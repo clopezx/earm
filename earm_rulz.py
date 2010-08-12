@@ -1,4 +1,3 @@
-# LA LA
 from pysb import *
 
 # FUNCTIONS
