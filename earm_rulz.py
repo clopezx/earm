@@ -73,7 +73,7 @@ Model()
 # cell.cell-membrane.(contains [DRECEPTOR])
 # cell.cytoplasm.(contains [caspase8] [caspase3] [caspase6] [caspase9] [BIDC] [BAXC] [BIM] 
 # 			 [BCLXLC]   [MCL1C]    [NOXA]     [BAD]      [MULE] [XIAP] [PARP] 
-# 			 [APAF]     [apoptosome])
+# 			 [APAF]     [apopsome])
 # cell.mito-membrane.(contains [BIDM] [BAXM] [BAK] [BCLXLM] [BCL2] [MCL1M] [BAXMPORE] [BAKPORE])
 # cell.mitochondria.(contains [CYTC] [SMAC])
 #
@@ -316,20 +316,20 @@ Monomer('BclXl',     ['b', 'loc'], {'loc':['C','M']})
 Monomer('Bim',       ['b'])
 Monomer('Bcl2',      ['b', 'loc'], {'loc':'M'}) # compartment: membrane ****
 Monomer('Csp3',      ['b', 'state'], {'state':['I','A','U']}) #state Inactive, Active, Ubiquinated
-Monomer('BAD',     'CANTI')
-Monomer('NOXA',    'CANTI')
-Monomer('MULE',    ['b', 'state', 'usite'],
-        {'state': ['I', 'A'], # default inactive
-         'usite': ['N', 'U']} # non-ubiquitinated/ubiquinated, default non-ubiquinated
+Monomer('BAD',        'CANTI')
+Monomer('NOXA',       'CANTI')
+Monomer('MULE',      ['b', 'state', 'usite'],
+                     {'state':['I', 'A'], # default inactive
+                      'usite': ['N', 'U']} # non-ubiquitinated/ubiquinated, default non-ubiquinated
         )
-Monomer('CASPASE6', ['CCSP3', 'CCSP8', 'state'], {'state': ['I', 'A']})
-Monomer('CYTC', ['CPORE', 'CAPAF'])
-Monomer('SMAC', ['CPORE', 'CXIAP'])
+Monomer('CASPASE6',  ['CCSP3', 'CCSP8', 'state'], {'state': ['I', 'A']})
+Monomer('CYTC',      ['CPORE', 'CAPAF'])
+Monomer('SMAC',      ['CPORE', 'CXIAP'])
 Monomer('XIAP',      ['CCSP3', 'CAPOP', 'CSMAC'])
 Monomer('PARP',      ['CCSP3', 'state'], {'state': ['I', 'A'] })
 Monomer('APAF',      ['CCYTC', 'CCSP9', 'state'], {'state': ['I', 'A'] })
-Monomer('CASPASE9',  'CAPAF')
-Monomer('APOPTPOSOME', ['CCSP3', 'CXIAP'])
+Monomer('CASPASE9',   'CAPAF')
+Monomer('APOPSOME',  ['CCSP3', 'CXIAP'])
 
 
 # ***RULEZ***
@@ -364,10 +364,6 @@ Rule('Csp8_activation',
      DReceptor(b=None, state='A') + Csp8(b=None, state='A'), # cytosolic C8 is released from the 'brane
      KDRECCSP8C)
      
-# ***Mcl1 DEGRADATION NEEDS TO BE ADDED***
-
-
-
 rdata_set("C8_block",
           lambda rname, r1, r2, param:
               (Rule(rname + '_%s_%s_bind' % (r1.name, r2[0].name),
@@ -497,9 +493,46 @@ rdata_set("anti_apop_bind",
                                    [KMCL1MBAKF,   KMCL1MBAKR]]
           )#r2
 
-#####
+### ANTIAPOPTOTIC binding BH3s
+rdata_set("anti_apop_bh3s",
+          lambda rname, r1, r2, data:
+              Rule(rname + '%s%s_%s%s' % (r1[0].name r1[1].get('loc',''), r2[0].name, r2[1].get('loc','')),
+                   r1[0](r1[1], b=None) + r2[0](r2[1], b=None) <>
+                   r1[0](r1[1], b=1)    % r2[0](r2[1], b=1), 
+                   data[0], data[1]
+                   ),
+          [                        (Bid, {'state':'A', 'loc':'C'}), (Bid, {'state':'A', 'loc':'M'}), Bim, Bad, NOXA, MULE], #r1
+          
+          
 
-Observe('mpore', BaxPore(b=None))
+
+### MCL1 degradation by NOXA/MULE
+
+### CSP8 activates BidC and CSP3
+
+### CSP3 activates CSP6
+
+### CSP3 gets tagged for ubiquination by XIAP
+
+### CSP3 cleaves PARP and inactivates it
+
+### CSP6 activates CSP8
+
+### CSP8/CSP3 induce MCL1 degradation
+
+### CYTC and SMAC released via BAX/BAK pores
+
+### CYTC complexes with APAF
+
+### APAF and CSP9 form APOP
+
+### APOP binds to XIAP
+
+### SMAC binds to XIAP
+
+#-------------------------------------------------------------------------------
+#OBSERVABLES
+Observe('tBid', Bid(b=None, state='A', loc='C'))
 
 # generate initial conditions from _0 parameter naming convention
 for m in model.monomers:
