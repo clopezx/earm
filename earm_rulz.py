@@ -316,8 +316,8 @@ Monomer('BclXl',     ['b', 'loc'], {'loc':['C','M']})
 Monomer('Bim',       ['b'])
 Monomer('Bcl2',      ['b', 'loc'], {'loc':'M'}) # compartment: membrane ****
 Monomer('Csp3',      ['b', 'state'], {'state':['I','A','U']}) #state Inactive, Active, Ubiquinated
-Monomer('BAD',        'CANTI')
-Monomer('NOXA',       'CANTI')
+Monomer('Bad',        'b')
+Monomer('NOXA',       'b')
 Monomer('MULE',      ['b', 'state', 'usite'],
                      {'state':['I', 'A'], # default inactive
                       'usite': ['N', 'U']} # non-ubiquitinated/ubiquinated, default non-ubiquinated
@@ -494,19 +494,69 @@ rdata_set("anti_apop_bind",
           )#r2
 
 ### ANTIAPOPTOTIC binding BH3s
+def helper_anti_apop_bh3s(rname, r1, r2, data):
+    if data:
+        if isinstance(r1, Monomer):
+            r1 = (r1, {})
+        print "r1=", r1
+        print "r2=", r2
+        print "--------------------------------------------"
+        Rule(rname + '%s%s_%s%s' % (r1[0].name, r1[1].get('loc',''), r2[0].name, r2[1].get('loc','')),
+             r1[0](r1[1], b=None) + r2[0](r2[1], b=None) <>
+             r1[0](r1[1], b=1)    % r2[0](r2[1], b=1), 
+             data[0], data[1])
+
 rdata_set("anti_apop_bh3s",
+          helper_anti_apop_bh3s,
+          [                        (Bid, {'state':'A', 'loc':'C'}), (Bid, {'state':'A', 'loc':'M'}), Bim, Bad, NOXA, MULE], #r1
+          [(BclXl, {'loc':'C'}),  [KBCLXLCBIDCF, KBCLXLCBIDCR],  # with BIDC
+                                  [KBCLXLCBIDMF, KBCLXLCBIDMR],  # with BIDM
+                                  [KBCLXLCBIMF,  KBCLXLCBIMR],   # with BIM
+                                  [KBCLXLCBADF,  KBCLXLCBADR],   # with BAD
+                                  None,                            # with NOXA
+                                  None],                           # with MULE
+          [(BclXl, {'loc':'M'}),  [KBCLXLMBIDCF, KBCLXLMBIDCR],  # with BIDC
+                                  [KBCLXLMBIDMF, KBCLXLMBIDMR],  # with BIDM
+                                  [KBCLXLMBIMF,  KBCLXLMBIMR],   # with BIM
+                                  [KBCLXLMBADF,  KBCLXLMBADR],   # with BAD
+                                  None,                            # with NOXA
+                                  None],                           # with MULE
+          [(Bcl2, {}),            [KBCL2BIDCF,   KBCL2BIDCR],    # with BIDC
+                                  [KBCL2BIDMF,   KBCL2BIDMR],    # with BIDM
+                                  [KBCL2BIMF,    KBCL2BIMR],     # with BIM
+                                  [KBCL2BADF,    KBCL2BADR],     # with BAD
+                                  None,                            # with NOXA
+                                  None],                           # with MULE
+          [(Mcl1, {'loc':'C'}),   [KMCL1CBIDCF,  KMCL1CBIDCR],   # with BIDC
+                                  [KMCL1CBIDMF,  KMCL1CBIDMR],   # with BIDM
+                                  [KMCL1CBIMF,   KMCL1CBIMR],    # with BIM
+                                  None,                            # with BAD
+                                  [KMCL1CNOXAF,  KMCL1CNOXAR],   # with NOXA
+                                  [KMCL1CMULEF,  KMCL1CMULER]],  # with MULE
+          [(Mcl1, {'loc':'M'}),   [KMCL1MBIDCF,  KMCL1MBIDCR],   # with BIDC
+                                  [KMCL1MBIDMF,  KMCL1MBIDMR],   # with BIDM
+                                  [KMCL1MBIMF,   KMCL1MBIMR],    # with BIM
+                                  None,                            # with BAD
+                                  [KMCL1MNOXAF,  KMCL1MNOXAR],   # with NOXA
+                                  [KMCL1MMULEF,  KMCL1MMULER]]   # with MULE
+          ) #r2
+
+### MCL1 degradation by NOXA/MULE
+rdata_set("anti_apop_bind",
           lambda rname, r1, r2, data:
-              Rule(rname + '%s%s_%s%s' % (r1[0].name r1[1].get('loc',''), r2[0].name, r2[1].get('loc','')),
+              Rule(rname + '_%s%s_%s%s' % (r1[0].name, r1[1].get('loc',''), r2[0].name, r2[1].get('loc','')),
                    r1[0](r1[1], b=None) + r2[0](r2[1], b=None) <>
                    r1[0](r1[1], b=1)    % r2[0](r2[1], b=1), 
                    data[0], data[1]
                    ),
-          [                        (Bid, {'state':'A', 'loc':'C'}), (Bid, {'state':'A', 'loc':'M'}), Bim, Bad, NOXA, MULE], #r1
-          
+          [                        (NOXA, {}), (MULE, {})], #r1
+          [(Mcl1, {'loc':'C'}),   [], 
+                                   []]
+          [(Mcl1, {'loc':'C'}),   [], 
+                                   []]
+          ) #r2
           
 
-
-### MCL1 degradation by NOXA/MULE
 
 ### CSP8 activates BidC and CSP3
 
