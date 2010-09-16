@@ -311,7 +311,7 @@ Monomer('Bax',       ['b', 't1', 't2', 'state', 'loc'], {'state': ['I','A'], 'lo
 Monomer('Bak',       ['b', 't1', 't2', 'state'], {'state': ['I','A']}) #compartment: membrane
 Monomer('BaxPore',   ['b']) # compartment: membrane
 Monomer('BakPore',   ['b']) # compartment: membrane
-Monomer('Mcl1',      ['b', 'loc', 'deg'], {'loc':['C','M'], 'deg':['U','D']}) # can degrade, undeg by default
+Monomer('Mcl1',      ['b', 'loc', 'state'], {'loc':['C','M'], 'state':['U','D']}) # can degrade, undeg by default
 Monomer('BclXl',     ['b', 'loc'], {'loc':['C','M']})
 Monomer('Bim',       ['b'])
 Monomer('Bcl2',      ['b', 'loc'], {'loc':'M'}) # compartment: membrane ****
@@ -322,14 +322,14 @@ Monomer('MULE',      ['b', 'state', 'usite'],
                      {'state':['I', 'A'], # default inactive
                       'usite': ['N', 'U']} # non-ubiquitinated/ubiquinated, default non-ubiquinated
         )
-Monomer('CASPASE6',  ['CCSP3', 'CCSP8', 'state'], {'state': ['I', 'A']})
-Monomer('CYTC',      ['CPORE', 'CAPAF'])
-Monomer('SMAC',      ['CPORE', 'CXIAP'])
-Monomer('XIAP',      ['CCSP3', 'CAPOP', 'CSMAC'])
-Monomer('PARP',      ['CCSP3', 'state'], {'state': ['I', 'A'] })
-Monomer('APAF',      ['CCYTC', 'CCSP9', 'state'], {'state': ['I', 'A'] })
-Monomer('CASPASE9',   'CAPAF')
-Monomer('APOPSOME',  ['CCSP3', 'CXIAP'])
+Monomer('Csp6',      ['b', 'state'], {'state': ['I', 'A']})
+Monomer('CytC',      ['b', 'loc'], {'loc':['mito', 'cyto']})
+Monomer('SMAC',      ['b', 'loc'], {'loc':['mito', 'cyto']})
+Monomer('XIAP',      ['b'])
+Monomer('PARP',      ['b', 'state'], {'state': ['U', 'C'] }) #state uncleaved (default), cleaved
+Monomer('APAF',      ['b', 'state'], {'state': ['I', 'A'] })
+Monomer('Csp9',       'b')
+Monomer('Apopsome',  ['b'])
 
 
 # ***RULEZ***
@@ -363,7 +363,8 @@ Rule('Csp8_activation',
      DReceptor(b=1, state='A')    % Csp8(b=1, state='I') >>
      DReceptor(b=None, state='A') + Csp8(b=None, state='A'), # cytosolic C8 is released from the 'brane
      KDRECCSP8C)
-     
+
+### CSP8 activates BidC and CSP3     
 rdata_set("C8_block",
           lambda rname, r1, r2, param:
               (Rule(rname + '_%s_%s_bind' % (r1.name, r2[0].name),
@@ -410,7 +411,7 @@ rdata_list("translocate",
            [(Bid,    {'state':'A', 'loc':'C'}), (Bid,   {'state':'A', 'loc':'M'}), [KBIDCBIDMF,     KBIDCBIDMR]],
            [(Bax,    {'state':'A', 'loc':'C'}), (Bax,   {'state':'A', 'loc':'M'}), [KBAXCBAXMF,     KBAXCBAXMR]],
            [(BclXl,  {'loc':'C'}),              (BclXl, {'loc':'M'}), [KBCLXLCBCLXLMF, KBCLXLCBCLXLMR]],
-           [(Mcl1,   {'loc':'C'}),              (Mcl1,  {'loc':'M'}), [KMCL1CMCL1MF,   KMCL1CMCL1MR]]
+           [(Mcl1,   {'state':'U', 'loc':'C'}), (Mcl1,  {'state':'U', 'loc':'M'}), [KMCL1CMCL1MF,   KMCL1CMCL1MR]]
            ) 
 
 #
@@ -468,7 +469,7 @@ rdata_list("tetramer_to_pore",
            )
 
 ### ANTIAPOPTOTIC inhibiting BAX, BAK FIXME: THIS GOES INTO THE PROPER COMPARTMENTS
-rdata_set("anti_apop_bind",
+rdata_set("antiapoptosis_bind",
           lambda rname, r1, r2, data:
               Rule(rname + '_%s%s_%s%s' % (r1[0].name, r1[1].get('loc',''), r2[0].name, r2[1].get('loc','')),
                    r1[0](r1[1], b=None) + r2[0](r2[1], b=None) <>
@@ -476,25 +477,25 @@ rdata_set("anti_apop_bind",
                    data[0], data[1]
                    ),
           [                        (Bax, {'state':'A', 'loc':'C'}), (Bax, {'state':'A', 'loc':'M'}), (Bak, {'state':'A'})], #r1
-          [(BclXl, {'loc':'C'}),   [KBCLXLCBAXCF, KBCLXLCBAXCR], 
-                                   [KBCLXLCBAXMF, KBCLXLCBAXMR],
-                                   [KBCLXLCBAKF,  KBCLXLCBAKR]],
-          [(BclXl, {'loc':'M'}),   [KBCLXLMBAXCF, KBCLXLMBAXCR],      
-                                   [KBCLXLMBAXMF, KBCLXLMBAXMF],      
-                                   [KBCLXLMBAKF,  KBCLXLMBAKR]],
-          [(Bcl2,  {}),            [KBCL2BAXCF,   KBCL2BAXCR],      
-                                   [KBCL2BAXMF,   KBCL2BAXMF],      
-                                   [KBCL2BAKF,    KBCL2BAKR]],
-          [(Mcl1, {'loc':'C'}),    [KMCL1CBAXCF,  KMCL1CBAXCR],      
-                                   [KMCL1CBAXMF,  KMCL1CBAXMF],      
-                                   [KMCL1CBAKF,   KMCL1CBAKR]],
-          [(Mcl1, {'loc':'M'}),    [KMCL1MBAXCF,  KMCL1MBAXCR],      
-                                   [KMCL1MBAXMF,  KMCL1MBAXMF],      
-                                   [KMCL1MBAKF,   KMCL1MBAKR]]
+          [(BclXl, {'loc':'C'}),                [KBCLXLCBAXCF, KBCLXLCBAXCR], 
+                                                [KBCLXLCBAXMF, KBCLXLCBAXMR],
+                                                [KBCLXLCBAKF,  KBCLXLCBAKR]],
+          [(BclXl, {'loc':'M'}),                [KBCLXLMBAXCF, KBCLXLMBAXCR],      
+                                                [KBCLXLMBAXMF, KBCLXLMBAXMF],      
+                                                [KBCLXLMBAKF,  KBCLXLMBAKR]],
+          [(Bcl2,  {}),                         [KBCL2BAXCF,   KBCL2BAXCR],      
+                                                [KBCL2BAXMF,   KBCL2BAXMF],      
+                                                [KBCL2BAKF,    KBCL2BAKR]],
+          [(Mcl1, {'state':'U', 'loc':'C'}),    [KMCL1CBAXCF,  KMCL1CBAXCR],      
+                                                [KMCL1CBAXMF,  KMCL1CBAXMF],      
+                                                [KMCL1CBAKF,   KMCL1CBAKR]],
+          [(Mcl1, {'state':'U', 'loc':'M'}),                 [KMCL1MBAXCF,  KMCL1MBAXCR],      
+                                                [KMCL1MBAXMF,  KMCL1MBAXMF],      
+                                                [KMCL1MBAKF,   KMCL1MBAKR]]
           )#r2
 
 ### ANTIAPOPTOTIC binding BH3s
-def helper_anti_apop_bh3s(rname, r1, r2, data):
+def helper_antiapoptosis_bh3s(rname, r1, r2, data):
     if data:
         if isinstance(r1, Monomer):
             r1 = (r1, {})
@@ -506,79 +507,163 @@ def helper_anti_apop_bh3s(rname, r1, r2, data):
              r1[0](r1[1], b=1)    % r2[0](r2[1], b=1), 
              data[0], data[1])
 
-rdata_set("anti_apop_bh3s",
-          helper_anti_apop_bh3s,
+rdata_set("antiapoptosis_bh3s",
+          helper_antiapoptosis_bh3s,
           [                        (Bid, {'state':'A', 'loc':'C'}), (Bid, {'state':'A', 'loc':'M'}), Bim, Bad, NOXA, MULE], #r1
-          [(BclXl, {'loc':'C'}),  [KBCLXLCBIDCF, KBCLXLCBIDCR],  # with BIDC
-                                  [KBCLXLCBIDMF, KBCLXLCBIDMR],  # with BIDM
-                                  [KBCLXLCBIMF,  KBCLXLCBIMR],   # with BIM
-                                  [KBCLXLCBADF,  KBCLXLCBADR],   # with BAD
-                                  None,                            # with NOXA
-                                  None],                           # with MULE
-          [(BclXl, {'loc':'M'}),  [KBCLXLMBIDCF, KBCLXLMBIDCR],  # with BIDC
-                                  [KBCLXLMBIDMF, KBCLXLMBIDMR],  # with BIDM
-                                  [KBCLXLMBIMF,  KBCLXLMBIMR],   # with BIM
-                                  [KBCLXLMBADF,  KBCLXLMBADR],   # with BAD
-                                  None,                            # with NOXA
-                                  None],                           # with MULE
-          [(Bcl2, {}),            [KBCL2BIDCF,   KBCL2BIDCR],    # with BIDC
-                                  [KBCL2BIDMF,   KBCL2BIDMR],    # with BIDM
-                                  [KBCL2BIMF,    KBCL2BIMR],     # with BIM
-                                  [KBCL2BADF,    KBCL2BADR],     # with BAD
-                                  None,                            # with NOXA
-                                  None],                           # with MULE
-          [(Mcl1, {'loc':'C'}),   [KMCL1CBIDCF,  KMCL1CBIDCR],   # with BIDC
-                                  [KMCL1CBIDMF,  KMCL1CBIDMR],   # with BIDM
-                                  [KMCL1CBIMF,   KMCL1CBIMR],    # with BIM
-                                  None,                            # with BAD
-                                  [KMCL1CNOXAF,  KMCL1CNOXAR],   # with NOXA
-                                  [KMCL1CMULEF,  KMCL1CMULER]],  # with MULE
-          [(Mcl1, {'loc':'M'}),   [KMCL1MBIDCF,  KMCL1MBIDCR],   # with BIDC
-                                  [KMCL1MBIDMF,  KMCL1MBIDMR],   # with BIDM
-                                  [KMCL1MBIMF,   KMCL1MBIMR],    # with BIM
-                                  None,                            # with BAD
-                                  [KMCL1MNOXAF,  KMCL1MNOXAR],   # with NOXA
-                                  [KMCL1MMULEF,  KMCL1MMULER]]   # with MULE
+          [(BclXl, {'loc':'C'}),               [KBCLXLCBIDCF, KBCLXLCBIDCR],  # with BIDC
+                                               [KBCLXLCBIDMF, KBCLXLCBIDMR],  # with BIDM
+                                               [KBCLXLCBIMF,  KBCLXLCBIMR],   # with BIM
+                                               [KBCLXLCBADF,  KBCLXLCBADR],   # with BAD
+                                               None,                          # with NOXA
+                                               None],                         # with MULE
+          [(BclXl, {'loc':'M'}),               [KBCLXLMBIDCF, KBCLXLMBIDCR],  # with BIDC
+                                               [KBCLXLMBIDMF, KBCLXLMBIDMR],  # with BIDM
+                                               [KBCLXLMBIMF,  KBCLXLMBIMR],   # with BIM
+                                               [KBCLXLMBADF,  KBCLXLMBADR],   # with BAD
+                                               None,                          # with NOXA
+                                               None],                         # with MULE
+          [(Bcl2, {}),                         [KBCL2BIDCF,   KBCL2BIDCR],    # with BIDC
+                                               [KBCL2BIDMF,   KBCL2BIDMR],    # with BIDM
+                                               [KBCL2BIMF,    KBCL2BIMR],     # with BIM
+                                               [KBCL2BADF,    KBCL2BADR],     # with BAD
+                                               None,                          # with NOXA
+                                               None],                         # with MULE
+          [(Mcl1, {'state':'U', 'loc':'C'}),   [KMCL1CBIDCF,  KMCL1CBIDCR],   # with BIDC
+                                               [KMCL1CBIDMF,  KMCL1CBIDMR],   # with BIDM
+                                               [KMCL1CBIMF,   KMCL1CBIMR],    # with BIM
+                                               None,                          # with BAD
+                                               [KMCL1CNOXAF,  KMCL1CNOXAR],   # with NOXA
+                                               [KMCL1CMULEF,  KMCL1CMULER]],  # with MULE
+          [(Mcl1, {'state':'U', 'loc':'M'}),   [KMCL1MBIDCF,  KMCL1MBIDCR],   # with BIDC
+                                               [KMCL1MBIDMF,  KMCL1MBIDMR],   # with BIDM
+                                               [KMCL1MBIMF,   KMCL1MBIMR],    # with BIM
+                                               None,                          # with BAD
+                                               [KMCL1MNOXAF,  KMCL1MNOXAR],   # with NOXA
+                                               [KMCL1MMULEF,  KMCL1MMULER]]   # with MULE
           ) #r2
 
 ### MCL1 degradation by NOXA/MULE
-rdata_set("anti_apop_bind",
+rdata_set("antiapoptosis_bind",
           lambda rname, r1, r2, data:
               Rule(rname + '_%s%s_%s%s' % (r1[0].name, r1[1].get('loc',''), r2[0].name, r2[1].get('loc','')),
-                   r1[0](r1[1], b=None) + r2[0](r2[1], b=None) <>
-                   r1[0](r1[1], b=1)    % r2[0](r2[1], b=1), 
-                   data[0], data[1]
+                   r1[0](r1[1], b=1)    % r2[0](r2[1], b=1, state='U') >>
+                   r1[0](r1[1], b=1)    + r2[0](r2[1], b=1, state='D'), 
+                   data[0]
                    ),
           [                        (NOXA, {}), (MULE, {})], #r1
-          [(Mcl1, {'loc':'C'}),   [], 
-                                   []]
-          [(Mcl1, {'loc':'C'}),   [], 
-                                   []]
+          [(Mcl1, {'loc':'C'}),   [KMCL1CNOXAC],[KMCL1CMULEC]], 
+          [(Mcl1, {'loc':'M'}),   [KMCL1MNOXAC],[KMCL1MMULEC]]
           ) #r2
-          
-
-
-### CSP8 activates BidC and CSP3
 
 ### CSP3 activates CSP6
-
+Rule('Csp8_bind_Csp6',
+     Csp3(b=None, state='A') + Csp6(b=None, state='I') <>
+     Csp3(b=1,    state='A') % Csp6(b=1,    state='I'),
+     KCSP3CSP6F, KCSP3CSP6R)
+Rule('Csp6_activation',
+     Csp3(b=1,    state='A') % Csp6(b=1,    state='I') >>
+     Csp3(b=None, state='A') % Csp6(b=None, state='A'),
+     KCSP3CSP6C)
+     
 ### CSP3 gets tagged for ubiquination by XIAP
+Rule('Csp3_bind_XIAP',
+     Csp3(b=None, state='A') + XIAP(b=None) <>
+     Csp3(b=1,    state='A') % XIAP(b=1),
+     KCSP3XIAPF,  KCSP3XIAPR)
+Rule('Csp3_ubiq',
+     Csp3(b=1,    state='A') % XIAP(b=1) >>
+     Csp3(b=1,    state='U') % XIAP(b=1),
+     KCSP3XIAPC)
 
 ### CSP3 cleaves PARP and inactivates it
+Rule('Csp3_bind_PARP',
+     Csp3(b=None, state='A') + PARP(b=None, state='U') <>
+     Csp3(b=1,    state='A') % PARP(b=1,    state='U'),
+     KCSP3PARPF, KCSP3PARPR)
+Rule('Csp3_cleave_PARP',
+     Csp3(b=1,    state='A') % PARP(b=1,    state='U') >>
+     Csp3(b=1,    state='A') + PARP(b=1,    state='C'),
+     KCSP3PARPC)
 
 ### CSP6 activates CSP8
+Rule('Csp6_bind_Csp8',
+     Csp6(b=None, state='A') + Csp8(b=None, state='I') <>
+     Csp6(b=1, state='A')    % Csp8(b=1, state='I'),
+     KCSP6CSP8F, KCSP6CSP8R)
+Rule('Csp3_act_Csp8',
+     Csp6(b=1, state='A')    % Csp8(b=1, state='I') >>
+     Csp6(b=None, state='A')    + Csp8(b=None, state='A'),
+     KCSP6CSP8C)
 
 ### CSP8/CSP3 induce MCL1 degradation
+rdata_set("MCL1_deg",
+          lambda rname, r1, r2, data:
+              (Rule(rname + '_%s_%s%s_bind' % (r1[0].name, r2[0].name, r2[1].get('loc','')),
+                    r1[0](r1[1], b=None, state='U') + r2[0](r2[1], b=None, state='A') <>
+                    r1[0](r1[1], b=1,    state='U') % r2[0](r2[1], b=1,    state='A'), 
+                    data[0], data[1]),
+               Rule(rname + '_%s_%s%s_deg' % (r1[0].name, r2[0].name, r2[1].get('loc','')),
+                    r1[0](r1[1], b=1,    state='U') % r2[0](r2[1], b=1,    state='A') >>
+                    r1[0](r1[1], b=None, state='D') + r2[0](r2[1], b=None, state='A'),
+                    data[2])
+               ),
+          [                        (Csp8, None), (Csp3, None)], #r1
+          [(Mcl1, {'loc':'M'}),   [KMCL1MCSP8F, KMCL1MCSP8R, KMCL1MCSP8C], [KMCL1MCSP3F, KMCL1MCSP3R, KMCL1MCSP3C]],
+          [(Mcl1, {'loc':'C'}),   [KMCL1CCSP8F, KMCL1CCSP8R, KMCL1CCSP8C], [KMCL1CCSP3F, KMCL1CCSP3R, KMCL1CCSP3C]] 
+          ) #r2
 
 ### CYTC and SMAC released via BAX/BAK pores
+rdata_set("mito_release", 
+          lambda rname, r1, r2, data:
+              (Rule(rname + '_%s_%s_bind' % (r1.name, r2.name),
+                    r1(b=None) + r2(b=None, loc='mito') <>
+                    r1(b=1)    % r2(b=1,    loc='mito'),
+                    data[0], data[1]),
+               Rule(rname + '_%s_%s_rel' % (r1.name, r2.name),
+                    r1(b=1)    % r2(b=1,    loc='mito') >>
+                    r1(b=None) + r2(b=None, loc='cyto'),
+                    data[2])),
+          [                        BaxPore, BakPore], #r1
+          [CytC,   [KCYTCBAXPF, KCYTCBAXPR, KCYTCBAXPC], [KCYTCBAKPF, KCYTCBAKPR, KCYTCBAKPC]],
+          [SMAC,   [KSMACBAXPF, KSMACBAXPR, KSMACBAXPC], [KSMACBAKPF, KSMACBAKPR, KSMACBAKPC]] 
+          ) #r2
 
 ### CYTC complexes with APAF
+# just active APAF, mathematically it is the same as having this complex bind
+# to Caspase 9 and make the apoptosome
+Rule("cytc_cpx_apaf",
+     CytC(b=None, loc='cyto') + APAF(b=None, state='I') <>
+     APAF(b=None, state='A'), 
+     KCYTCAPAFF, KCYTCAPAFR)
 
 ### APAF and CSP9 form APOP
+Rule("cytc_apaf_csp9_cpx",
+     APAF(b=1, state='A') + Csp9(b=None) <>
+     Apopsome(b=None),
+     KAPAFCSP9F, KAPAFCSP9R)
+
+### Apopsome activates CSP3
+Rule("apop_binds_csp3",
+     Apopsome(b=None) + Csp3(b=None, state='I') <>
+     Apopsome(b=1)    % Csp3(b=1,    state='I'),
+     KAPOPCSP3F, KAPOPCSP3R)
+Rule("apop_act_csp3",
+     Apopsome(b=1)    % Csp3(b=1,    state='I') >>
+     Apopsome(b=None) + Csp3(b=None, state='A'),
+     KAPOPCSP3C)
 
 ### APOP binds to XIAP
+Rule("apop_bind_xiap",
+     Apopsome(b=None) + XIAP(b=None) <>
+     Apopsome(b=1)    % XIAP(b=1),
+     KAPOPXIAPF, KAPOPXIAPR)
 
 ### SMAC binds to XIAP
+Rule("smac_binds_xiap",
+     SMAC(b=None, loc='cyto') + XIAP(b=None) <>
+     SMAC(b=1,    loc='cyto') % XIAP(b=1),
+     KSMACXIAPF, KSMACXIAPR)
+
 
 #-------------------------------------------------------------------------------
 #OBSERVABLES
@@ -597,8 +682,8 @@ for m in model.monomers:
         Initial(m(sites), ic_param)
 Initial(BclXl(b=None, loc='C'), BclXl_C_0)
 Initial(BclXl(b=None, loc='M'), BclXl_M_0)
-Initial(Mcl1(b=None, loc='C', deg='U'), Mcl1_C_0)
-Initial(Mcl1(b=None, loc='M', deg='U'), Mcl1_M_0)
+Initial(Mcl1(b=None, loc='C', state='U'), Mcl1_C_0)
+Initial(Mcl1(b=None, loc='M', state='U'), Mcl1_M_0)
 
 ###
 if __name__ == '__main__':
