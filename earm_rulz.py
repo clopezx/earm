@@ -499,9 +499,9 @@ def helper_antiapoptosis_bh3s(rname, r1, r2, data):
     if data:
         if isinstance(r1, Monomer):
             r1 = (r1, {})
-        print "r1=", r1
-        print "r2=", r2
-        print "--------------------------------------------"
+        # print "r1=", r1
+        # print "r2=", r2
+        # print "--------------------------------------------"
         Rule(rname + '%s%s_%s%s' % (r1[0].name, r1[1].get('loc',''), r2[0].name, r2[1].get('loc','')),
              r1[0](r1[1], b=None) + r2[0](r2[1], b=None) <>
              r1[0](r1[1], b=1)    % r2[0](r2[1], b=1), 
