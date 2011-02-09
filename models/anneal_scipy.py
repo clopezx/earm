@@ -1,5 +1,6 @@
 import scipy.optimize
 import numpy
+import csv
 
 
 
@@ -8,4 +9,14 @@ import numpy
 #        feps=9.9999999999999995e-07, quench=1.0, m=1.0, n=1.0, lower=-100, upper=100, dwell=50)
 
 
-def expsimrmsd(simarray, exparray)
+def read_cvs_array(fp):
+    """return a numpy array from a cvs set of data"""
+    reader = csv.reader(fp)
+    templist = []
+    for row in reader:
+        templist.append(row)
+    converters = (float, str, int)
+    for i, item in enumerate(data):
+        print converters[i](item)
+        
+    
