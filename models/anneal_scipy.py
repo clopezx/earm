@@ -12,11 +12,10 @@ import csv
 def read_cvs_array(fp):
     """return a numpy array from a cvs set of data"""
     reader = csv.reader(fp)
-    templist = []
     for row in reader:
-        templist.append(row)
+        
     converters = (float, str, int)
     for i, item in enumerate(data):
         print converters[i](item)
-        
+    
     
