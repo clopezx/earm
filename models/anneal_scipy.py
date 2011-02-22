@@ -9,7 +9,7 @@ import csv
 #        feps=9.9999999999999995e-07, quench=1.0, m=1.0, n=1.0, lower=-100, upper=100, dwell=50)
 
 def read_csv_array(fp):
-    """return a numpy array from a cvs set of data"""
+    """returns the first string and a numpy array from a csv set of data"""
     reader = csv.reader(fp)
     templist = []
     #read in the lists
@@ -26,3 +26,8 @@ def read_csv_array(fp):
     for i, item in enumerate(templist):
         darray[i] = numpy.asarray(templist[i], dtype=darray.dtype)    
     return (headstring, darray)
+
+
+def compare_data(array1, array2):
+    """Compares two arrays and returns the RMSD between them"""
+    
