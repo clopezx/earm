@@ -29,5 +29,14 @@ def read_csv_array(fp):
 
 
 def compare_data(array1, array2):
-    """Compares two arrays and returns the RMSD between them"""
+    """Compares two arrays and returns the X^2 between them"""
+    # figure out the array shapes
+    # this expects arrays of the form array([time, measurements])
+    # the time is assumed to be roughly the same for both and the 
+    # shortest time will be taken as reference to regrid the data
+    # the regridding is done using a b-spline interpolation
+    #
+    
+    
+    
     
