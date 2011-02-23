@@ -2,12 +2,6 @@ import scipy.optimize
 import numpy
 import csv
 
-
-
-# anneal(func, x0, args=(), schedule='fast', full_output=0, T0=None, Tf=9.9999999999999998e-13, 
-#        maxeval=None, maxaccept=None, maxiter=400, boltzmann=1.0, learn_rate=0.5, 
-#        feps=9.9999999999999995e-07, quench=1.0, m=1.0, n=1.0, lower=-100, upper=100, dwell=50)
-
 def read_csv_array(fp):
     """returns the first string and a numpy array from a csv set of data"""
     reader = csv.reader(fp)
@@ -28,7 +22,7 @@ def read_csv_array(fp):
     return (headstring, darray)
 
 
-def compare_data(array1, array2):
+def compare_data(array0, array1):
     """Compares two arrays and returns the X^2 between them"""
     # figure out the array shapes
     # this expects arrays of the form array([time, measurements])
@@ -36,6 +30,28 @@ def compare_data(array1, array2):
     # shortest time will be taken as reference to regrid the data
     # the regridding is done using a b-spline interpolation
     #
+
+    # sanity checks
+    # make sure we are comparing the right shape arrays
+    arr0shape = array0.shape
+    arr1shape = array1.shape
+    
+    if len(arr0shape) != len(arr1shape):
+        raise SystemExit("comparing arrays of different dimensions")
+    
+    # get ref array for regridding...
+    if arr0shape[0] > arr1shape[0]:
+        refarray = array0
+        otharray = array1
+    else:
+        refarray = array1
+        otharray = array0
+
+    
+
+    
+    
+    
     
     
     
