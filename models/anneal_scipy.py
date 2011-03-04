@@ -23,13 +23,14 @@ def read_csv_array(fp):
     return (headstring, darray)
 
 
-def compare_data(array0, array1):
+def compare_data(array0, array0var=None, array1):
     """Compares two arrays and returns the X^2 between them"""
     # figure out the array shapes
     # this expects arrays of the form array([time, measurements])
     # the time is assumed to be roughly the same for both and the 
     # shortest time will be taken as reference to regrid the data
     # the regridding is done using a b-spline interpolation
+    # array0var shuold be the variances at every time point
     #
 
     # sanity checks
@@ -46,21 +47,35 @@ def compare_data(array0, array1):
     rngmin = round(rngmin, -1)
     rngmax = round(rngmax, -1)
     
-    # use the smallest number of gridpoints between the arrays as
-    # the new gridset... this is prob good enough as long as the
-    # arrays are roughly similar in the number of points
-    # 
-    # FIXME: should this be an average of the gridsize?
-    ngrid = min(arr0shape[0], arr1shape[0])
-    ipgrid =  numpy.linspace(rngmin, rngmax, ngrid)
+    # use the experimental gridpoints from the reference array as
+    # the new gridset for the model array. notice the time range
+    # of the experiment has to be within the model range
+    #
+    iparray = numpy.zeros(array0.shape)
+    iparray[:,0] =  array0[:,0]
     
-    #now create a b-spline of the data and fit it to desired range
-    tck = scipy.interpolate.splrep(array0[:,0], array0[:,1])
-    iparray0 = scipy.interpolate.splev(ipgrid, tck)
-    
+    # now create a b-spline of the data and fit it to desired range
     tck = scipy.interpolate.splrep(array1[:,0], array1[:,1])
-    iparray1 = scipy.interpolate.splev(ipgrid, tck)
+    iparray[:,1] = scipy.interpolate.splev(iparray[:,0], tck)
+    
+    # we now have x and y axis for the points in the model array
+    # calculate the objective function
+    
+    diffarray = array0[:,1] - iparray[:,1]
+    diffsqarray = diffarray * diffarray
+    
+    # assume a default .05 variance
+    if array0var is None:
+        array0var = numpy.ones(iparray[:,1].shape)
+        array0var = array0var*.05
+    
+    array0var = numpy.multiply(array0var,array0var)
+    array0var = array0var*0.5
 
+    objarray = diffsqarray * array0var
+    
+    return objarray.sum()
+    
     
     
     
