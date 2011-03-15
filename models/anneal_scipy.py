@@ -76,8 +76,6 @@ def compare_data(array0, array0var=None, array1):
     
     return objarray.sum()
     
-    
-    
-    
-    
+# The system running file
+def run_anneal():
     
