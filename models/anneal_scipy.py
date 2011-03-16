@@ -77,5 +77,10 @@ def compare_data(array0, array0var=None, array1):
     return objarray.sum()
     
 # The system running file
-def run_anneal():
+def calibrate_anneal():
+    # This is the feeder function for the anneal routine. It needs to:
+    # 1- run the integration for the model with parameters as vars
+    # 2- calculate the objective function and return it
+    # 3- do this every time it's called
+
     
