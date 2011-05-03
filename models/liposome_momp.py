@@ -54,7 +54,7 @@ Rule('Baxbrane_dimer',
      Bax(b = None, m1 = None, m2 = None, state='A') ** lipo_brane +
      Bax(b = None, m1 = None, m2 = None, state='A') ** lipo_brane <>
      Bax(b = None, m1 = 1, m2 = None, state='A') ** lipo_brane +
-     Bax(b = None, m1 = 1, m2 = None, state='A') ** lipo_brane,
+     Bax(b = None, m1 = None, m2 = 1, state='A') ** lipo_brane,
      kdimf, kdimr)
      
 # Active Bax trimerize
