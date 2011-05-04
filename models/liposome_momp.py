@@ -53,18 +53,47 @@ Rule('BaxbraneCplx_to_Baxbrane',
 Rule('Baxbrane_dimer',
      Bax(b = None, m1 = None, m2 = None, state='A') ** lipo_brane +
      Bax(b = None, m1 = None, m2 = None, state='A') ** lipo_brane <>
-     Bax(b = None, m1 = 1, m2 = None, state='A') ** lipo_brane +
+     Bax(b = None, m1 = 1, m2 = None, state='A') ** lipo_brane %
      Bax(b = None, m1 = None, m2 = 1, state='A') ** lipo_brane,
      kdimf, kdimr)
      
 # Active Bax trimerize
+Rule('Baxbrane_trimer',
+     Bax(b = None, m1 = 1, m2 = None, state='A') %
+     Bax(b = None, m1 = None, m2 = 1, state='A') +
+     Bax(b = None, m1 = None, m2 = None, state='A') ** lipo_brane <>
+     Bax(b = None, m1 = 1, m2 = None, state='A') %
+     Bax(b = None, m1 = 2, m2 = 1, state='A') %
+     Bax(b = None, m1 = None, m2 = 2, state='A') ** lipo_brane,
+     ktrimf, ktrimr)
 
 # Active Bax tetramerize
-
 # Active Bax pentamerize
-
 # Active Bax hexamerize
-
 # Active Bax heptamerize
 
 # CytC mimic released to the cytosol
+Rule('CytC_release_trimer1',
+     CytC(b = None) ** liposome +
+     Bax(b = None, m1 = 1, m2 = None, state='A') %
+     Bax(b = None, m1 = 2, m2 = 1, state='A') %
+     Bax(b = None, m1 = None, m2 = 2, state='A') ** lipo_brane <>
+     CytC(b = 3) ** liposome %
+     Bax(b = 3, m1 = 1, m2 = None, state='A') %
+     Bax(b = None, m1 = 2, m2 = 1, state='A') %
+     Bax(b = None, m1 = None, m2 = 2, state='A') ** lipo_brane,
+     kcyttrimf, kcyttrimr)
+Rule('CytC_release_trimer2',
+     CytC(b = 3) ** liposome %
+     Bax(b = 3, m1 = 1, m2 = None, state='A') %
+     Bax(b = None, m1 = 2, m2 = 1, state='A') %
+     Bax(b = None, m1 = None, m2 = 2, state='A') ** lipo_brane >>
+     CytC(b = None) ** soln +
+     Bax(b = None, m1 = 1, m2 = None, state='A') %
+     Bax(b = None, m1 = 2, m2 = 1, state='A') %
+     Bax(b = None, m1 = None, m2 = 2, state='A') ** lipo_brane,
+     kcyttrimc)
+     
+
+     
+     
