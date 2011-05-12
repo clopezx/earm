@@ -1,9 +1,9 @@
 from pysb import *
-
+from pysbhelperfuncs import *
 # Show how to incorporate complex rules easily
 # Based on Letai data
 
-Model()
+Model('simple_momp')
 
 # Species monomer sections
 Monomer('tBid', ['b', 'state'], {'state':['A', 'I']})
@@ -15,6 +15,10 @@ Monomer('BaxPore')
 Parameter('[NAME]', [VALUE])
 
 # Bax binds to active tBid, Bax becomes Active
+catalyze(tBid(b=None, s='A'), Bax(b=None, m1 = None, state='I'),
+         kbidbaxf, kbidbaxr, kbidbaxc)
+
+
 Rule('Bax_to_Bid',
      Bax(b = None, m1 = None,  state='I') + tBid(b = None, s='A')  <>
      Bax(b = 1, m1 = None,  state='I') % tBid(b = 1,  s='A'),
