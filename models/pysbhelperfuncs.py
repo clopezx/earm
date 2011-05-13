@@ -1,7 +1,11 @@
-def catalyze(enz, sub, prod, kf, kr, kc):
+def catalyze(sp1, sp2, prod, kf, kr, kc):
     """2-step catalytic process"""
     r1_name = 'bind_%s_%s' % (sub.name, enz.name)
     r2_name = 'produce_%s_via_%s' % (prod.name, enz.name)
+    # check to make sure the bc site is in enz and sub
+    if 'bc' not in sp1 or 'bc' not in sp2:
+        print "*bc* site required in both reactants"
+        
     E = enz(b=None)
     S = sub(b=None)
     ES = enz(b=1) % sub(b=1)
