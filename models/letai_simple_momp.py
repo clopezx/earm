@@ -3,42 +3,26 @@ from pysbhelperfuncs import *
 # Show how to incorporate complex rules easily
 # Based on Letai data
 
-Model('simple_momp')
+Model()
 
 # Species monomer sections
-Monomer('tBid', ['b', 'state'], {'state':['A', 'I']})
-Monomer('Bax', ['b', 'm', 'state'], {'state':['A', 'I']})
+Monomer('tBid', ['bf', 'state'], {'state':['A', 'I']})
+Monomer('Bax', ['bf', 'state'], {'state':['A', 'I']})
 Monomer('CytC', ['b', 'state'], {'state':['mito', 'cyto']})
-Monomer('BaxPore')
+Monomer('BaxPore', ['b'])
 
 # Parameter section
-Parameter('[NAME]', [VALUE])
+Parameter('kbidbaxf',  9.99)
+Parameter('kbidbaxr',  9.99)
+Parameter('kbidbaxc',  9.99)
+Parameter('kbaxporef', 8.88)
+Parameter('kbaxporer', 8.88)
+Parameter('kbaxporec', 8.88)
 
 # Bax binds to active tBid, Bax becomes Active
-catalyze(tBid(b=None, s='A'), Bax(b=None, m1 = None, state='I'),
-         kbidbaxf, kbidbaxr, kbidbaxc)
-
-
-Rule('Bax_to_Bid',
-     Bax(b = None, m1 = None,  state='I') + tBid(b = None, s='A')  <>
-     Bax(b = 1, m1 = None,  state='I') % tBid(b = 1,  s='A'),
-     kbaxbidf, baxbidr)
-Rule(Bax(b = 1, m1 = None,  state='I') % tBid(b = 1,  s='A') >>
-     Bax(b = None, m1 = None,  state='A') + tBid(b=None, s='A'),
-     kbaxbidc)
+catact(tBid(state='A'), Bax(state='I'), Bax(bf = None, state='A'),
+       kbidbaxf, kbidbaxr, kbidbaxc)
 
 # Active Bax aggregates into a pore
-Rule(Bax(b = None, m = None, state='A') + Bax(b = None, m = None, state='A') <>
-     Bax(b = None, m = 1, state='A') % Bax(b = None, m = 1, state='A'),
-     kbaxporef, kbaxporer)
-Rule(Bax(b = None, m = 1, state='A') % Bax(b = None, m = 1, state='A') >>
-     BaxPore(),
-     kbaxporec)
-
-
-
-
-     
-
-     
-     
+catact(Bax(state='A'), Bax(state='A'), BaxPore(b=None),
+       kbaxporef, kbaxporer, kbaxporec)
