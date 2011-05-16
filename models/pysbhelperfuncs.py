@@ -1,4 +1,6 @@
-def catalyze(enz, sub, prod, kf, kr, kc):
+import string
+
+def catalyzeori(enz, sub, prod, kf, kr, kc):
     """2-step catalytic process"""
     r1_name = 'bind_%s_%s' % (sub.name, enz.name)
     r2_name = 'produce_%s_via_%s' % (prod.name, enz.name)
@@ -8,6 +10,39 @@ def catalyze(enz, sub, prod, kf, kr, kc):
     P = prod(b=None)
     Rule(r1_name, E + S <> ES, kf, kr)
     Rule(r2_name, ES >> E + P, kc)
+
+def catalyze(R0, R1, P0, kf, kr, kc):
+    """Automation of the R0 + R1 <> R0:R1 >> R0+P0 two-step catalytic reaction
+    this function assumes that there is a site named 'bc' (bind catalysis)
+    hich it uses by default."""
+    r1_name = 'bind_%s_%s' % (sub.name, enz.name)
+    r2_name = 'produce_%s_via_%s' % (prod.name, enz.name)
+    try:
+        R0.site_conditions['bc'] is None
+        R1.site_conditions['bc'] is None
+    except KeyError:
+        raise KeyError('Required site 'bc' not present in %s or %s as required')
+    #build the intermediate from R0 and R1 using 'bc' as the binding site
+    templist=[]
+    for x,y in R0.site_conditions.iteritems():
+        #test for state sites, these contain strings in the value
+        if type(y) is str:
+            templist.append("%s='%s' "%(x,y))
+        else:
+            templist.append("%s=%s "%(x,y))
+    
+    
+    R0str=""
+    for x,y in R1.site_conditions.iteritems():
+        if type(y) is str:
+            R1str += "%s='%s' "%(x,y)
+        else:
+            R1str += "%s=%s "%(x,y)
+    #build the R0:R1 string and exec it
+    
+    
+
+
 
 
 def catalyze_convert(s1, s2, p, kf, kr, kc):
