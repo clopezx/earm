@@ -41,11 +41,9 @@ twostepact(BakPore(), CytC(state='cyto'), CytC(bf=None, state='mito'),
            kbakcytcf, kbakcytcr, kbakcytcc)
 
 # Bcl2 inhibitors of Bax and Bak
-Inhtable([[        Bcl2, BclxL, Mcl1, Bclw, Bfl1]
-          [Bax, baxbcl2, baxbclxl, baxmcl1, ]
-          [Bak                              ]])
-
-
+sbindtable([[          Bcl2,      BclxL,      Mcl1,      Bclw,      Bfl1]
+            [Bax, 'baxbcl2', 'baxbclxl', 'baxmcl1', 'baxbclw', 'baxbfl1']
+            [Bak, 'baxbcl2', 'baxbclxl', 'baxmcl1', 'baxbclw', 'baxbfl1']])
 
 # Bcl-2 inhibits Bax
 simplebind(Bax(state='A'), Bcl2(), kbaxbcl2f, kbaxbcl2r)
