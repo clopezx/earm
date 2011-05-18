@@ -118,4 +118,8 @@ def sbindtable(bindtable):
     for i in range(1, len(testlist)):
         for j in range(0, len(testlist[i])):
             reacts1.append(testlist[i][0])
-            parmfam.append
+            parmfam.append(testlist[1][1:])
+    
+    #now that we have everything out we can proceed to create the rules
+    
+    
