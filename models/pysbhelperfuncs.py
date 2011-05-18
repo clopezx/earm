@@ -100,4 +100,22 @@ def simplebind(Sub1, Sub2, kf, kr):
     # now that we have the complex elements formed we can write the first step rule
     Rule(r1_name, Sub1 + Sub2 <> Sub1Cplx % Sub2Cplx, kf, kr)
 
-    
+def sbindtable(bindtable):
+    """This assumes that the monomers passed are in their desired state without
+    the 'bf' site, which will be used for binding.
+    bindtable is a list of lists denoting the reactions between two types of reactants
+    as follows:
+
+    bindtable[0]: [                  reactypeA0(args), reactypeA1(args)... reactypeAN(args)]
+    bindtable[1]: [reactypeB0(args), 'parmfamA0B0',    'parmfamA1B0'...    'parmfamANB0'   ]
+    bindtable[2]: [reactypeB1(args), 'parmfamA0B1',    'parmfamA1B1'...    'parmfamANB1'   ]"""
+
+    # parse the list, extract reactants, products and parameter families
+    #first line is one set of reactants
+    reacts0 = bindtable[0]
+    reacts1 = []
+    parmfamlist = []
+    for i in range(1, len(testlist)):
+        for j in range(0, len(testlist[i])):
+            reacts1.append(testlist[i][0])
+            parmfam.append
