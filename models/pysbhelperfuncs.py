@@ -113,11 +113,15 @@ def sbindtable(bindtable):
     # parse the list, extract reactants, products and parameter families
     #first line is one set of reactants
     reacts0 = bindtable[0]
-    reacts1 = [row[0] for row in bindtable[1:]]
-    parmfamlist = [row[1:] for row in bindtable[1:]]
-    for i in range(1, len(testlist)):
-        for j in range(0, len(testlist[i])):
-            pass
+    reacts0st = bindtable[1]
+    reacts1 = [row[0] for row in bindtable[2:]]
+    reacts1st = [row[1] for row in bindtable[2:]]
+    intrxns = [row[2:] for row in bindtable[2:]]
+    
+    # loop over interactions
+    for i in range(0, len(reacts0)):
+        for j in range(0, len(reacts1)):
+            
     
     #now that we have everything out we can proceed to create the rules
     
