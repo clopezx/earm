@@ -96,11 +96,19 @@ def simplebind(Sub1, Sub2, kf, kr):
     # create the sites for the monomers
     Sub1.site_conditions['bf'] = None
     Sub2.site_conditions['bf'] = None
-
     # now that we have the complex elements formed we can write the first step rule
     Rule(r1_name, Sub1 + Sub2 <> Sub1Cplx % Sub2Cplx, kf, kr)
 
-def sbindtable(bindtable):
+def getparm(plist, name):
+    for i in plist:
+        if i.name == name:
+            return i
+        else:
+            continue
+    print "PARAMETER %s NOT FOUND"%(name)
+    LookupError
+
+def sbindtable(bindtable, plist):
     """This assumes that the monomers passed are in their desired state without
     the 'bf' site, which will be used for binding.
     bindtable is a list of lists denoting the reactions between two types of reactants
@@ -112,17 +120,44 @@ def sbindtable(bindtable):
 
     # parse the list, extract reactants, products and parameter families
     #first line is one set of reactants
-    reacts0 = bindtable[0]
-    reacts0st = bindtable[1]
-    reacts1 = [row[0] for row in bindtable[2:]]
-    reacts1st = [row[1] for row in bindtable[2:]]
+    react0 = bindtable[0]
+    react0st = bindtable[1]
+    react1 = [row[0] for row in bindtable[2:]]
+    react1st = [row[1] for row in bindtable[2:]]
+
+    # Notice this makes intrxns of size/index intrxns[react1][react0]
     intrxns = [row[2:] for row in bindtable[2:]]
     
-    # loop over interactions
-    for i in range(0, len(reacts0)):
-        for j in range(0, len(reacts1)):
-            
+    # Add the bf sites to the reactant states dict
+    # NOTE: this will reset the value if it is already set.
+    # Build the prod states dict from react dicts, change bf to 1
+    prod0st = []
+    prod1st = []
+    for d in react0st:
+        d['bf'] = None
+        prod0st.append(d.copy())
+    for d in react1st:
+        d['bf'] = None
+        prod1st.append(d.copy())
+    for d in prod0st:
+        d['bf'] = 1
+    for d in prod1st:
+        d['bf'] = 1
     
-    #now that we have everything out we can proceed to create the rules
+    # loop over interactions
+    for i in range(0, len(react1)):
+        for j in range(0, len(react0)):
+            if intrxns[i][j] is True:
+                # build the name of the forward/reverse parameters
+                sparamf = react1[i].name.lower()+react0[j].name.lower()+'f'
+                sparamr = react1[i].name.lower()+react0[j].name.lower()+'r'
+                # rule name
+                rname = 'cplx_%s_%s' % (react1[i].name, react0[j].name)
+                # create the rule
+                print "Processing %s and %s complex"%(react1[i].name, react0[j].name)
+                
+                Rule(rname, react1[i](react1st[i]) + react0[j](react0st[j]) <>
+                     react1[i](prod1st[i]) % react0[j](prod0st[j]), 
+                     getparm(plist,sparamf), getparm(plist,sparamr))
     
     
