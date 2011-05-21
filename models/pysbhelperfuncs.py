@@ -99,16 +99,16 @@ def simplebind(Sub1, Sub2, kf, kr):
     # now that we have the complex elements formed we can write the first step rule
     Rule(r1_name, Sub1 + Sub2 <> Sub1Cplx % Sub2Cplx, kf, kr)
 
-def getparm(plist, name):
-    for i in plist:
-        if i.name == name:
-            return i
-        else:
-            continue
-    print "PARAMETER %s NOT FOUND"%(name)
-    LookupError
+# def getparm(plist, name):
+#     for i in plist:
+#         if i.name == name:
+#             return i
+#         else:
+#             continue
+#     print "PARAMETER %s NOT FOUND"%(name)
+#     LookupError
 
-def sbindtable(bindtable, plist):
+def sbindtable(bindtable, lmodel):
     """This assumes that the monomers passed are in their desired state without
     the 'bf' site, which will be used for binding.
     bindtable is a list of lists denoting the reactions between two types of reactants
@@ -116,7 +116,10 @@ def sbindtable(bindtable, plist):
 
     bindtable[0]: [                  reactypeA0(args), reactypeA1(args)... reactypeAN(args)]
     bindtable[1]: [reactypeB0(args), 'parmfamA0B0',    'parmfamA1B0'...    'parmfamANB0'   ]
-    bindtable[2]: [reactypeB1(args), 'parmfamA0B1',    'parmfamA1B1'...    'parmfamANB1'   ]"""
+    bindtable[2]: [reactypeB1(args), 'parmfamA0B1',    'parmfamA1B1'...    'parmfamANB1'   ]
+    
+    the variable 'lmodel' is the model passed for local lookup of parameter variables
+    """
 
     # parse the list, extract reactants, products and parameter families
     #first line is one set of reactants
@@ -151,13 +154,14 @@ def sbindtable(bindtable, plist):
                 # build the name of the forward/reverse parameters
                 sparamf = react1[i].name.lower()+react0[j].name.lower()+'f'
                 sparamr = react1[i].name.lower()+react0[j].name.lower()+'r'
+                kf = lmodel.parameter(sparamf)
+                kr = lmodel.parameter(sparamr)
                 # rule name
                 rname = 'cplx_%s_%s' % (react1[i].name, react0[j].name)
                 # create the rule
-                print "Processing %s and %s complex"%(react1[i].name, react0[j].name)
-                
+                print "Generating  %s:%s complex"%(react1[i].name, react0[j].name)
                 Rule(rname, react1[i](react1st[i]) + react0[j](react0st[j]) <>
                      react1[i](prod1st[i]) % react0[j](prod0st[j]), 
-                     getparm(plist,sparamf), getparm(plist,sparamr))
+                     kf, kr)
     
     
