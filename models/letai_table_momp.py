@@ -43,6 +43,16 @@ sbindtable([[                     Bcl2, BclxL,  Mcl1],
            model)
 
 # Bad inhibits Bcl-2
+sbindtable([[           Bcl2, BclxL,  Mcl1],
+            [             {},    {},    {}],
+            [Bad,  {},  True,  True, False],
+            [Bik,  {},  True,  True, False],
+            [NOXA, {},  True,  True, False],
+            [HRK,  {},  True,  True, False],
+            [Puma, {}, False,  True,  True]],
+           model)
+
+
 simplebind(Bcl2(), Bad(), kbcl2badf, kbcl2badr)
 
 
