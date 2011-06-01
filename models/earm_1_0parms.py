@@ -1,6 +1,9 @@
 from pysb import *
 # Parameter section
 
+# Special parameters
+transloc = .01; # rate of transloc bw cytosol and mitochondria
+v = .07; # mitochondria compartment volume/cell volume
 
 # Reaction rates
 Parameter('klrf', 4e-07) #ligand - receptor forward, reverse, catalytic
@@ -8,10 +11,36 @@ Parameter('klrr', 1e-03)
 Parameter('klrc', 1e-05)
 Parameter('kflipdiscf', 1e-06) #flip-DISC binding
 Parameter('kflipdiscr', 1e-03)
-Parameter('kdiscc8f', 1e-06)
+Parameter('kdiscc8f', 1e-06) # C8 activation via DISC
 Parameter('kdiscc8r', 1e-03)
 Parameter('kdiscc8c', 1e+00)
-
+Parameter('kbarc8f', 1e-06) # BAR C8
+Parameter('kbarc8r', 1e-03)
+Parameter('kc8c3f', 1e-07) # C3 activation
+Parameter('kc8c3r', 1e-03)
+Parameter('kc8c3c', 1e+00)
+Parameter('kc3c6f', 1e-06) # C6 activation
+Parameter('kc3c6r', 1e-03)
+Parameter('kc3c6c', 1e+00)
+Parameter('kc6c8f', 3e-08) # C8 activation via C6
+Parameter('kc6c8r', 1e-03)
+Parameter('kc6c8c', 1e+00)
+Parameter('kxiapc3f', 2e-06) # C3 ubiquitination
+Parameter('kxiapc3r', 1e-03)
+Parameter('kxiapc3c', 1e-01)
+Parameter('kc3parpf', 1e-06) # PARP cleavage by C3
+Parameter('kc3parpr', 1e-02)
+Parameter('kc3parpc', 1e+00)
+Parameter('kc8bidf', 1e-07) # Bid cleavage by C8
+Parameter('kc8bidr', 1e-03)
+Parameter('kc8bidc', 1e+00)
+Parameter('kbidbcl2f', 1e-06) # Bid inhibited by Bcl2
+Parameter('kbidbcl2r', 1e-03)
+Parameter('kbidbaxf', 1e-07) # Bax activation via Bid
+Parameter('kbidbaxr', 1e-03)
+Parameter('kbidbaxc', 1e+00)
+Parameter('kbaxcbaxmf', transloc)
+Parameter('kbaxcbaxmr', transloc)
 
 
 # Initial concentrations
@@ -35,6 +64,3 @@ Parameter('mSmac_0'    , 1e5);  # Smac
 Parameter('pC9_0'      , 1e5);  # procaspase-9 (pro-C9)
 Parameter('Apaf_0'     , 1e5);  # Apaf-1
 
-# Special parameters
-transloc = .01; # rate of transloc bw cytosol and mitochondria
-v = .07; # mitochondria compartment volume/cell volume

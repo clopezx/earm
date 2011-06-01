@@ -33,10 +33,9 @@ Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']}
 Monomer('pC9', ['bf'])
 Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']}
 Monomer('Apop', ['bf'])
+Monomer('XIAP', ['bf'])
 
-
-
-
+# Rules
 # Ligand + Receptor <--> L:R --> DISC
 twostepconv(L(), R(), DISC(), klrf, klrr, klrc)
 
@@ -44,67 +43,47 @@ twostepconv(L(), R(), DISC(), klrf, klrr, klrc)
 simplebind(DISC(), flip(), kflipdiscf, kflipdiscr)
 
 # pC8 + DISC <--> DISC:pC8 --> C8 + DISC
-twostepact(DISC(), C8(state='pro'), C8(state='A'),
+twostepact(DISC(), C8(state='pro'), C8(bf = None, state='A'),
            kdiscc8f, kdiscc8r, kdiscc8c)
 
 # C8 + BAR <--> BAR:C8 
-Parameter('kf4', 1e-06)
-Parameter('kr4', 1e-03)
-inhibit(BAR, C8, kf4, kr4)
+simplebind(BAR(), C8(state='A'), kbarc8f, kbarc8r)
 
 # pC3 + C8 <--> pC3:C8 --> C3 + C8
-Parameter('kf5', 1e-07)
-Parameter('kr5', 1e-03)
-Parameter('kc5', 1e+00)
-catalyze(C8, pC3, C3, kf5, kr5, kc5)
+twostepact(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'),
+           kc8c3f, kc8c3r, kc8c3c)
 
 # pC6 + C3 <--> pC6:C3 --> C6 + C3
-Parameter('kf6', 1e-06)
-Parameter('kr6', 1e-03)
-Parameter('kc6', 1e+00)
-catalyze(C3, pC6, C6, kf6, kr6, kc6)
+twostepact(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'),
+           kc3c6f, kc3c6r, kc3c6c)
 
 # pC8 + C6 <--> pC8:C6 --> C8 + C6
-Parameter('kf7', 3e-08)
-Parameter('kr7', 1e-03)
-Parameter('kc7', 1e+00)
-catalyze(C6, pC8, C8, kf7, kr7, kc7)
+twostepact(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'),
+           kc6c8f, kc6c8r, kc8c6c)
 
 # XIAP + C3 <--> XIAP:C3 --> XIAP + C3_U
-Parameter('kf8', 2e-06)
-Parameter('kr8', 1e-03)
-Parameter('kc8', 1e-01)
-catalyze(XIAP, C3, C3_U, kf8, kr8, kc8)
+twostepact(XIAP, C3(state = 'A'), C3(bf = None, state = 'ub'),
+           kxiapc3f, kxiapc3r, kxiapc3c)
 
 # PARP + C3 <--> PARP:C3 --> CPARP + C3
-Parameter('kf9', 1e-06)
-Parameter('kr9', 1e-02)
-Parameter('kc9', 1e+00)
-catalyze(C3, PARP, CPARP, kf9, kr9, kc9)
+twostepact(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C')
 
 # Bid + C8 <--> Bid:C8 --> tBid + C8
-Parameter('kf10', 1e-07)
-Parameter('kr10', 1e-03)
-Parameter('kc10', 1e+00)
-catalyze(C8, Bid, tBid, kf10, kr10, kc10)
+twostepact(C8(state='A'), Bid(state='U'), Bid(state='T'),
 
 # tBid + Bcl2c <-->  tBid:Bcl2c  
-Parameter('kf11', 1e-06)
-Parameter('kr11', 1e-03)
-inhibit(tBid, Bcl2c, kf11, kr11)
+simplebind(Bid(state='T'), Bcl2(state='cyto'), kbidbcl2f, kbidbcl2r)
 
 # Bax + tBid <--> Bax:tBid --> aBax + tBid 
-Parameter('kf12', 1e-07)
-Parameter('kr12', 1e-03)
-Parameter('kc12', 1e+00)
-catalyze(tBid, Bax, aBax, kf12, kr12, kc12)
+twostateact(Bid(state = 'T'), Bax(state='I'), Bax(bf = None, state = 'A'),
+            kbidbaxf, kbidbaxr, kbidbaxc)
 
 # aBax <-->  MBax 
-Parameter('kf13', transloc)
-Parameter('kr13', transloc)
-Rule('transloc_MBax_aBax', aBax(b=None) <> MBax(b=None), kf13, kr13)
+Rule('baxctom', Bax(bf = None, state = 'A') <> Bax(bf=None, state = 'M'),
+     kbaxcbaxmf, kbaxcbaxmr)
 
 # MBax + Bcl2 <-->  MBax:Bcl2  
+simplebind(Bax(state='M'), Bcl2
 Parameter('kf14', 1e-06/v)
 Parameter('kr14', 1e-03)
 inhibit(MBax, Bcl2, kf14, kr14)
