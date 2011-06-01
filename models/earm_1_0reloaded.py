@@ -71,7 +71,7 @@ twostepact(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C')
 # Bid + C8 <--> Bid:C8 --> tBid + C8
 twostepact(C8(state='A'), Bid(state='U'), Bid(state='T'),
 
-# tBid + Bcl2c <-->  tBid:Bcl2c  
+# tBid + Bcl2c <-->  tBid:Bcl2c INHIBITION IN CYTO ONLY
 simplebind(Bid(state='T'), Bcl2(state='cyto'), kbidbcl2f, kbidbcl2r)
 
 # Bax + tBid <--> Bax:tBid --> aBax + tBid 
@@ -83,15 +83,10 @@ Rule('baxctom', Bax(bf = None, state = 'A') <> Bax(bf=None, state = 'M'),
      kbaxcbaxmf, kbaxcbaxmr)
 
 # MBax + Bcl2 <-->  MBax:Bcl2  
-simplebind(Bax(state='M'), Bcl2
-Parameter('kf14', 1e-06/v)
-Parameter('kr14', 1e-03)
-inhibit(MBax, Bcl2, kf14, kr14)
+simplebind(Bax(state='M'), Bcl2(state='mito'), kbaxMbcl2Mf, kbaxMbcl2Mr)
 
 # MBax + MBax <-->  Bax2
-Parameter('kf15', 1e-06/v*2)
-Parameter('kr15', 1e-03)
-Rule('dimerize_MBax_to_Bax2', MBax(b=None) + MBax(b=None) <> Bax2(b=None), kf15, kr15)
+twostepconv(Bax(state='M'), Bax(state='M'), Bax2(bf=None), kbaxdimf, kbaxdimr)
 
 # Bax2 + Bcl2 <-->  Bax2:Bcl2  
 Parameter('kf16', 1e-06/v)

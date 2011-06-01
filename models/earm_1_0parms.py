@@ -39,9 +39,12 @@ Parameter('kbidbcl2r', 1e-03)
 Parameter('kbidbaxf', 1e-07) # Bax activation via Bid
 Parameter('kbidbaxr', 1e-03)
 Parameter('kbidbaxc', 1e+00)
-Parameter('kbaxcbaxmf', transloc)
+Parameter('kbaxcbaxmf', transloc) # Bax translocation
 Parameter('kbaxcbaxmr', transloc)
-
+Parameter('kbaxMbcl2Mf', 1e-06/v) # Bax inhibition in mito
+Parameter('kbaxMbcl2Mr', 1e-03)
+Parameter('kbaxdimf', 1e-06/v*2) # Bax dimerization
+Parameter('kbaxdimr', 1e-03)
 
 # Initial concentrations
 # Non-zero initial conditions (in molecules per cell):
