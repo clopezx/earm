@@ -86,22 +86,18 @@ Rule('baxctom', Bax(bf = None, state = 'A') <> Bax(bf=None, state = 'M'),
 simplebind(Bax(state='M'), Bcl2(state='mito'), kbaxMbcl2Mf, kbaxMbcl2Mr)
 
 # MBax + MBax <-->  Bax2
-twostepconv(Bax(state='M'), Bax(state='M'), Bax2(bf=None), kbaxdimf, kbaxdimr)
+simpledimer(Bax(state='M'), Bax2(bf=None), kbaxdimf, kbaxdimr)
+###Rule('dimerize_MBax_to_Bax2', MBax(b=None) + MBax(b=None) <> Bax2(b=None), kf15, kr15)
 
 # Bax2 + Bcl2 <-->  Bax2:Bcl2  
-Parameter('kf16', 1e-06/v)
-Parameter('kr16', 1e-03)
-inhibit(Bax2, Bcl2, kf16, kr16)
+simplebind(Bax2(), Bcl2(state='mito'), kbax2Mbcl2Mf, kbax2Mbcl2Mr)
 
 # Bax2 + Bax2 <-->  Bax4
-Parameter('kf17', 1e-06/v*2)
-Parameter('kr17', 1e-03)
-Rule('dimerize_Bax2_to_Bax4', Bax2(b=None) + Bax2(b=None) <> Bax4(b=None), kf17, kr17)
+simpledimer(Bax2(), Bax4(bf = None), kbaxtetf, kbaxtetr)
+## Rule('dimerize_Bax2_to_Bax4', Bax2(b=None) + Bax2(b=None) <> Bax4(b=None), kf17, kr17)
 
 # Bax4 + Bcl2 <-->  Bax4:Bcl2  
-Parameter('kf18', 1e-06/v)
-Parameter('kr18', 1e-03)
-inhibit(Bax4, Bcl2, kf18, kr18)
+simplebind(Bax4(), Bcl2(state='mito'), kbax4Mbcl2Mf, kbax4Mbcl2Mr)
 
 # Bax4 + Mito <-->  Bax4:Mito -->  AMito  
 Parameter('kf19', 1e-06/v)

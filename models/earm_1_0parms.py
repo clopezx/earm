@@ -45,6 +45,13 @@ Parameter('kbaxMbcl2Mf', 1e-06/v) # Bax inhibition in mito
 Parameter('kbaxMbcl2Mr', 1e-03)
 Parameter('kbaxdimf', 1e-06/v*2) # Bax dimerization
 Parameter('kbaxdimr', 1e-03)
+Parameter('kbax2Mbcl2Mf', 1e-06/v) # Bax2 inibition in mito
+Parameter('kbax2Mbcl2Mr', 1e-03)
+Parameter('kbaxtetf', 1e-06/v*2) # Bax2 dimerization (tetramer formation)
+Parameter('kbaxtetr', 1e-03)
+Parameter('kbax4Mbcl2Mf', 1e-06/v) # Bax4 inhibition
+Parameter('kbax4Mbcl2Mr', 1e-03)
+
 
 # Initial concentrations
 # Non-zero initial conditions (in molecules per cell):
