@@ -100,12 +100,12 @@ simpledimer(Bax2(), Bax4(bf = None), kbaxtetf, kbaxtetr)
 simplebind(Bax4(), Bcl2(state='mito'), kbax4Mbcl2Mf, kbax4Mbcl2Mr)
 
 # Bax4 + Mito <-->  Bax4:Mito -->  AMito  
-Parameter('kf19', 1e-06/v)
-Parameter('kr19', 1e-03)
-Parameter('kc19', 1e+00)
-catalyze_convert(Bax4, Mito, AMito, kf19, kr19, kc19)
+twostepconv(Bax4(), MitoP(state='U'), MitoP(bf = None, state='A'),
+            kbax4poref,kbax4porer,kbax4porec) 
 
 # AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
+twostepact(MitoP(state='A'), CytoC(state='mito'), CytoC(bf = None, state='A'),
+           kmitopcytocMf, kmitopcytocMr, kmitopcytocMc)
 Parameter('kf20', 2e-06/v)
 Parameter('kr20', 1e-03)
 Parameter('kc20', 1e+01)

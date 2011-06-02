@@ -51,6 +51,12 @@ Parameter('kbaxtetf', 1e-06/v*2) # Bax2 dimerization (tetramer formation)
 Parameter('kbaxtetr', 1e-03)
 Parameter('kbax4Mbcl2Mf', 1e-06/v) # Bax4 inhibition
 Parameter('kbax4Mbcl2Mr', 1e-03)
+Parameter('kbax4poref', 1e-06/v) # Bax4 + MitoP to Pore
+Parameter('kbax4porer', 1e-03)
+Parameter('kbax4porec', 1e+00)
+Parameter('kmitopcytocMf', 2e-06/v) # CytoC activation
+Parameter('kmitopcytocMr', 1e-03)
+Parameter('kmitopcytocMc', 1e+01)
 
 
 # Initial concentrations
