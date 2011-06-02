@@ -39,8 +39,8 @@ Parameter('kbidbcl2r', 1e-03)
 Parameter('kbidbaxf', 1e-07) # Bax activation via Bid
 Parameter('kbidbaxr', 1e-03)
 Parameter('kbidbaxc', 1e+00)
-Parameter('kbaxcbaxmf', transloc) # Bax translocation
-Parameter('kbaxcbaxmr', transloc)
+Parameter('kbaxCbaxMf', transloc) # Bax translocation
+Parameter('kbaxCbaxMr', transloc)
 Parameter('kbaxMbcl2Mf', 1e-06/v) # Bax inhibition in mito
 Parameter('kbaxMbcl2Mr', 1e-03)
 Parameter('kbaxdimf', 1e-06/v*2) # Bax dimerization
@@ -57,6 +57,26 @@ Parameter('kbax4porec', 1e+00)
 Parameter('kmitopcytocMf', 2e-06/v) # CytoC activation
 Parameter('kmitopcytocMr', 1e-03)
 Parameter('kmitopcytocMc', 1e+01)
+Parameter('kmitopsmacMf', 2e-06/v) # Smac activation
+Parameter('kmitopsmacMr', 1e-03)
+Parameter('kmitopsmacMc', 1e+01)
+Parameter('kcytocMcytocCf', transloc) # CytoC translocation
+Parameter('kcytocMcytocCr', transloc)
+Parameter('kcytocCapaff', 5e-07) # Apaf activation
+Parameter('kcytocCapafr', 1e-03)
+Parameter('kcytocCapafc', 1e+00)
+Parameter('kapafc9f', 5e-08) # Apop formation
+Parameter('kapafc9r', 1e-03)
+Parameter('kapopc3f', 5e-09) # C3 activation via Apop
+Parameter('kapopc3r', 1e-03)
+Parameter('kapopc3c', 1e+00)
+Parameter('ksmacMsmacCf', transloc) # Smac translocation
+Parameter('ksmacMsmacCr', transloc)
+Parameter('kapopxiapf', 2e-06) # Apop inhibition by XIAP
+Parameter('kapopxiapr', 1e-03)
+Parameter('ksmacxiapf', 7e-06) # XIAP inhibition by Smac
+Parameter('ksmacxiapr', 1e-03)
+
 
 
 # Initial concentrations

@@ -30,7 +30,7 @@ Monomer('Bax4', ['bf'])
 Monomer('MitoP', ['bf', 'state'],{'state':['U', 'A']})
 Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']}
 Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']}
-Monomer('pC9', ['bf'])
+Monomer('C9', ['bf'])
 Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']}
 Monomer('Apop', ['bf'])
 Monomer('XIAP', ['bf'])
@@ -79,7 +79,7 @@ twostateact(Bid(state = 'T'), Bax(state='I'), Bax(bf = None, state = 'A'),
             kbidbaxf, kbidbaxr, kbidbaxc)
 
 # aBax <-->  MBax 
-Rule('baxctom', Bax(bf = None, state = 'A') <> Bax(bf=None, state = 'M'),
+Rule('baxCtoM', Bax(bf = None, state = 'A') <> Bax(bf=None, state = 'M'),
      kbaxcbaxmf, kbaxcbaxmr)
 
 # MBax + Bcl2 <-->  MBax:Bcl2  
@@ -106,54 +106,35 @@ twostepconv(Bax4(), MitoP(state='U'), MitoP(bf = None, state='A'),
 # AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
 twostepact(MitoP(state='A'), CytoC(state='mito'), CytoC(bf = None, state='A'),
            kmitopcytocMf, kmitopcytocMr, kmitopcytocMc)
-Parameter('kf20', 2e-06/v)
-Parameter('kr20', 1e-03)
-Parameter('kc20', 1e+01)
-catalyze(AMito, mCytoC, ACytoC, kf20, kr20, kc20)
 
 # AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
-Parameter('kf21', 2e-06/v)
-Parameter('kr21', 1e-03)
-Parameter('kc21', 1e+01)
-catalyze(AMito, mSmac, ASmac, kf21, kr21, kc21)
+twostepact(MitoP(state='A'), Smac(state='mito'), Smac(bf = None, state='A'),
+           kmitopsmacMf, kmitopsmacMr, kmitopsmacMc)
 
 # ACytoC <-->  cCytoC
-Parameter('kf22', transloc)
-Parameter('kr22', transloc)
-Rule('transloc_cCytoC_ACytoC', ACytoC(b=None) <> cCytoC(b=None), kf22, kr22)
+Rule('cytocCtoM', CytoC(bf = None, state = 'A') <> CytoC(bf=None, state = 'cyto'),
+     kcytocMcytocCf, kcytocMcytocCr)
 
 # Apaf + cCytoC <-->  Apaf:cCytoC --> aApaf + cCytoC
-Parameter('kf23', 5e-07)
-Parameter('kr23', 1e-03)
-Parameter('kc23', 1e+00)
-catalyze(cCytoC, Apaf, aApaf, kf23, kr23, kc23)
+twostepact(CytoC(state='cyto'), Apaf(state='I'), Apaf(bf = None, state = 'A'),
+           kcytocCapaff, kcytocCapafr, kcytocCapafc)
 
 # aApaf + pC9 <-->  Apop
-Parameter('kf24', 5e-08)
-Parameter('kr24', 1e-03)
-Rule('bind_aApaf_pC9_as_Apop', aApaf(b=None) + pC9(b=None) <> Apop(b=None), kf24, kr24)
+simpleconv(Apaf(state='A', C9(), Apop(bf=None),
+                kapafc9f, kapafc9r)
 
 # Apop + pC3 <-->  Apop:pC3 --> Apop + C3
-Parameter('kf25', 5e-09)
-Parameter('kr25', 1e-03)
-Parameter('kc25', 1e+00)
-catalyze(Apop, pC3, C3, kf25, kr25, kc25)
+twostepact(Apop(), C3(state='pro'), C3(bf = None, state='A'),
+           kapopc3f, kapopc3r, kapopc3c)
 
 # ASmac <-->  cSmac
-Parameter('kf26', transloc)
-Parameter('kr26', transloc)
-Rule('transloc_cSmac_ASmac', ASmac(b=None) <> cSmac(b=None), kf26, kr26)
+Rule('SmacMtoSmacC', Smac(state='A') <> Smac(state='cyto'), ksmacMsmacCf, ksmacMsmacCr)
 
 # Apop + XIAP <-->  Apop:XIAP  
-Parameter('kf27', 2e-06)
-Parameter('kr27', 1e-03)
-inhibit(Apop, XIAP, kf27, kr27)
+simplebind(Apop(), XIAP(), kapopxiapf, kapopxiapr)
 
 # cSmac + XIAP <-->  cSmac:XIAP  
-Parameter('kf28', 7e-06)
-Parameter('kr28', 1e-03)
-inhibit(cSmac, XIAP, kf28, kr28)
-
+simplebind(Smac(state='cyto'), XIAP(), ksmacxiapf, ksmacxiapr)
 
 
 # Fig 4B
