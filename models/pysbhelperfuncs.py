@@ -1,11 +1,12 @@
 from pysb import *
-def twostepact(Enz, Sub, Prod, kf, kr, kc):
-    """Automation of the Enz + Sub <> Enz:Sub >> Enz+Prod two-step catalytic reaction
-    this function assumes that there is a site named 'bf' (bind site for fxn)
+def twostepmod(Enz, Sub, Prod, kf, kr, kc):
+    """Automation of the Enz + Sub <> Enz:Sub >> Enz + Prod two-step catalytic reaction.
+    This function assumes that there is a site named 'bf' (bind site for fxn)
     which it uses by default. This also assume Enz returns to its original state.
-    In an aim for simplicity, site 'bf' need not be passed when calling the function."""
+    In an aim for simplicity, site 'bf' need not be passed when calling the function by
+    the reactants, but THE FULL STATE OF THE PRODUCT must be specified"""
     
-    # FIXME: this will fail if the argument passed is a Complex
+    # FIXME: this will fail if the argument passed is a Complex object. 
 
     r1_name = 'cplx_%s_%s' % (Sub.monomer.name, Enz.monomer.name)
     r2_name = 'dssc_%s_via_%s' % (Prod.monomer.name, Enz.monomer.name)
@@ -69,6 +70,22 @@ def twostepconv(Sub1, Sub2, Prod, kf, kr, kc):
     
     # and finally the rule for the catalytic transformation
     Rule(r2_name, Sub1Cplx % Sub2Cplx >> Prod, kc)
+
+def simpleadd(Sub, Prod, kf, kr):
+    """ Convert two Sub species into one Prod species:
+    Sub + Sub <> Prod
+    """
+    r1_name = 'dimer_%s_to_%s'%(Sub.monomer.name, Prod.monomer.name)
+    assert 'bf' in Sub.monomer.sites_dict, \
+        "Required site 'bf' not present in %s as required"%(Sub.monomer.name)
+
+    # create the sites for the monomers
+    Sub.site_conditions['bf'] = None
+
+    # combine the monomers into a product step rule
+    Rule(r1_name, Sub + Sub <> Prod, kf, kr)
+    
+
     
 def simplebind(Sub1, Sub2, kf, kr):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 one-step complex formation. 
