@@ -131,6 +131,8 @@ def simplebind(Sub1, Sub2, kf, kr):
     # now that we have the complex elements formed we can write the first step rule
     Rule(r1_name, Sub1 + Sub2 <> Sub1Cplx % Sub2Cplx, kf, kr)
 
+inhibit = simplebind #alias for simplebind
+
 # def getparm(plist, name):
 #     for i in plist:
 #         if i.name == name:
