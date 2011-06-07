@@ -38,41 +38,19 @@ Monomer('XIAP', ['bf'])
 # Rules
 # Ligand + Receptor <--> L:R --> DISC
 twostepconv(L(), R(), DISC(), klrf, klrr, klrc)
-
 # flip + DISC <-->  flip:DISC  
 simplebind(DISC(), flip(), kflipdiscf, kflipdiscr)
 
-# pC8 + DISC <--> DISC:pC8 --> C8 + DISC
+# pC8 + DISC <--> DISC:pC8 --> C8 + DISC CSPS
 twostepmod(DISC(), C8(state='pro'), C8(bf = None, state='A'),
            kdiscc8f, kdiscc8r, kdiscc8c)
 
-# C8 + BAR <--> BAR:C8 
+# C8 + BAR <--> BAR:C8 CSPS
 simplebind(BAR(), C8(state='A'), kbarc8f, kbarc8r)
 
-# pC3 + C8 <--> pC3:C8 --> C3 + C8
-twostepmod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'),
-           kc8c3f, kc8c3r, kc8c3c)
-
-# pC6 + C3 <--> pC6:C3 --> C6 + C3
-twostepmod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'),
-           kc3c6f, kc3c6r, kc3c6c)
-
-# pC8 + C6 <--> pC8:C6 --> C8 + C6
-twostepmod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'),
-           kc6c8f, kc6c8r, kc8c6c)
-
-# XIAP + C3 <--> XIAP:C3 --> XIAP + C3_U
-twostepmod(XIAP, C3(state = 'A'), C3(bf = None, state = 'ub'),
-           kxiapc3f, kxiapc3r, kxiapc3c)
-
-# PARP + C3 <--> PARP:C3 --> CPARP + C3
-twostepmod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C')
-
-# Bid + C8 <--> Bid:C8 --> tBid + C8
+# Bid + C8 <--> Bid:C8 --> tBid + C8 CSPS
 twostepmod(C8(state='A'), Bid(state='U'), Bid(state='T'),
-
-# tBid + Bcl2c <-->  tBid:Bcl2c INHIBITION IN CYTO ONLY
-simplebind(Bid(state='T'), Bcl2(state='cyto'), kbidbcl2f, kbidbcl2r)
+           kc8bidf, kc8bidr, kc8bidc)
 
 # Bax + tBid <--> Bax:tBid --> aBax + tBid 
 twostepmod(Bid(state = 'T'), Bax(state='I'), Bax(bf = None, state = 'A'),
@@ -81,6 +59,29 @@ twostepmod(Bid(state = 'T'), Bax(state='I'), Bax(bf = None, state = 'A'),
 # aBax <-->  MBax 
 Rule('baxCtoM', Bax(bf = None, state = 'A') <> Bax(bf=None, state = 'M'),
      kbaxcbaxmf, kbaxcbaxmr)
+
+# pC3 + C8 <--> pC3:C8 --> C3 + C8 CSPS
+twostepmod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'),
+           kc8c3f, kc8c3r, kc8c3c)
+
+# pC6 + C3 <--> pC6:C3 --> C6 + C3 CSPS
+twostepmod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'),
+           kc3c6f, kc3c6r, kc3c6c)
+
+# pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
+twostepmod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'),
+           kc6c8f, kc6c8r, kc8c6c)
+
+# XIAP + C3 <--> XIAP:C3 --> XIAP + C3_U CSPS
+twostepmod(XIAP, C3(state = 'A'), C3(bf = None, state = 'ub'),
+           kxiapc3f, kxiapc3r, kxiapc3c)
+
+# PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
+twostepmod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C')
+
+
+# tBid + Bcl2c <-->  tBid:Bcl2c INHIBITION IN CYTO ONLY
+simplebind(Bid(state='T'), Bcl2(state='cyto'), kbidbcl2f, kbidbcl2r)
 
 # MBax + Bcl2 <-->  MBax:Bcl2  
 simplebind(Bax(state='M'), Bcl2(state='mito'), kbaxMbcl2Mf, kbaxMbcl2Mr)

@@ -71,7 +71,7 @@ def twostepconv(Sub1, Sub2, Prod, kf, kr, kc):
     # and finally the rule for the catalytic transformation
     Rule(r2_name, Sub1Cplx % Sub2Cplx >> Prod, kc)
 
-def simpleadd(Sub, Prod, kf, kr):
+def simpledim(Sub, Prod, kf, kr):
     """ Convert two Sub species into one Prod species:
     Sub + Sub <> Prod
     """
@@ -84,8 +84,23 @@ def simpleadd(Sub, Prod, kf, kr):
 
     # combine the monomers into a product step rule
     Rule(r1_name, Sub + Sub <> Prod, kf, kr)
-    
 
+def onestepconv(Sub1, Sub2, Prod, kf, kr):
+    """ Convert two Sub species into one Prod species:
+    Sub + Sub <> Prod
+    """
+    r1_name = 'conv_%s_%s_to_%s'%(Sub1.monomer.name, Sub2.monomer.name, Prod.monomer.name)
+    assert 'bf' in Sub1.monomer.sites_dict, \
+        "Required site 'bf' not present in %s as required"%(Sub.monomer.name)
+    assert 'bf' in Sub2.monomer.sites_dict, \
+        "Required site 'bf' not present in %s as required"%(Sub.monomer.name)
+    # create the sites for the monomers
+
+    Sub1.site_conditions['bf'] = None
+    Sub2.site_conditions['bf'] = None
+
+    # combine the monomers into a product step rule
+    Rule(r1_name, Sub1 + Sub2 <> Prod, kf, kr)
     
 def simplebind(Sub1, Sub2, kf, kr):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 one-step complex formation. 
