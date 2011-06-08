@@ -132,13 +132,9 @@ twostepmod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kc6c8f, k
 
 
 # Fig 4B
-# Observe('Bid',   Bid(b=None))
-# Observe('PARP',  PARP(b=None))
-# Observe('mSmac', mSmac(b=None))
-# # this is what I originally thought 4B was actually plotting
-# Observe('tBid',  tBid())
-# Observe('CPARP', CPARP())
-# Observe('cSmac', cSmac())
+Observe('Bid',  tBid(state='T'))
+Observe('PARP', PARP(state='C'))
+Observe('Smac', Smac(state='cyto'))
 
 # # generate initial conditions from _0 parameter naming convention
 # for m in model.monomers:

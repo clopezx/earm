@@ -7,7 +7,6 @@ from pysb import *
 # http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
 
 Model()
-import earm_1_0_parms
 
 transloc = .01; # rate of translocation between the cytosolic and mitochondrial compartments
 
