@@ -121,7 +121,7 @@ simplebind(Smac(state='cyto'), XIAP(), ksmacxiapf, ksmacxiapr)
 #        pC3 + C8 <--> pC3:C8 --> C3 + C8 CSPS
 #        pC6 + C3 <--> pC6:C3 --> C6 + C3 CSPS
 #        XIAP + C3 <--> XIAP:C3 --> XIAP + C3_U CSPS
-#        PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
+ok #        PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
 #        pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
 # ---------------------------
 twostepmod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), kc8c3f, kc8c3r, kc8c3c)
