@@ -10,7 +10,7 @@ from pysbhelperfuncs import *
 #
 
 Model()
-import earm_1_0parms
+import earm_1_4parms
 
 # Monomers
 #('bf' site can be used with automated rule gen fxns)
