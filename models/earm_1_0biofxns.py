@@ -136,23 +136,28 @@ Observe('Bid',  Bid(state='T'))
 Observe('PARP', PARP(state='C'))
 Observe('Smac', Smac(state='cyto'))
 
-# # generate initial conditions from _0 parameter naming convention
-# for m in model.monomers:
-#     ic_param = model.parameter('%s_0' % m.name)
-#     if ic_param is not None:
-#         sites = {}
-#         for s in m.sites:
-#             if s in m.site_states:
-#                 sites[s] = m.site_states[s][0]
-#             else:
-#                 sites[s] = None
-#         Initial(m(sites), ic_param)
+# generate initial conditions from _0 parameter naming convention
+for m in model.monomers:
+    ic_param = model.parameter('%s_0' % m.name)
+    if ic_param is not None:
+        sites = {}
+        for s in m.sites:
+            if s in m.site_states:
+                sites[s] = m.site_states[s][0]
+            else:
+                sites[s] = None
+        Initial(m(sites), ic_param)
 
 
 # ####
 
 
-# if __name__ == '__main__':
-#     from pysb.bng import generate_network_code
-#     from pysb.tools.export_bng import run as run_export
-#     print run_export(model)
+if __name__ == '__main__':
+    from pysb.bng import generate_network_code
+    from pysb.tools.export_bng import run as run_export
+    print run_export(model)
+    print ""
+    print "begin actions"
+    print "  generate_network({overwrite=>1});"
+    print "  simulate_ode({t_end=>21600,n_steps=>360});" # 6 hours, 1-minute steps
+    print "end actions"

@@ -81,8 +81,14 @@ Parameter('ksmacxiapr', 1e-03)
 
 # Initial concentrations
 # Non-zero initial conditions (in molecules per cell):
+Parameter('BAX_0', 1e3)
+Initial(BAX(t1=None, t2=None, inh=None), BAX_0)
+Parameter('MCL1_0', 1e2)
+Initial(MCL1(b=None), MCL1_0)
+
 Parameter('L_0'        , 3000); # baseline level of ligand for most experiments (corresponding to 50 ng/ml SuperKiller TRAIL)
-Parameter('pR_0'       , 200);  # TRAIL receptor (for experiments not involving siRNA)
+Initial(L(bf=None), L_0)
+Parameter('R_0'       , 200);  # TRAIL receptor (for experiments not involving siRNA)
 Parameter('flip_0'     , 1e2);  # Flip
 Parameter('pC8_0'      , 2e4);  # procaspase-8 (pro-C8)
 Parameter('BAR_0'      , 1e3);  # Bifunctional apoptosis regulator
