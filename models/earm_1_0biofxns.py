@@ -10,7 +10,6 @@ from pysbhelperfuncs import *
 #
 
 Model()
-import earm_1_0parms
 
 # Monomers
 #('bf' site can be used with automated rule gen fxns)
@@ -35,6 +34,9 @@ Monomer('C9', ['bf'])
 Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
 Monomer('Apop', ['bf'])
 Monomer('XIAP', ['bf'])
+
+# get the parameters
+import earm_1_0parms
 
 # RECEPTOR TO tBID
 # =====================
@@ -131,33 +133,41 @@ twostepmod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), kc3parp
 twostepmod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kc6c8f, kc6c8r, kc6c8c)
 
 
+#Initial states
+Initial(L(bf=None), L_0)
+Initial(R(bf=None), R_0)
+Initial(flip(bf=None), flip_0)
+Initial(C8(bf=None, state='pro'), C8_0)
+Initial(BAR(bf=None), BAR_0)
+Initial(C3(bf=None, state='pro'), C3_0)
+Initial(C6(bf=None, state='pro'), C6_0)
+Initial(XIAP(bf=None), XIAP_0)
+Initial(PARP(bf=None, state='U'), PARP_0)
+Initial(Bid(bf=None, state='U'), Bid_0)
+Initial(Bcl2(bf=None, state='cyto'), Bcl2_cyto_0)
+Initial(Bax(bf=None, state='I'), Bax_0)
+Initial(Bcl2(bf=None, state='mito'), Bcl2_mito_0)
+Initial(MitoP(bf=None, state='U'), MitoP_0)
+Initial(CytoC(bf=None, state='mito'), CytoC_0)
+Initial(Smac(bf=None, state='mito'), Smac_0)
+Initial(C9(bf=None), C9_0)
+Initial(Apaf(bf=None, state='I'), Apaf_0)
+
+
 # Fig 4B
 Observe('Bid',  Bid(state='T'))
 Observe('PARP', PARP(state='C'))
 Observe('Smac', Smac(state='cyto'))
 
-# generate initial conditions from _0 parameter naming convention
-for m in model.monomers:
-    ic_param = model.parameter('%s_0' % m.name)
-    if ic_param is not None:
-        sites = {}
-        for s in m.sites:
-            if s in m.site_states:
-                sites[s] = m.site_states[s][0]
-            else:
-                sites[s] = None
-        Initial(m(sites), ic_param)
-
-
 # ####
 
 
-if __name__ == '__main__':
-    from pysb.bng import generate_network_code
-    from pysb.tools.export_bng import run as run_export
-    print run_export(model)
-    print ""
-    print "begin actions"
-    print "  generate_network({overwrite=>1});"
-    print "  simulate_ode({t_end=>21600,n_steps=>360});" # 6 hours, 1-minute steps
-    print "end actions"
+# if __name__ == '__main__':
+#     from pysb.bng import generate_network_code
+#     from pysb.tools.export_bng import run as run_export
+#     print run_export(model)
+#     print ""
+#     print "begin actions"
+#     print "  generate_network({overwrite=>1});"
+#     print "  simulate_ode({t_end=>21600,n_steps=>360});" # 6 hours, 1-minute steps
+#     print "end actions"
