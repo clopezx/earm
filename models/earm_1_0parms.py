@@ -77,8 +77,6 @@ Parameter('kapopxiapr', 1e-03)
 Parameter('ksmacxiapf', 7e-06) # XIAP inhibition by Smac
 Parameter('ksmacxiapr', 1e-03)
 
-
-
 # Initial amounts
 # Non-zero initial conditions (in molecules per cell):
 Parameter('L_0'        , 3000); # baseline level of ligand for most experiments (corresponding to 50 ng/ml SuperKiller TRAIL)

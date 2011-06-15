@@ -46,9 +46,9 @@ import earm_1_0parms
 #        pC8 + DISC <--> DISC:pC8 --> C8 + DISC
 #        Bid + C8 <--> Bid:C8 --> tBid + C8
 # ---------------------
-twostepconv(L(), R(), DISC(), klrf, klrr, klrc)
+twostepconv(L(), R(), DISC(bf = None ), klrf, klrr, klrc)
 twostepmod(DISC(), C8(state='pro'), C8(bf = None, state='A'), kdiscc8f, kdiscc8r, kdiscc8c)
-twostepmod(C8(state='A'), Bid(state='U'), Bid(state='T'), kc8bidf, kc8bidr, kc8bidc)
+twostepmod(C8(state='A'), Bid(state='U'), Bid(bf = None, state='T'), kc8bidf, kc8bidr, kc8bidc)
 # ---------------------
 # Inhibition Rules
 # ---------------------
@@ -154,10 +154,14 @@ Initial(C9(bf=None), C9_0)
 Initial(Apaf(bf=None, state='I'), Apaf_0)
 
 
-# Fig 4B
-Observe('Bid',  Bid(state='T'))
-Observe('PARP', PARP(state='C'))
-Observe('Smac', Smac(state='cyto'))
+Observe('tBid',  Bid(state='T'))
+Observe('cPARP', PARP(state='C'))
+Observe('cSmac', Smac(state='cyto'))
+# Fig 4B from Albeck observes these, normalizes and inverts them
+Observe('Bid',   Bid(bf=None, state='U'))
+Observe('PARP',  PARP(bf=None, state='U'))
+Observe('Smac',  Smac(bf=None, state='mito'))
+
 
 # ####
 
