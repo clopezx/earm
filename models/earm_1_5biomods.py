@@ -12,11 +12,11 @@ Monomer('DISC', ['bf']) # DISC
 Monomer('flip', ['bf']) # flip
 Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('BAR', ['bf']) # BAR
-Monomer('Bid', ['bf', 'state'], {'state':['U', 'T']}) # Bid, states: untruncated, truncated
-Monomer('Bax', ['bf', 'state'], {'state':['I', 'A', 'M']}) # Bax, states: inactive, active, mitochondrial
-Monomer('Bax2', ['bf'])
-Monomer('Bax4', ['bf'])
-Monomer('Bcl2', ['bf', 'state'], {'state':['cyto', 'mito']}) # Bcl2, states: cytoplasm, mitochondria
+Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
+Monomer('Bax', ['bf', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bcl2', ['bf', 'state'], {'state':['C', 'M']}) # Bcl2, states: Cytoplasm, Mitochondria
+Monomer('Mcl1', ['bf']) 
 Monomer('MitoP', ['bf', 'state'],{'state':['U', 'A']})
 Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
 Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
@@ -30,36 +30,47 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-import earm_1_0parms
+import earm_1_5parms
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
 # ======================
-# Bcl2 effectors to Pore
-# ----------------------
-#        Bax + tBid <--> Bax:tBid --> aBax + tBid 
+# Bcl2, Bid, Bax migration to mitochondria
+# ----------------------------------------
+Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
+Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
+Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
+# Mitochondrial tBid activates Bax/Bak
+# Bax/Bak form pores
+# ------------------------------------
+#        Bax + tBid <--> Bax:tBid --> Bax* + tBid 
+#        Bak + tBid <--> Bak:tBid --> Bak* + tBid
+#        Bax + Bax <--> Bax:Bax + Bax <--> Bax:Bax:Bax + Bax <--> Bax:Bax:Bax:Bax
+#        Bak + Bak <--> Bak:Bak + Bak <--> Bak:Bak:Bak + Bak <--> Bak:Bak:Bak:Bak
+#        Bax:Bax:Bax:Bax --> BaxPore
+#        Bak:Bak:Bak:Bak --> BakPore
+twostepmod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
+twostepmod(Bid(state = 'M'), Bak(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
+oligomerize(Bax(state='A'), 4) # oligomerize to tetramer
+oligomerize(Bak(state='A'), 4) # oligomerize to tetramer
+Rule('tetraBax_to_pore', 
+     Bax(b1=None, b2=1)%Bax(b1=1, b2=2)%Bax(b1=2,b2=3)%Bax(b1=3,b2=None) <> BaxPore(), kf, kr)
+Rule('tetraBak_to_pore', 
+     Bak(b1=None, b2=1)%Bak(b1=1, b2=2)%Bak(b1=2,b2=3)%Bak(b1=3,b2=None) <> BakPore(), kf, kr)
+# ------------------------------------
+# MOMP Inhibition
+# ------------------------------------
 #        aBax <-->  MBax 
 #        MBax + MBax <-->  Bax2
 #        Bax2 + Bax2 <-->  Bax4
 #        Bax4 + MitoP <-->  Bax4:MitoP -->  AMitoP  
 # ---------------------
-twostepmod(Bid(state = 'T'), Bax(state='I'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
-Rule('baxCtoM', Bax(bf = None, state = 'A') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
-simpledim(Bax(state='M'), Bax2(bf=None), kbaxdimf, kbaxdimr)
-simpledim(Bax2(), Bax4(bf = None), kbaxtetf, kbaxtetr)
-twostepconv(Bax4(), MitoP(state='U'), MitoP(bf = None, state='A'), kbax4poref,kbax4porer,kbax4porec) 
-# -----------------------
-# Bcl2 inhibitors to Pore
-# -----------------------
-#        tBid + Bcl2c <-->  tBid:Bcl2c INHIBITION IN CYTO ONLY
-#        MBax + Bcl2 <-->  MBax:Bcl2  
-#        Bax2 + Bcl2 <-->  Bax2:Bcl2  
-#        Bax4 + Bcl2 <-->  Bax4:Bcl2  
-# -----------------------
-simplebind(Bid(state='T'), Bcl2(state='cyto'), kbidbcl2f, kbidbcl2r)
-simplebind(Bax(state='M'), Bcl2(state='mito'), kbaxMbcl2Mf, kbaxMbcl2Mr)
-simplebind(Bax2(), Bcl2(state='mito'), kbax2Mbcl2Mf, kbax2Mbcl2Mr)
-simplebind(Bax4(), Bcl2(state='mito'), kbax4Mbcl2Mf, kbax4Mbcl2Mr)
+simplebind(Bid(state='M'), Bcl2(state='M'), kbidbcl2f, kbidbcl2r)
+simplebind(Bax(), Bcl2(state='M'), kbaxMbcl2Mf, kbaxMbcl2Mr) # CHECK: only membrane-bound heterodimers are formed in the rulz
+simplebind(Bak(), Mcl1(state='M'), kbaxMbcl2Mf, kbaxMbcl2Mr) # CHECK: only membrane-bound heterodimers are formed in the rulz
+
+XXsimplebind(Bax2(), Bcl2(state='mito'), kbax2Mbcl2Mf, kbax2Mbcl2Mr)
+XXsimplebind(Bax4(), Bcl2(state='mito'), kbax4Mbcl2Mf, kbax4Mbcl2Mr)
 
 # Import necessary modules
 # ========================

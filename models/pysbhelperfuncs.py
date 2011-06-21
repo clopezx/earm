@@ -2,8 +2,14 @@ import inspect
 from pysb import *
 
 def del_rule(model, rname):
+    """delete rules by name 'rname'"""
     idx = [i for i,r in enumerate(model.rules) if r.name == rname][0]
     model.rules.pop(idx)
+
+def report_extra_parms(model):
+    """report the parameters that are not involved in any rules"""
+    pass
+
 
 def alias_model_components(model=None):
     """
@@ -99,6 +105,12 @@ def simpledim(Sub, Prod, kf, kr):
 
     # combine the monomers into a product step rule
     Rule(r1_name, Sub + Sub <> Prod, kf, kr)
+
+def oligomerize(Mono, mer):
+    """
+    oligomerize monomers into oligomers using binding rules of any length
+    """
+    pass
 
 def onestepconv(Sub1, Sub2, Prod, kf, kr):
     """ Convert two Sub species into one Prod species:
