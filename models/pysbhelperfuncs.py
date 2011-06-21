@@ -1,4 +1,19 @@
+import inspect
 from pysb import *
+
+def del_rule(model, rname):
+    idx = [i for i,r in enumerate(model.rules) if r.name == rname][0]
+    model.rules.pop(idx)
+
+def alias_model_components(model=None):
+    """
+    """
+    if model is None:
+        model = SelfExporter.default_model
+    caller_globals = inspect.currentframe().f_back.f_globals
+    components = dict((c.name, c) for c in model.all_components())
+    caller_globals.update(components)
+
 def twostepmod(Enz, Sub, Prod, kf, kr, kc):
     """Automation of the Enz + Sub <> Enz:Sub >> Enz + Prod two-step catalytic reaction.
     This function assumes that there is a site named 'bf' (bind site for fxn)

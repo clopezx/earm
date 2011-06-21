@@ -1,5 +1,5 @@
 # EARM 1.0 MODULES
-# Notice the set_mons_parms global function is needed to recognize the monomer and 
+# Notice the alias_model_components function is needed to recognize the monomer and 
 # parameter names in the present scope
 #
 # rec_to_bid: This module defines the interactions from the ligand insult (e.g. TRAIL)
@@ -8,6 +8,7 @@
 # fxrcsp_to_parp: This module defines what happens after the pore is activated and 
 #                 CytC and Smac are released
 #
+# These segments are adapted from:
 # Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
 # Modeling a Snap-Action, Variable-Delay Switch Controlling Extrinsic
 # Cell Death. PLoS Biol 6(12): e299. doi:10.1371/journal.pbio.0060299
@@ -15,20 +16,20 @@
 # http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
 #
 #
-import pysb
 from pysbhelperfuncs import *
 
-def set_mons_parms(model, monomer_list):
-    # copy model parameters and value names to local scope
-    for i in range(len(monomer_list)):
-        globals()[monomer_list[i].name] = monomer_list[i]
-    for i in range(len(model.parameters)):
-        globals()[model.parameters[i].name] = model.parameters[i]
+# get model components accessible in this scope
+alias_model_components()
 
-def rec_to_bid(model, monomer_list):
-    # make Monomers/Parameters accessible
-    set_mons_parms(model, monomer_list)
-        
+# RECEPTOR TO BID SEGMENT
+def rec_to_bid(model):
+    """ This is a very specific function which depends on specifically
+    on the parameters and monomers of earm_1_0 to work. This function
+    uses L, R, DISC, flip, C8, BAR, and Bid monomers and their
+    associated parameters to generate the rules that describe Ligand
+    to Receptor binding, DISC formation, Caspase8 activation and
+    inhibition by flip and BAR as specified in EARM1.0.
+    """
     # RECEPTOR TO tBID
     # =====================
     # tBID Activation Rules
@@ -50,10 +51,15 @@ def rec_to_bid(model, monomer_list):
     simplebind(BAR(), C8(state='A'), kbarc8f, kbarc8r)
     # ---------------------
 
-def pore_to_parp(model, monomer_list):
-    # make Monomers/Parameters accessible 
-    set_mons_parms(model, monomer_list)
-
+def pore_to_parp(model):
+    """ This is a very specific function which depends on specifically
+    on the parameters and monomers of earm_1_0 to work. This function
+    uses MitoP, CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP
+    monomers and their associated parameters to generate the rules
+    that describe CytC and Smac export from the mitochondria by the
+    active pore activation of Caspase3, loopback through Caspase 6,
+    and some inhibitions as specified in EARM1.0.
+    """
     # FXR CASPASES CLEAVE PARP 
     # ========================
     # CytC, Smac release
