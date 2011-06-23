@@ -17,6 +17,7 @@ Monomer('Bax', ['bf', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytopl
 Monomer('Bak', ['bf', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
 Monomer('Bcl2', ['bf', 'state'], {'state':['C', 'M']}) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('Mcl1', ['bf']) 
+Monomer('Bclxl', ['bf', 'state'], {'state':['C', 'M']}) # Bclxl states: cytoplasm, mitochondris
 Monomer('MitoP', ['bf', 'state'],{'state':['U', 'A']})
 Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
 Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
@@ -39,6 +40,7 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # ----------------------------------------
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
 Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
+Rule('Bclxl_to_mem', Bclxl(bf = None, state = 'C') <> Bclxl(bf=None, state = 'M'), kbclxlCbaxMf, kbaxCbaxMr)
 Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
 # Mitochondrial tBid activates Bax/Bak
 # Bax/Bak form pores
@@ -53,24 +55,28 @@ twostepmod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kbidba
 twostepmod(Bid(state = 'M'), Bak(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
 oligomerize(Bax(state='A'), 4) # oligomerize to tetramer
 oligomerize(Bak(state='A'), 4) # oligomerize to tetramer
-Rule('tetraBax_to_pore', 
-     Bax(b1=None, b2=1)%Bax(b1=1, b2=2)%Bax(b1=2,b2=3)%Bax(b1=3,b2=None) <> BaxPore(), kf, kr)
-Rule('tetraBak_to_pore', 
-     Bak(b1=None, b2=1)%Bak(b1=1, b2=2)%Bak(b1=2,b2=3)%Bak(b1=3,b2=None) <> BakPore(), kf, kr)
 # ------------------------------------
 # MOMP Inhibition
 # ------------------------------------
-#        aBax <-->  MBax 
-#        MBax + MBax <-->  Bax2
-#        Bax2 + Bax2 <-->  Bax4
-#        Bax4 + MitoP <-->  Bax4:MitoP -->  AMitoP  
-# ---------------------
-simplebind(Bid(state='M'), Bcl2(state='M'), kbidbcl2f, kbidbcl2r)
-simplebind(Bax(), Bcl2(state='M'), kbaxMbcl2Mf, kbaxMbcl2Mr) # CHECK: only membrane-bound heterodimers are formed in the rulz
-simplebind(Bak(), Mcl1(state='M'), kbaxMbcl2Mf, kbaxMbcl2Mr) # CHECK: only membrane-bound heterodimers are formed in the rulz
+# Bcl2 inhibitors of Bax and Bak
+# a set of simple bind reactions:
+#        Inh + Act <--> Inh:Act
+# ------------------------------------
+sbindtable([[                     Bcl2, BclxL,  Mcl1],
+            [                       {},    {},    {}],
+            [Bax, {'state':'A'},  True,  True, False],
+            [Bak, {'state':'A'}, False,  True,  True]],
+           model)
 
-XXsimplebind(Bax2(), Bcl2(state='mito'), kbax2Mbcl2Mf, kbax2Mbcl2Mr)
-XXsimplebind(Bax4(), Bcl2(state='mito'), kbax4Mbcl2Mf, kbax4Mbcl2Mr)
+# Sensitizers
+# Bcl2 sensitizers bind through a simple bind resction: 
+#        Inh + Act <--> Inh:Act
+# ------------------------------------
+sbindtable([[           Bcl2, BclxL,  Mcl1],
+            [             {},    {},    {}],
+            [Bad,  {},  True,  True, False],
+            [NOXA, {},  False, True,  True]],
+           model)
 
 # Import necessary modules
 # ========================
