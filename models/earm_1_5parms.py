@@ -5,6 +5,7 @@ from pysb import *
 transloc = .01; # rate of transloc bw cytosol and mitochondria
 v = .07; # mitochondria compartment volume/cell volume
 
+# EARM 1.0 parameters
 # Reaction rates
 Parameter('klrf', 4e-07) #ligand - receptor forward, reverse, catalytic
 Parameter('klrr', 1e-03)
@@ -41,6 +42,8 @@ Parameter('kbidbaxr', 1e-03)
 Parameter('kbidbaxc', 1e+00)
 Parameter('kbaxCbaxMf', transloc) # Bax translocation
 Parameter('kbaxCbaxMr', transloc)
+Parameter('kbidCbidMf', transloc) # Bid translocation
+Parameter('kbidCbidMr', transloc)
 Parameter('kbaxMbcl2Mf', 1e-06/v) # Bax inhibition in mito
 Parameter('kbaxMbcl2Mr', 1e-03)
 Parameter('kbaxdimf', 1e-06/v*2) # Bax dimerization
@@ -77,24 +80,68 @@ Parameter('kapopxiapr', 1e-03)
 Parameter('ksmacxiapf', 7e-06) # XIAP inhibition by Smac
 Parameter('ksmacxiapr', 1e-03)
 
+# EARM 1.5 parameters
+Parameter('kbcl2Cbcl2Mf', transloc) # Bcl2 translocation
+Parameter('kbcl2Cbcl2Mr', transloc)
+Parameter('kbclxlCbclxlMf', transloc) # Bclxl translocation
+Parameter('kbclxlCbclxlMr', transloc)
+Parameter('baxbcl2f', 3.33) # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
+Parameter('baxbcl2r', 3.33)
+Parameter('baxbclxlf', 3.33) 
+Parameter('baxbclxlr', 3.33)
+Parameter('baxmcl1f', 3.33)
+Parameter('baxmcl1r', 3.33)
+Parameter('bakbcl2f', 3.33)
+Parameter('bakbcl2r', 3.33)
+Parameter('bakbclxlf', 3.33)
+Parameter('bakbclxlr', 3.33)
+Parameter('bakmcl1f', 3.33)
+Parameter('bakmcl1r', 3.33)
+Parameter('badbcl2f', 3.33) # Sensitization of Bcl2/BclxL/Mcl1 by Bad/NOXA
+Parameter('badbcl2r', 3.33)
+Parameter('badbclxlf', 3.33) 
+Parameter('badbclxlr', 3.33)
+Parameter('badmcl1f', 3.33)
+Parameter('badmcl1r', 3.33)
+Parameter('noxabcl2f', 3.33)
+Parameter('noxabcl2r', 3.33)
+Parameter('noxabclxlf', 3.33)
+Parameter('noxabclxlr', 3.33)
+Parameter('noxamcl1f', 3.33)
+Parameter('noxamcl1r', 3.33)
+
+
 # Initial amounts
 # Non-zero initial conditions (in molecules per cell):
 Parameter('L_0'        , 3000); # baseline level of ligand for most experiments (corresponding to 50 ng/ml SuperKiller TRAIL)
 Parameter('R_0'       , 200);  # TRAIL receptor (for experiments not involving siRNA)
 Parameter('flip_0'     , 1e2);  # Flip
 Parameter('C8_0'      , 2e4);  # procaspase-8 (pro-C8)
+Parameter('Bid_0'      , 4e4);  # Bid
+Parameter('Bax_0'      , 1e5);  # Bax
+Parameter('Bak_0'      , 1e0);  # Bax
+Parameter('Mcl1_0'    , 2e4);  # cytosolic Mcl-1
+Parameter('Bcl2_mito_0', 2e4);  # mitochondrial Bcl-2  
 Parameter('BAR_0'      , 1e3);  # Bifunctional apoptosis regulator
 Parameter('C3_0'      , 1e4);  # procaspase-3 (pro-C3)
 Parameter('C6_0'      , 1e4);  # procaspase-6 (pro-C6)  
 Parameter('XIAP_0'     , 1e5);  # X-linked inhibitor of apoptosis protein  
 Parameter('PARP_0'     , 1e6);  # C3* substrate
-Parameter('Bid_0'      , 4e4);  # Bid
-Parameter('Bcl2_cyto_0'    , 2e4);  # cytosolic Bcl-2
-Parameter('Bax_0'      , 1e5);  # Bax
-Parameter('Bcl2_mito_0'     , 2e4);  # mitochondrial Bcl-2  
 Parameter('MitoP_0'     , 5e5);  # mitochondrial binding sites for activated Bax
 Parameter('CytoC_0'   , 5e5);  # cytochrome c
 Parameter('Smac_0'    , 1e5);  # Smac    
 Parameter('C9_0'      , 1e5);  # procaspase-9 (pro-C9)
 Parameter('Apaf_0'     , 1e5);  # Apaf-1
 
+Monomer('Mcl1', ['bf']) 
+Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
+Monomer('MitoP', ['bf', 'state'],{'state':['U', 'A']})
+Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
+Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
+Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
+Monomer('Apop', ['bf'])
+Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
+Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, active
+Monomer('C9', ['bf'])
+Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
+Monomer('XIAP', ['bf'])

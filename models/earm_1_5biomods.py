@@ -17,7 +17,7 @@ Monomer('Bax', ['bf', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytopl
 Monomer('Bak', ['bf', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
 Monomer('Bcl2', ['bf', 'state'], {'state':['C', 'M']}) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('Mcl1', ['bf']) 
-Monomer('Bclxl', ['bf', 'state'], {'state':['C', 'M']}) # Bclxl states: cytoplasm, mitochondris
+Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
 Monomer('MitoP', ['bf', 'state'],{'state':['U', 'A']})
 Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
 Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
@@ -39,9 +39,9 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # Bcl2, Bid, Bax migration to mitochondria
 # ----------------------------------------
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
-Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
-Rule('Bclxl_to_mem', Bclxl(bf = None, state = 'C') <> Bclxl(bf=None, state = 'M'), kbclxlCbaxMf, kbaxCbaxMr)
-Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
+Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kbcl2Cbcl2Mf, kbcl2Cbcl2Mf)
+Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kbclxlCbclxlMf, kbclxlCbclxlMf)
+Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbidCbidMf, kbidCbidMr)
 # Mitochondrial tBid activates Bax/Bak
 # Bax/Bak form pores
 # ------------------------------------
