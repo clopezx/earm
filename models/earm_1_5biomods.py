@@ -15,10 +15,12 @@ Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
 Monomer('Bax', ['bf', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
 Monomer('Bak', ['bf', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('MitoP', ['bf'])
 Monomer('Bcl2', ['bf', 'state'], {'state':['C', 'M']}) # Bcl2, states: Cytoplasm, Mitochondria
-Monomer('Mcl1', ['bf']) 
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
-Monomer('MitoP', ['bf', 'state'],{'state':['U', 'A']})
+Monomer('Mcl1', ['bf']) 
+Monomer('Bad', ['bf']) 
+Monomer('NOXA', ['bf']) 
 Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
 Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
 Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
@@ -94,19 +96,22 @@ Initial(R(bf=None), R_0)
 Initial(flip(bf=None), flip_0)
 Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
+Initial(Bid(bf=None, state='U'), Bid_0)
+Initial(Bax(bf=None, state='C'), Bax_0)
+Initial(Bak(bf=None, state='M'), Bax_0)
+Initial(Bcl2(bf=None, state='C'), Bcl2_0)
+Initial(BclxL (bf=None, state='C'), BclxL_0)
+Initial(Mcl1(bf=None), Mcl1_0)
+Initial(Bad(bf=None), Bad_0)
+Initial(NOXA(bf=None), NOXA_0)
+Initial(CytoC(bf=None, state='M'), CytoC_0)
+Initial(Smac(bf=None, state='M'), Smac_0)
+Initial(Apaf(bf=None, state='I'), Apaf_0)
 Initial(C3(bf=None, state='pro'), C3_0)
 Initial(C6(bf=None, state='pro'), C6_0)
-Initial(XIAP(bf=None), XIAP_0)
-Initial(PARP(bf=None, state='U'), PARP_0)
-Initial(Bid(bf=None, state='U'), Bid_0)
-Initial(Bcl2(bf=None, state='cyto'), Bcl2_cyto_0)
-Initial(Bax(bf=None, state='I'), Bax_0)
-Initial(Bcl2(bf=None, state='mito'), Bcl2_mito_0)
-Initial(MitoP(bf=None, state='U'), MitoP_0)
-Initial(CytoC(bf=None, state='mito'), CytoC_0)
-Initial(Smac(bf=None, state='mito'), Smac_0)
 Initial(C9(bf=None), C9_0)
-Initial(Apaf(bf=None, state='I'), Apaf_0)
+Initial(PARP(bf=None, state='U'), PARP_0)
+Initial(XIAP(bf=None), XIAP_0)
 
 # Observables
 # ===========

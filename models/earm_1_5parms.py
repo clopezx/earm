@@ -117,31 +117,20 @@ Parameter('L_0'        , 3000); # baseline level of ligand for most experiments 
 Parameter('R_0'       , 200);  # TRAIL receptor (for experiments not involving siRNA)
 Parameter('flip_0'     , 1e2);  # Flip
 Parameter('C8_0'      , 2e4);  # procaspase-8 (pro-C8)
+Parameter('BAR_0'      , 1e3);  # Bifunctional apoptosis regulator
 Parameter('Bid_0'      , 4e4);  # Bid
 Parameter('Bax_0'      , 1e5);  # Bax
 Parameter('Bak_0'      , 1e0);  # Bax
-Parameter('Mcl1_0'    , 2e4);  # cytosolic Mcl-1
-Parameter('Bcl2_mito_0', 2e4);  # mitochondrial Bcl-2  
-Parameter('BAR_0'      , 1e3);  # Bifunctional apoptosis regulator
-Parameter('C3_0'      , 1e4);  # procaspase-3 (pro-C3)
-Parameter('C6_0'      , 1e4);  # procaspase-6 (pro-C6)  
-Parameter('XIAP_0'     , 1e5);  # X-linked inhibitor of apoptosis protein  
-Parameter('PARP_0'     , 1e6);  # C3* substrate
-Parameter('MitoP_0'     , 5e5);  # mitochondrial binding sites for activated Bax
+Parameter('Bcl2_0'    , 2e4);  # cytosolic Bcl2
+Parameter('BclxL_0'    , 2e4);  # cytosolic BclxL
+Parameter('Mcl1_0', 2e4);  # mitochondrial Mcl1  
+Parameter('Bad_0'      , 1e3);  # Bad
+Parameter('NOXA_0'      , 1e3);  # NOXA
 Parameter('CytoC_0'   , 5e5);  # cytochrome c
 Parameter('Smac_0'    , 1e5);  # Smac    
-Parameter('C9_0'      , 1e5);  # procaspase-9 (pro-C9)
 Parameter('Apaf_0'     , 1e5);  # Apaf-1
-
-Monomer('Mcl1', ['bf']) 
-Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
-Monomer('MitoP', ['bf', 'state'],{'state':['U', 'A']})
-Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
-Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
-Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
-Monomer('Apop', ['bf'])
-Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
-Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, active
-Monomer('C9', ['bf'])
-Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
-Monomer('XIAP', ['bf'])
+Parameter('C3_0'      , 1e4);  # procaspase-3 (pro-C3)
+Parameter('C6_0'      , 1e4);  # procaspase-6 (pro-C6)  
+Parameter('C9_0'      , 1e5);  # procaspase-9 (pro-C9)
+Parameter('XIAP_0'     , 1e5);  # X-linked inhibitor of apoptosis protein  
+Parameter('PARP_0'     , 1e6);  # C3* substrate
