@@ -226,3 +226,13 @@ def sbindtable(bindtable, lmodel):
                      kf, kr)
     
     
+def oligomerize(Monomer, number):
+    """
+    This function oligomerizes Bax/Bak type of oligomers. All the
+    states that contribute to oligomerization should be specified
+    except the binding sites. This function assumes the 'bf' site to
+    be present for oligomerization.  
+
+    Usage example: oligomerize(Bax(state='A'), 4) will yield, dimer, trimer, tetramer
+    
+    """
