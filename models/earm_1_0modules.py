@@ -69,10 +69,12 @@ def pore_to_parp(model):
     #        ACytoC <-->  cCytoC
     #        ASmac <-->  cSmac
     # ----------------------
-    twostepmod(MitoP(state='A'), CytoC(state='mito'), CytoC(bf = None, state='A'), kmitopcytocMf, kmitopcytocMr, kmitopcytocMc)
-    twostepmod(MitoP(state='A'), Smac(state='mito'), Smac(bf = None, state='A'), kmitopsmacMf, kmitopsmacMr, kmitopsmacMc)
-    Rule('cytocCtoM', CytoC(bf = None, state = 'A') <> CytoC(bf=None, state = 'cyto'), kcytocMcytocCf, kcytocMcytocCr)
-    Rule('SmacMtoSmacC', Smac(bf = None, state='A') <> Smac(bf = None, state='cyto'), ksmacMsmacCf, ksmacMsmacCr)
+    poretransport(4, Bax(), CytoC(state='M'), CytoC(bf=None, state='C'), kbaxcytocMCf, kbaxcytocMCr, kbaxcytocMCc) 
+    poretransport(4, Bak(), CytoC(state='M'), CytoC(bf=None, state='C'), kbakcytocMCf, kbakcytocMCr, kbakcytocMCc) 
+    poretransport(4, Bax(), Smac(state='M'), Smac(bf=None, state='C'), kbaxsmacCAf, kbaxsmacCAr, kbaxsmacCAc) 
+    poretransport(4, Bak(), Smac(state='M'), Smac(bf=None, state='C'), kbaksmacCAf, kbaksmacCAr, kbaksmacCAc) 
+    Rule('cytocCtoM', CytoC(bf = None, state='C') <> CytoC(bf=None, state = 'A'), kcytocMcytocCf, kcytocMcytocCr)
+    Rule('SmacMtoSmacC', Smac(bf = None, state='C') <> Smac(bf = None, state='A'), ksmacMsmacCf, ksmacMsmacCr)
     # ---------------------------
     # Apoptosome formation
     # ---------------------------
@@ -80,7 +82,7 @@ def pore_to_parp(model):
     #        aApaf + pC9 <-->  Apop
     #        Apop + pC3 <-->  Apop:pC3 --> Apop + C3
     # ---------------------------
-    twostepmod(CytoC(state='cyto'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kcytocCapaff, kcytocCapafr, kcytocCapafc)
+    twostepmod(CytoC(state='C'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kcytocCapaff, kcytocCapafr, kcytocCapafc)
     onestepconv(Apaf(state='A'), C9(), Apop(bf=None), kapafc9f, kapafc9r)
     twostepmod(Apop(), C3(state='pro'), C3(bf = None, state='A'), kapopc3f, kapopc3r, kapopc3c)
     # -----------------------------
@@ -89,7 +91,7 @@ def pore_to_parp(model):
     #        Apop + XIAP <-->  Apop:XIAP  
     #        cSmac + XIAP <-->  cSmac:XIAP  
     simplebind(Apop(), XIAP(), kapopxiapf, kapopxiapr)
-    simplebind(Smac(state='cyto'), XIAP(), ksmacxiapf, ksmacxiapr)
+    simplebind(Smac(state='C'), XIAP(), ksmacxiapf, ksmacxiapr)
     # ---------------------------
     # Caspase reactions (effectors, inhibitors, and loopback initiators)
     # ---------------------------
