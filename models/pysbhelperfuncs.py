@@ -106,11 +106,44 @@ def simpledim(Sub, Prod, kf, kr):
     # combine the monomers into a product step rule
     Rule(r1_name, Sub + Sub <> Prod, kf, kr)
 
-def oligomerize(Mono, mer):
+def pore_species(Subunit, site, size):
     """
-    oligomerize monomers into oligomers using binding rules of any length
+    Generate a single species representing a homomeric circular pore,
+    composed of <size> copies of <Subunit>, bound together in a ring
+    on <site>.
     """
-    pass
+    if size == 0:
+        raise ValueError("size must be an integer greater than 0")
+    if size == 1:
+        Unit = Subunit._copy()
+        Unit.site_conditions[site] = None
+        Pore = Unit
+    elif size == 2:
+        Unit = Subunit._copy()
+        Unit.site_conditions[site] = 1
+        Pore = Unit % Unit
+    else:
+        Pore = ComplexPattern([], None, match_once=True)
+        for i in range(size):
+            Unit = Subunit._copy()
+            Unit.site_conditions[site] = [i+1, (i+1) % size + 1]
+            Pore %= Unit
+    return Pore
+
+def pore_assembly(Subunit, site, size, rates):
+    """
+    Generate rules to chain identical <Subunits> into increasingly
+    larger circular pores up to size <size>, using <site> to bind the
+    components to each other.
+    """
+    rules = []
+    for i in range(2, size + 1):
+        M = pore_species(Subunit, site, 1)
+        S1 = pore_species(Subunit, site, i-1)
+        S2 = pore_species(Subunit, site, i)
+        rules.append(Rule('%s_pore_assembly_%d' % (Subunit.monomer.name, i),
+                          M + S1 <> S2, *rates[i-2]))
+    return rules
 
 def onestepconv(Sub1, Sub2, Prod, kf, kr):
     """ Convert two Sub species into one Prod species:
