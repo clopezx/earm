@@ -106,44 +106,74 @@ def simpledim(Sub, Prod, kf, kr):
     # combine the monomers into a product step rule
     Rule(r1_name, Sub + Sub <> Prod, kf, kr)
 
-def pore_species(Subunit, site, size):
+def pore_species(Subunit, size):
     """
-    Generate a single species representing a homomeric circular pore,
-    composed of <size> copies of <Subunit>, bound together in a ring
-    on <site>.
+    Generate a single species representing a homomeric pore, composed
+    of <size> copies of <Subunit> bound together in a ring, with bonds
+    formed between bh3 of one unit and d2 of the next.
     """
+    M = Subunit.monomer
+    sc = Subunit.site_conditions
     if size == 0:
         raise ValueError("size must be an integer greater than 0")
     if size == 1:
-        Unit = Subunit._copy()
-        Unit.site_conditions[site] = None
-        Pore = Unit
+        Pore = M(sc, bh3=None, d2=None)
     elif size == 2:
-        Unit = Subunit._copy()
-        Unit.site_conditions[site] = 1
-        Pore = Unit % Unit
+        Pore = M(sc, bh3=1, d2=None) % M(sc, d2=1, bh3=None)
     else:
         Pore = ComplexPattern([], None, match_once=True)
-        for i in range(size):
-            Unit = Subunit._copy()
-            Unit.site_conditions[site] = [i+1, (i+1) % size + 1]
-            Pore %= Unit
+        for i in range(1, size+1):
+            Pore %= M(sc, bh3=i, d2=i%size+1)
     return Pore
 
-def pore_assembly(Subunit, site, size, rates):
+def pore_assembly(Subunit, size, rates):
     """
-    Generate rules to chain identical <Subunits> into increasingly
-    larger circular pores up to size <size>, using <site> to bind the
-    components to each other.
+    Generate rules to chain identical MonomerPatterns <Subunit> into
+    increasingly larger pores of up to <size> units, using sites bh3
+    and d2 to bind the units to each other.
     """
     rules = []
     for i in range(2, size + 1):
-        M = pore_species(Subunit, site, 1)
-        S1 = pore_species(Subunit, site, i-1)
-        S2 = pore_species(Subunit, site, i)
+        M = pore_species(Subunit, 1)
+        S1 = pore_species(Subunit, i-1)
+        S2 = pore_species(Subunit, i)
         rules.append(Rule('%s_pore_assembly_%d' % (Subunit.monomer.name, i),
                           M + S1 <> S2, *rates[i-2]))
     return rules
+
+def pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
+    """
+    Generate rules to transport MonomerPattern <Source> to <Dest>
+    through any of a series of pores of at least <min_size> and at
+    most <max_size> subunits, as defined by pore_assembly.  Implicitly
+    uses site 'bf' on both Subunit and Source to bind to each other.
+    """
+    assert 'bf' in Source.monomer.sites_dict, \
+        "Required site 'bf' not present in %s as required"%(Source.monomer.name)
+    assert 'bf' in Dest.monomer.sites_dict, \
+        "Required site 'bf' not present in %s as required"%(Dest.monomer.name)
+
+    for i in range(min_size, max_size+1):
+        Pore = pore_species(Subunit, i)
+        # require all pore subunit bf sites to be empty for Pore match
+        for mp in Pore.monomer_patterns:
+            mp.site_conditions['bf'] = None
+        SM = Source.monomer
+        ssc = Source.site_conditions
+        DM = Dest.monomer
+        dsc = Dest.site_conditions
+
+        r1_name = '%s_pore_%d_transport_%s_cplx' % (SM.name, i, Subunit.monomer.name)
+        r2_name = '%s_pore_%d_transport_%s_dssc' % (SM.name, i, Subunit.monomer.name)
+
+        rule_rates = rates[i-min_size]
+        CPore = Pore._copy()
+        source_bonds = range(i+1, i+1+i)
+        for b in range(i):
+            CPore.monomer_patterns[b].site_conditions['bf'] = source_bonds[b]
+        Complex = CPore % SM(ssc, bf=source_bonds)
+        Rule(r1_name, Pore + SM(ssc, bf=None) <> Complex, *rule_rates[0:2])
+        Rule(r2_name, Complex >> Pore + DM(dsc, bf=None), rule_rates[2])
 
 def onestepconv(Sub1, Sub2, Prod, kf, kr):
     """ Convert two Sub species into one Prod species:
