@@ -69,10 +69,11 @@ def pore_to_parp(model):
     #        ACytoC <-->  cCytoC
     #        ASmac <-->  cSmac
     # ----------------------
-    poretransport(4, Bax(), CytoC(state='M'), CytoC(bf=None, state='C'), kbaxcytocMCf, kbaxcytocMCr, kbaxcytocMCc) 
-    poretransport(4, Bak(), CytoC(state='M'), CytoC(bf=None, state='C'), kbakcytocMCf, kbakcytocMCr, kbakcytocMCc) 
-    poretransport(4, Bax(), Smac(state='M'), Smac(bf=None, state='C'), kbaxsmacCAf, kbaxsmacCAr, kbaxsmacCAc) 
-    poretransport(4, Bak(), Smac(state='M'), Smac(bf=None, state='C'), kbaksmacCAf, kbaksmacCAr, kbaksmacCAc) 
+    #pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
+    pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, [[kbaxcytocMCf, kbaxcytocMCr, kbaxcytocMCc]]) 
+    pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, [[kbakcytocMCf, kbakcytocMCr, kbakcytocMCc]])
+    pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, [[kbaxsmacCAf, kbaxsmacCAr, kbaxsmacCAc]]) 
+    pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, [[kbaksmacCAf, kbaksmacCAr, kbaksmacCAc]])
     Rule('cytocCtoM', CytoC(bf = None, state='C') <> CytoC(bf=None, state = 'A'), kcytocMcytocCf, kcytocMcytocCr)
     Rule('SmacMtoSmacC', Smac(bf = None, state='C') <> Smac(bf = None, state='A'), ksmacMsmacCf, ksmacMsmacCr)
     # ---------------------------

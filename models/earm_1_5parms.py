@@ -40,6 +40,9 @@ Parameter('kbidbcl2r', 1e-03)
 Parameter('kbidbaxf', 1e-07) # Bax activation via Bid
 Parameter('kbidbaxr', 1e-03)
 Parameter('kbidbaxc', 1e+00)
+Parameter('kbidbakf', 1e-07) # Bak activation via Bid ***
+Parameter('kbidbakr', 1e-03)
+Parameter('kbidbakc', 1e+00)
 Parameter('kbaxCbaxMf', transloc) # Bax translocation
 Parameter('kbaxCbaxMr', transloc)
 Parameter('kbidCbidMf', transloc) # Bid translocation
@@ -48,6 +51,8 @@ Parameter('kbaxMbcl2Mf', 1e-06/v) # Bax inhibition in mito
 Parameter('kbaxMbcl2Mr', 1e-03)
 Parameter('kbaxdimf', 1e-06/v*2) # Bax dimerization
 Parameter('kbaxdimr', 1e-03)
+Parameter('kbakdimf', 1e-06/v*2) # Bak dimerization ***
+Parameter('kbakdimr', 1e-03)
 Parameter('kbax2Mbcl2Mf', 1e-06/v) # Bax2 inibition in mito
 Parameter('kbax2Mbcl2Mr', 1e-03)
 Parameter('kbaxtetf', 1e-06/v*2) # Bax2 dimerization (tetramer formation)
@@ -57,12 +62,18 @@ Parameter('kbax4Mbcl2Mr', 1e-03)
 Parameter('kbax4poref', 1e-06/v) # Bax4 + MitoP to Pore
 Parameter('kbax4porer', 1e-03)
 Parameter('kbax4porec', 1e+00)
-Parameter('kmitopcytocMf', 2e-06/v) # CytoC activation
-Parameter('kmitopcytocMr', 1e-03)
-Parameter('kmitopcytocMc', 1e+01)
-Parameter('kmitopsmacMf', 2e-06/v) # Smac activation
-Parameter('kmitopsmacMr', 1e-03)
-Parameter('kmitopsmacMc', 1e+01)
+Parameter('kbaxcytocMCf', 2e-06/v) # CytoC activation
+Parameter('kbaxcytocMCr', 1e-03)
+Parameter('kbaxcytocMCc', 1e+01)
+Parameter('kbakcytocMCf', 2e-06/v) # CytoC activation ***
+Parameter('kbakcytocMCr', 1e-03)
+Parameter('kbakcytocMCc', 1e+01)
+Parameter('kbaxsmacCAf', 2e-06/v) # Smac activation
+Parameter('kbaxsmacCAr', 1e-03)
+Parameter('kbaxsmacCAc', 1e+01)
+Parameter('kbaksmacCAf', 2e-06/v) # Smac activation
+Parameter('kbaksmacCAr', 1e-03)
+Parameter('kbaksmacCAc', 1e+01)
 Parameter('kcytocMcytocCf', transloc) # CytoC translocation
 Parameter('kcytocMcytocCr', transloc)
 Parameter('kcytocCapaff', 5e-07) # Apaf activation

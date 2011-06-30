@@ -30,7 +30,7 @@ def twostepmod(Enz, Sub, Prod, kf, kr, kc):
     # FIXME: this will fail if the argument passed is a Complex object. 
 
     r1_name = 'cplx_%s_%s' % (Sub.monomer.name, Enz.monomer.name)
-    r2_name = 'dssc_%s_via_%s' % (Prod.monomer.name, Enz.monomer.name)
+    r2_name = 'diss_%s_via_%s' % (Prod.monomer.name, Enz.monomer.name)
     
     assert 'bf' in Enz.monomer.sites_dict, \
         "Required site 'bf' not present in %s as required"%(Enz.monomer.name)
@@ -289,13 +289,3 @@ def sbindtable(bindtable, lmodel):
                      kf, kr)
     
     
-def oligomerize(Monomer, number):
-    """
-    This function oligomerizes Bax/Bak type of oligomers. All the
-    states that contribute to oligomerization should be specified
-    except the binding sites. This function assumes the 'bf' site to
-    be present for oligomerization.  
-
-    Usage example: oligomerize(Bax(state='A'), 4) will yield, dimer, trimer, tetramer
-    
-    """

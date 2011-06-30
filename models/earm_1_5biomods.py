@@ -13,8 +13,8 @@ Monomer('flip', ['bf']) # flip
 Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
-Monomer('Bax', ['bf', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
-Monomer('Bak', ['bf', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
 Monomer('MitoP', ['bf'])
 Monomer('Bcl2', ['bf', 'state'], {'state':['C', 'M']}) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
@@ -54,9 +54,11 @@ Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbi
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
 twostepmod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
-twostepmod(Bid(state = 'M'), Bak(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
-oligomerize(Bax(state='A'), 4) # oligomerize to tetramer
-oligomerize(Bak(state='A'), 4) # oligomerize to tetramer
+twostepmod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kbidbakf, kbidbakr, kbidbakc)
+# pore_assembly(Subunit, size, rates):
+pore_assembly(Bax(bf=None, state='A'), 4, [[kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr]])
+pore_assembly(Bak(bf=None, state='A'), 4, [[kbakdimf,kbakdimr], [kbakdimf,kbakdimr], [kbakdimf,kbakdimr]])
+
 # ------------------------------------
 # MOMP Inhibition
 # ------------------------------------
@@ -97,8 +99,8 @@ Initial(flip(bf=None), flip_0)
 Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
-Initial(Bax(bf=None, state='C'), Bax_0)
-Initial(Bak(bf=None, state='M'), Bax_0)
+Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
+Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bax_0)
 Initial(Bcl2(bf=None, state='C'), Bcl2_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
