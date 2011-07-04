@@ -38,17 +38,17 @@ def rec_to_bid(model):
     #        pC8 + DISC <--> DISC:pC8 --> C8 + DISC
     #        Bid + C8 <--> Bid:C8 --> tBid + C8
     # ---------------------
-    twostepconv(L(), R(), DISC(bf = None ), klrf, klrr, klrc)
-    twostepmod(DISC(), C8(state='pro'), C8(bf = None, state='A'), kdiscc8f, kdiscc8r, kdiscc8c)
-    twostepmod(C8(state='A'), Bid(state='U'), Bid(bf = None, state='T'), kc8bidf, kc8bidr, kc8bidc)
+    two_step_conv(L(), R(), DISC(bf = None ), klrf, klrr, klrc)
+    two_step_mod(DISC(), C8(state='pro'), C8(bf = None, state='A'), kdiscc8f, kdiscc8r, kdiscc8c)
+    two_step_mod(C8(state='A'), Bid(state='U'), Bid(bf = None, state='T'), kc8bidf, kc8bidr, kc8bidc)
     # ---------------------
     # Inhibition Rules
     # ---------------------
     #        flip + DISC <-->  flip:DISC  
     #        C8 + BAR <--> BAR:C8 CSPS
     # ---------------------
-    simplebind(DISC(), flip(), kflipdiscf, kflipdiscr)
-    simplebind(BAR(), C8(state='A'), kbarc8f, kbarc8r)
+    simple_bind(DISC(), flip(), kflipdiscf, kflipdiscr)
+    simple_bind(BAR(), C8(state='A'), kbarc8f, kbarc8r)
     # ---------------------
 
 def pore_to_parp(model):
@@ -83,16 +83,16 @@ def pore_to_parp(model):
     #        aApaf + pC9 <-->  Apop
     #        Apop + pC3 <-->  Apop:pC3 --> Apop + C3
     # ---------------------------
-    twostepmod(CytoC(state='C'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kcytocCapaff, kcytocCapafr, kcytocCapafc)
-    onestepconv(Apaf(state='A'), C9(), Apop(bf=None), kapafc9f, kapafc9r)
-    twostepmod(Apop(), C3(state='pro'), C3(bf = None, state='A'), kapopc3f, kapopc3r, kapopc3c)
+    two_step_mod(CytoC(state='C'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kcytocCapaff, kcytocCapafr, kcytocCapafc)
+    one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), kapafc9f, kapafc9r)
+    two_step_mod(Apop(), C3(state='pro'), C3(bf = None, state='A'), kapopc3f, kapopc3r, kapopc3c)
     # -----------------------------
     # Apoptosome related inhibitors
     # -----------------------------
     #        Apop + XIAP <-->  Apop:XIAP  
     #        cSmac + XIAP <-->  cSmac:XIAP  
-    simplebind(Apop(), XIAP(), kapopxiapf, kapopxiapr)
-    simplebind(Smac(state='C'), XIAP(), ksmacxiapf, ksmacxiapr)
+    simple_bind(Apop(), XIAP(), kapopxiapf, kapopxiapr)
+    simple_bind(Smac(state='C'), XIAP(), ksmacxiapf, ksmacxiapr)
     # ---------------------------
     # Caspase reactions (effectors, inhibitors, and loopback initiators)
     # ---------------------------
@@ -102,8 +102,8 @@ def pore_to_parp(model):
     #        PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
     #        pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
     # ---------------------------
-    twostepmod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), kc8c3f, kc8c3r, kc8c3c)
-    twostepmod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'), kc3c6f, kc3c6r, kc3c6c)
-    twostepmod(XIAP(), C3(state = 'A'), C3(bf = None, state = 'ub'), kxiapc3f, kxiapc3r, kxiapc3c)
-    twostepmod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), kc3parpf, kc3parpr, kc3parpc)
-    twostepmod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kc6c8f, kc6c8r, kc6c8c)
+    two_step_mod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), kc8c3f, kc8c3r, kc8c3c)
+    two_step_mod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'), kc3c6f, kc3c6r, kc3c6c)
+    two_step_mod(XIAP(), C3(state = 'A'), C3(bf = None, state = 'ub'), kxiapc3f, kxiapc3r, kxiapc3c)
+    two_step_mod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), kc3parpf, kc3parpr, kc3parpc)
+    two_step_mod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kc6c8f, kc6c8r, kc6c8c)

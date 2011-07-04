@@ -53,8 +53,8 @@ Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbi
 #        Bak + Bak <--> Bak:Bak + Bak <--> Bak:Bak:Bak + Bak <--> Bak:Bak:Bak:Bak
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
-twostepmod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
-twostepmod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kbidbakf, kbidbakr, kbidbakc)
+two_step_mod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
+two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kbidbakf, kbidbakr, kbidbakc)
 # pore_assembly(Subunit, size, rates):
 pore_assembly(Bax(bf=None, state='A'), 4, [[kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr]])
 pore_assembly(Bak(bf=None, state='A'), 4, [[kbakdimf,kbakdimr], [kbakdimf,kbakdimr], [kbakdimf,kbakdimr]])
@@ -66,21 +66,21 @@ pore_assembly(Bak(bf=None, state='A'), 4, [[kbakdimf,kbakdimr], [kbakdimf,kbakdi
 # a set of simple bind reactions:
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
-sbindtable([[                     Bcl2, BclxL,  Mcl1],
-            [                       {},    {},    {}],
-            [Bax, {'state':'A'},  True,  True, False],
-            [Bak, {'state':'A'}, False,  True,  True]],
-           model)
+simple_bind_table([[                     Bcl2, BclxL,  Mcl1],
+                   [                       {},    {},    {}],
+                   [Bax, {'state':'A'},  True,  True, False],
+                   [Bak, {'state':'A'}, False,  True,  True]],
+                  model)
 
 # Sensitizers
 # Bcl2 sensitizers bind through a simple bind resction: 
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
-sbindtable([[           Bcl2, BclxL,  Mcl1],
-            [             {},    {},    {}],
-            [Bad,  {},  True,  True, False],
-            [NOXA, {},  False, True,  True]],
-           model)
+simple_bind_table([[           Bcl2, BclxL,  Mcl1],
+                   [             {},    {},    {}],
+                   [Bad,  {},  True,  True, False],
+                   [NOXA, {},  False, True,  True]],
+                  model)
 
 # Import necessary modules
 # ========================
