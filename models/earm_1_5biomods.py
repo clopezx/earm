@@ -21,8 +21,8 @@ Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplas
 Monomer('Mcl1', ['bf']) 
 Monomer('Bad', ['bf']) 
 Monomer('NOXA', ['bf']) 
-Monomer('CytoC', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
-Monomer('Smac', ['bf', 'state'], {'state':['mito', 'A', 'cyto']})
+Monomer('CytoC', ['bf', 'state'], {'state':['M', 'A', 'C']})
+Monomer('Smac', ['bf', 'state'], {'state':['M', 'A', 'C']})
 Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
 Monomer('Apop', ['bf'])
 Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
@@ -33,6 +33,7 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
+rd = {} #rate dictionary
 import earm_1_5parms
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
@@ -40,6 +41,7 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # ======================
 # Bcl2, Bid, Bax migration to mitochondria
 # ----------------------------------------
+
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
 Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kbcl2Cbcl2Mf, kbcl2Cbcl2Mf)
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kbclxlCbclxlMf, kbclxlCbclxlMf)
@@ -53,8 +55,8 @@ Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbi
 #        Bak + Bak <--> Bak:Bak + Bak <--> Bak:Bak:Bak + Bak <--> Bak:Bak:Bak:Bak
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
-two_step_mod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kbidbaxf, kbidbaxr, kbidbaxc)
-two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kbidbakf, kbidbakr, kbidbakc)
+two_step_mod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), [kbidbaxf, kbidbaxr, kbidbaxc])
+two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), [kbidbakf, kbidbakr, kbidbakc])
 # pore_assembly(Subunit, size, rates):
 pore_assembly(Bax(bf=None, state='A'), 4, [[kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr]])
 pore_assembly(Bak(bf=None, state='A'), 4, [[kbakdimf,kbakdimr], [kbakdimf,kbakdimr], [kbakdimf,kbakdimr]])
@@ -66,10 +68,10 @@ pore_assembly(Bak(bf=None, state='A'), 4, [[kbakdimf,kbakdimr], [kbakdimf,kbakdi
 # a set of simple bind reactions:
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
-simple_bind_table([[                     Bcl2, BclxL,  Mcl1],
-                   [                       {},    {},    {}],
-                   [Bax, {'state':'A'},  True,  True, False],
-                   [Bak, {'state':'A'}, False,  True,  True]],
+simple_bind_table([[                                            Bcl2, BclxL,  Mcl1],
+                   [                                              {},    {},    {}],
+                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,  True, False],
+                   [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,  True,  True]],
                   model)
 
 # Sensitizers
@@ -118,11 +120,10 @@ Initial(XIAP(bf=None), XIAP_0)
 # Observables
 # ===========
 # Fig 4B from Albeck observes these, normalizes and inverts them
-Observe('Bid',   Bid(bf=None, state='U'))
-Observe('PARP',  PARP(bf=None, state='U'))
-Observe('Smac',  Smac(bf=None, state='mito'))
-# This is what *should* be observed???
+# Observe('Bid',   Bid(bf=None, state='U'))
+# Observe('PARP',  PARP(bf=None, state='U'))
+# Observe('Smac',  Smac(bf=None, state='mito'))
+# # This is what *should* be observed???
 Observe('tBid',  Bid(state='T'))
 Observe('cPARP', PARP(state='C'))
 Observe('cSmac', Smac(state='cyto'))
-

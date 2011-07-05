@@ -147,6 +147,10 @@ def pore_assembly(Subunit, size, rates):
                           M + S1 <> S2, *rates[i-2]))
     return rules
 
+def transport(Subunit, Source, Dest, rates, site='bf'):
+    #Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
+    pass
+
 def pore_transport(Subunit, Source, Dest, min_size, max_size, rates, site='bf'):
     """
     Generate rules to transport MonomerPattern <Source> to <Dest>
@@ -230,7 +234,7 @@ def simple_bind(Sub1, Sub2, klist, site='bf'):
     # now that we have the complex elements formed we can write the first step rule
     Rule(r1_name, Sub1 + Sub2 <> Sub1Cplx % Sub2Cplx, kf, kr)
 
-inhibit = simplebind #alias for simplebind
+inhibit = simple_bind #alias for simplebind
 
 #FIXME: pass klist of sorts?
 def simple_bind_table(bindtable, lmodel, site='bf'):
@@ -285,7 +289,7 @@ def simple_bind_table(bindtable, lmodel, site='bf'):
                 # rule name
                 rname = 'cplx_%s_%s' % (react1[i].name, react0[j].name)
                 # create the rule
-                print "Generating  %s:%s complex"%(react1[i].name, react0[j].name)
+                #print "Generating  %s:%s complex"%(react1[i].name, react0[j].name)
                 Rule(rname, react1[i](react1st[i]) + react0[j](react0st[j]) <>
                      react1[i](prod1st[i]) % react0[j](prod0st[j]), 
                      kf, kr)
