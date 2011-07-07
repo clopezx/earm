@@ -22,7 +22,7 @@ from pysbhelperfuncs import *
 alias_model_components()
 
 # RECEPTOR TO BID SEGMENT
-def rec_to_bid(model):
+def rec_to_bid(model, kd):
     """ This is a very specific function which depends on specifically
     on the parameters and monomers of earm_1_0 to work. This function
     uses L, R, DISC, flip, C8, BAR, and Bid monomers and their
@@ -38,17 +38,17 @@ def rec_to_bid(model):
     #        pC8 + DISC <--> DISC:pC8 --> C8 + DISC
     #        Bid + C8 <--> Bid:C8 --> tBid + C8
     # ---------------------
-    two_step_conv(L(), R(), DISC(bf = None ), [klrf, klrr, klrc])
-    two_step_mod(DISC(), C8(state='pro'), C8(bf = None, state='A'), [kdiscc8f, kdiscc8r, kdiscc8c])
-    two_step_mod(C8(state='A'), Bid(state='U'), Bid(bf = None, state='T'), [kc8bidf, kc8bidr, kc8bidc])
+    two_step_conv(L(), R(), DISC(bf = None ), kd['L_R_DISC'])
+    two_step_mod(DISC(), C8(state='pro'), C8(bf = None, state='A'), kd['DISC_C8'])
+    two_step_mod(C8(state='A'), Bid(state='U'), Bid(bf = None, state='T'), kd['C8_BID'])
     # ---------------------
     # Inhibition Rules
     # ---------------------
     #        flip + DISC <-->  flip:DISC  
     #        C8 + BAR <--> BAR:C8 CSPS
     # ---------------------
-    simple_bind(DISC(), flip(), [kflipdiscf, kflipdiscr])
-    simple_bind(BAR(), C8(state='A'), [kbarc8f, kbarc8r])
+    simple_bind(DISC(), flip(), kd['DISC_FLIP'])
+    simple_bind(BAR(), C8(state='A'), kd['BAR_C8'])
     # ---------------------
 
 def pore_to_parp(model):
@@ -71,8 +71,8 @@ def pore_to_parp(model):
     # ----------------------
     #pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
     pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, [[kbaxcytocMCf, kbaxcytocMCr, kbaxcytocMCc]]) 
-    pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, [[kbakcytocMCf, kbakcytocMCr, kbakcytocMCc]])
     pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, [[kbaxsmacCAf, kbaxsmacCAr, kbaxsmacCAc]]) 
+    pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, [[kbakcytocMCf, kbakcytocMCr, kbakcytocMCc]])
     pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, [[kbaksmacCAf, kbaksmacCAr, kbaksmacCAc]])
     Rule('cytocCtoM', CytoC(bf = None, state='C') <> CytoC(bf=None, state = 'A'), kcytocMcytocCf, kcytocMcytocCr)
     Rule('SmacMtoSmacC', Smac(bf = None, state='C') <> Smac(bf = None, state='A'), ksmacMsmacCf, ksmacMsmacCr)

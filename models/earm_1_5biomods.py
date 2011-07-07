@@ -34,7 +34,7 @@ Monomer('XIAP', ['bf'])
 # EARM 1.0 Parameters and Modules 
 # ===============================
 rd = {} #rate dictionary
-import earm_1_5parms
+from earm_1_5parms import parameter_dict as kd
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
@@ -87,9 +87,9 @@ simple_bind_table([[           Bcl2, BclxL,  Mcl1],
 # Import necessary modules
 # ========================
 # Generate the Receptor to Bid section from the EARM 1.0 module
-earm_1_0modules.rec_to_bid(model)
+earm_1_0modules.rec_to_bid(model, kd)
 # Generate the Pore to MOMP section from the EARM 1.0 module
-earm_1_0modules.pore_to_parp(model)
+earm_1_0modules.pore_to_parp(model, kd)
 
 # Initial amounts
 # ===============

@@ -11,20 +11,45 @@ parameter_dict = {
     #---------------------------
     # EARM 1.0 legacy parameters
     #---------------------------
-    # DISC formation
+    # rec_to_bid parameters
     'L_R_DISC':   [ Parameter('klrf', 4e-07)       
                     Parameter('klrr', 1e-03),
                     Parameter('klrc', 1e-05)],
-    # DISC inhibition by FLIP
-    'DISC_FLIP':  [ Parameter('kflipdiscf', 1e-06), 
-                    Parameter('kflipdiscr', 1e-03)],
     # C8 activation via DISC,
     'DISC_C8':    [ Parameter('kdiscc8f', 1e-06),   
                     Parameter('kdiscc8r', 1e-03),
                     Parameter('kdiscc8c', 1e+00)],
+    # Bid cleavage by C8
+    'C8_BID':     [ Parameter('kc8bidf', 1e-07),
+                    Parameter('kc8bidr', 1e-03),
+                    Parameter('kc8bidc', 1e+00)],
+    # DISC inhibition by FLIP
+    'DISC_FLIP':  [ Parameter('kflipdiscf', 1e-06), 
+                    Parameter('kflipdiscr', 1e-03)],
     # C8 inhibition by BAR
     'BAR_C8':     [ Parameter('kbarc8f', 1e-06), 
                     Parameter('kbarc8r', 1e-03)],
+    #---------------------------
+    # pore_to_parp parameters
+    #---------------------------
+    # CytoC transport/activation by Bax
+    'BAX_CYTC':   [ Parameter('kbaxcytocMCf', 2e-06/v),
+                    Parameter('kbaxcytocMCr', 1e-03),
+                    Parameter('kbaxcytocMCc', 1e+01)],
+    # Smac transport/activation by Bax
+    'BAX_SMAC':   [ Parameter('kbaxsmacCAf', 2e-06/v),
+                    Parameter('kbaxsmacCAr', 1e-03),
+                    Parameter('kbaxsmacCAc', 1e+01)],
+    # CytoC transport/activation by Bak **
+    'BAK_CYTC':   [ Parameter('kbakcytocMCf', 2e-06/v),
+                    Parameter('kbakcytocMCr', 1e-03),
+                    Parameter('kbakcytocMCc', 1e+01)],
+    # Smac transport/activation by Bak  **
+    'BAK_SMAC':   [ Parameter('kbaksmacCAf', 2e-06/v),
+                    Parameter('kbaksmacCAr', 1e-03),
+                    Parameter('kbaksmacCAc', 1e+01)],
+
+
     # C3 activation by C8
     'C8_C3':      [ Parameter('kc8c3f', 1e-07), 
                     Parameter('kc8c3r', 1e-03),
@@ -45,10 +70,6 @@ parameter_dict = {
     'PARP_C3':    [ Parameter('kc3parpf', 1e-06),
                     Parameter('kc3parpr', 1e-02),
                     Parameter('kc3parpc', 1e+00)],
-    # Bid cleavage by C8
-    'C8_BID':     [ Parameter('kc8bidf', 1e-07),
-                    Parameter('kc8bidr', 1e-03),
-                    Parameter('kc8bidc', 1e+00)],
     # Bid inhibition by Bcl2
     'BID_BCL2':   [ Parameter('kbidbcl2f', 1e-06),
                     Parameter('kbidbcl2r', 1e-03)],
@@ -78,22 +99,7 @@ parameter_dict = {
     # Bax2 dimerization (tetramer formation) *** this probably should go?
     'BAX_TET':    [ Parameter('kbaxtetf', 1e-06/v*2),
                     Parameter('kbaxtetr', 1e-03)],
-    # CytoC activation by Bax
-    'BAX_CYTC':   [ Parameter('kbaxcytocMCf', 2e-06/v),
-                    Parameter('kbaxcytocMCr', 1e-03),
-                    Parameter('kbaxcytocMCc', 1e+01)],
-    # CytoC activation by Bax
-    'BAK_CYTC':   [ Parameter('kbakcytocMCf', 2e-06/v),
-                    Parameter('kbakcytocMCr', 1e-03),
-                    Parameter('kbakcytocMCc', 1e+01)],
-    # Smac activation by Bax
-    'BAX_SMAC':   [ Parameter('kbaxsmacCAf', 2e-06/v),
-                    Parameter('kbaxsmacCAr', 1e-03),
-                    Parameter('kbaxsmacCAc', 1e+01)],
-    # Smac activation by Bak
-    'BAK_SMAC':   [ Parameter('kbaksmacCAf', 2e-06/v),
-                    Parameter('kbaksmacCAr', 1e-03),
-                    Parameter('kbaksmacCAc', 1e+01)],
+
     # CytoC translocation
     'CYTC_trans': [ Parameter('kcytocMcytocCf', transloc),
                     Parameter('kcytocMcytocCr', transloc)],
