@@ -65,17 +65,15 @@ def pore_to_parp(model):
     # CytC, Smac release
     # ----------------------
     #        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
-    #        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
     #        ACytoC <-->  cCytoC
+    #        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
     #        ASmac <-->  cSmac
     # ----------------------
     #pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
-    pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, [[kbaxcytocMCf, kbaxcytocMCr, kbaxcytocMCc]]) 
-    pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, [[kbaxsmacCAf, kbaxsmacCAr, kbaxsmacCAc]]) 
-    pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, [[kbakcytocMCf, kbakcytocMCr, kbakcytocMCc]])
-    pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, [[kbaksmacCAf, kbaksmacCAr, kbaksmacCAc]])
-    Rule('cytocCtoM', CytoC(bf = None, state='C') <> CytoC(bf=None, state = 'A'), kcytocMcytocCf, kcytocMcytocCr)
-    Rule('SmacMtoSmacC', Smac(bf = None, state='C') <> Smac(bf = None, state='A'), ksmacMsmacCf, ksmacMsmacCr)
+    pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
+    pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
+    pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
+    pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
     # ---------------------------
     # Apoptosome formation
     # ---------------------------
@@ -83,16 +81,16 @@ def pore_to_parp(model):
     #        aApaf + pC9 <-->  Apop
     #        Apop + pC3 <-->  Apop:pC3 --> Apop + C3
     # ---------------------------
-    two_step_mod(CytoC(state='C'), Apaf(state='I'), Apaf(bf = None, state = 'A'), [kcytocCapaff, kcytocCapafr, kcytocCapafc])
-    one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), [kapafc9f, kapafc9r])
-    two_step_mod(Apop(), C3(state='pro'), C3(bf = None, state='A'), [kapopc3f, kapopc3r, kapopc3c])
+    two_step_mod(CytoC(state='C'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kd['APAF_CYTC'])
+    one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), kd['APOP_C9:APAF'])
+    two_step_mod(Apop(), C3(state='pro'), C3(bf = None, state='A'), kd['APOP_C3'])
     # -----------------------------
     # Apoptosome related inhibitors
     # -----------------------------
     #        Apop + XIAP <-->  Apop:XIAP  
     #        cSmac + XIAP <-->  cSmac:XIAP  
-    simple_bind(Apop(), XIAP(), [kapopxiapf, kapopxiapr])
-    simple_bind(Smac(state='C'), XIAP(), [ksmacxiapf, ksmacxiapr])
+    simple_bind(Apop(), XIAP(), kd['APOP_XIAP'])
+    simple_bind(Smac(state='C'), XIAP(), kd['SMAC_XIAP'])
     # ---------------------------
     # Caspase reactions (effectors, inhibitors, and loopback initiators)
     # ---------------------------
@@ -102,8 +100,8 @@ def pore_to_parp(model):
     #        PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
     #        pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
     # ---------------------------
-    two_step_mod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), [kc8c3f, kc8c3r, kc8c3c])
-    two_step_mod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'), [kc3c6f, kc3c6r, kc3c6c])
-    two_step_mod(XIAP(), C3(state = 'A'), C3(bf = None, state = 'ub'), [kxiapc3f, kxiapc3r, kxiapc3c])
-    two_step_mod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), [kc3parpf, kc3parpr, kc3parpc])
-    two_step_mod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), [kc6c8f, kc6c8r, kc6c8c])
+    two_step_mod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), kd['C3_C8'])
+    two_step_mod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'), kd['C6_C3'])
+    two_step_mod(XIAP(), C3(state = 'A'), C3(bf = None, state = 'ub'), kd['C3_XIAP'])
+    two_step_mod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), kd['PARP_C3'])
+    two_step_mod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kd['C8_C6'])

@@ -3,9 +3,8 @@ from pysbhelperfuncs import *
 
 
 Model()
-# Monomers
-# ======================
-#('bf' site can be used with automated rule gen fxns)
+# Monomers for all modules (including imported modules)
+# =====================================================
 Monomer('L', ['bf']) # Ligand
 Monomer('R', ['bf']) # Receptor
 Monomer('DISC', ['bf']) # DISC
@@ -41,11 +40,10 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # ======================
 # Bcl2, Bid, Bax migration to mitochondria
 # ----------------------------------------
-
-Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
-Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kbcl2Cbcl2Mf, kbcl2Cbcl2Mf)
-Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kbclxlCbclxlMf, kbclxlCbclxlMf)
-Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kbidCbidMf, kbidCbidMr)
+Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kd['BID_trans'])
+Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'])
+Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kd['BCL2_trans'])
+Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'])
 # Mitochondrial tBid activates Bax/Bak
 # Bax/Bak form pores
 # ------------------------------------
@@ -91,10 +89,8 @@ earm_1_0modules.rec_to_bid(model, kd)
 # Generate the Pore to MOMP section from the EARM 1.0 module
 earm_1_0modules.pore_to_parp(model, kd)
 
-# Initial amounts
-# ===============
-# including species from modules!
-# -------------------------------
+# Initial non-zero species
+# ========================
 Initial(L(bf=None), L_0)
 Initial(R(bf=None), R_0)
 Initial(flip(bf=None), flip_0)
