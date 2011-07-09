@@ -23,10 +23,6 @@ parameter_dict = {
     # Bclxl translocation
     'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', transloc),
                     Parameter('kbclxlCbclxlMr', transloc)]
-
-    # Bid inhibition by Bcl2
-    'BID_BCL2':   [ Parameter('kbidbcl2f', 1e-06),
-                    Parameter('kbidbcl2r', 1e-03)],
     # Bax activation by Bid
     'BID_BAX':    [ Parameter('kbidbaxf', 1e-07),
                     Parameter('kbidbaxr', 1e-03),
@@ -35,31 +31,39 @@ parameter_dict = {
     'BID_BAK':    [ Parameter('kbidbakf', 1e-07),
                     Parameter('kbidbakr', 1e-03),
                     Parameter('kbidbakc', 1e+00)],
+
+    # Bid inhibition by Bcl2
+    'BID_BCL2':   [ Parameter('kbidbcl2f', 1e-06),
+                    Parameter('kbidbcl2r', 1e-03)],
      # Bax inhibition by Bcl2
     'BAX_BCL2':   [ Parameter('kbaxMbcl2Mf', 1e-06/v),
                     Parameter('kbaxMbcl2Mr', 1e-03)]
-    # Bax dimerization
-    'BAX_DIM':    [ Parameter('kbaxdimf', 1e-06/v*2),
-                    Parameter('kbaxdimr', 1e-03)]
-    # Bak dimerization ***
-    'BAK_DIM':    [ Parameter('kbakdimf', 1e-06/v*2),
+    #Bax pore assembly
+    'BAX_PORE':   [[Parameter('kbaxdimf', 1e-06/v*2),
+                    Parameter('kbaxdimr', 1e-03)],
+                   [Parameter('kbaxtrimf', 1e-06/v*2),
+                    Parameter('kbaxtrimr', 1e-03)]
+                   [Parameter('kbaxtetf', 1e-06/v*2),
+                    Parameter('kbaxtetr', 1e-03)]],
+    'BAK_PORE':   [[Parameter('kbakdimf', 1e-06/v*2),
                     Parameter('kbakdimr', 1e-03)],
-    # Bax2 dimerization (tetramer formation) *** this probably should go?
-    'BAX_TET':    [ Parameter('kbaxtetf', 1e-06/v*2),
-                    Parameter('kbaxtetr', 1e-03)],
+                   [Parameter('kbaktrimf', 1e-06/v*2),
+                    Parameter('kbaktrimr', 1e-03)]
+                   [Parameter('kbaktetf', 1e-06/v*2),
+                    Parameter('kbaktetr', 1e-03)]],
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
-    'BAX_BAK_inh':[ [Parameter('baxbcl2f', 3.33),
-                     Parameter('baxbcl2r', 3.33)],
-                    [Parameter('baxbclxlf', 3.33),
-                     Parameter('baxbclxlr', 3.33)],
-                    [Parameter('baxmcl1f', 3.33),
-                     Parameter('baxmcl1r', 3.33)],
-                    [Parameter('bakbcl2f', 3.33),
-                     Parameter('bakbcl2r', 3.33)],
-                    [Parameter('bakbclxlf', 3.33),
-                     Parameter('bakbclxlr', 3.33)],
-                    [Parameter('bakmcl1f', 3.33),
-                     Parameter('bakmcl1r', 3.33)]]
+    'BAX_BAK_inh':[[Parameter('baxbcl2f', 3.33),
+                    Parameter('baxbcl2r', 3.33)],
+                   [Parameter('baxbclxlf', 3.33),
+                    Parameter('baxbclxlr', 3.33)],
+                   [Parameter('baxmcl1f', 3.33),
+                    Parameter('baxmcl1r', 3.33)],
+                   [Parameter('bakbcl2f', 3.33),
+                    Parameter('bakbcl2r', 3.33)],
+                   [Parameter('bakbclxlf', 3.33),
+                    Parameter('bakbclxlr', 3.33)],
+                   [Parameter('bakmcl1f', 3.33),
+                    Parameter('bakmcl1r', 3.33)]],
     # Sensitization of Bcl2/BclxL/Mcl1 by Bad/NOXA
     'BCLs_sens':  [ [Parameter('badbcl2f', 3.33),
                      Parameter('badbcl2r', 3.33)],
