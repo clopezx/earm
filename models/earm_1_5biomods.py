@@ -40,10 +40,10 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # ======================
 # Bcl2, Bid, Bax migration to mitochondria
 # ----------------------------------------
-Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kd['BID_trans'])
-Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'])
-Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kd['BCL2_trans'])
-Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'])
+Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
+Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'][0], kd['BAX_trans'][1])
+Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kd['BCL2_trans'][0], kd['BCL2_trans'][1])
+Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
 
 # Mitochondrial tBid activates Bax/Bak
 # Bax/Bak form pores
@@ -57,21 +57,22 @@ Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'
 two_step_mod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
 two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
 # pore_assembly(Subunit, size, rates):
-pore_assembly(Bax(bf=None, state='A'), 4, [[kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr], [kbaxdimf,kbaxdimr]])
-pore_assembly(Bak(bf=None, state='A'), 4, [[kbakdimf,kbakdimr], [kbakdimf,kbakdimr], [kbakdimf,kbakdimr]])
+pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
+pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition
 # ------------------------------------
-# Bcl2 inhibitors of Bax and Bak
+# Bcl2 inhibitors of Bax, Bak, and Bid
 # a set of simple bind reactions:
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
 simple_bind_table([[                                            Bcl2, BclxL,  Mcl1],
                    [                                              {},    {},    {}],
-                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,  True, False],
-                   [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,  True,  True]],
-                  kd['BAX_BAK_inh'], model)
+                   [Bid, {'state':'M'},                         True,  False, False],
+                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,   True, False],
+                   [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,   True,  True]],
+                  kd['BID_BAX_BAK_inh'], model)
 
 # Sensitizers
 # Bcl2 sensitizers bind through a simple bind resction: 
