@@ -51,7 +51,7 @@ def rec_to_bid(model, kd):
     simple_bind(BAR(), C8(state='A'), kd['BAR_C8'])
     # ---------------------
 
-def pore_to_parp(model):
+def pore_to_parp(model, kd):
     """ This is a very specific function which depends on specifically
     on the parameters and monomers of earm_1_0 to work. This function
     uses MitoP, CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP

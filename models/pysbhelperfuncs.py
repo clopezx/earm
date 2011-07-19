@@ -237,7 +237,7 @@ def simple_bind(Sub1, Sub2, klist, site='bf'):
 inhibit = simple_bind #alias for simplebind
 
 #FIXME: pass klist of sorts?
-def simple_bind_table(bindtable, lmodel, site='bf'):
+def simple_bind_table(bindtable, parmlist, lmodel, site='bf'):
     """This assumes that the monomers passed are in their desired state without
     the 'bf' site, which will be used for binding.
     bindtable is a list of lists denoting the reactions between two types of reactants
@@ -277,15 +277,13 @@ def simple_bind_table(bindtable, lmodel, site='bf'):
         d[site] = 1
     
     # loop over interactions
+    pc = 0 # parameter counter, cheap way of keeping track of which param set in the list to use
     for i in range(0, len(react1)):
         for j in range(0, len(react0)):
             if intrxns[i][j] is True:
-                # build the name of the forward/reverse parameters
-                # FIXME: make the rate passing uniform with the simple fxns
-                sparamf = react1[i].name.lower()+react0[j].name.lower()+'f'
-                sparamr = react1[i].name.lower()+react0[j].name.lower()+'r'
-                kf = lmodel.parameter(sparamf)
-                kr = lmodel.parameter(sparamr)
+                # get the parameters from the parmlist
+                kf = parmlist[pc][0]
+                kr = parmlist[pc][1]
                 # rule name
                 rname = 'cplx_%s_%s' % (react1[i].name, react0[j].name)
                 # create the rule
@@ -293,5 +291,5 @@ def simple_bind_table(bindtable, lmodel, site='bf'):
                 Rule(rname, react1[i](react1st[i]) + react0[j](react0st[j]) <>
                      react1[i](prod1st[i]) % react0[j](prod0st[j]), 
                      kf, kr)
-    
+                pc += 1
     

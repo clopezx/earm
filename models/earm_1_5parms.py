@@ -45,21 +45,28 @@ parameter_dict = {
                    [Parameter('kbaktetf', 1e-06/v*2),
                     Parameter('kbaktetr', 1e-03)]],
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
-    'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 1e-06),
-                        Parameter('kbidbcl2r', 1e-03)],
-                       [Parameter('baxbcl2f', 1e-06/v),
-                        Parameter('baxbcl2r', 1e-03)],
+    # These are used in the simple_bind_table function which expects
+    # row-major order (if you don't know what this means google it)
+    'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 3.33/v),
+                        Parameter('kbidbcl2r', 3.33)],
+                       [Parameter('baxbcl2f', 3.33/v),
+                        Parameter('baxbcl2r', 3.33)],
                        [Parameter('baxbclxlf', 3.33),
                         Parameter('baxbclxlr', 3.33)],
-                       [Parameter('baxmcl1f', 3.33),
-                        Parameter('baxmcl1r', 3.33)],
-                       [Parameter('bakbcl2f', 3.33),
-                        Parameter('bakbcl2r', 3.33)],
                        [Parameter('bakbclxlf', 3.33),
                         Parameter('bakbclxlr', 3.33)],
                        [Parameter('bakmcl1f', 3.33),
                         Parameter('bakmcl1r', 3.33)]],
-
+    # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
+    'BCLs_sens':      [[Parameter('kbadbcl2f', 3.33/v),
+                        Parameter('kbadbcl2r', 3.33)],
+                       [Parameter('kbadbclxlf', 3.33/v),
+                        Parameter('kbadbclxlr', 3.33)],
+                       [Parameter('knoxabcl2f', 3.33/v),
+                        Parameter('knoxabcl2r', 3.33)],
+                       [Parameter('knoxamcl1f', 3.33/v),
+                        Parameter('knoxamcl1r', 3.33)]],
+    
     #---------------------------
     # EARM 1.0 legacy parameters
     #---------------------------
@@ -86,28 +93,28 @@ parameter_dict = {
     # pore_to_parp module parameters
     #---------------------------
     # CytoC transport/activation by Bax
-    'BAX_CYTC':   [ Parameter('kbaxcytocMCf', 2e-06/v),
-                    Parameter('kbaxcytocMCr', 1e-03),
-                    Parameter('kbaxcytocMCc', 1e+01)],
+    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf', 2e-06/v),
+                     Parameter('kbaxcytocMCr', 1e-03),
+                     Parameter('kbaxcytocMCc', 1e+01)]],
     # Smac transport/activation by Bax
-    'BAX_SMAC':   [ Parameter('kbaxsmacCAf', 2e-06/v),
-                    Parameter('kbaxsmacCAr', 1e-03),
-                    Parameter('kbaxsmacCAc', 1e+01)],
+    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf', 2e-06/v),
+                     Parameter('kbaxsmacCAr', 1e-03),
+                     Parameter('kbaxsmacCAc', 1e+01)]],
     # CytoC transport/activation by Bak **
-    'BAK_CYTC':   [ Parameter('kbakcytocMCf', 2e-06/v),
-                    Parameter('kbakcytocMCr', 1e-03),
-                    Parameter('kbakcytocMCc', 1e+01)],
+    'BAK_CYTC':   [[ Parameter('kbakcytocMCf', 2e-06/v),
+                     Parameter('kbakcytocMCr', 1e-03),
+                     Parameter('kbakcytocMCc', 1e+01)]],
     # Smac transport/activation by Bak  **
-    'BAK_SMAC':   [ Parameter('kbaksmacCAf', 2e-06/v),
-                    Parameter('kbaksmacCAr', 1e-03),
-                    Parameter('kbaksmacCAc', 1e+01)],
+    'BAK_SMAC':   [[ Parameter('kbaksmacCAf', 2e-06/v),
+                     Parameter('kbaksmacCAr', 1e-03),
+                     Parameter('kbaksmacCAc', 1e+01)]],
     # Apaf activation by CytC
     'APAF_CYTC':  [ Parameter('kcytocCapaff', 5e-07),
                     Parameter('kcytocCapafr', 1e-03),
                     Parameter('kcytocCapafc', 1e+00)],
     # Apop formation by Apaf + C9
-    'APAC_C9:APAF':    [ Parameter('kapafc9f', 5e-08),
-                    Parameter('kapafc9r', 1e-03)],
+    'APOP_C9:APAF':[ Parameter('kapafc9f', 5e-08),
+                     Parameter('kapafc9r', 1e-03)],
      # C3 activation by Apop
     'APOP_C3':    [ Parameter('kapopc3f', 5e-09),
                     Parameter('kapopc3r', 1e-03),

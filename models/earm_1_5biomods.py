@@ -77,7 +77,8 @@ simple_bind_table([[                                            Bcl2, BclxL,  Mc
 # Sensitizers
 # Bcl2 sensitizers bind through a simple bind resction: 
 #        Inh + Act <--> Inh:Act
-# ------------------------------------
+# This goes through the list in row-major order (as it should be)
+# ---------------------------------------------------------------
 simple_bind_table([[           Bcl2, BclxL,  Mcl1],
                    [             {},    {},    {}],
                    [Bad,  {},  True,  True, False],
