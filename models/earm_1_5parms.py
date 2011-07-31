@@ -2,7 +2,6 @@ from pysb import *
 # Parameter section
 
 # Special parameters
-transloc = .01; # rate of transloc bw cytosol and mitochondria
 v = .07; # mitochondria compartment volume/cell volume
 
 # EARM 1.0 parameters
@@ -12,17 +11,17 @@ parameter_dict = {
     # EARM 1.5 bcl2 module parameters
     #--------------------
     # Bid transport to mitochondria
-    'BID_trans':  [ Parameter('kbidCbidMf', transloc),
-                    Parameter('kbidCbidMr', transloc)],
+    'BID_trans':  [ Parameter('kbidCbidMf', .01),
+                    Parameter('kbidCbidMr', .01)],
     # Bax transport to mitochondria
-    'BAX_trans':  [ Parameter('kbaxCbaxMf', transloc), 
-                    Parameter('kbaxCbaxMr', transloc)],
+    'BAX_trans':  [ Parameter('kbaxCbaxMf', .01), 
+                    Parameter('kbaxCbaxMr', .01)],
     # Bcl2 translocation
-    'BCL2_trans': [ Parameter('kbcl2Cbcl2Mf', transloc),
-                    Parameter('kbcl2Cbcl2Mr', transloc)],
+    'BCL2_trans': [ Parameter('kbcl2Cbcl2Mf', .01),
+                    Parameter('kbcl2Cbcl2Mr', .01)],
     # Bclxl translocation
-    'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', transloc),
-                    Parameter('kbclxlCbclxlMr', transloc)],
+    'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', .01),
+                    Parameter('kbclxlCbclxlMr', .01)],
     # Bax activation by Bid
     'BID_BAX':    [ Parameter('kbidbaxf', 1e-07),
                     Parameter('kbidbaxr', 1e-03),
@@ -47,25 +46,25 @@ parameter_dict = {
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
     # These are used in the simple_bind_table function which expects
     # row-major order (if you don't know what this means google it)
-    'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 3.33/v),
-                        Parameter('kbidbcl2r', 3.33)],
-                       [Parameter('baxbcl2f', 3.33/v),
-                        Parameter('baxbcl2r', 3.33)],
-                       [Parameter('baxbclxlf', 3.33),
-                        Parameter('baxbclxlr', 3.33)],
-                       [Parameter('bakbclxlf', 3.33),
-                        Parameter('bakbclxlr', 3.33)],
-                       [Parameter('bakmcl1f', 3.33),
-                        Parameter('bakmcl1r', 3.33)]],
+    'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 1e-06/v),
+                        Parameter('kbidbcl2r', 1e-03  )],
+                       [Parameter('baxbcl2f', 1e-06/v),
+                        Parameter('baxbcl2r', 1e-03  )],
+                       [Parameter('baxbclxlf', 1e-06/v),
+                        Parameter('baxbclxlr', 1e-03  )],
+                       [Parameter('bakbclxlf',1e-06/v),
+                        Parameter('bakbclxlr',1e-03  )],
+                       [Parameter('bakmcl1f', 1e-06/v),
+                        Parameter('bakmcl1r', 1e-03  )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
-    'BCLs_sens':      [[Parameter('kbadbcl2f', 3.33/v),
-                        Parameter('kbadbcl2r', 3.33)],
-                       [Parameter('kbadbclxlf', 3.33/v),
-                        Parameter('kbadbclxlr', 3.33)],
-                       [Parameter('knoxabcl2f', 3.33/v),
-                        Parameter('knoxabcl2r', 3.33)],
-                       [Parameter('knoxamcl1f', 3.33/v),
-                        Parameter('knoxamcl1r', 3.33)]],
+    'BCLs_sens':      [[Parameter('kbadbcl2f',  1e-06/v),
+                        Parameter('kbadbcl2r',  1e-03  )],
+                       [Parameter('kbadbclxlf', 1e-06/v),
+                        Parameter('kbadbclxlr', 1e-03  )],
+                       [Parameter('knoxabcl2f', 1e-06/v),
+                        Parameter('knoxabcl2r', 1e-03  )],
+                       [Parameter('knoxamcl1f', 1e-06/v),
+                        Parameter('knoxamcl1r', 1e-03  )]],
     
     #---------------------------
     # EARM 1.0 legacy parameters
@@ -150,27 +149,27 @@ parameter_dict = {
     # EARM 1.0 HeLa initial conditions
     # Non-zero initial conditions (in molecules per cell):
     #---------------------------------
-    'INIT_AMTS':    [ Parameter('L_0'        , 3000), # Ligand corresponding to 50 ng/ml SuperKiller TRAIL
-                      Parameter('R_0'       , 200),  # TRAIL receptor 
-                      Parameter('flip_0'     , 1e2),  # Flip
-                      Parameter('C8_0'      , 2e4),  # procaspase-8 
-                      Parameter('BAR_0'      , 1e3),  # Bifunctional apoptosis regulator
-                      Parameter('Bid_0'      , 4e4),  # Bid
-                      Parameter('Bax_0'      , 1e5),  # Bax
-                      Parameter('Bak_0'      , 1e0),  # Bax
-                      Parameter('Bcl2_0'    , 2e4),  # cytosolic Bcl2
-                      Parameter('BclxL_0'    , 2e4),  # cytosolic BclxL
-                      Parameter('Mcl1_0', 2e4),  # mitochondrial Mcl1  
-                      Parameter('Bad_0'      , 1e3),  # Bad
-                      Parameter('NOXA_0'      , 1e3),  # NOXA
-                      Parameter('CytoC_0'   , 5e5),  # cytochrome c
-                      Parameter('Smac_0'    , 1e5),  # Smac    
-                      Parameter('Apaf_0'     , 1e5),  # Apaf-1
-                      Parameter('C3_0'      , 1e4),  # procaspase-3 (pro-C3)
-                      Parameter('C6_0'      , 1e4),  # procaspase-6 (pro-C6)  
-                      Parameter('C9_0'      , 1e5),  # procaspase-9 (pro-C9)
-                      Parameter('XIAP_0'     , 1e5),  # X-linked inhibitor of apoptosis protein  
-                      Parameter('PARP_0'     , 1e6),  # C3* substrate
+    'INIT_AMTS':    [ Parameter('L_0'     ,  3000), # Ligand corresponding to 50 ng/ml SuperKiller TRAIL
+                      Parameter('R_0'     ,   200),   # TRAIL receptor 
+                      Parameter('flip_0'  , 1.0e2),  # Flip
+                      Parameter('C8_0'    , 2.0e4),   # procaspase-8 
+                      Parameter('BAR_0'   , 1.0e3),  # Bifunctional apoptosis regulator
+                      Parameter('Bid_0'   , 4.0e4),  # Bid
+                      Parameter('Bax_0'   , 0.8e5), # Bax
+                      Parameter('Bak_0'   , 0.2e5), # Bak
+                      Parameter('Bcl2_0'  , 2.0e4),   # cytosolic Bcl2
+                      Parameter('BclxL_0' , 2.0e4),  # cytosolic BclxL
+                      Parameter('Mcl1_0'  , 2.0e4),   # mitochondrial Mcl1  
+                      Parameter('Bad_0'   , 1.0e3),  # Bad
+                      Parameter('NOXA_0'  , 1.0e3),  # NOXA
+                      Parameter('CytoC_0' , 5.0e5),  # cytochrome c
+                      Parameter('Smac_0'  , 1.0e5),  # Smac    
+                      Parameter('Apaf_0'  , 1.0e5),  # Apaf-1
+                      Parameter('C3_0'    , 1.0e4),  # procaspase-3 (pro-C3)
+                      Parameter('C6_0'    , 1.0e4),  # procaspase-6 (pro-C6)  
+                      Parameter('C9_0'    , 1.0e5),  # procaspase-9 (pro-C9)
+                      Parameter('XIAP_0'  , 1.0e5),  # X-linked inhibitor of apoptosis protein  
+                      Parameter('PARP_0'  , 1.0e6),  # C3* substrate
                       ]
     }
 
