@@ -46,7 +46,7 @@ parameter_dict = {
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
     # These are used in the simple_bind_table function which expects
     # row-major order (if you don't know what this means google it)
-    'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 1e-06/v),
+    'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 1e-06),
                         Parameter('kbidbcl2r', 1e-03  )],
                        [Parameter('baxbcl2f', 1e-06/v),
                         Parameter('baxbcl2r', 1e-03  )],
@@ -57,13 +57,13 @@ parameter_dict = {
                        [Parameter('bakmcl1f', 1e-06/v),
                         Parameter('bakmcl1r', 1e-03  )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
-    'BCLs_sens':      [[Parameter('kbadbcl2f',  1e-06/v),
+    'BCLs_sens':      [[Parameter('kbadbcl2f',  1e-09/v),
                         Parameter('kbadbcl2r',  1e-03  )],
-                       [Parameter('kbadbclxlf', 1e-06/v),
+                       [Parameter('kbadbclxlf', 1e-09/v),
                         Parameter('kbadbclxlr', 1e-03  )],
-                       [Parameter('knoxabcl2f', 1e-06/v),
+                       [Parameter('knoxabcl2f', 1e-09/v),
                         Parameter('knoxabcl2r', 1e-03  )],
-                       [Parameter('knoxamcl1f', 1e-06/v),
+                       [Parameter('knoxamcl1f', 1e-09/v),
                         Parameter('knoxamcl1r', 1e-03  )]],
     
     #---------------------------
