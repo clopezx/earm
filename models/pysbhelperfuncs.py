@@ -293,3 +293,14 @@ def simple_bind_table(bindtable, parmlist, lmodel, site='bf'):
                      kf, kr)
                 pc += 1
     
+
+#-------------------------------------------------------------------------
+# Random little helper funcs that make it easier to interact w the model.
+#-------------------------------------------------------------------------
+
+def get_param_num(model, name):
+    for i in range(len(model.parameters)):
+        if model.parameters[i].name == name:
+            print i, model.parameters[i]
+    return i
+

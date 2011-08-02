@@ -1,0 +1,43 @@
+== Introduction ==
+
+Models are useful, but the workflow has problems/challenges
+
+1) biochemistry is wrong
+
+Could build another model, but the model will continue to evolve
+
+How do we make the process transparent and powerful?
+
+2) Lumped proteins into classes, so can't be fed by molecular data
+
+Current technical solutions proposed:
+
+- Rules based modeling (bng, kappa)
+
+- Higher levels on rules: little b, metakappa
+
+== Results ==
+
+1. Biological problem
+
+Old topology vs. New topology
+
+2. Problem with old ODE representation
+
+Conversion of the old model into rules…changes level of representation
+
+Rules into macros reduces verbosity and changes level of representation to fit with biological understanding
+
+3. Adding new elements of topology
+
+Pysb -> Pysb
+
+4. Calling mini-model
+
+Not just easier to do--can actually see what's going on!
+
+5. Show simulation data
+
+6. Features
+
+Added simulator, can do basic calibration, can export to other formats, can use kappa or bng, stochastic

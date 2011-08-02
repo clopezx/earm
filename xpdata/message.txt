@@ -1,0 +1,15 @@
+Here are the excel sheets.  The page each one opens to is the data for 50ng/ml
+trail plus cycloheximide.  The units are in overexpressed GFP-tagged proteins
+per cell (Bax-GFP for example), so to get total Bax in that cell, you'd have to
+add the average endogenous Bax to those numbers.  The Bid data are from Fig 4
+of my nature paper, and the Bcl2 data will be in the simulation paper with
+Suzanne.  BclxL and Bax are unpublished. 
+
+Nomenclature:  the number in the "sheet" tab is the dose of trail - 100, 250,
+50, 10, 2, and + means plus cycloheximide.  For example, 1000+ means 1000ng/ml
+TRAIL plus cycloheximide.
+
+You can find the endogenous levels of each of the 4 proteins in the
+supplementary captions pdf.  The data to support these numbers is in the
+supplementary figs pdf. 
+

@@ -11,7 +11,7 @@ parameter_dict = {
     # EARM 1.5 bcl2 module parameters
     #--------------------
     # Bid transport to mitochondria
-    'BID_trans':  [ Parameter('kbidCbidMf', .01),
+    'BID_trans':  [ Parameter('kbidCbidMf', 1.),
                     Parameter('kbidCbidMr', .01)],
     # Bax transport to mitochondria
     'BAX_trans':  [ Parameter('kbaxCbaxMf', .01), 
