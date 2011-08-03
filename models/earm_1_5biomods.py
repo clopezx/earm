@@ -32,8 +32,7 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-rd = {} #rate dictionary
-from earm_1_5parms import parameter_dict as kd
+from earm_1_5annbidprms import parameter_dict as kd 
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
