@@ -22,8 +22,6 @@
 'kbaktrimr',
 'kbaktetf',
 'kbaktetr',
-'kbidbcl2f',
-'kbidbcl2r',
 'baxbcl2f',
 'baxbcl2r',
 'baxbclxlf',

@@ -54,13 +54,13 @@ parameter_dict = {
     # row-major order (if you don't know what this means google it)
     'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 1.45280010e-06),
                         Parameter('kbidbcl2r', 1.70789566e-03)],
-                       [Parameter('baxbcl2f', 1e-06/v),
+                       [Parameter('baxbcl2f', 1e-05/v), #
                         Parameter('baxbcl2r', 1e-03  )],
-                       [Parameter('baxbclxlf', 1e-06/v),
+                       [Parameter('baxbclxlf', 1e-05/v),#
                         Parameter('baxbclxlr', 1e-03  )],
-                       [Parameter('bakbclxlf',1e-06/v),
+                       [Parameter('bakbclxlf',1e-05/v),#
                         Parameter('bakbclxlr',1e-03  )],
-                       [Parameter('bakmcl1f', 1e-06/v),
+                       [Parameter('bakmcl1f', 1e-05/v),#
                         Parameter('bakmcl1r', 1e-03  )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
     'BCLs_sens':      [[Parameter('kbadbcl2f',  1e-09/v),
