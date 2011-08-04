@@ -268,8 +268,9 @@ Observe('mSmac', mSmac(b=None))
 Observe('tBid',  tBid())
 Observe('CPARP', CPARP())
 Observe('cSmac', cSmac())
-
-
+Observe('cSmac_XIAP', cSmac(b=1) % XIAP(b=1))
+Observe('cSmac_none', cSmac(b=None))
+Observe('Asmac', ASmac())
 
 # generate initial conditions from _0 parameter naming convention
 for m in model.monomers:

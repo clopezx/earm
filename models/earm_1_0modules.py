@@ -54,7 +54,7 @@ def rec_to_bid(model, kd):
 def pore_to_parp(model, kd):
     """ This is a very specific function which depends on specifically
     on the parameters and monomers of earm_1_0 to work. This function
-    uses MitoP, CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP
+    uses, CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP
     monomers and their associated parameters to generate the rules
     that describe CytC and Smac export from the mitochondria by the
     active pore activation of Caspase3, loopback through Caspase 6,

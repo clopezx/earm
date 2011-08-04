@@ -14,14 +14,13 @@ Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
 Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
 Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
-Monomer('MitoP', ['bf'])
 Monomer('Bcl2', ['bf', 'state'], {'state':['C', 'M']}) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
 Monomer('Mcl1', ['bf']) 
 Monomer('Bad', ['bf']) 
 Monomer('NOXA', ['bf']) 
-Monomer('CytoC', ['bf', 'state'], {'state':['M', 'A', 'C']})
-Monomer('Smac', ['bf', 'state'], {'state':['M', 'A', 'C']})
+Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C']})
+Monomer('Smac', ['bf', 'state'], {'state':['M', 'C']})
 Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
 Monomer('Apop', ['bf'])
 Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
@@ -125,3 +124,6 @@ Initial(XIAP(bf=None), XIAP_0)
 Observe('tBid',  Bid(state='M'))
 Observe('cPARP', PARP(state='C'))
 Observe('cSmac', Smac(state='C'))
+Observe('cSmac_n', Smac(bf=None, state='C'))
+Observe('cSmac_X', Smac(bf=1, state='C') % XIAP(bf=1))
+Observe('mSmac', Smac(bf=None, state='M'))

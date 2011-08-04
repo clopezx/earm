@@ -63,13 +63,13 @@ parameter_dict = {
                        [Parameter('bakmcl1f', 1e-05/v),#
                         Parameter('bakmcl1r', 1e-03  )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
-    'BCLs_sens':      [[Parameter('kbadbcl2f',  1e-09/v),
+    'BCLs_sens':      [[Parameter('kbadbcl2f',  1e-06/v),
                         Parameter('kbadbcl2r',  1e-03  )],
-                       [Parameter('kbadbclxlf', 1e-09/v),
+                       [Parameter('kbadbclxlf', 1e-06/v),
                         Parameter('kbadbclxlr', 1e-03  )],
-                       [Parameter('knoxabcl2f', 1e-09/v),
+                       [Parameter('knoxabcl2f', 1e-06/v),
                         Parameter('knoxabcl2r', 1e-03  )],
-                       [Parameter('knoxamcl1f', 1e-09/v),
+                       [Parameter('knoxamcl1f', 1e-06/v),
                         Parameter('knoxamcl1r', 1e-03  )]],
     
     #---------------------------
@@ -98,19 +98,19 @@ parameter_dict = {
     # pore_to_parp module parameters
     #---------------------------
     # CytoC transport/activation by Bax
-    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf', 2e-06/v),
+    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf', 1e-06/v),
                      Parameter('kbaxcytocMCr', 1e-03),
                      Parameter('kbaxcytocMCc', 1e+01)]],
     # Smac transport/activation by Bax
-    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf', 2e-06/v),
+    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf', 1e-06/v),
                      Parameter('kbaxsmacCAr', 1e-03),
                      Parameter('kbaxsmacCAc', 1e+01)]],
     # CytoC transport/activation by Bak **
-    'BAK_CYTC':   [[ Parameter('kbakcytocMCf', 2e-06/v),
+    'BAK_CYTC':   [[ Parameter('kbakcytocMCf', 1e-06/v),
                      Parameter('kbakcytocMCr', 1e-03),
                      Parameter('kbakcytocMCc', 1e+01)]],
     # Smac transport/activation by Bak  **
-    'BAK_SMAC':   [[ Parameter('kbaksmacCAf', 2e-06/v),
+    'BAK_SMAC':   [[ Parameter('kbaksmacCAf', 1e-06/v),
                      Parameter('kbaksmacCAr', 1e-03),
                      Parameter('kbaksmacCAc', 1e+01)]],
     # Apaf activation by CytC
@@ -128,7 +128,7 @@ parameter_dict = {
     'APOP_XIAP':  [ Parameter('kapopxiapf', 2e-06),
                     Parameter('kapopxiapr', 1e-03)],
     # XIAP inhibition by Smac
-    'SMAC_XIAP':  [ Parameter('ksmacxiapf', 7e-06),
+    'SMAC_XIAP':  [ Parameter('ksmacxiapf', 1e-05),
                     Parameter('ksmacxiapr', 1e-03)],
     # C3 activation by C8
     'C3_C8':      [ Parameter('kc8c3f', 1e-07), 
