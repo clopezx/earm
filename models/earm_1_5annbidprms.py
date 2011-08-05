@@ -97,22 +97,28 @@ parameter_dict = {
     #---------------------------
     # pore_to_parp module parameters
     #---------------------------
-    # CytoC transport/activation by Bax
+    # CytoC transport by Bax
     'BAX_CYTC':   [[ Parameter('kbaxcytocMCf', 1e-06/v),
                      Parameter('kbaxcytocMCr', 1e-03),
                      Parameter('kbaxcytocMCc', 1e+01)]],
-    # Smac transport/activation by Bax
+    # Smac transport by Bax
     'BAX_SMAC':   [[ Parameter('kbaxsmacCAf', 1e-06/v),
                      Parameter('kbaxsmacCAr', 1e-03),
                      Parameter('kbaxsmacCAc', 1e+01)]],
-    # CytoC transport/activation by Bak **
+    # CytoC transport activation by Bak **
     'BAK_CYTC':   [[ Parameter('kbakcytocMCf', 1e-06/v),
                      Parameter('kbakcytocMCr', 1e-03),
                      Parameter('kbakcytocMCc', 1e+01)]],
-    # Smac transport/activation by Bak  **
+    # Smac transport by Bak  **
     'BAK_SMAC':   [[ Parameter('kbaksmacCAf', 1e-06/v),
                      Parameter('kbaksmacCAr', 1e-03),
                      Parameter('kbaksmacCAc', 1e+01)]],
+    # CytoC activation
+    'CYTOC_ACT':  [ Parameter('kcytocC_cytoAf', .01),
+                    Parameter('kcytocC_cytoAr', .01)],
+    # Smac activation
+    'SMAC_ACT':  [ Parameter('ksmacC_smacAf', .01),
+                   Parameter('ksmacC_smacAr', .01)],
     # Apaf activation by CytC
     'APAF_CYTC':  [ Parameter('kcytocCapaff', 5e-07),
                     Parameter('kcytocCapafr', 1e-03),

@@ -19,8 +19,8 @@ Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplas
 Monomer('Mcl1', ['bf']) 
 Monomer('Bad', ['bf']) 
 Monomer('NOXA', ['bf']) 
-Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C']})
-Monomer('Smac', ['bf', 'state'], {'state':['M', 'C']})
+Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
+Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
 Monomer('Apop', ['bf'])
 Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated

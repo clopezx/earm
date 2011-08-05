@@ -74,6 +74,11 @@ def pore_to_parp(model, kd):
     pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
     pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
     pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
+    # --------------------------------------
+    # CytC and Smac activation after release
+    # --------------------------------------
+    Rule('act_cSmac',  Smac(bf=None, state='C') <> Smac(bf=None, state='A'), kd['SMAC_ACT'][0], kd['SMAC_ACT'][1])
+    Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['CYTOC_ACT'][0], kd['CYTOC_ACT'][1])
     # ---------------------------
     # Apoptosome formation
     # ---------------------------
@@ -81,7 +86,7 @@ def pore_to_parp(model, kd):
     #        aApaf + pC9 <-->  Apop
     #        Apop + pC3 <-->  Apop:pC3 --> Apop + C3
     # ---------------------------
-    two_step_mod(CytoC(state='C'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kd['APAF_CYTC'])
+    two_step_mod(CytoC(state='A'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kd['APAF_CYTC'])
     one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), kd['APOP_C9:APAF'])
     two_step_mod(Apop(), C3(state='pro'), C3(bf = None, state='A'), kd['APOP_C3'])
     # -----------------------------
@@ -90,7 +95,7 @@ def pore_to_parp(model, kd):
     #        Apop + XIAP <-->  Apop:XIAP  
     #        cSmac + XIAP <-->  cSmac:XIAP  
     simple_bind(Apop(), XIAP(), kd['APOP_XIAP'])
-    simple_bind(Smac(state='C'), XIAP(), kd['SMAC_XIAP'])
+    simple_bind(Smac(state='A'), XIAP(), kd['SMAC_XIAP'])
     # ---------------------------
     # Caspase reactions (effectors, inhibitors, and loopback initiators)
     # ---------------------------

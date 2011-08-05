@@ -147,10 +147,6 @@ def pore_assembly(Subunit, size, rates):
                           M + S1 <> S2, *rates[i-2]))
     return rules
 
-def transport(Subunit, Source, Dest, rates, site='bf'):
-    #Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kbaxCbaxMf, kbaxCbaxMr)
-    pass
-
 def pore_transport(Subunit, Source, Dest, min_size, max_size, rates, site='bf'):
     """
     Generate rules to transport MonomerPattern <Source> to <Dest>
