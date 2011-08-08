@@ -31,7 +31,7 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-from earm_1_5annbidprms import parameter_dict as kd 
+from earm_1_5annbidsmacprms import parameter_dict as kd 
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
@@ -123,7 +123,7 @@ Initial(XIAP(bf=None), XIAP_0)
 # # This is what *should* be observed???
 Observe('tBid',  Bid(state='M'))
 Observe('cPARP', PARP(state='C'))
-Observe('cSmac', Smac(state='C'))
-Observe('cSmac_n', Smac(bf=None, state='C'))
-Observe('cSmac_X', Smac(bf=1, state='C') % XIAP(bf=1))
-Observe('mSmac', Smac(bf=None, state='M'))
+Observe('cSmac', Smac(state='A'))
+Observe('cSmac_n', Smac(bf=None, state='A'))
+Observe('cSmac_X', Smac(bf=1, state='A') % XIAP(bf=1))
+
