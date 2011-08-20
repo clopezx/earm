@@ -6,14 +6,14 @@ envlist, paramarr = pysb.anneal_sundials.annlinit(model)
 xpfile = numpy.load('xp_mod_data_earm10.npz')
 xpdata = xpfile['arr_0']
 
-prmfile = numpy.load('earm_1_5smacannlst.npz')
-smacprm = prmfile['arr_0']
-smacnum = prmfile['arr_1']
-smaclst = prmfile['arr_2']
+prmfile = numpy.load('earm_1_5parpannlst.npz')
+parpprm = prmfile['arr_0']
+parpnum = prmfile['arr_1']
+parplst = prmfile['arr_2']
 
-lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(smacprm, omag=3, N=1000)
+lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(parpprm, omag=3, N=1000)
 
-annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, smacprm, args=(smacnum, 25000, model, envlist, xpdata, 6, 3, lb, ub), lower=lower, upper=upper, full_output=1)
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, parpprm, args=(parpnum, 25000, model, envlist, xpdata, 6, 3, lb, ub), lower=lower, upper=upper, full_output=1)
 #started at 1:56a
 
 

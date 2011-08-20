@@ -98,24 +98,24 @@ parameter_dict = {
     # pore_to_parp module parameters
     #---------------------------
     # CytoC transport by Bax
-    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf', 2.42482146121e-06),
-                     Parameter('kbaxcytocMCr', 0.00588416094221),
-                     Parameter('kbaxcytocMCc', 2.35876002016)]],
+    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf',  1.07052327914e-05),   #same as Bax-SMAC
+                     Parameter('kbaxcytocMCr',  0.00114074765938 ),   #same as Bax-SMAC
+                     Parameter('kbaxcytocMCc', 11.1174330138     )]], #same as Bax-SMAC
     # Smac transport by Bax
-    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf', 1.07052327914e-05),#change to MC for consistency (mito to cyto)
-                     Parameter('kbaxsmacCAr', 0.00114074765938),
-                     Parameter('kbaxsmacCAc', 11.1174330138)]],
+    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf',   1.07052327914e-05),  #change to MC for consistency (mito to cyto)
+                     Parameter('kbaxsmacCAr',   0.00114074765938 ),
+                     Parameter('kbaxsmacCAc',  11.1174330138     )]],
     # CytoC transport activation by Bak **
-    'BAK_CYTC':   [[ Parameter('kbakcytocMCf', 5.56612718315e-05),
-                     Parameter('kbakcytocMCr', 0.0024339652692),
-                     Parameter('kbakcytocMCc', 10.9610503612)]],
+    'BAK_CYTC':   [[ Parameter('kbakcytocMCf',  9.21063577757e-06 ),
+                     Parameter('kbakcytocMCr',  0.00234088295981  ),
+                     Parameter('kbakcytocMCc', 27.3582352876      )]],
     # Smac transport by Bak  **
-    'BAK_SMAC':   [[ Parameter('kbaksmacCAf', 9.21063577757e-06),
-                     Parameter('kbaksmacCAr', 0.00234088295981),
-                     Parameter('kbaksmacCAc', 27.3582352876)]],
+    'BAK_SMAC':   [[ Parameter('kbaksmacCAf',  9.21063577757e-06),   #same as Bak-SMAC
+                     Parameter('kbaksmacCAr',  0.00234088295981 ),   #same as Bak-SMAC
+                     Parameter('kbaksmacCAc', 27.3582352876     )]], #same as Bak-SMAC
     # CytoC activation
-    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.0164402646406),
-                    Parameter('kcytocCcytoAr', 0.0136700510202)],
+    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.0273684974471),  #same as SMAC_ACT
+                    Parameter('kcytocCcytoAr', 0.0136700510202)], #same as SMAC_ACT
     # Smac activation
     'SMAC_ACT':  [ Parameter('ksmacCsmacAf', 0.0273684974471),
                    Parameter('ksmacCsmacAr', 0.0159988303507)],
