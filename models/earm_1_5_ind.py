@@ -14,8 +14,8 @@ Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
 Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
 Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
-Monomer('Bcl2', ['bf', 'state'], {'state':['C', 'M']}) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
+Monomer('Bcl2', ['bf', 'state']) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('Mcl1', ['bf']) 
 Monomer('Bad', ['bf']) 
 Monomer('NOXA', ['bf']) 
@@ -31,7 +31,7 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-from earm_1_5annbidsmacparpprms import parameter_dict as kd 
+from earm_1_5_indparms import parameter_dict as kd 
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
@@ -40,7 +40,6 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # ----------------------------------------
 Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'][0], kd['BAX_trans'][1])
-Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kd['BCL2_trans'][0], kd['BCL2_trans'][1])
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
 
 # Mitochondrial tBid activates Bax/Bak
@@ -52,8 +51,8 @@ Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'
 #        Bak + Bak <--> Bak:Bak + Bak <--> Bak:Bak:Bak + Bak <--> Bak:Bak:Bak:Bak
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
-two_step_mod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
-two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
+#two_step_mod(Bid(state = 'M'), Bax(state='M'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
+#two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
 # pore_assembly(Subunit, size, rates):
 pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
 pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
@@ -100,7 +99,7 @@ Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
 Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
 Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bax_0)
-Initial(Bcl2(bf=None, state='C'), Bcl2_0)
+Initial(Bcl2(bf=None), Bcl2_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
 Initial(Bad(bf=None), Bad_0)
