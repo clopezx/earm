@@ -43,7 +43,7 @@ Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd[
 Rule('Bcl2_to_mem', Bcl2(bf = None, state = 'C') <> Bcl2(bf=None, state = 'M'), kd['BCL2_trans'][0], kd['BCL2_trans'][1])
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
 
-# Mitochondrial tBid activates Bax/Bak
+cd e# Mitochondrial tBid activates Bax/Bak
 # Bax/Bak form pores
 # ------------------------------------
 #        Bax + tBid <--> Bax:tBid --> Bax* + tBid 
