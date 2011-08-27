@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="990"
+   height="765"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="comp_pysb_rules_odes.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="489.39567"
+     inkscape:cy="345.53276"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1570"
+     inkscape:window-height="867"
+     inkscape:window-x="211"
+     inkscape:window-y="40"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-287.36218)">
+    <rect
+       style="fill:#e6e6e6;stroke:#e6e6e6;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3104"
+       width="637.56775"
+       height="62.629459"
+       x="7.2538147"
+       y="342.95084" />
+    <rect
+       style="fill:#ffd5d5;stroke:#ffd5d5;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3104-7-4"
+       width="974.52063"
+       height="306.60013"
+       x="7.2538147"
+       y="738.46442" />
+    <rect
+       style="fill:#ffd5d5;stroke:#ffd5d5;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3104-7"
+       width="974.52063"
+       height="203.61276"
+       x="8.482996"
+       y="474.87549" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="13.253815"
+       y="366.16394"
+       id="text2985"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2987"
+         x="13.253815"
+         y="366.16394"
+         style="font-size:20px">pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="391.16394"
+         id="tspan2989"
+         style="font-size:20px">pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="416.16394"
+         id="tspan2991"
+         style="font-size:20px" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium"
+       x="15.253815"
+       y="492.08414"
+       id="text2999"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3001"
+         x="15.253815"
+         y="492.08414"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bax(bf,bh3,d2,state~A) + Bax(bf,bh3,d2,state~A) &lt;-&gt; Bax(bf,bh3!1,d2,state~A).Bax(bf,bh3,d2!1,state~A)    kbaxdimf, kbaxdimr</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="508.33414"
+         id="tspan3007"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bax(bf,bh3,d2,state~A) + Bax(bf,bh3!1,d2,state~A).Bax(bf,bh3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bax(bf,bh3!1,d2!2,state~A).Bax(bf,bh3!2,d2!3,</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="524.58411"
+         id="tspan3009"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bax(bf,bh3,d2,state~A) + {MatchOnce}Bax(bf,bh3!1,d2!2,state~A).Bax(bf,bh3!2,d2!3,state~A).Bax(bf,bh3!3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bax</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="540.83411"
+         id="tspan3011"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bak(bf,bh3,d2,state~A) + Bak(bf,bh3,d2,state~A) &lt;-&gt; Bak(bf,bh3!1,d2,state~A).Bak(bf,bh3,d2!1,state~A)    kbakdimf, kbakdimr</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="557.08411"
+         id="tspan3013"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bak(bf,bh3,d2,state~A) + Bak(bf,bh3!1,d2,state~A).Bak(bf,bh3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bak(bf,bh3!1,d2!2,state~A).Bak(bf,bh3!2,d2!3,</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="573.33411"
+         id="tspan3015"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bak(bf,bh3,d2,state~A) + {MatchOnce}Bak(bf,bh3!1,d2!2,state~A).Bak(bf,bh3!2,d2!3,state~A).Bak(bf,bh3!3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bak</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="589.58411"
+         id="tspan3017"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bax(bf,bh3,d2,state~A) + Bax(bf,bh3,d2,state~A) &lt;-&gt; Bax(bf,bh3!1,d2,state~A).Bax(bf,bh3,d2!1,state~A)    kbaxdimf, kbaxdimr</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="605.83411"
+         id="tspan3019"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bax(bf,bh3,d2,state~A) + Bax(bf,bh3!1,d2,state~A).Bax(bf,bh3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bax(bf,bh3!1,d2!2,state~A).Bax(bf,bh3!2,d2!3,state [...]</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="622.08411"
+         id="tspan3021"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bax(bf,bh3,d2,state~A) + {MatchOnce}Bax(bf,bh3!1,d2!2,state~A).Bax(bf,bh3!2,d2!3,state~A).Bax(bf,bh3!3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bax(bf [...]</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="638.33411"
+         id="tspan3023"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bak(bf,bh3,d2,state~A) + Bak(bf,bh3,d2,state~A) &lt;-&gt; Bak(bf,bh3!1,d2,state~A).Bak(bf,bh3,d2!1,state~A)    kbakdimf, kbakdimr</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="654.58411"
+         id="tspan3025"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bak(bf,bh3,d2,state~A) + Bak(bf,bh3!1,d2,state~A).Bak(bf,bh3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bak(bf,bh3!1,d2!2,state~A).Bak(bf,bh3!2,d2!3,state~ [...]</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="670.83411"
+         id="tspan3027"
+         style="font-size:13px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium">Bak(bf,bh3,d2,state~A) + {MatchOnce}Bak(bf,bh3!1,d2!2,state~A).Bak(bf,bh3!2,d2!3,state~A).Bak(bf,bh3!3,d2!1,state~A) &lt;-&gt; {MatchOnce}Bak(bf [...]</tspan><tspan
+         sodipodi:role="line"
+         x="15.253815"
+         y="687.08411"
+         id="tspan3029" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="7.2538147"
+       y="607.89502"
+       id="text3033"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3037"
+         x="7.2538147"
+         y="607.89502" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Inconsolata;-inkscape-font-specification:Inconsolata Medium"
+       x="13.253815"
+       y="754.34686"
+       id="text3041"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="754.34686"
+         id="tspan3045"
+         style="font-size:12px">baxbcl2r*s57 + baxbcl2r*s58 + baxbclxlr*s59 + baxbclxlr*s60 + kbaxtetr*s66 + kbaxtrimr*s64 + kbidbaxc*s45 + 2*kbaxdimr*s55 - baxbcl2f*s22*s52 - </tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="769.34686"
+         id="tspan3087"
+         style="font-size:12px">baxbcl2f*s52*s8 - baxbclxlf*s23*s52 - baxbclxlf*s52*s9 - kbaxtetf*s52*s64 - kbaxtrimf*s52*s55 - 2*kbaxdimf*s52**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="784.34686"
+         id="tspan3047"
+         style="font-size:12px">bakbclxlr*s61 + bakbclxlr*s62 + bakmcl1r*s63 + kbaktetr*s67 + kbaktrimr*s65 + kbidbakc*s46 + 2*kbakdimr*s56 - bakbclxlf*s23*s53 - bakbclxlf*s53*s9 - </tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="799.34686"
+         id="tspan3089"
+         style="font-size:12px">bakmcl1f*s10*s53 - kbaktetf*s53*s65 - kbaktrimf*s53*s56 - 2*kbakdimf*s53**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="814.34686"
+         id="tspan3049"
+         style="font-size:12px">kbaxtrimr*s64 - kbaxdimr*s55 - kbaxtrimf*s52*s55 + kbaxdimf*s52**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="829.34686"
+         id="tspan3051"
+         style="font-size:12px">kbaktrimr*s65 - kbakdimr*s56 - kbaktrimf*s53*s56 + kbakdimf*s53**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="844.34686"
+         id="tspan3055"
+         style="font-size:12px">baxbcl2r*s57 + baxbcl2r*s58 + baxbclxlr*s59 + baxbclxlr*s60 + kbaxtetr*s66 + kbaxtrimr*s64 + kbidbaxc*s45 + 2*kbaxdimr*s55 - </tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="859.34686"
+         id="tspan3091"
+         style="font-size:12px">baxbcl2f*s22*s52 - baxbcl2f*s52*s8 - baxbclxlf*s23*s52 - baxbclxlf*s52*s9 - kbaxtetf*s52*s64 - kbaxtrimf*s52*s55 - 2*kbaxdimf*s52**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="874.34686"
+         id="tspan3059"
+         style="font-size:12px">kbaxtrimr*s64 - kbaxdimr*s55 - kbaxtrimf*s52*s55 + kbaxdimf*s52**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="889.34686"
+         id="tspan3061"
+         style="font-size:12px">kbaktrimr*s65 - kbakdimr*s56 - kbaktrimf*s53*s56 + kbakdimf*s53**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="904.34686"
+         id="tspan3063"
+         style="font-size:12px">kbaxtetr*s66 - kbaxtrimr*s64 + kbaxtrimf*s52*s55 - kbaxtetf*s52*s64,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="919.34686"
+         id="tspan3065"
+         style="font-size:12px">kbaktetr*s67 - kbaktrimr*s65 + kbaktrimf*s53*s56 - kbaktetf*s53*s65,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="934.34686"
+         id="tspan3069"
+         style="font-size:12px">baxbcl2r*s57 + baxbcl2r*s58 + baxbclxlr*s59 + baxbclxlr*s60 + kbaxtetr*s66 + kbaxtrimr*s64 + kbidbaxc*s45 + 2*kbaxdimr*s55 - baxbcl2f*s22*s52 - </tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="949.34686"
+         id="tspan3100"
+         style="font-size:12px">baxbcl2f*s52*s8 - baxbclxlf*s23*s52 - baxbclxlf*s52*s9 - kbaxtetf*s52*s64 - kbaxtrimf*s52*s55 - 2*kbaxdimf*s52**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="964.34686"
+         id="tspan3071"
+         style="font-size:12px">bakbclxlr*s61 + bakbclxlr*s62 + bakmcl1r*s63 + kbaktetr*s67 + kbaktrimr*s65 + kbidbakc*s46 + 2*kbakdimr*s56 - bakbclxlf*s23*s53 - bakbclxlf*s53*s9 - </tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="979.34686"
+         id="tspan3102"
+         style="font-size:12px">bakmcl1f*s10*s53 - kbaktetf*s53*s65 - kbaktrimf*s53*s56 - 2*kbakdimf*s53**2,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="994.34686"
+         id="tspan3073"
+         style="font-size:12px">kbaxtetr*s66 - kbaxtrimr*s64 + kbaxtrimf*s52*s55 - kbaxtetf*s52*s64,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="1009.3469"
+         id="tspan3075"
+         style="font-size:12px">kbaktetr*s67 - kbaktrimr*s65 + kbaktrimf*s53*s56 - kbaktetf*s53*s65,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="1024.3469"
+         id="tspan3077"
+         style="font-size:12px">kbaxcytocMCc*s68 + kbaxcytocMCr*s68 + kbaxsmacCAc*s69 + kbaxsmacCAr*s69 - kbaxtetr*s66 + kbaxtetf*s52*s64 - kbaxcytocMCf*s13*s66 - kbaxsmacCAf*s14*s66,</tspan><tspan
+         sodipodi:role="line"
+         x="13.253815"
+         y="1039.3469"
+         id="tspan3079"
+         style="font-size:12px">kbakcytocMCc*s70 + kbakcytocMCr*s70 + kbaksmacCAc*s71 + kbaksmacCAr*s71 - kbaktetr*s67 + kbaktetf*s53*s65 - kbakcytocMCf*s13*s67 - kbaksmacCAf*s14*s67</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSerif;-inkscape-font-specification:FreeSerif"
+       x="11.111678"
+       y="334.18433"
+       id="text3990"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3992"
+         x="11.111678"
+         y="334.18433">Calling pore algorithm for tetramers of Bax/Bak</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 11.111678,337.19448 608.111832,0"
+       id="path3994"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSerif;-inkscape-font-specification:FreeSerif"
+       x="7.0710745"
+       y="466.84262"
+       id="text3990-9"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3992-3"
+         x="7.0710745"
+         y="466.84262">Fragment of rule enumeration in BNG</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 7.0710682,469.85279 476.8998018,0"
+       id="path3994-0"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSerif;-inkscape-font-specification:FreeSerif"
+       x="4.8527675"
+       y="727.46198"
+       id="text3990-9-1"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan3992-3-8"
+         x="4.8527675"
+         y="727.46198">Fragment of ODE enumeration (e.g. Matlab)</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 4.8527606,730.47217 561.6638394,0"
+       id="path3994-0-4"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

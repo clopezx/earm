@@ -1,0 +1,3 @@
+
+Bootstrapper.bindDOMParsed(function(){try{Bootstrapper.setCurrentRuleId(3442);var images=document.images;var sendNielson=true;if(images.length>-1){var i=0;for(i;i<images.length;i++){if(images[i].src&&images[i].src.indexOf('secure-us.imrworldwide.com')>-1){sendNielson=false;}}}
+if(sendNielson){(function(){var d=new Image(1,1);d.onerror=d.onload=function(){d.onerror=d.onload=null;};d.src=["//secure-us.imrworldwide.com/cgi-bin/m?ci=us-504674h&cg=0&cc=1&si=",escape(window.location.href),"&rp=",escape(document.referrer),"&ts=compact&rnd=",(new Date()).getTime()].join('');})();};}catch(e){Bootstrapper.reportException(e);}});
