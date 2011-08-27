@@ -1,1 +1,0 @@
-document.write('<a target="_blank" href="http://ad.doubleclick.net/click;h=v8/3b50/0/0/%2a/l;241586943;0-0;0;10615347;2321-160/600;42299171/42316958/1;;~sscs=%3fhttp://www.icsb-2011.net"><img src="http://s0.2mdn.net/viewad/997630/BANNER_ICSB_2011_V6_160X600_RGB_110520.jpg" border=0 alt="ICSB 2011"></a>');
