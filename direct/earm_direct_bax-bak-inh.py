@@ -67,8 +67,8 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 simple_bind_table([[                                            Bcl2, BclxL,  Mcl1],
                    [                                              {},    {},    {}],
                    [Bid, {'state':'M'},                         True,  False, False],
-#                  [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,   True, False],
-#                  [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,   True,  True]
+                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,   True, False],
+                   [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,   True,  True]
                    ],
                   kd['BID_BAX_BAK_inh'], model)
 
