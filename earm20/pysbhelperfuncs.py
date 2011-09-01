@@ -288,6 +288,9 @@ def simple_bind_table(bindtable, parmlist, lmodel, site='bf'):
                      react1[i](prod1st[i]) % react0[j](prod0st[j]), 
                      kf, kr)
                 pc += 1
+    if pc != len(parmlist):
+        print "WARNING, unassigned parameters from list", parmlist
+        print "Assigned",pc,"parameter pairs from a total of", len(parmlist)
     
 
 #-------------------------------------------------------------------------

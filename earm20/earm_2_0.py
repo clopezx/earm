@@ -1,3 +1,4 @@
+# "embedded together" w earm1.0
 from pysb import *
 from pysbhelperfuncs import *
 
@@ -12,11 +13,12 @@ Monomer('flip', ['bf']) # flip
 Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
-Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
-Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bcl2', ['bf']) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
 Monomer('Mcl1', ['bf']) 
-Monomer('Bad', ['bf']) 
+Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']}) 
 Monomer('NOXA', ['bf']) 
 Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
 Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
@@ -30,47 +32,60 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-from earm_ind_parms import parameter_dict as kd 
+from earm_2_0_parms import parameter_dict as kd 
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
 # ======================
-# Bid, Bax migration to mitochondria
-# ----------------------------------------
-Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
-Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'A'), kd['BAX_trans'][0], kd['BAX_trans'][1])
-Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
+# tBid and Bad spontaneously insert into the mito membrane
+# --------------------------------------------------------
+Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf = None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
+Rule('Bad_to_mem', Bad(bf = None, state = 'C') <> Bad(bf = None, state = 'M'), kd['BAD_trans'][0],kd['BAD_trans'][1])
 
-# Mitochondrial tBid activates Bax/Bak
-# Bax/Bak form pores
+# tBid helps transport of BclxL and Bax to Membrane
 # ------------------------------------
+two_step_mod(Bid(state = 'M'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
+two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
+
+# Autoactivation, Bax and Bak self-activate
+# ------------------------------------
+two_step_mod(Bax(state = 'A'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
+two_step_mod(Bak(state = 'A'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
+
 # pore_assembly(Subunit, size, rates):
+# ------------------------------------
 pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
 pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition
 # ------------------------------------
-# inhibitors of Bax, Bak, and Bid
+# tBid/Bax recruit Bcl-xL and autoinhibit themselves
+# ------------------------------------
+two_step_conv(Bid(state = 'M'), BclxL(state='C'), Bid(bf = 1, state = 'M')%BclxL(bf = 1, state='M'), kd['BidBclxLrec'])
+two_step_conv(Bax(state = 'A'), BclxL(state='C'), Bax(bf = 1, state = 'A')%BclxL(bf = 1, state='M'), kd['BaxBclxLrec'])
+
+
+# Bcl2 inhibitors of Bax, Bak, and Bid
 # a set of simple bind reactions:
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
-simple_bind_table([[                                           BclxL,  Mcl1],
-                   [                                              {},    {}],
-                   [Bid, {'state':'M'},                         True,  True],
-                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True, False],
-                   [Bak, {'bh3':None, 'd2':None, 'state':'A'},  True,  True]],
+simple_bind_table([[                                            Bcl2,         BclxL,  Mcl1],
+                   [                                              {}, {'state':'M'},    {}],
+                   [Bid, {'state':'M'},                         True,          True, False],
+                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,          True, False],
+                   [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,          True,  True]],
                   kd['BID_BAX_BAK_inh'], model)
 
 # Sensitizers
-# sensitizers bind through a simple bind reaction: 
+# Bcl2 sensitizers bind through a simple bind resction: 
 #        Inh + Act <--> Inh:Act
 # This goes through the list in row-major order (as it should be)
 # ---------------------------------------------------------------
-simple_bind_table([[           BclxL,  Mcl1],
-                   [              {},    {}],
-                   [Bad,  {},   True, False],
-                   [NOXA, {},   True,  True]],
+simple_bind_table([[                      Bcl2,         BclxL,  Mcl1],
+                   [                        {}, {'state':'M'},    {}],
+                   [Bad,  {'state':'M'},  True,          True, False],
+                   [NOXA, {},            False,          True,  True]], 
                   kd['BCLs_sens'], model)
 
 # Import necessary modules
@@ -87,13 +102,14 @@ Initial(R(bf=None), R_0)
 Initial(flip(bf=None), flip_0)
 Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
-Initial(Bid(bf=None, state='U'), ZERO) #Bid_0
+Initial(Bid(bf=None, state='U'), Bid_0)
 Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
-Initial(Bak(bf=None, bh3=None, d2=None, state='A'), Bak_0)
+Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bak_0)
+Initial(Bcl2(bf=None), Bcl2_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
-Initial(Bad(bf=None), ZERO) # Bad_0
-Initial(NOXA(bf=None), ZERO) # NOXA_0
+Initial(Bad(bf=None), Bad_0)
+Initial(NOXA(bf=None), NOXA_0)
 Initial(CytoC(bf=None, state='M'), CytoC_0)
 Initial(Smac(bf=None, state='M'), Smac_0)
 Initial(Apaf(bf=None, state='I'), Apaf_0)
@@ -110,10 +126,9 @@ Initial(XIAP(bf=None), XIAP_0)
 # Observe('PARP',  PARP(bf=None, state='U'))
 # Observe('Smac',  Smac(bf=None, state='mito'))
 # # This is what *should* be observed???
-Observe('tBid',  Bid(state='M'))           # 1
-Observe('cSmac', Smac(state='A'))          # 2
-Observe('cPARP', PARP(state='C'))          # 3
-Observe('Bak', Bak(bf=None, state='A'))    # 4
-Observe('Bax', Bak(bf=None, state='A'))    # 5
-Observe('Bak_any', Bak(bf=ANY, state='A')) # 6 ANY: Bond must exist to something
-Observe('Bax_any', Bax(bf=ANY, state='A')) # 7
+Observe('tBid',  Bid(state='M'))
+Observe('cPARP', PARP(state='C'))
+Observe('cSmac', Smac(state='A'))
+Observe('cSmac_n', Smac(bf=None, state='A'))
+Observe('cSmac_X', Smac(bf=1, state='A') % XIAP(bf=1))
+

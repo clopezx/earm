@@ -36,7 +36,7 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 
 # tBID to MOMP 
 # ======================
-# Bcl2, Bid, Bax migration to mitochondria
+# Bid, Bax migration to mitochondria
 # ----------------------------------------
 Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf=None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'][0], kd['BAX_trans'][1])

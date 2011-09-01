@@ -1,3 +1,4 @@
+# autoact, bid bax bak inhibition
 from pysb import *
 from pysbhelperfuncs import *
 
@@ -31,7 +32,7 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-from earm_1_5annbidsmacparpprms import parameter_dict as kd 
+from earm_direct_bbi_autoact_parms import parameter_dict as kd 
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
