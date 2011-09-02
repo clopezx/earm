@@ -67,7 +67,13 @@ def two_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
     kf, kr, kc = klist
     
     r1_name = 'cplx_%s_%s' % (Sub2.monomer.name, Sub1.monomer.name)
-    r2_name = 'cplx_%s_via_%s__%s' % (Prod.monomer.name, Sub1.monomer.name, Sub2.monomer.name)
+
+    #FIXME: this is a bit dirty but it fixes the problem when prod is a pattern
+    if isinstance(Prod, MonomerPattern):
+        r2_name = 'cplx_%s_via_%s__%s' % (Prod.monomer.name, Sub1.monomer.name, Sub2.monomer.name)
+    elif isinstance(Prod, ComplexPattern):
+        r2_name = 'cplx_%s_via_%s__%s' % (("-".join([sub.monomer.name for sub in Prod.monomer_patterns])),
+                                          Sub1.monomer.name, Sub2.monomer.name)
     
     assert site in Sub1.monomer.sites_dict, \
         "Required site %s not present in %s as required"%(site, Sub1.monomer.name)

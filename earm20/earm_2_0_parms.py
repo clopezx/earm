@@ -19,6 +19,9 @@ parameter_dict = {
     # Bid transport to mitochondria
     'BID_trans':  [ Parameter('kbidCbidMf', 4.91481326e+00),
                     Parameter('kbidCbidMr', 1.40411075e-03)],
+    # Bad transport to mitochondria
+    'BAD_trans':  [ Parameter('kbadCbadMf', 4.91481326e+00),
+                    Parameter('kbadCbadMr', 1.40411075e-03)],
     # Bax transport to mitochondria
     'BAX_trans':  [ Parameter('kbaxCbaxMf', 0.00730727274745), 
                     Parameter('kbaxCbaxMr', 0.0107476023245)],
@@ -36,6 +39,14 @@ parameter_dict = {
     'BID_BAK':    [ Parameter('kbidbakf', 2.3840120805e-07),
                     Parameter('kbidbakr', 0.00116686859656),
                     Parameter('kbidbakc', 0.616100104218)],
+    # Bax activation by Bid
+    'BAX_BAX':    [ Parameter('kbaxbaxf', 1.78519244773e-08),
+                    Parameter('kbaxbaxr', 0.000127019618397),
+                    Parameter('kbaxbaxc', 3.12885090105 )],
+    # Bak activation via Bid ***CHECK VALUES
+    'BAK_BAK':    [ Parameter('kbakbakf', 2.3840120805e-07),
+                    Parameter('kbakbakr', 0.00116686859656),
+                    Parameter('kbakbakc', 0.616100104218)],
     #Bax pore assembly
     'BAX_PORE':   [[Parameter('kbaxdimf', 1.9e-05),
                     Parameter('kbaxdimr', 0.00253168857302)],
@@ -49,6 +60,14 @@ parameter_dict = {
                     Parameter('kbaktrimr', 4.81022463147e-06)],
                    [Parameter('kbaktetf',  0.000116488694321),
                     Parameter('kbaktetr', 0.000743264410286)]],
+    #BclxL recruitment by and inhibition of Bid
+    'Bid_BclxL_RA': [Parameter('kbidbclxl_RAf', 1.78519244773e-08),
+                     Parameter('kbidbclxl_RAr', 0.00012701961),
+                     Parameter('kbidbclxl_RAc', 3.12885090105)],
+    #BclxL recruitment by and inhibition of Bax
+    'Bax_BclxL_RA': [Parameter('kbaxbclxl_RAf', 1.78519244773e-08),
+                     Parameter('kbaxbclxl_RAr', 0.00012701961),
+                     Parameter('kbaxbclxl_RAc', 3.12885090105)],
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
     # These are used in the simple_bind_table function which expects
     # row-major order (if you don't know what this means google it)
@@ -56,6 +75,8 @@ parameter_dict = {
                         Parameter('kbidbcl2r', 1.70789566e-03)],
                        [Parameter('baxbcl2f', 0.000396587292307), #
                         Parameter('baxbcl2r', 0.00123288686313)],
+                       [Parameter('bidbclxlf', 2.53724317374e-06),#
+                        Parameter('bidbclxlr', 0.000777609558706  )],
                        [Parameter('baxbclxlf', 2.53724317374e-06),#
                         Parameter('baxbclxlr', 0.000777609558706  )],
                        [Parameter('bakbclxlf', 0.000139640194286),#

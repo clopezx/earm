@@ -62,8 +62,8 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # ------------------------------------
 # tBid/Bax recruit Bcl-xL and autoinhibit themselves
 # ------------------------------------
-two_step_conv(Bid(state = 'M'), BclxL(state='C'), Bid(bf = 1, state = 'M')%BclxL(bf = 1, state='M'), kd['BidBclxLrec'])
-two_step_conv(Bax(state = 'A'), BclxL(state='C'), Bax(bf = 1, state = 'A')%BclxL(bf = 1, state='M'), kd['BaxBclxLrec'])
+two_step_conv(Bid(state = 'M'), BclxL(state='C'), Bid(bf = 1, state = 'M')%BclxL(bf = 1, state='M'), kd['Bid_BclxL_RA'])
+two_step_conv(Bax(state = 'A'), BclxL(state='C'), Bax(bf = 1, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
 
 
 # Bcl2 inhibitors of Bax, Bak, and Bid
@@ -108,7 +108,7 @@ Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bak_0)
 Initial(Bcl2(bf=None), Bcl2_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
-Initial(Bad(bf=None), Bad_0)
+Initial(Bad(bf=None, state='C'), Bad_0)
 Initial(NOXA(bf=None), NOXA_0)
 Initial(CytoC(bf=None, state='M'), CytoC_0)
 Initial(Smac(bf=None, state='M'), Smac_0)
