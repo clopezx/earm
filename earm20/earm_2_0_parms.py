@@ -17,8 +17,8 @@ parameter_dict = {
     # EARM 1.5 bcl2 module parameters
     #--------------------
     # Bid transport to mitochondria
-    'BID_trans':  [ Parameter('kbidCbidMf', 4.91481326e+00),
-                    Parameter('kbidCbidMr', 1.40411075e-03)],
+    'BID_trans':  [ Parameter('kbidTbidMf', 4.91481326e+00),
+                    Parameter('kbidTbidMr', 1.40411075e-03)],
     # Bad transport to mitochondria
     'BAD_trans':  [ Parameter('kbadCbadMf', 4.91481326e+00),
                     Parameter('kbadCbadMr', 1.40411075e-03)],
@@ -96,6 +96,7 @@ parameter_dict = {
     #---------------------------
     # EARM 1.0 legacy parameters
     #---------------------------
+
     # rec_to_bid module parameters
     'L_R_DISC':   [ Parameter('klrf', 4e-07),       
                     Parameter('klrr', 1e-03),

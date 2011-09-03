@@ -126,9 +126,7 @@ Initial(XIAP(bf=None), XIAP_0)
 # Observe('PARP',  PARP(bf=None, state='U'))
 # Observe('Smac',  Smac(bf=None, state='mito'))
 # # This is what *should* be observed???
-Observe('tBid',  Bid(state='M'))
-Observe('cPARP', PARP(state='C'))
+Observe('mBid',  Bid(state='M'))
 Observe('cSmac', Smac(state='A'))
-Observe('cSmac_n', Smac(bf=None, state='A'))
-Observe('cSmac_X', Smac(bf=1, state='A') % XIAP(bf=1))
-
+Observe('cPARP', PARP(state='C'))
+Observe('tBid', Bid(state='T'))

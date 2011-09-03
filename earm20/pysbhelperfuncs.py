@@ -72,7 +72,7 @@ def two_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
     if isinstance(Prod, MonomerPattern):
         r2_name = 'cplx_%s_via_%s__%s' % (Prod.monomer.name, Sub1.monomer.name, Sub2.monomer.name)
     elif isinstance(Prod, ComplexPattern):
-        r2_name = 'cplx_%s_via_%s__%s' % (("-".join([sub.monomer.name for sub in Prod.monomer_patterns])),
+        r2_name = 'cplx_%s_via_%s__%s' % (("_".join([sub.monomer.name for sub in Prod.monomer_patterns])),
                                           Sub1.monomer.name, Sub2.monomer.name)
     
     assert site in Sub1.monomer.sites_dict, \
