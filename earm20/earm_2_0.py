@@ -44,6 +44,10 @@ Rule('Bad_to_mem', Bad(bf = None, state = 'C') <> Bad(bf = None, state = 'M'), k
 
 # tBid helps transport of BclxL and Bax to Membrane
 # ------------------------------------
+
+
+# tBid activates Bax and Bak
+#----------------------------
 two_step_mod(Bid(state = 'M'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
 two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
 
