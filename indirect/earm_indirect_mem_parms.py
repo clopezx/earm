@@ -7,23 +7,12 @@ parameter_dict = {
     #--------------------
     # EARM 1.5 bcl2 module parameters
     #--------------------
-    # Bid transport to mitochondria
-    'BID_trans':  [ Parameter('kbidCbidMf', 4.91481326e+00),
-                    Parameter('kbidCbidMr', 1.40411075e-03)],
     # Bax transport to mitochondria
     'BAX_trans':  [ Parameter('kbaxCbaxMf', 0.00730727274745), 
                     Parameter('kbaxCbaxMr', 0.0107476023245)],
     # Bclxl translocation
     'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', 0.00080830468994),
                     Parameter('kbclxlCbclxlMr', 0.0136380873594)],
-    # Bax activation by Bid
-    'BID_BAX':    [ Parameter('kbidbaxf', 1.78519244773e-08),
-                    Parameter('kbidbaxr', 0.000127019618397),
-                    Parameter('kbidbaxc', 3.12885090105 )],
-    # Bak activation via Bid ***CHECK VALUES
-    'BID_BAK':    [ Parameter('kbidbakf', 2.3840120805e-07),
-                    Parameter('kbidbakr', 0.00116686859656),
-                    Parameter('kbidbakc', 0.616100104218)],
     #Bax pore assembly
     'BAX_PORE':   [[Parameter('kbaxdimf', 1.9e-05),
                     Parameter('kbaxdimr', 0.00253168857302)],

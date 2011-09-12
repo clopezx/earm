@@ -131,4 +131,4 @@ Initial(XIAP(bf=None), XIAP_0)
 Observe('mBid',  Bid(state='M'))
 Observe('cSmac', Smac(state='A'))
 Observe('cPARP', PARP(state='C'))
-Observe('tBid', Bid(state='T'))
+

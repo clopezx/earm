@@ -26,10 +26,11 @@ Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, act
 Monomer('C9', ['bf'])
 Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
 Monomer('XIAP', ['bf'])
+Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # NOT USED. Kept here simply to use the trail_to_bid module
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-from earm_indirect_parms import parameter_dict as kd 
+from earm_indirect_mem_parms import parameter_dict as kd 
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
@@ -113,9 +114,8 @@ Initial(XIAP(bf=None), XIAP_0)
 # Observe('PARP',  PARP(bf=None, state='U'))
 # Observe('Smac',  Smac(bf=None, state='mito'))
 # # This is what *should* be observed???
-Observe('tBid',  Bid(state='M'))
-Observe('cPARP', PARP(state='C'))
+Observe('tBid',  Bid(state='T')) #no state M in this case!
 Observe('cSmac', Smac(state='A'))
-Observe('cSmac_n', Smac(bf=None, state='A'))
-Observe('cSmac_X', Smac(bf=1, state='A') % XIAP(bf=1))
+Observe('cPARP', PARP(state='C'))
+
 
