@@ -17,8 +17,8 @@ parameter_dict = {
     # EARM 1.5 bcl2 module parameters
     #--------------------
     # Bid transport to mitochondria
-    'BID_trans':  [ Parameter('kbidTbidMf', 4.91481326e+00),
-                    Parameter('kbidTbidMr', 1.40411075e-03)],
+    'BID_trans':  [ Parameter('kbidTbidMf', 0.0612607534149),
+                    Parameter('kbidTbidMr', 0.000709215581377)],
     # Bad transport to mitochondria
     'BAD_trans':  [ Parameter('kbadCbadMf', 4.91481326e+00),
                     Parameter('kbadCbadMr', 1.40411075e-03)],
@@ -54,6 +54,7 @@ parameter_dict = {
                     Parameter('kbaxtrimr', 0.000455745565138)],
                    [Parameter('kbaxtetf', 0.000116),
                     Parameter('kbaxtetr', 0.000902098483308)]],
+    #Bak pore assembly
     'BAK_PORE':   [[Parameter('kbakdimf', 1.98972134863e-05),
                     Parameter('kbakdimr', 0.00117910083105)],
                    [Parameter('kbaktrimf', 0.000120932227934 ),
@@ -98,23 +99,23 @@ parameter_dict = {
     #---------------------------
 
     # rec_to_bid module parameters
-    'L_R_DISC':   [ Parameter('klrf', 4e-07),       
-                    Parameter('klrr', 1e-03),
-                    Parameter('klrc', 1e-05)],
+    'L_R_DISC':   [ Parameter('klrf', 3.16778866964e-07),       
+                    Parameter('klrr', 0.00348412289944),
+                    Parameter('klrc', 6.25171535745e-06)],
     # C8 activation via DISC,
-    'DISC_C8':    [ Parameter('kdiscc8f', 1e-06),   
-                    Parameter('kdiscc8r', 1e-03),
-                    Parameter('kdiscc8c', 1e+00)],
+    'DISC_C8':    [ Parameter('kdiscc8f', 6.24455983646e-06),   
+                    Parameter('kdiscc8r', 5.31630214477e-05),
+                    Parameter('kdiscc8c', 7.2196057206)],
     # Bid cleavage by C8
-    'C8_BID':     [ Parameter('kc8bidf', 9.98683170e-08),
-                    Parameter('kc8bidr', 1.72707515e-03),
-                    Parameter('kc8bidc', 1.40842965e+00)],
+    'C8_BID':     [ Parameter('kc8bidf', 4.12889999975e-08),
+                    Parameter('kc8bidr', 4.5677553868e-05),
+                    Parameter('kc8bidc', 16.0133713052)],
     # DISC inhibition by FLIP
-    'DISC_FLIP':  [ Parameter('kflipdiscf', 1e-06), 
-                    Parameter('kflipdiscr', 1e-03)],
+    'DISC_FLIP':  [ Parameter('kflipdiscf', 4.20690082454e-07), 
+                    Parameter('kflipdiscr', 7.29146539552e-05)],
     # C8 inhibition by BAR
-    'BAR_C8':     [ Parameter('kbarc8f', 1e-06), 
-                    Parameter('kbarc8r', 1e-03)],
+    'BAR_C8':     [ Parameter('kbarc8f', 3.74374298237e-07), 
+                    Parameter('kbarc8r', 0.00154671269112)],
 
     #---------------------------
     # pore_to_parp module parameters

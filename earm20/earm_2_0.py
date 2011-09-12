@@ -42,17 +42,13 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf = None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
 Rule('Bad_to_mem', Bad(bf = None, state = 'C') <> Bad(bf = None, state = 'M'), kd['BAD_trans'][0],kd['BAD_trans'][1])
 
-# tBid helps transport of BclxL and Bax to Membrane
-# ------------------------------------
-
-
-# tBid activates Bax and Bak
-#----------------------------
+# tBid in the mitochondria activates Bax(C) and Bak(M)
+#-----------------------------------------------------
 two_step_mod(Bid(state = 'M'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
 two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
 
-# Autoactivation, Bax and Bak self-activate
-# ------------------------------------
+# Autoactivation, Bax and Bak activate their own kind
+# ---------------------------------------------------
 two_step_mod(Bax(state = 'A'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
 two_step_mod(Bak(state = 'A'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
 
@@ -63,9 +59,11 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition
-# ------------------------------------
-# tBid/Bax recruit Bcl-xL and autoinhibit themselves
-# ------------------------------------
+# -----------------------------------------------------
+# tBid/Bax recruit Bcl-xL(C) and autoinhibit themselves
+#        Bid/Bax + BclxL <> Bid/Bax:BclxL(C) >> Bid/Bax:BclxL(M)
+#        Notice the product of this feeds into the product of the inh rxns
+# ------------------------------------------------------------------------
 two_step_conv(Bid(state = 'M'), BclxL(state='C'), Bid(bf = 1, state = 'M')%BclxL(bf = 1, state='M'), kd['Bid_BclxL_RA'])
 two_step_conv(Bax(state = 'A'), BclxL(state='C'), Bax(bf = 1, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
 
