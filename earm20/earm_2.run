@@ -33,6 +33,17 @@ xpdata = xpfile['arr_0']
 lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=4, N=10000)
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 25000, model, envlist, xpdata, [(4,1),(6,2),(5,3)], lb, ub), lower=lower, upper=upper, full_output=1)
 
+#---------ANNEAL ALL, normalized section
+import scipy.optimize.anneal
+import numpy
+import pysb.anneal_sundials
+from earm_2_0 import model
+envlist, paramarr = pysb.anneal_sundials.annlinit(model)
+xpfile = numpy.load('xp_mod_data_earm10.npz')
+xpdata = xpfile['arr_0']
+lb, ub, lower, upper, xpnormdata, normfact = pysb.anneal_sundials.getgenparambounds(paramarr, xptonorm = xpdata)
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 25000, model, envlist, xpdata, [(4,1),(6,2),(5,3)], lb, ub, normfact), lower=lower, upper=upper, full_output=1)
+
 
 
 #===
