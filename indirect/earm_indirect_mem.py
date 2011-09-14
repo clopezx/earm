@@ -61,7 +61,7 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
 simple_bind_table([[                                                   BclxL,  Mcl1],
-                   [                                           {'state':'M'},    {}], #NOTE: indirect is not clear about state of Bcl-xL
+                   [                                           {'state':'M'},    {}], #NOTE: indirect not clear about state of Bcl-xL
                    [Bax, {'bh3':None, 'd2':None, 'state':'A'},          True, False],
                    [Bak, {'bh3':None, 'd2':None, 'state':'A'},          True,  True]],
                   kd['BID_BAX_BAK_inh'], model)

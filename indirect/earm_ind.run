@@ -1,32 +1,8 @@
-import scipy.optimize.anneal
-import numpy
-import pysb.anneal_sundials
-from earm_2_0 import model
-envlist, paramarr = pysb.anneal_sundials.annlinit(model)
-xpfile = numpy.load('xp_mod_data_earm10.npz')
-xpdata = xpfile['arr_0']
-
-#----------bid annealing section
-prmfile = numpy.load('annl_bid_prmlst.npz')
-bidprm = prmfile['arr_0']
-bidnum = prmfile['arr_1']
-bidlst = prmfile['arr_2']
-lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(bidprm, omag=3, N=1000)
-annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, bidprm, args=(bidnum, 25000, model, envlist, xpdata, 4, 1, lb, ub), lower=lower, upper=upper, full_output=1)
-
-#----------smac annealing section
-prmfile = numpy.load('annl_smac_prmlst.npz')
-smacprm = prmfile['arr_0']
-smacnum = prmfile['arr_1']
-smaclst = prmfile['arr_2']
-lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(smacprm, omag=3, N=1000)
-annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, smacprm, args=(smacnum, 25000, model, envlist, xpdata, 6, 2, lb, ub), lower=lower, upper=upper, full_output=1)
-
 #---------ANNEAL ALL section
 import scipy.optimize.anneal
 import numpy
 import pysb.anneal_sundials
-from earm_2_0 import model
+from earm_indirect_mem import model
 envlist, paramarr = pysb.anneal_sundials.annlinit(model)
 xpfile = numpy.load('xp_mod_data_earm10.npz')
 xpdata = xpfile['arr_0']
