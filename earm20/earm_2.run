@@ -1,10 +1,14 @@
+#---------ANNEAL ALL section
 import scipy.optimize.anneal
 import numpy
 import pysb.anneal_sundials
 from earm_2_0 import model
 envlist, paramarr = pysb.anneal_sundials.annlinit(model)
-xpfile = numpy.load('xp_mod_data_earm10.npz')
-xpdata = xpfile['arr_0']
+xpfile = numpy.load('EC-RP_IC-RP_IMS-RP_ed.npz')
+xpnormdata = xpfile['arr_0']
+# DATA IS ALREADY NORMALIZED
+lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=4, N=10000)
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 50000, model, envlist, xpnormdata, [(2,1),(5,2),(4,3)], lb, ub, True), lower=lower, upper=upper, full_output=1)
 
 #----------bid annealing section
 prmfile = numpy.load('annl_bid_prmlst.npz')
@@ -22,25 +26,4 @@ smaclst = prmfile['arr_2']
 lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(smacprm, omag=3, N=1000)
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, smacprm, args=(smacnum, 25000, model, envlist, xpdata, 6, 2, lb, ub), lower=lower, upper=upper, full_output=1)
 
-#---------ANNEAL ALL section
-import scipy.optimize.anneal
-import numpy
-import pysb.anneal_sundials
-from earm_2_0 import model
-envlist, paramarr = pysb.anneal_sundials.annlinit(model)
-xpfile = numpy.load('xp_mod_data_earm10.npz')
-xpdata = xpfile['arr_0']
-lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=4, N=10000)
-annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 25000, model, envlist, xpdata, [(4,1),(6,2),(5,3)], lb, ub), lower=lower, upper=upper, full_output=1)
-
-#---------ANNEAL ALL, normalized section
-import scipy.optimize.anneal
-import numpy
-import pysb.anneal_sundials
-from earm_2_0 import model
-envlist, paramarr = pysb.anneal_sundials.annlinit(model)
-xpfile = numpy.load('xp_mod_data_earm10.npz')
-xpdata = xpfile['arr_0']
-lb, ub, lower, upper, xpnormdata, normfact = pysb.anneal_sundials.getgenparambounds(paramarr, xptonorm = xpdata)
-annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 25000, model, envlist, xpnormdata, [(4,1),(6,2),(5,3)], lb, ub, normfact[[0,4,6,5]]), lower=lower, upper=upper, full_output=1)
 
