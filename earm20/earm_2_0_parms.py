@@ -14,7 +14,7 @@ v = .07; # mitochondria compartment volume/cell volume
 # Reaction rates
 parameter_dict = {
     #--------------------
-    # EARM 1.5 bcl2 module parameters
+    # EARM 2.0 bcl2 module parameters
     #--------------------
     # Bid transport to mitochondria
     'BID_trans':  [ Parameter('kbidTbidMf', 0.0612607534149),

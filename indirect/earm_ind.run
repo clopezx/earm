@@ -1,3 +1,16 @@
+#---ANNEAL NORM DATA
+import scipy.optimize.anneal
+import numpy
+import pysb.anneal_sundials
+from earm_indirect_mem import model
+envlist, paramarr = pysb.anneal_sundials.annlinit(model)
+xpfile = numpy.load('EC-RP_IC-RP_IMS-RP_ed.npz')
+xpnormdata = xpfile['arr_0']
+# DATA IS ALREADY NORMALIZED
+lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=4, N=10000)
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 50000, model, envlist, xpnormdata, [(2,1),(5,2),(4,3)], lb, ub, True), lower=lower, upper=upper, full_output=1)
+
+
 #---------ANNEAL ALL section
 import scipy.optimize.anneal
 import numpy
