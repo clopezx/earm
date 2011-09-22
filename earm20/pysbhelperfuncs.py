@@ -31,8 +31,10 @@ def two_step_mod(Enz, Sub, Prod, klist,  site='bf'):
     
     # FIXME: this will fail if the argument passed is a Complex object. 
 
-    r1_name = 'cplx_%s_%s' % (Sub.monomer.name, Enz.monomer.name)
-    r2_name = 'diss_%s_via_%s' % (Prod.monomer.name, Enz.monomer.name)
+    r1_name = 'cplx_%s%s_%s%s' % (Sub.monomer.name, ''.join(filter(lambda a: a != None, Sub.site_conditions.values())),
+                                     Enz.monomer.name, ''.join(filter(lambda a: a != None, Enz.site_conditions.values())))
+    r2_name = 'diss_%s%s_via_%s%s' % (Prod.monomer.name, ''.join(filter(lambda a: a != None, Prod.site_conditions.values())),
+                                         Enz.monomer.name, ''.join(filter(lambda a: a != None, Enz.site_conditions.values())))
     
     assert site in Enz.monomer.sites_dict, \
         "Required site %s not present in %s as required"%(site, Enz.monomer.name)

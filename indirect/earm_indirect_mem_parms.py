@@ -29,10 +29,14 @@ parameter_dict = {
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
     # These are used in the simple_bind_table function which expects
     # row-major order (if you don't know what this means google it)
-    'BID_BAX_BAK_inh':[[Parameter('baxbclxlf', 2.53724317374e-06),#
+    'BID_BAX_BAK_inh':[[Parameter('bidbclxlf', 2.53724317374e-06),#
+                        Parameter('bidbclxlr', 0.000777609558706  )],
+                       [Parameter('baxbclxlf', 2.53724317374e-06),#
                         Parameter('baxbclxlr', 0.000777609558706  )],
                        [Parameter('bakbclxlf', 0.000139640194286),#
                         Parameter('bakbclxlr',0.000334860167879 )],
+                       [Parameter('bidmcl1f', 0.00011361077281),#
+                        Parameter('bidmcl1r', 0.0117982649382 )],
                        [Parameter('bakmcl1f', 0.00011361077281),#
                         Parameter('bakmcl1r', 0.0117982649382 )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA

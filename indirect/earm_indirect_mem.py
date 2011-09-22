@@ -40,7 +40,6 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'A'), kd['BAX_trans'][0], kd['BAX_trans'][1])
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
 
-# Mitochondrial tBid activates Bax/Bak
 # Bax/Bak form pores
 # ------------------------------------
 #        Bax + tBid <--> Bax:tBid --> Bax* + tBid 
@@ -62,6 +61,7 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # ------------------------------------
 simple_bind_table([[                                                   BclxL,  Mcl1],
                    [                                           {'state':'M'},    {}], #NOTE: indirect not clear about state of Bcl-xL
+                   [Bid, {'state':'T'},                                 True,  True],
                    [Bax, {'bh3':None, 'd2':None, 'state':'A'},          True, False],
                    [Bak, {'bh3':None, 'd2':None, 'state':'A'},          True,  True]],
                   kd['BID_BAX_BAK_inh'], model)
