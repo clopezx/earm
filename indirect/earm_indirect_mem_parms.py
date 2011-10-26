@@ -89,8 +89,8 @@ parameter_dict = {
                      Parameter('kbaksmacCAr',  0.00234088295981 ),   #same as Bak-SMAC
                      Parameter('kbaksmacCAc', 27.3582352876     )]], #same as Bak-SMAC
     # CytoC activation
-    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.0273684974471),  #same as SMAC_ACT
-                    Parameter('kcytocCcytoAr', 0.0136700510202)], #same as SMAC_ACT
+    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.1237684974471),  #same as SMAC_ACT
+                    Parameter('kcytocCcytoAr', 0.0236700510202)], #same as SMAC_ACT
     # Smac activation
     'SMAC_ACT':  [ Parameter('ksmacCsmacAf', 0.0273684974471),
                    Parameter('ksmacCsmacAr', 0.0159988303507)],

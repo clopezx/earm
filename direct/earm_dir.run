@@ -4,12 +4,12 @@ import numpy
 import pysb.anneal_sundials
 from earm_direct_mem import model
 envlist, paramarr = pysb.anneal_sundials.annlinit(model)
-xpfile = numpy.load('EC-RP_IC-RP_IMS-RP_ed.npz')
+xpfile = numpy.load('IC-RP_IMS-RP_EC-RP_for_fits.npz')
 xpnormdata = xpfile['arr_0']
-# DATA IS ALREADY NORMALIZED
-lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=4, N=10000)
+lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr)
+# DATA IS ALREADY NORMALIZED, NORM = TRUE
+# envlist is a list of tuples which says which array from xpdata corresponds to simulation observables
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 50000, model, envlist, xpnormdata, [(2,1),(5,2),(4,3)], lb, ub, True), lower=lower, upper=upper, full_output=1)
-
 
 #---------ANNEAL ALL section
 import scipy.optimize.anneal
