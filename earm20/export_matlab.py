@@ -20,7 +20,7 @@ def run(model):
   param_subs = dict([ (sympy.Symbol(p.name), p.value) for p in
       model.parameters + model.parameter_overrides.values() ])
 
-  c_code_consts = '\n'.join(['%% %s = param(%d) = %s;' % (p.name, i+1, p.value) for i, p in
+  c_code_consts = '\n'.join(['param(%d) = %s; %% %s ' % (i+1, p.value, p.name) for i, p in
       enumerate(model.parameters)])
   c_code_eqs = '\n'.join(['out(%d,1) = %s;' % (i+1, sympy.ccode(model.odes[i])) for i in
       range(len(model.odes))])
