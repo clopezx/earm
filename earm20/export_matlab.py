@@ -6,15 +6,32 @@ import sympy
 import re
 import sys
 import os
+import numpy
 from StringIO import StringIO
 
 def run(model):
   output = StringIO()
   pysb.bng.generate_equations(model)
+  
+  odesize = len(model.odes)
+  yzero = numpy.zeros(odesize)
+  
+  #initial conditions for ODES
+  for cplxptrn, ic_parm in model.initial_conditions:
+    override = model.parameter_overrides.get(ic_parm.name)
+    if override is not None:
+      ic_parm = override
+    speci = model.get_species_index(cplxptrn)
+    yzero[speci] = ic_parm.value
 
   output.write("% MATLAB model definition file\n")
   output.write('%% save as %s_odes.m\n' % model_name)
   output.write('function out = %s_odes(t, input, param)' % model_name)
+  output.write("\n\n")
+
+  # write the initial y(0)
+  for i in range(len(yzero)):
+    output.write("conc(%d) = %f;\n"%(i+1, yzero[i]))
   output.write("\n\n")
 
   param_subs = dict([ (sympy.Symbol(p.name), p.value) for p in
