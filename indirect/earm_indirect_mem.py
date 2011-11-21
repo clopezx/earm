@@ -118,7 +118,4 @@ Initial(XIAP(bf=None), XIAP_0)
 Observe('tBid',  Bid(state='T'))  # 1 no state M in this case!
 Observe('aSmac', Smac(state='A')) # 2
 Observe('cPARP', PARP(state='C')) # 3
-Observe('mSmac', Smac(state='M')) # 4
-Observe('cSmac', Smac(state='C')) # 5
-Observe('xSmac', Smac(bf=1, state='A') % XIAP(bf=1))
 
