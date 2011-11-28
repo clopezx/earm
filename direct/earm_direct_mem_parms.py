@@ -19,34 +19,24 @@ parameter_dict = {
     # Bid transport to mitochondria
     'BID_trans':  [ Parameter('kbidTbidMf', 0.0612607534149),
                     Parameter('kbidTbidMr', 0.000709215581377)],
-    # Bad transport to mitochondria
-    'BAD_trans':  [ Parameter('kbadCbadMf', 4.91481326e+00),
-                    Parameter('kbadCbadMr', 1.40411075e-03)],
     # Bax transport to mitochondria
     'BAX_trans':  [ Parameter('kbaxCbaxMf', 0.00730727274745), 
                     Parameter('kbaxCbaxMr', 0.0107476023245)],
-    # Bcl2 translocation
-    'BCL2_trans': [ Parameter('kbcl2Cbcl2Mf', 0.0218508615202),
-                    Parameter('kbcl2Cbcl2Mr', 0.00139519037226)],
     # Bclxl translocation
     'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', 0.00080830468994),
                     Parameter('kbclxlCbclxlMr', 0.0136380873594)],
     # Bax activation by Bid
-    'BID_BAX':    [ Parameter('kbidbaxf', 1.78519244773e-08),
-                    Parameter('kbidbaxr', 0.000127019618397),
-                    Parameter('kbidbaxc', 3.12885090105 )],
-    # Bak activation via Bid ***CHECK VALUES
-    'BID_BAK':    [ Parameter('kbidbakf', 2.3840120805e-07),
-                    Parameter('kbidbakr', 0.00116686859656),
-                    Parameter('kbidbakc', 0.616100104218)],
+    'BIDt_BAX':   [ Parameter('kbidtbaxf', 1.78519244773e-08),
+                    Parameter('kbidtbaxr', 0.000127019618397),
+                    Parameter('kbidtbaxc', 3.12885090105 )],
     # Bax activation by Bid
-    'BAX_BAX':    [ Parameter('kbaxbaxf', 1.78519244773e-08),
-                    Parameter('kbaxbaxr', 0.000127019618397),
-                    Parameter('kbaxbaxc', 3.12885090105 )],
+    'BIDm_BAX':   [ Parameter('kbidmbaxf', 1.78519244773e-08),
+                    Parameter('kbidmbaxr', 0.000127019618397),
+                    Parameter('kbidmbaxc', 3.12885090105 )],
     # Bak activation via Bid ***CHECK VALUES
-    'BAK_BAK':    [ Parameter('kbakbakf', 2.3840120805e-07),
-                    Parameter('kbakbakr', 0.00116686859656),
-                    Parameter('kbakbakc', 0.616100104218)],
+    'BIDt_BAK':   [ Parameter('kbidtbakf', 2.3840120805e-07),
+                    Parameter('kbidtbakr', 0.00116686859656),
+                    Parameter('kbidtbakc', 0.616100104218)],
     #Bax pore assembly
     'BAX_PORE':   [[Parameter('kbaxdimf', 1.9e-05),
                     Parameter('kbaxdimr', 0.00253168857302)],
@@ -61,36 +51,20 @@ parameter_dict = {
                     Parameter('kbaktrimr', 4.81022463147e-06)],
                    [Parameter('kbaktetf',  0.000116488694321),
                     Parameter('kbaktetr', 0.000743264410286)]],
-    #BclxL recruitment by and inhibition of Bid
-    'Bid_BclxL_RA': [Parameter('kbidbclxl_RAf', 1.78519244773e-08),
-                     Parameter('kbidbclxl_RAr', 0.00012701961),
-                     Parameter('kbidbclxl_RAc', 3.12885090105)],
-    #BclxL recruitment by and inhibition of Bax
-    'Bax_BclxL_RA': [Parameter('kbaxbclxl_RAf', 1.78519244773e-08),
-                     Parameter('kbaxbclxl_RAr', 0.00012701961),
-                     Parameter('kbaxbclxl_RAc', 3.12885090105)],
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
     # These are used in the simple_bind_table function which expects
     # row-major order (if you don't know what this means google it)
     'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 1.45280010e-06),
                         Parameter('kbidbcl2r', 1.70789566e-03)],
-                       [Parameter('baxbcl2f', 0.000396587292307), #
-                        Parameter('baxbcl2r', 0.00123288686313)],
-                       [Parameter('bidbclxlf', 2.53724317374e-06),#
-                        Parameter('bidbclxlr', 0.000777609558706  )],
-                       [Parameter('baxbclxlf', 2.53724317374e-06),#
-                        Parameter('baxbclxlr', 0.000777609558706  )],
-                       [Parameter('bakbclxlf', 0.000139640194286),#
-                        Parameter('bakbclxlr',0.000334860167879 )],
-                       [Parameter('bakmcl1f', 0.00011361077281),#
-                        Parameter('bakmcl1r', 0.0117982649382 )]],
+                       [Parameter('kbidbclxlf', 2.53724317374e-06),#
+                        Parameter('kbidbclxlr', 0.000777609558706  )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
     'BCLs_sens':      [[Parameter('kbadbcl2f',  3.77284671141e-06),
                         Parameter('kbadbcl2r',  0.00106766288445 )],
                        [Parameter('kbadbclxlf', 5.02786873341e-05),
                         Parameter('kbadbclxlr', 0.00029689476754 )],
-                       [Parameter('knoxabcl2f', 1.46064619002e-05),
-                        Parameter('knoxabcl2r', 0.00137190327654 )],
+                       [Parameter('knoxabclxlf', 1.46064619002e-05),
+                        Parameter('knoxabclxlr', 0.00137190327654 )],
                        [Parameter('knoxamcl1f', 5.97803309472e-06),
                         Parameter('knoxamcl1r', 6.68821754476e-05 )]],
     

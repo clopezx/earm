@@ -1,4 +1,4 @@
-# EARM 2.0 INDIRECT
+# EARM 2.0 DIRECT
 from pysb import *
 from pysbhelperfuncs import *
 
@@ -12,9 +12,11 @@ Monomer('DISC', ['bf']) # DISC
 Monomer('flip', ['bf']) # flip
 Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('BAR', ['bf']) # BAR
+Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
 Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
 Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
-Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
+Monomer('Bcl2', ['bf']) 
+Monomer('BclxL', ['bf', 'state'], {'state':['C','M']}) # No difference if it is Cyto or Mito
 Monomer('Mcl1', ['bf']) 
 Monomer('Bad', ['bf']) 
 Monomer('NOXA', ['bf']) 
@@ -27,20 +29,21 @@ Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, act
 Monomer('C9', ['bf'])
 Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
 Monomer('XIAP', ['bf'])
-Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # NOT USED. Kept here simply to use the trail_to_bid module
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-from earm_indirect_mem_parms import parameter_dict as kd 
+from earm_direct_mem_parms import parameter_dict as kd 
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
 # ======================
-# Bcl2, Bid, Bax migration to mitochondria
+# Bid, Bax migration to mitochondria
 # ----------------------------------------
-Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'A'), kd['BAX_trans'][0], kd['BAX_trans'][1])
+Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf = None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
+Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'][0], kd['BAX_trans'][1])
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
 
+# Mitochondrial tBid activates Bax/Bak
 # Bax/Bak form pores
 # ------------------------------------
 #        Bax + tBid <--> Bax:tBid --> Bax* + tBid 
@@ -49,6 +52,9 @@ Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'
 #        Bak + Bak <--> Bak:Bak + Bak <--> Bak:Bak:Bak + Bak <--> Bak:Bak:Bak:Bak
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
+two_step_mod(Bid(state = 'T'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDt_BAX'])
+two_step_mod(Bid(state = 'M'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDm_BAX'])
+two_step_mod(Bid(state = 'T'), Bak(state = 'M'), Bak(bf = None, state = 'A'), kd['BIDt_BAK'])
 # pore_assembly(Subunit, size, rates):
 pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
 pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
@@ -60,11 +66,10 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # a set of simple bind reactions:
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
-simple_bind_table([[                                                   BclxL,  Mcl1],
-                   [                                           {'state':'M'},    {}], #NOTE: indirect not clear about state of Bcl-xL
-                   [Bid, {'state':'T'},                                 True,  True],
-                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},          True, False],
-                   [Bak, {'bh3':None, 'd2':None, 'state':'A'},          True,  True]],
+simple_bind_table([[                                            Bcl2,         BclxL,  Mcl1],
+                   [                                              {}, {'state':'M'},    {}],
+                   [Bid, {'state':'M'},                         True,          True, False], #Bax/Bak not inhibited in direct model
+                   ],
                   kd['BID_BAX_BAK_inh'], model)
 
 # Sensitizers
@@ -72,10 +77,10 @@ simple_bind_table([[                                                   BclxL,  M
 #        Inh + Act <--> Inh:Act
 # This goes through the list in row-major order (as it should be)
 # ---------------------------------------------------------------
-simple_bind_table([[                  BclxL,  Mcl1], #Note: according to Andrews, these should all be at mitochondria
-                   [          {'state':'M'},    {}],
-                   [Bad,  {},          True, False],
-                   [NOXA, {},          True,  True]],
+simple_bind_table([[           Bcl2,         BclxL,  Mcl1],
+                   [             {}, {'state':'M'},    {}],
+                   [Bad,  {},  True,          True, False],
+                   [NOXA, {},  False,         True,  True]],
                   kd['BCLs_sens'], model)
 
 # Import necessary modules
@@ -94,7 +99,8 @@ Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
 Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
-Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bax_0)
+Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bak_0)
+Initial(Bcl2(bf=None), Bcl2_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
 Initial(Bad(bf=None), Bad_0)
@@ -115,7 +121,8 @@ Initial(XIAP(bf=None), XIAP_0)
 # Observe('PARP',  PARP(bf=None, state='U'))
 # Observe('Smac',  Smac(bf=None, state='mito'))
 # # This is what *should* be observed???
-Observe('tBid',  Bid(state='T'))  # 1 no state M in this case!
-Observe('aSmac', Smac(state='A')) # 2
-Observe('cPARP', PARP(state='C')) # 3
+Observe('tBid',  Bid(state='M'))
+Observe('cSmac', Smac(state='A'))
+Observe('cPARP', PARP(state='C'))
+
 

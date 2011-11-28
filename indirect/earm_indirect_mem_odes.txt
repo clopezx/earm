@@ -1,0 +1,81 @@
+L(bf=None): klrr*s23 - klrf*s0*s1
+R(bf=None): klrr*s23 - klrf*s0*s1
+flip(bf=None): kflipdiscr*s33 - kflipdiscf*s2*s28
+C8(bf=None, state=pro): kc6c8r*s77 + kdiscc8r*s32 - kc6c8f*s3*s71 - kdiscc8f*s28*s3
+BAR(bf=None): kbarc8r*s41 - kbarc8f*s37*s4
+Bid(bf=None, state=U): kc8bidr*s40 - kc8bidf*s37*s5
+Bax(bf=None, bh3=None, d2=None, state=C): kbaxCbaxMr*s20 - kbaxCbaxMf*s6
+Bak(bf=None, bh3=None, d2=None, state=M): 0
+BclxL(bf=None, state=C): kbclxlCbclxlMr*s21 - kbclxlCbclxlMf*s8
+Mcl1(bf=None): baxbclxlr*s56 + knoxamcl1r*s22 - baxbclxlf*s48*s9 - knoxamcl1f*s11*s9
+Bad(bf=None): kbadbclxlr*s26 - kbadbclxlf*s10*s21
+NOXA(bf=None): knoxabclxlr*s27 + knoxamcl1r*s22 - knoxabclxlf*s11*s21 - knoxamcl1f*s11*s9
+CytoC(bf=None, state=M): kbaxcytocMCr*s42 + kbaxcytocMCr*s49 + kbaxcytocMCr*s57 + kbaxcytocMCr*s58 + kbaxcytocMCr*s67 + kbaxcytocMCr*s74 - kbaxcytocMCf*s12*s36 - kbaxcytocMCf*s12*s39 - kbaxcytocMCf*s12*s46 - kbaxcytocMCf*s12*s47 - kbaxcytocMCf*s12*s54 - kbaxcytocMCf*s12*s66
+Smac(bf=None, state=M): kbaxsmacCAr*s43 + kbaxsmacCAr*s51 + kbaxsmacCAr*s59 + kbaxsmacCAr*s60 + kbaxsmacCAr*s68 + kbaxsmacCAr*s75 - kbaxsmacCAf*s13*s36 - kbaxsmacCAf*s13*s39 - kbaxsmacCAf*s13*s46 - kbaxsmacCAf*s13*s47 - kbaxsmacCAf*s13*s54 - kbaxsmacCAf*s13*s66
+Apaf(bf=None, state=I): kcytocCapafr*s69 - kcytocCapaff*s14*s62
+C3(bf=None, state=pro): kapopc3r*s79 + kc8c3r*s44 - kapopc3f*s15*s78 - kc8c3f*s15*s37
+C6(bf=None, state=pro): kc3c6r*s63 - kc3c6f*s16*s53
+C9(bf=None): kapafc9r*s78 - kapafc9f*s17*s76
+PARP(bf=None, state=U): kc3parpr*s65 - kc3parpf*s18*s53
+XIAP(bf=None): kapopxiapr*s80 + ksmacxiapr*s70 + kxiapc3c*s64 + kxiapc3r*s64 - kapopxiapf*s19*s78 - ksmacxiapf*s19*s61 - kxiapc3f*s19*s53
+Bax(bf=None, bh3=None, d2=None, state=A): bakbclxlr*s25 + kbaxCbaxMf*s6 + kbaxtetr*s36 + kbaxtrimr*s31 - kbaxCbaxMr*s20 + 2*kbaxdimr*s24 - bakbclxlf*s20*s21 - kbaxtetf*s20*s31 - kbaxtrimf*s20*s24 - 2*kbaxdimf*s20**2
+BclxL(bf=None, state=M): bakbclxlr*s25 + bidbclxlr*s55 + kbadbclxlr*s26 + kbclxlCbclxlMf*s8 + knoxabclxlr*s27 - kbclxlCbclxlMr*s21 - bakbclxlf*s20*s21 - bidbclxlf*s21*s48 - kbadbclxlf*s10*s21 - knoxabclxlf*s11*s21
+Mcl1(bf=1) % NOXA(bf=1): -knoxamcl1r*s22 + knoxamcl1f*s11*s9
+L(bf=1) % R(bf=1): -klrc*s23 - klrr*s23 + klrf*s0*s1
+Bax(bf=None, bh3=1, d2=None, state=A) % Bax(bf=None, bh3=None, d2=1, state=A): kbaxCbaxMf*s29 + kbaxCbaxMf*s30 + kbaxtrimr*s31 - kbaxdimr*s24 - 2*kbaxCbaxMr*s24 - kbaxtrimf*s20*s24 + kbaxdimf*s20**2
+Bax(bf=1, bh3=None, d2=None, state=A) % BclxL(bf=1, state=M): -bakbclxlr*s25 + bakbclxlf*s20*s21
+Bad(bf=1) % BclxL(bf=1, state=M): -kbadbclxlr*s26 + kbadbclxlf*s10*s21
+BclxL(bf=1, state=M) % NOXA(bf=1): -knoxabclxlr*s27 + knoxabclxlf*s11*s21
+DISC(bf=None): kdiscc8c*s32 + kdiscc8r*s32 + kflipdiscr*s33 + klrc*s23 - kdiscc8f*s28*s3 - kflipdiscf*s2*s28
+Bax(bf=None, bh3=1, d2=None, state=C) % Bax(bf=None, bh3=None, d2=1, state=A): kbaxCbaxMf*s34 + kbaxCbaxMr*s24 - kbaxCbaxMf*s29 - kbaxCbaxMr*s29
+Bax(bf=None, bh3=1, d2=None, state=A) % Bax(bf=None, bh3=None, d2=1, state=C): kbaxCbaxMf*s34 + kbaxCbaxMr*s24 - kbaxCbaxMf*s30 - kbaxCbaxMr*s30
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=2, d2=3, state=A) % Bax(bf=None, bh3=3, d2=1, state=A): kbaxCbaxMf*s35 + kbaxtetr*s36 - kbaxtrimr*s31 - 3*kbaxCbaxMr*s31 + kbaxtrimf*s20*s24 - kbaxtetf*s20*s31
+C8(bf=1, state=pro) % DISC(bf=1): -kdiscc8c*s32 - kdiscc8r*s32 + kdiscc8f*s28*s3
+DISC(bf=1) % flip(bf=1): -kflipdiscr*s33 + kflipdiscf*s2*s28
+Bax(bf=None, bh3=1, d2=None, state=C) % Bax(bf=None, bh3=None, d2=1, state=C): kbaxCbaxMr*s29 + kbaxCbaxMr*s30 - 2*kbaxCbaxMf*s34
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=2, d2=3, state=A) % Bax(bf=None, bh3=3, d2=1, state=C): -kbaxCbaxMf*s35 - 2*kbaxCbaxMr*s35 + 2*kbaxCbaxMf*s38 + 3*kbaxCbaxMr*s31
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=2, d2=3, state=A) % Bax(bf=None, bh3=3, d2=4, state=A) % Bax(bf=None, bh3=4, d2=1, state=A): kbaxCbaxMf*s39 + kbaxcytocMCc*s42 + kbaxcytocMCr*s42 + kbaxsmacCAc*s43 + kbaxsmacCAr*s43 - kbaxtetr*s36 - 4*kbaxCbaxMr*s36 + kbaxtetf*s20*s31 - kbaxcytocMCf*s12*s36 - kbaxsmacCAf*s13*s36
+C8(bf=None, state=A): kbarc8r*s41 + kc6c8c*s77 + kc8bidc*s40 + kc8bidr*s40 + kc8c3c*s44 + kc8c3r*s44 + kdiscc8c*s32 - kbarc8f*s37*s4 - kc8bidf*s37*s5 - kc8c3f*s15*s37
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=3, d2=1, state=C) % Bax(bf=None, bh3=2, d2=3, state=C): -kbaxCbaxMr*s38 - 2*kbaxCbaxMf*s38 + 2*kbaxCbaxMr*s35 + 3*kbaxCbaxMf*s45
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=2, d2=3, state=A) % Bax(bf=None, bh3=3, d2=4, state=A) % Bax(bf=None, bh3=4, d2=1, state=C): kbaxcytocMCc*s49 + kbaxcytocMCr*s49 + kbaxsmacCAc*s51 + kbaxsmacCAr*s51 - kbaxCbaxMf*s39 - 3*kbaxCbaxMr*s39 + 2*kbaxCbaxMf*s46 + 2*kbaxCbaxMf*s47 + 4*kbaxCbaxMr*s36 - kbaxcytocMCf*s12*s39 - kbaxsmacCAf*s13*s39
+Bid(bf=1, state=U) % C8(bf=1, state=A): -kc8bidc*s40 - kc8bidr*s40 + kc8bidf*s37*s5
+BAR(bf=1) % C8(bf=1, state=A): -kbarc8r*s41 + kbarc8f*s37*s4
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=3, d2=5, state=A) % Bax(bf=6, bh3=5, d2=7, state=A) % Bax(bf=8, bh3=7, d2=2, state=A) % CytoC(bf=[1, 4, 6, 8], state=M): -kbaxcytocMCc*s42 - kbaxcytocMCr*s42 + kbaxcytocMCf*s12*s36
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=3, d2=5, state=A) % Bax(bf=6, bh3=5, d2=7, state=A) % Bax(bf=8, bh3=7, d2=2, state=A) % Smac(bf=[1, 4, 6, 8], state=M): -kbaxsmacCAc*s43 - kbaxsmacCAr*s43 + kbaxsmacCAf*s13*s36
+C3(bf=1, state=pro) % C8(bf=1, state=A): -kc8c3c*s44 - kc8c3r*s44 + kc8c3f*s15*s37
+Bax(bf=None, bh3=1, d2=2, state=C) % Bax(bf=None, bh3=3, d2=1, state=C) % Bax(bf=None, bh3=2, d2=3, state=C): kbaxCbaxMr*s38 - 3*kbaxCbaxMf*s45
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=2, d2=3, state=A) % Bax(bf=None, bh3=4, d2=1, state=C) % Bax(bf=None, bh3=3, d2=4, state=C): kbaxcytocMCc*s57 + kbaxcytocMCr*s57 + kbaxsmacCAc*s59 + kbaxsmacCAr*s59 - 2*kbaxCbaxMf*s46 - 2*kbaxCbaxMr*s46 + 2*kbaxCbaxMf*s54 + 2*kbaxCbaxMr*s39 - kbaxcytocMCf*s12*s46 - kbaxsmacCAf*s13*s46
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=3, d2=4, state=A) % Bax(bf=None, bh3=2, d2=3, state=C) % Bax(bf=None, bh3=4, d2=1, state=C): kbaxCbaxMf*s54 + kbaxCbaxMr*s39 + kbaxcytocMCc*s58 + kbaxcytocMCr*s58 + kbaxsmacCAc*s60 + kbaxsmacCAr*s60 - 2*kbaxCbaxMf*s47 - 2*kbaxCbaxMr*s47 - kbaxcytocMCf*s12*s47 - kbaxsmacCAf*s13*s47
+Bid(bf=None, state=T): baxbclxlr*s56 + bidbclxlr*s55 + kc8bidc*s40 - baxbclxlf*s48*s9 - bidbclxlf*s21*s48
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=3, d2=5, state=A) % Bax(bf=6, bh3=5, d2=7, state=A) % Bax(bf=8, bh3=7, d2=2, state=C) % CytoC(bf=[1, 4, 6, 8], state=M): -kbaxcytocMCc*s49 - kbaxcytocMCr*s49 + kbaxcytocMCf*s12*s39
+CytoC(bf=None, state=C): kbaxcytocMCc*s42 + kbaxcytocMCc*s49 + kbaxcytocMCc*s57 + kbaxcytocMCc*s58 + kbaxcytocMCc*s67 + kbaxcytocMCc*s74 + kcytocCcytoAr*s62 - kcytocCcytoAf*s50
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=3, d2=5, state=A) % Bax(bf=6, bh3=5, d2=7, state=A) % Bax(bf=8, bh3=7, d2=2, state=C) % Smac(bf=[1, 4, 6, 8], state=M): -kbaxsmacCAc*s51 - kbaxsmacCAr*s51 + kbaxsmacCAf*s13*s39
+Smac(bf=None, state=C): kbaxsmacCAc*s43 + kbaxsmacCAc*s51 + kbaxsmacCAc*s59 + kbaxsmacCAc*s60 + kbaxsmacCAc*s68 + kbaxsmacCAc*s75 + ksmacCsmacAr*s61 - ksmacCsmacAf*s52
+C3(bf=None, state=A): kapopc3c*s79 + kc3c6c*s63 + kc3c6r*s63 + kc3parpc*s65 + kc3parpr*s65 + kc8c3c*s44 + kxiapc3r*s64 - kc3c6f*s16*s53 - kc3parpf*s18*s53 - kxiapc3f*s19*s53
+Bax(bf=None, bh3=1, d2=2, state=A) % Bax(bf=None, bh3=3, d2=1, state=C) % Bax(bf=None, bh3=4, d2=3, state=C) % Bax(bf=None, bh3=2, d2=4, state=C): kbaxcytocMCc*s67 + kbaxcytocMCr*s67 + kbaxsmacCAc*s68 + kbaxsmacCAr*s68 - kbaxCbaxMr*s54 - 3*kbaxCbaxMf*s54 + 2*kbaxCbaxMr*s46 + 2*kbaxCbaxMr*s47 + 4*kbaxCbaxMf*s66 - kbaxcytocMCf*s12*s54 - kbaxsmacCAf*s13*s54
+BclxL(bf=1, state=M) % Bid(bf=1, state=T): -bidbclxlr*s55 + bidbclxlf*s21*s48
+Bid(bf=1, state=T) % Mcl1(bf=1): -baxbclxlr*s56 + baxbclxlf*s48*s9
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=3, d2=5, state=A) % Bax(bf=6, bh3=7, d2=2, state=C) % Bax(bf=8, bh3=5, d2=7, state=C) % CytoC(bf=[1, 4, 6, 8], state=M): -kbaxcytocMCc*s57 - kbaxcytocMCr*s57 + kbaxcytocMCf*s12*s46
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=5, d2=6, state=A) % Bax(bf=7, bh3=3, d2=5, state=C) % Bax(bf=8, bh3=6, d2=2, state=C) % CytoC(bf=[1, 4, 7, 8], state=M): -kbaxcytocMCc*s58 - kbaxcytocMCr*s58 + kbaxcytocMCf*s12*s47
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=3, d2=5, state=A) % Bax(bf=6, bh3=7, d2=2, state=C) % Bax(bf=8, bh3=5, d2=7, state=C) % Smac(bf=[1, 4, 6, 8], state=M): -kbaxsmacCAc*s59 - kbaxsmacCAr*s59 + kbaxsmacCAf*s13*s46
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=5, d2=6, state=A) % Bax(bf=7, bh3=3, d2=5, state=C) % Bax(bf=8, bh3=6, d2=2, state=C) % Smac(bf=[1, 4, 7, 8], state=M): -kbaxsmacCAc*s60 - kbaxsmacCAr*s60 + kbaxsmacCAf*s13*s47
+Smac(bf=None, state=A): ksmacCsmacAf*s52 + ksmacxiapr*s70 - ksmacCsmacAr*s61 - ksmacxiapf*s19*s61
+CytoC(bf=None, state=A): kcytocCapafc*s69 + kcytocCapafr*s69 + kcytocCcytoAf*s50 - kcytocCcytoAr*s62 - kcytocCapaff*s14*s62
+C3(bf=1, state=A) % C6(bf=1, state=pro): -kc3c6c*s63 - kc3c6r*s63 + kc3c6f*s16*s53
+C3(bf=1, state=A) % XIAP(bf=1): -kxiapc3c*s64 - kxiapc3r*s64 + kxiapc3f*s19*s53
+C3(bf=1, state=A) % PARP(bf=1, state=U): -kc3parpc*s65 - kc3parpr*s65 + kc3parpf*s18*s53
+Bax(bf=None, bh3=1, d2=2, state=C) % Bax(bf=None, bh3=3, d2=1, state=C) % Bax(bf=None, bh3=4, d2=3, state=C) % Bax(bf=None, bh3=2, d2=4, state=C): kbaxCbaxMr*s54 + kbaxcytocMCc*s74 + kbaxcytocMCr*s74 + kbaxsmacCAc*s75 + kbaxsmacCAr*s75 - 4*kbaxCbaxMf*s66 - kbaxcytocMCf*s12*s66 - kbaxsmacCAf*s13*s66
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=5, d2=2, state=C) % Bax(bf=6, bh3=7, d2=5, state=C) % Bax(bf=8, bh3=3, d2=7, state=C) % CytoC(bf=[1, 4, 6, 8], state=M): -kbaxcytocMCc*s67 - kbaxcytocMCr*s67 + kbaxcytocMCf*s12*s54
+Bax(bf=1, bh3=2, d2=3, state=A) % Bax(bf=4, bh3=5, d2=2, state=C) % Bax(bf=6, bh3=7, d2=5, state=C) % Bax(bf=8, bh3=3, d2=7, state=C) % Smac(bf=[1, 4, 6, 8], state=M): -kbaxsmacCAc*s68 - kbaxsmacCAr*s68 + kbaxsmacCAf*s13*s54
+Apaf(bf=1, state=I) % CytoC(bf=1, state=A): -kcytocCapafc*s69 - kcytocCapafr*s69 + kcytocCapaff*s14*s62
+Smac(bf=1, state=A) % XIAP(bf=1): -ksmacxiapr*s70 + ksmacxiapf*s19*s61
+C6(bf=None, state=A): kc3c6c*s63 + kc6c8c*s77 + kc6c8r*s77 - kc6c8f*s3*s71
+C3(bf=None, state=ub): kxiapc3c*s64
+PARP(bf=None, state=C): kc3parpc*s65
+Bax(bf=1, bh3=2, d2=3, state=C) % Bax(bf=4, bh3=5, d2=2, state=C) % Bax(bf=6, bh3=7, d2=5, state=C) % Bax(bf=8, bh3=3, d2=7, state=C) % CytoC(bf=[1, 4, 6, 8], state=M): -kbaxcytocMCc*s74 - kbaxcytocMCr*s74 + kbaxcytocMCf*s12*s66
+Bax(bf=1, bh3=2, d2=3, state=C) % Bax(bf=4, bh3=5, d2=2, state=C) % Bax(bf=6, bh3=7, d2=5, state=C) % Bax(bf=8, bh3=3, d2=7, state=C) % Smac(bf=[1, 4, 6, 8], state=M): -kbaxsmacCAc*s75 - kbaxsmacCAr*s75 + kbaxsmacCAf*s13*s66
+Apaf(bf=None, state=A): kapafc9r*s78 + kcytocCapafc*s69 - kapafc9f*s17*s76
+C6(bf=1, state=A) % C8(bf=1, state=pro): -kc6c8c*s77 - kc6c8r*s77 + kc6c8f*s3*s71
+Apop(bf=None): kapopc3c*s79 + kapopc3r*s79 + kapopxiapr*s80 - kapafc9r*s78 + kapafc9f*s17*s76 - kapopc3f*s15*s78 - kapopxiapf*s19*s78
+Apop(bf=1) % C3(bf=1, state=pro): -kapopc3c*s79 - kapopc3r*s79 + kapopc3f*s15*s78
+Apop(bf=1) % XIAP(bf=1): -kapopxiapr*s80 + kapopxiapf*s19*s78
