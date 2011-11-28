@@ -4,12 +4,12 @@ import numpy
 import pysb.anneal_sundials
 from earm_indirect_mem import model
 envlist, paramarr = pysb.anneal_sundials.annlinit(model)
-xpfile = numpy.load('IC-RP_IMS-RP_EC-RP_for_fits.npz')
+xpfile = numpy.load('IC-RP_IMS-RP_EC-RP_for_fits_revised.npz')
 xpnormdata = xpfile['arr_0']
 # DATA IS ALREADY NORMALIZED
+# WE ARE USING THE EXPERIMENTAL VARIANCES
 lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=4, N=10000)
-annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 50000, model, envlist, xpnormdata, [(,1),(,2),(,3)], lb, ub, True), lower=lower, upper=upper, full_output=1)
-
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 20000, model, envlist, xpnormdata, [(2,1),(4,2),(7,3)], lb, ub, True, True), lower=lower, upper=upper, full_output=1)
 
 #---------ANNEAL ALL section
 import scipy.optimize.anneal
