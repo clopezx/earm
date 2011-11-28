@@ -1,4 +1,4 @@
-#---ANNEAL NORM DATA
+#---ANNEAL NORM DATA 
 import scipy.optimize.anneal
 import numpy
 import pysb.anneal_sundials
@@ -10,6 +10,8 @@ lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr)
 # DATA IS ALREADY NORMALIZED, NORM = TRUE
 # envlist is a list of tuples which says which array from xpdata corresponds to simulation observables
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 50000, model, envlist, xpnormdata, [(2,1),(5,2),(4,3)], lb, ub, True), lower=lower, upper=upper, full_output=1)
+
+# normalized AND vardata
 
 #---------ANNEAL ALL section
 import scipy.optimize.anneal
