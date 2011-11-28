@@ -7,7 +7,7 @@ envlist, paramarr = pysb.anneal_sundials.annlinit(model)
 xpfile = numpy.load('xp_mod_data_earm10.npz')
 xpdata = xpfile['arr_0']
 lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=4, N=10000)
-annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 25000, model, envlist, xpdata, [(4,1),(6,2),(5,3)], lb, ub), lower=lower, upper=upper, full_output=1)
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 25000, model, envlist, xpdata, [(2,1),(4,2),(7,3)], lb, ub, True, True), lower=lower, upper=upper, full_output=1)
 
 
 
