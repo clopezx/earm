@@ -1,12 +1,6 @@
 from pysb import *
 # Parameter section
 #
-# 8/3/2011 
-# The parameters for ['kbidCbidMf', 'kbidCbidMr', 'kbidbcl2f', 'kbidbcl2r', 'kc8bidf', 'kc8bidr', 'kc8bidc']
-# were optimized using simulated annealing to match the output of tBid in earm_1_5 to the 
-# original output of earm_1_0. I used a sigma of 5% (i.e. .05) for the objective function.
-#
-
 # Special parameters
 v = .07; # mitochondria compartment volume/cell volume
 
