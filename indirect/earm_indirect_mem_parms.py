@@ -8,44 +8,45 @@ parameter_dict = {
     # EARM 1.5 bcl2 module parameters
     #--------------------
     # Bax transport to mitochondria
-    'BAX_trans':  [ Parameter('kbaxCbaxMf', 0.00730727274745), 
-                    Parameter('kbaxCbaxMr', 0.0107476023245)],
+    'BAX_trans':  [ Parameter('kbaxCbaxMf', 0.01), 
+                    Parameter('kbaxCbaxMr', 0.01)],
     # Bclxl translocation
-    'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', 0.00080830468994),
-                    Parameter('kbclxlCbclxlMr', 0.0136380873594)],
+    'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', 0.01),
+                    Parameter('kbclxlCbclxlMr', 0.01)],
     #Bax pore assembly
-    'BAX_PORE':   [[Parameter('kbaxdimf', 1.9e-05),
-                    Parameter('kbaxdimr', 0.00253168857302)],
-                   [Parameter('kbaxtrimf', 0.00012),
-                    Parameter('kbaxtrimr', 0.000455745565138)],
-                   [Parameter('kbaxtetf', 0.000116),
-                    Parameter('kbaxtetr', 0.000902098483308)]],
-    'BAK_PORE':   [[Parameter('kbakdimf', 1.98972134863e-05),
-                    Parameter('kbakdimr', 0.00117910083105)],
-                   [Parameter('kbaktrimf', 0.000120932227934 ),
-                    Parameter('kbaktrimr', 4.81022463147e-06)],
-                   [Parameter('kbaktetf',  0.000116488694321),
-                    Parameter('kbaktetr', 0.000743264410286)]],
+    'BAX_PORE':   [[Parameter('kbaxdimf',  2.040816e-04),     #1.0e-6/v**2
+                    Parameter('kbaxdimr',  1e-3        )],
+                   [Parameter('kbaxtrimf', 2.040816e-04),
+                    Parameter('kbaxtrimr', 1e-3        )],
+                   [Parameter('kbaxtetf',  2.040816e-04),
+                    Parameter('kbaxtetr',  1e-3        )]],
+    #Bak pore assembly
+    'BAK_PORE':   [[Parameter('kbakdimf',  2.040816e-04),
+                    Parameter('kbakdimr',  1e-3        )],
+                   [Parameter('kbaktrimf', 2.040816e-04),
+                    Parameter('kbaktrimr', 1e-3        )],
+                   [Parameter('kbaktetf',  2.040816e-04),
+                    Parameter('kbaktetr',  1e-3        )]],
     # Inhibitions of Bax/Bak by Bcl2/BclxL/Mcl1
     # These are used in the simple_bind_table function which expects
     # row-major order (if you don't know what this means google it)
-    'BID_BAX_BAK_inh':[[Parameter('bidbclxlf', 2.53724317374e-06),#
-                        Parameter('bidbclxlr', 0.000777609558706  )],
-                       [Parameter('baxbclxlf', 2.53724317374e-06),#
-                        Parameter('baxbclxlr', 0.000777609558706  )],
-                       [Parameter('bakbclxlf', 0.000139640194286),#
-                        Parameter('bakbclxlr',0.000334860167879 )],
-                       [Parameter('bidmcl1f', 0.00011361077281),#
-                        Parameter('bidmcl1r', 0.0117982649382 )],
-                       [Parameter('bakmcl1f', 0.00011361077281),#
-                        Parameter('bakmcl1r', 0.0117982649382 )]],
+    'BID_BAX_BAK_inh':[[Parameter('bidbclxlf', 1.428571e-05),   # 1.0e-6/v
+                        Parameter('bidbclxlr', 1.0e-3      )],
+                       [Parameter('baxbclxlf', 1.428571e-05),
+                        Parameter('baxbclxlr', 1.0e-3      )],
+                       [Parameter('bakbclxlf', 1.428571e-05),
+                        Parameter('bakbclxlr', 1.0e-3      )],
+                       [Parameter('bidmcl1f',  1.428571e-05),
+                        Parameter('bidmcl1r',  1.0e-3      )],
+                       [Parameter('bakmcl1f',  1.428571e-05),
+                        Parameter('bakmcl1r',  1.0e-3      )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
-    'BCLs_sens':      [[Parameter('kbadbclxlf', 5.02786873341e-05),
-                        Parameter('kbadbclxlr', 0.00029689476754 )],
-                       [Parameter('knoxabclxlf', 5.97803309472e-06),
-                        Parameter('knoxabclxlr', 6.68821754476e-05 )],
-                       [Parameter('knoxamcl1f', 5.97803309472e-06),
-                        Parameter('knoxamcl1r', 6.68821754476e-05 )]],
+    'BCLs_sens':      [[Parameter('kbadbclxlf',  1.428571e-05),
+                        Parameter('kbadbclxlr',  1.0e-3      )],
+                       [Parameter('knoxabclxlf', 1.428571e-05),
+                        Parameter('knoxabclxlr', 1.0e-3      )],
+                       [Parameter('knoxamcl1f',  1.428571e-05),
+                        Parameter('knoxamcl1r',  1.0e-3      )]],
     
     #---------------------------
     # EARM 1.0 legacy parameters
@@ -59,9 +60,9 @@ parameter_dict = {
                     Parameter('kdiscc8r', 1e-03),
                     Parameter('kdiscc8c', 1e+00)],
     # Bid cleavage by C8
-    'C8_BID':     [ Parameter('kc8bidf', 9.98683170e-08),
-                    Parameter('kc8bidr', 1.72707515e-03),
-                    Parameter('kc8bidc', 1.40842965e+00)],
+    'C8_BID':     [ Parameter('kc8bidf', 1.0e-7),
+                    Parameter('kc8bidr', 1.0e-3),
+                    Parameter('kc8bidc', 1.0)],
     # DISC inhibition by FLIP
     'DISC_FLIP':  [ Parameter('kflipdiscf', 1e-06), 
                     Parameter('kflipdiscr', 1e-03)],
@@ -73,27 +74,27 @@ parameter_dict = {
     # pore_to_parp module parameters
     #---------------------------
     # CytoC transport by Bax
-    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf',  1.07052327914e-05),   #same as Bax-SMAC
-                     Parameter('kbaxcytocMCr',  0.00114074765938 ),   #same as Bax-SMAC
-                     Parameter('kbaxcytocMCc', 11.1174330138     )]], #same as Bax-SMAC
+    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf',  2.857143e-05),   #same as Bax-SMAC
+                     Parameter('kbaxcytocMCr',  1.0e-03     ),   #same as Bax-SMAC
+                     Parameter('kbaxcytocMCc',  1.0e01      )]], #same as Bax-SMAC
     # Smac transport by Bax
-    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf',   1.07052327914e-05),  #change to MC for consistency (mito to cyto)
-                     Parameter('kbaxsmacCAr',   0.00114074765938 ),
-                     Parameter('kbaxsmacCAc',  11.1174330138     )]],
+    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf',   2.857143e-05),  #change to MC for consistency (mito to cyto)
+                     Parameter('kbaxsmacCAr',   1.0e-03     ),
+                     Parameter('kbaxsmacCAc',   1.0e01      )]],
     # CytoC transport activation by Bak **
-    'BAK_CYTC':   [[ Parameter('kbakcytocMCf',  9.21063577757e-06 ),
-                     Parameter('kbakcytocMCr',  0.00234088295981  ),
-                     Parameter('kbakcytocMCc', 27.3582352876      )]],
+    'BAK_CYTC':   [[ Parameter('kbakcytocMCf',  2.857143e-05),
+                     Parameter('kbakcytocMCr',  1.0e-03     ),
+                     Parameter('kbakcytocMCc',  1.0e01      )]],
     # Smac transport by Bak  **
-    'BAK_SMAC':   [[ Parameter('kbaksmacCAf',  9.21063577757e-06),   #same as Bak-SMAC
-                     Parameter('kbaksmacCAr',  0.00234088295981 ),   #same as Bak-SMAC
-                     Parameter('kbaksmacCAc', 27.3582352876     )]], #same as Bak-SMAC
+    'BAK_SMAC':   [[ Parameter('kbaksmacCAf',  2.857143e-05),   #same as Bak-SMAC
+                     Parameter('kbaksmacCAr',  1.0e-03     ),   #same as Bak-SMAC
+                     Parameter('kbaksmacCAc',  1.0e01      )]], #same as Bak-SMAC
     # CytoC activation
-    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.1237684974471),  #same as SMAC_ACT
-                    Parameter('kcytocCcytoAr', 0.0236700510202)], #same as SMAC_ACT
+    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.01),  #same as SMAC_ACT
+                    Parameter('kcytocCcytoAr', 0.01)], #same as SMAC_ACT
     # Smac activation
-    'SMAC_ACT':  [ Parameter('ksmacCsmacAf', 0.0273684974471),
-                   Parameter('ksmacCsmacAr', 0.0159988303507)],
+    'SMAC_ACT':  [ Parameter('ksmacCsmacAf',   0.01),
+                   Parameter('ksmacCsmacAr',   0.01)],
     # Apaf activation by CytC
     'APAF_CYTC':  [ Parameter('kcytocCapaff', 5e-07),
                     Parameter('kcytocCapafr', 1e-03),
@@ -109,8 +110,8 @@ parameter_dict = {
     'APOP_XIAP':  [ Parameter('kapopxiapf', 2e-06),
                     Parameter('kapopxiapr', 1e-03)],
     # XIAP inhibition by Smac
-    'SMAC_XIAP':  [ Parameter('ksmacxiapf', 3.0000000001e-06),
-                    Parameter('ksmacxiapr', 0.00184889755483)],
+    'SMAC_XIAP':  [ Parameter('ksmacxiapf', 7.0e-06),
+                    Parameter('ksmacxiapr', 1.0e-03)],
     # C3 activation by C8
     'C3_C8':      [ Parameter('kc8c3f', 1e-07), 
                     Parameter('kc8c3r', 1e-03),
