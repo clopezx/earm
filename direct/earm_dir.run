@@ -12,6 +12,9 @@ lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=1, 
 # DATA IS NORMALIZED
 # XP VAR IS BEING USED  
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 20000, model, envlist, xpnormdata, [(2,1),(5,2),(8,3)], lb, ub, True, True), lower=lower, upper=upper, full_output=1)
+#
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxncust, paramarr, args=(None, 20000, model, envlist, xpnormdata, [(2,1),(8,3)],[2,9810,7245000,180,3600], lb, ub, True, True), lower=lower, upper=upper, full_output=1)
+
 
 # normalized AND vardata
 

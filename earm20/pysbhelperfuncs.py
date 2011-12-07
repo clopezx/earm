@@ -312,3 +312,14 @@ def get_param_num(model, name):
             break
     return i
 
+def plotoutput(simout, norm=True):
+    """ Assume norm is true for now
+    """
+    pylab.ion()
+    pylab.figure()
+    nplots = len(simout.shape[0] -1)
+    
+    
+    for i in range(nplots): #assume simout[0] is time
+        pass
+        
