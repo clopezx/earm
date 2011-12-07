@@ -309,5 +309,6 @@ def get_param_num(model, name):
     for i in range(len(model.parameters)):
         if model.parameters[i].name == name:
             print i, model.parameters[i]
+            break
     return i
 
