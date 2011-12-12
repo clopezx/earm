@@ -1,0 +1,67 @@
+    'BID_trans':  [ Parameter('kbidTbidMf', 0.0612607534149),
+                    Parameter('kbidTbidMr', 0.000709215581377)],
+    'BAX_trans':  [ Parameter('kbaxCbaxMf', 0.00730727274745), 
+                    Parameter('kbaxCbaxMr', 0.0107476023245)],
+    'BCLXL_trans':[ Parameter('kbclxlCbclxlMf', 0.00080830468994),
+                    Parameter('kbclxlCbclxlMr', 0.0136380873594)],
+    'BIDt_BAX':   [ Parameter('kbidtbaxf', 1.78519244773e-08),
+                    Parameter('kbidtbaxr', 0.000127019618397),
+                    Parameter('kbidtbaxc', 3.12885090105 )],
+    'BIDm_BAX':   [ Parameter('kbidmbaxf', 1.78519244773e-08),
+                    Parameter('kbidmbaxr', 0.000127019618397),
+                    Parameter('kbidmbaxc', 3.12885090105 )],
+    'BIDt_BAK':   [ Parameter('kbidtbakf', 2.3840120805e-07),
+                    Parameter('kbidtbakr', 0.00116686859656),
+                    Parameter('kbidtbakc', 0.616100104218)],
+    'BAX_PORE':   [[Parameter('kbaxdimf', 1.9e-05),
+                    Parameter('kbaxdimr', 0.00253168857302)],
+                   [Parameter('kbaxtrimf', 0.00012),
+                    Parameter('kbaxtrimr', 0.000455745565138)],
+                   [Parameter('kbaxtetf', 0.000116),
+                    Parameter('kbaxtetr', 0.000902098483308)]],
+    'BAK_PORE':   [[Parameter('kbakdimf', 1.98972134863e-05),
+                    Parameter('kbakdimr', 0.00117910083105)],
+                   [Parameter('kbaktrimf', 0.000120932227934 ),
+                    Parameter('kbaktrimr', 4.81022463147e-06)],
+                   [Parameter('kbaktetf',  0.000116488694321),
+                    Parameter('kbaktetr', 0.000743264410286)]],
+    'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f', 1.45280010e-06),
+                        Parameter('kbidbcl2r', 1.70789566e-03)],
+                       [Parameter('kbidbclxlf', 2.53724317374e-06),#
+                        Parameter('kbidbclxlr', 0.000777609558706  )]],
+    'BCLs_sens':      [[Parameter('kbadbcl2f',  3.77284671141e-06),
+                        Parameter('kbadbcl2r',  0.00106766288445 )],
+                       [Parameter('kbadbclxlf', 5.02786873341e-05),
+                        Parameter('kbadbclxlr', 0.00029689476754 )],
+                       [Parameter('knoxabclxlf', 1.46064619002e-05),
+                        Parameter('knoxabclxlr', 0.00137190327654 )],
+                       [Parameter('knoxamcl1f', 5.97803309472e-06),
+                        Parameter('knoxamcl1r', 6.68821754476e-05 )]],
+
+
+    'INIT_AMTS':    [ Parameter('L_0'     ,  3000), # Ligand corresponding to 50 ng/ml SuperKiller TRAIL
+                      Parameter('R_0'     ,   200),   # TRAIL receptor 
+                      Parameter('flip_0'  , 1.0e2),  # Flip
+                      Parameter('C8_0'    , 2.0e4),   # procaspase-8 
+                      Parameter('BAR_0'   , 1.0e3),  # Bifunctional apoptosis regulator
+                      Parameter('Bid_0'   , 4.0e4),  # Bid
+                      Parameter('Bax_0'   , 0.8e5), # Bax
+                      Parameter('Bak_0'   , 0.2e5), # Bak
+                      Parameter('Bcl2_0'  , 2.0e4),   # cytosolic Bcl2
+                      Parameter('BclxL_0' , 2.0e4),  # cytosolic BclxL
+                      Parameter('Mcl1_0'  , 2.0e4),   # mitochondrial Mcl1  
+                      Parameter('Bad_0'   , 1.0e3),  # Bad
+                      Parameter('NOXA_0'  , 1.0e3),  # NOXA
+                      Parameter('CytoC_0' , 5.0e5),  # cytochrome c
+                      Parameter('Smac_0'  , 1.0e5),  # Smac    
+                      Parameter('Apaf_0'  , 1.0e5),  # Apaf-1
+                      Parameter('C3_0'    , 1.0e4),  # procaspase-3 (pro-C3)
+                      Parameter('C6_0'    , 1.0e4),  # procaspase-6 (pro-C6)  
+                      Parameter('C9_0'    , 1.0e5),  # procaspase-9 (pro-C9)
+                      Parameter('XIAP_0'  , 1.0e5),  # X-linked inhibitor of apoptosis protein  
+                      Parameter('PARP_0'  , 1.0e6),  # C3* substrate
+                      ]
+    }
+
+
+
