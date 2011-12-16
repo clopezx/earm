@@ -1,0 +1,237 @@
+begin parameters
+  Apaf_0           1.000000e+05
+  BAR_0            1.000000e+03
+  Bad_0            1.000000e+03
+  Bak_0            2.000000e+04
+  Bax_0            8.000000e+04
+  Bcl2_0           2.000000e+04
+  BclxL_0          2.000000e+04
+  Bid_0            4.000000e+04
+  C3_0             1.000000e+04
+  C6_0             1.000000e+04
+  C8_0             2.000000e+04
+  C9_0             1.000000e+05
+  CytoC_0          5.000000e+05
+  L_0              3.000000e+03
+  Mcl1_0           2.000000e+04
+  NOXA_0           1.000000e+03
+  PARP_0           1.000000e+06
+  R_0              2.000000e+02
+  Smac_0           1.000000e+05
+  XIAP_0           1.000000e+05
+  flip_0           1.000000e+02
+  kapafc9f         5.000000e-08
+  kapafc9r         1.000000e-03
+  kapopc3c         1.000000e+00
+  kapopc3f         5.000000e-09
+  kapopc3r         1.000000e-03
+  kapopxiapf       2.000000e-06
+  kapopxiapr       1.000000e-03
+  kbadbcl2f        3.772847e-06
+  kbadbcl2r        1.067663e-03
+  kbadbclxlf       5.027869e-05
+  kbadbclxlr       2.968948e-04
+  kbakcytocMCc     2.735824e+01
+  kbakcytocMCf     9.210636e-06
+  kbakcytocMCr     2.340883e-03
+  kbakdimf         1.989721e-05
+  kbakdimr         1.179101e-03
+  kbaksmacCAc      2.735824e+01
+  kbaksmacCAf      9.210636e-06
+  kbaksmacCAr      2.340883e-03
+  kbaktetf         1.164887e-04
+  kbaktetr         7.432644e-04
+  kbaktrimf        1.209322e-04
+  kbaktrimr        4.810225e-06
+  kbarc8f          3.743743e-07
+  kbarc8r          1.546713e-03
+  kbaxCbaxMf       7.307273e-03
+  kbaxCbaxMr       1.074760e-02
+  kbaxcytocMCc     1.111743e+01
+  kbaxcytocMCf     1.070523e-05
+  kbaxcytocMCr     1.140748e-03
+  kbaxdimf         1.900000e-05
+  kbaxdimr         2.531689e-03
+  kbaxsmacCAc      1.111743e+01
+  kbaxsmacCAf      1.070523e-05
+  kbaxsmacCAr      1.140748e-03
+  kbaxtetf         1.160000e-04
+  kbaxtetr         9.020985e-04
+  kbaxtrimf        1.200000e-04
+  kbaxtrimr        4.557456e-04
+  kbclxlCbclxlMf   8.083047e-04
+  kbclxlCbclxlMr   1.363809e-02
+  kbidTbidMf       6.126075e-02
+  kbidTbidMr       7.092156e-04
+  kbidbcl2f        1.452800e-06
+  kbidbcl2r        1.707896e-03
+  kbidbclxlf       2.537243e-06
+  kbidbclxlr       7.776096e-04
+  kbidmbaxc        3.128851e+00
+  kbidmbaxf        1.785192e-08
+  kbidmbaxr        1.270196e-04
+  kbidtbakc        6.161001e-01
+  kbidtbakf        2.384012e-07
+  kbidtbakr        1.166869e-03
+  kbidtbaxc        3.128851e+00
+  kbidtbaxf        1.785192e-08
+  kbidtbaxr        1.270196e-04
+  kc3c6c           1.000000e+00
+  kc3c6f           1.000000e-06
+  kc3c6r           1.000000e-03
+  kc3parpc         1.000000e+00
+  kc3parpf         1.000000e-06
+  kc3parpr         1.000000e-02
+  kc6c8c           1.000000e+00
+  kc6c8f           3.000000e-08
+  kc6c8r           1.000000e-03
+  kc8bidc          1.601337e+01
+  kc8bidf          4.128900e-08
+  kc8bidr          4.567755e-05
+  kc8c3c           1.000000e+00
+  kc8c3f           1.000000e-07
+  kc8c3r           1.000000e-03
+  kcytocCapafc     1.000000e+00
+  kcytocCapaff     5.000000e-07
+  kcytocCapafr     1.000000e-03
+  kcytocCcytoAf    2.736850e-02
+  kcytocCcytoAr    1.367005e-02
+  kdiscc8c         7.219606e+00
+  kdiscc8f         6.244560e-06
+  kdiscc8r         5.316302e-05
+  kflipdiscf       4.206901e-07
+  kflipdiscr       7.291465e-05
+  klrc             6.251715e-06
+  klrf             3.167789e-07
+  klrr             3.484123e-03
+  knoxabclxlf      1.460646e-05
+  knoxabclxlr      1.371903e-03
+  knoxamcl1f       5.978033e-06
+  knoxamcl1r       6.688218e-05
+  ksmacCsmacAf     2.736850e-02
+  ksmacCsmacAr     1.599883e-02
+  ksmacxiapf       3.000000e-06
+  ksmacxiapr       1.848898e-03
+  kxiapc3c         1.000000e-01
+  kxiapc3f         2.000000e-06
+  kxiapc3r         1.000000e-03
+end parameters
+
+begin compartments
+end compartments
+
+begin molecule types
+  L(bf)
+  R(bf)
+  DISC(bf)
+  flip(bf)
+  C8(bf,state~pro~A)
+  BAR(bf)
+  Bid(bf,state~U~T~M)
+  Bax(bf,bh3,d2,state~C~M~A)
+  Bak(bf,bh3,d2,state~M~A)
+  Bcl2(bf)
+  BclxL(bf,state~C~M)
+  Mcl1(bf)
+  Bad(bf)
+  NOXA(bf)
+  CytoC(bf,state~M~C~A)
+  Smac(bf,state~M~C~A)
+  Apaf(bf,state~I~A)
+  Apop(bf)
+  C3(bf,state~pro~A~ub)
+  C6(bf,state~pro~A)
+  C9(bf)
+  PARP(bf,state~U~C)
+  XIAP(bf)
+end molecule types
+
+begin reaction rules
+  Bid_to_mem:                       Bid(bf,state~T) <-> Bid(bf,state~M)    kbidTbidMf, kbidTbidMr
+  Bax_to_mem:                       Bax(bf,state~C) <-> Bax(bf,state~M)    kbaxCbaxMf, kbaxCbaxMr
+  BclxL_to_mem:                     BclxL(bf,state~C) <-> BclxL(bf,state~M)    kbclxlCbclxlMf, kbclxlCbclxlMr
+  cplx_BaxM_BidT:                   Bid(bf,state~T) + Bax(bf,state~M) <-> Bid(bf!1,state~T).Bax(bf!1,state~M)    kbidtbaxf, kbidtbaxr
+  diss_BaxA_via_BidT:               Bid(bf!1,state~T).Bax(bf!1,state~M) -> Bid(bf,state~T) + Bax(bf,state~A)    kbidtbaxc
+  cplx_BaxM_BidM:                   Bid(bf,state~M) + Bax(bf,state~M) <-> Bid(bf!1,state~M).Bax(bf!1,state~M)    kbidmbaxf, kbidmbaxr
+  diss_BaxA_via_BidM:               Bid(bf!1,state~M).Bax(bf!1,state~M) -> Bid(bf,state~M) + Bax(bf,state~A)    kbidmbaxc
+  cplx_BakM_BidT:                   Bid(bf,state~T) + Bak(bf,state~M) <-> Bid(bf!1,state~T).Bak(bf!1,state~M)    kbidtbakf, kbidtbakr
+  diss_BakA_via_BidT:               Bid(bf!1,state~T).Bak(bf!1,state~M) -> Bid(bf,state~T) + Bak(bf,state~A)    kbidtbakc
+  Bax_pore_assembly_2:              Bax(bf,bh3,d2,state~A) + Bax(bf,bh3,d2,state~A) <-> Bax(bf,bh3!1,d2,state~A).Bax(bf,bh3,d2!1,state~A)    kbaxdimf, kbaxdimr
+  Bax_pore_assembly_3:              Bax(bf,bh3,d2,state~A) + Bax(bf,bh3!1,d2,state~A).Bax(bf,bh3,d2!1,state~A) <-> {MatchOnce}Bax(bf,bh3!1,d2!2,state~A).Bax(bf,bh3!2,d2!3,state~A).Bax(bf,bh3!3,d2!1,state~A)    kbaxtrimf, kbaxtrimr
+  Bax_pore_assembly_4:              Bax(bf,bh3,d2,state~A) + {MatchOnce}Bax(bf,bh3!1,d2!2,state~A).Bax(bf,bh3!2,d2!3,state~A).Bax(bf,bh3!3,d2!1,state~A) <-> {MatchOnce}Bax(bf,bh3!1,d2!2,state~A).Bax(bf,bh3!2,d2!3,state~A).Bax(bf,bh3!3,d2!4,state~A).Bax(bf,bh3!4,d2!1,state~A)    kbaxtetf, kbaxtetr
+  Bak_pore_assembly_2:              Bak(bf,bh3,d2,state~A) + Bak(bf,bh3,d2,state~A) <-> Bak(bf,bh3!1,d2,state~A).Bak(bf,bh3,d2!1,state~A)    kbakdimf, kbakdimr
+  Bak_pore_assembly_3:              Bak(bf,bh3,d2,state~A) + Bak(bf,bh3!1,d2,state~A).Bak(bf,bh3,d2!1,state~A) <-> {MatchOnce}Bak(bf,bh3!1,d2!2,state~A).Bak(bf,bh3!2,d2!3,state~A).Bak(bf,bh3!3,d2!1,state~A)    kbaktrimf, kbaktrimr
+  Bak_pore_assembly_4:              Bak(bf,bh3,d2,state~A) + {MatchOnce}Bak(bf,bh3!1,d2!2,state~A).Bak(bf,bh3!2,d2!3,state~A).Bak(bf,bh3!3,d2!1,state~A) <-> {MatchOnce}Bak(bf,bh3!1,d2!2,state~A).Bak(bf,bh3!2,d2!3,state~A).Bak(bf,bh3!3,d2!4,state~A).Bak(bf,bh3!4,d2!1,state~A)    kbaktetf, kbaktetr
+  cplx_Bid_Bcl2:                    Bid(bf,state~M) + Bcl2(bf) <-> Bid(bf!1,state~M).Bcl2(bf!1)    kbidbcl2f, kbidbcl2r
+  cplx_Bid_BclxL:                   Bid(bf,state~M) + BclxL(bf,state~M) <-> Bid(bf!1,state~M).BclxL(bf!1,state~M)    kbidbclxlf, kbidbclxlr
+  cplx_Bad_Bcl2:                    Bad(bf) + Bcl2(bf) <-> Bad(bf!1).Bcl2(bf!1)    kbadbcl2f, kbadbcl2r
+  cplx_Bad_BclxL:                   Bad(bf) + BclxL(bf,state~M) <-> Bad(bf!1).BclxL(bf!1,state~M)    kbadbclxlf, kbadbclxlr
+  cplx_NOXA_BclxL:                  NOXA(bf) + BclxL(bf,state~M) <-> NOXA(bf!1).BclxL(bf!1,state~M)    knoxabclxlf, knoxabclxlr
+  cplx_NOXA_Mcl1:                   NOXA(bf) + Mcl1(bf) <-> NOXA(bf!1).Mcl1(bf!1)    knoxamcl1f, knoxamcl1r
+  cplx_R_L:                         L(bf) + R(bf) <-> L(bf!1).R(bf!1)    klrf, klrr
+  cplx_DISC_via_L__R:               L(bf!1).R(bf!1) -> DISC(bf)    klrc
+  cplx_C8pro_DISC:                  DISC(bf) + C8(bf,state~pro) <-> DISC(bf!1).C8(bf!1,state~pro)    kdiscc8f, kdiscc8r
+  diss_C8A_via_DISC:                DISC(bf!1).C8(bf!1,state~pro) -> DISC(bf) + C8(bf,state~A)    kdiscc8c
+  cplx_BidU_C8A:                    C8(bf,state~A) + Bid(bf,state~U) <-> C8(bf!1,state~A).Bid(bf!1,state~U)    kc8bidf, kc8bidr
+  diss_BidT_via_C8A:                C8(bf!1,state~A).Bid(bf!1,state~U) -> C8(bf,state~A) + Bid(bf,state~T)    kc8bidc
+  cplx_DISC_flip:                   DISC(bf) + flip(bf) <-> DISC(bf!1).flip(bf!1)    kflipdiscf, kflipdiscr
+  cplx_BAR_C8:                      BAR(bf) + C8(bf,state~A) <-> BAR(bf!1).C8(bf!1,state~A)    kbarc8f, kbarc8r
+  CytoC_pore_4_transport_Bax_cplx:  {MatchOnce}Bax(bf,bh3!1,d2!2).Bax(bf,bh3!2,d2!3).Bax(bf,bh3!3,d2!4).Bax(bf,bh3!4,d2!1) + CytoC(bf,state~M) <-> {MatchOnce}Bax(bf!5,bh3!1,d2!2).Bax(bf!6,bh3!2,d2!3).Bax(bf!7,bh3!3,d2!4).Bax(bf!8,bh3!4,d2!1).CytoC(bf!5!6!7!8,state~M)    kbaxcytocMCf, kbaxcytocMCr
+  CytoC_pore_4_transport_Bax_dssc:  {MatchOnce}Bax(bf!5,bh3!1,d2!2).Bax(bf!6,bh3!2,d2!3).Bax(bf!7,bh3!3,d2!4).Bax(bf!8,bh3!4,d2!1).CytoC(bf!5!6!7!8,state~M) -> {MatchOnce}Bax(bf,bh3!1,d2!2).Bax(bf,bh3!2,d2!3).Bax(bf,bh3!3,d2!4).Bax(bf,bh3!4,d2!1) + CytoC(bf,state~C)    kbaxcytocMCc
+  Smac_pore_4_transport_Bax_cplx:   {MatchOnce}Bax(bf,bh3!1,d2!2).Bax(bf,bh3!2,d2!3).Bax(bf,bh3!3,d2!4).Bax(bf,bh3!4,d2!1) + Smac(bf,state~M) <-> {MatchOnce}Bax(bf!5,bh3!1,d2!2).Bax(bf!6,bh3!2,d2!3).Bax(bf!7,bh3!3,d2!4).Bax(bf!8,bh3!4,d2!1).Smac(bf!5!6!7!8,state~M)    kbaxsmacCAf, kbaxsmacCAr
+  Smac_pore_4_transport_Bax_dssc:   {MatchOnce}Bax(bf!5,bh3!1,d2!2).Bax(bf!6,bh3!2,d2!3).Bax(bf!7,bh3!3,d2!4).Bax(bf!8,bh3!4,d2!1).Smac(bf!5!6!7!8,state~M) -> {MatchOnce}Bax(bf,bh3!1,d2!2).Bax(bf,bh3!2,d2!3).Bax(bf,bh3!3,d2!4).Bax(bf,bh3!4,d2!1) + Smac(bf,state~C)    kbaxsmacCAc
+  CytoC_pore_4_transport_Bak_cplx:  {MatchOnce}Bak(bf,bh3!1,d2!2).Bak(bf,bh3!2,d2!3).Bak(bf,bh3!3,d2!4).Bak(bf,bh3!4,d2!1) + CytoC(bf,state~M) <-> {MatchOnce}Bak(bf!5,bh3!1,d2!2).Bak(bf!6,bh3!2,d2!3).Bak(bf!7,bh3!3,d2!4).Bak(bf!8,bh3!4,d2!1).CytoC(bf!5!6!7!8,state~M)    kbakcytocMCf, kbakcytocMCr
+  CytoC_pore_4_transport_Bak_dssc:  {MatchOnce}Bak(bf!5,bh3!1,d2!2).Bak(bf!6,bh3!2,d2!3).Bak(bf!7,bh3!3,d2!4).Bak(bf!8,bh3!4,d2!1).CytoC(bf!5!6!7!8,state~M) -> {MatchOnce}Bak(bf,bh3!1,d2!2).Bak(bf,bh3!2,d2!3).Bak(bf,bh3!3,d2!4).Bak(bf,bh3!4,d2!1) + CytoC(bf,state~C)    kbakcytocMCc
+  Smac_pore_4_transport_Bak_cplx:   {MatchOnce}Bak(bf,bh3!1,d2!2).Bak(bf,bh3!2,d2!3).Bak(bf,bh3!3,d2!4).Bak(bf,bh3!4,d2!1) + Smac(bf,state~M) <-> {MatchOnce}Bak(bf!5,bh3!1,d2!2).Bak(bf!6,bh3!2,d2!3).Bak(bf!7,bh3!3,d2!4).Bak(bf!8,bh3!4,d2!1).Smac(bf!5!6!7!8,state~M)    kbaksmacCAf, kbaksmacCAr
+  Smac_pore_4_transport_Bak_dssc:   {MatchOnce}Bak(bf!5,bh3!1,d2!2).Bak(bf!6,bh3!2,d2!3).Bak(bf!7,bh3!3,d2!4).Bak(bf!8,bh3!4,d2!1).Smac(bf!5!6!7!8,state~M) -> {MatchOnce}Bak(bf,bh3!1,d2!2).Bak(bf,bh3!2,d2!3).Bak(bf,bh3!3,d2!4).Bak(bf,bh3!4,d2!1) + Smac(bf,state~C)    kbaksmacCAc
+  act_cSmac:                        Smac(bf,state~C) <-> Smac(bf,state~A)    ksmacCsmacAf, ksmacCsmacAr
+  act_cCytoC:                       CytoC(bf,state~C) <-> CytoC(bf,state~A)    kcytocCcytoAf, kcytocCcytoAr
+  cplx_ApafI_CytoCA:                CytoC(bf,state~A) + Apaf(bf,state~I) <-> CytoC(bf!1,state~A).Apaf(bf!1,state~I)    kcytocCapaff, kcytocCapafr
+  diss_ApafA_via_CytoCA:            CytoC(bf!1,state~A).Apaf(bf!1,state~I) -> CytoC(bf,state~A) + Apaf(bf,state~A)    kcytocCapafc
+  conv_Apaf_C9_to_Apop:             Apaf(bf,state~A) + C9(bf) <-> Apop(bf)    kapafc9f, kapafc9r
+  cplx_C3pro_Apop:                  Apop(bf) + C3(bf,state~pro) <-> Apop(bf!1).C3(bf!1,state~pro)    kapopc3f, kapopc3r
+  diss_C3A_via_Apop:                Apop(bf!1).C3(bf!1,state~pro) -> Apop(bf) + C3(bf,state~A)    kapopc3c
+  cplx_Apop_XIAP:                   Apop(bf) + XIAP(bf) <-> Apop(bf!1).XIAP(bf!1)    kapopxiapf, kapopxiapr
+  cplx_Smac_XIAP:                   Smac(bf,state~A) + XIAP(bf) <-> Smac(bf!1,state~A).XIAP(bf!1)    ksmacxiapf, ksmacxiapr
+  cplx_C3pro_C8A:                   C8(bf,state~A) + C3(bf,state~pro) <-> C8(bf!1,state~A).C3(bf!1,state~pro)    kc8c3f, kc8c3r
+  diss_C3A_via_C8A:                 C8(bf!1,state~A).C3(bf!1,state~pro) -> C8(bf,state~A) + C3(bf,state~A)    kc8c3c
+  cplx_C6pro_C3A:                   C3(bf,state~A) + C6(bf,state~pro) <-> C3(bf!1,state~A).C6(bf!1,state~pro)    kc3c6f, kc3c6r
+  diss_C6A_via_C3A:                 C3(bf!1,state~A).C6(bf!1,state~pro) -> C3(bf,state~A) + C6(bf,state~A)    kc3c6c
+  cplx_C3A_XIAP:                    XIAP(bf) + C3(bf,state~A) <-> XIAP(bf!1).C3(bf!1,state~A)    kxiapc3f, kxiapc3r
+  diss_C3ub_via_XIAP:               XIAP(bf!1).C3(bf!1,state~A) -> XIAP(bf) + C3(bf,state~ub)    kxiapc3c
+  cplx_PARPU_C3A:                   C3(bf,state~A) + PARP(bf,state~U) <-> C3(bf!1,state~A).PARP(bf!1,state~U)    kc3parpf, kc3parpr
+  diss_PARPC_via_C3A:               C3(bf!1,state~A).PARP(bf!1,state~U) -> C3(bf,state~A) + PARP(bf,state~C)    kc3parpc
+  cplx_C8pro_C6A:                   C6(bf,state~A) + C8(bf,state~pro) <-> C6(bf!1,state~A).C8(bf!1,state~pro)    kc6c8f, kc6c8r
+  diss_C8A_via_C6A:                 C6(bf!1,state~A).C8(bf!1,state~pro) -> C6(bf,state~A) + C8(bf,state~A)    kc6c8c
+end reaction rules
+
+begin observables
+  tBid    Bid(state~M)
+  cSmac   Smac(state~A)
+  cPARP   PARP(state~C)
+end observables
+
+begin species
+  L(bf)                    L_0
+  R(bf)                    R_0
+  flip(bf)                 flip_0
+  C8(bf,state~pro)         C8_0
+  BAR(bf)                  BAR_0
+  Bid(bf,state~U)          Bid_0
+  Bax(bf,bh3,d2,state~C)   Bax_0
+  Bak(bf,bh3,d2,state~M)   Bak_0
+  Bcl2(bf)                 Bcl2_0
+  BclxL(bf,state~C)        BclxL_0
+  Mcl1(bf)                 Mcl1_0
+  Bad(bf)                  Bad_0
+  NOXA(bf)                 NOXA_0
+  CytoC(bf,state~M)        CytoC_0
+  Smac(bf,state~M)         Smac_0
+  Apaf(bf,state~I)         Apaf_0
+  C3(bf,state~pro)         C3_0
+  C6(bf,state~pro)         C6_0
+  C9(bf)                   C9_0
+  PARP(bf,state~U)         PARP_0
+  XIAP(bf)                 XIAP_0
+end species
+
