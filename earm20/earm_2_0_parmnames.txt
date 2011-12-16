@@ -1,4 +1,3 @@
-# MOMP MODULE
 kbidTbidMf
 kbidTbidMr
 kbadCbadMf
@@ -59,7 +58,6 @@ knoxabcl2f
 knoxabcl2r
 knoxamcl1f
 knoxamcl1r
-# TRAIL MODULE
 klrf
 klrr
 klrc
@@ -73,7 +71,6 @@ kflipdiscf
 kflipdiscr
 kbarc8f
 kbarc8r
-# PARP MODULE
 kbaxcytocMCf
 kbaxcytocMCr
 kbaxcytocMCc
@@ -117,10 +114,6 @@ kc3parpc
 kc6c8f
 kc6c8r
 kc6c8c
-
-
-
-
 L_0    
 R_0    
 flip_0 
