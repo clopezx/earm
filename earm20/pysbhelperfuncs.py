@@ -17,8 +17,7 @@ def alias_model_components(model=None):
     if model is None:
         model = SelfExporter.default_model
     caller_globals = inspect.currentframe().f_back.f_globals
-    components = dict((c.name, c) for c in model.all_components())
-    caller_globals.update(components)
+    caller_globals.update(model.all_components())
 
 def two_step_mod(Enz, Sub, Prod, klist,  site='bf'):
     """Automation of the Enz + Sub <> Enz:Sub >> Enz + Prod two-step catalytic reaction.
