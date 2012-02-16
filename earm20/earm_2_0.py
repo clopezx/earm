@@ -47,10 +47,11 @@ Rule('Bad_to_mem', Bad(bf = None, state = 'C') <> Bad(bf = None, state = 'M'), k
 two_step_mod(Bid(state = 'M'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
 two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
 
-# Autoactivation, Bax and Bak activate their own kind
-# ---------------------------------------------------
-two_step_mod(Bax(state = 'A'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
-two_step_mod(Bak(state = 'A'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
+# Autoactivation, Bax and Bak activate their own kind, but only when
+# free (i.e. not part of a pore complex)
+# ------------------------------------------------------------------
+two_step_mod(Bax(state = 'A', bh3=None, d2=None), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
+two_step_mod(Bak(state = 'A', bh3=None, d2=None), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
 
 # pore_assembly(Subunit, size, rates):
 # ------------------------------------
@@ -60,12 +61,12 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # ------------------------------------
 # MOMP Inhibition
 # -----------------------------------------------------
-# tBid/Bax recruit Bcl-xL(C) and autoinhibit themselves
+# tBid and free Bax recruit Bcl-xL(C) and autoinhibit themselves
 #        Bid/Bax + BclxL <> Bid/Bax:BclxL(C) >> Bid/Bax:BclxL(M)
 #        Notice the product of this feeds into the product of the inh rxns
 # ------------------------------------------------------------------------
-two_step_conv(Bid(state = 'M'), BclxL(state='C'), Bid(bf = 1, state = 'M')%BclxL(bf = 1, state='M'), kd['Bid_BclxL_RA'])
-two_step_conv(Bax(state = 'A'), BclxL(state='C'), Bax(bf = 1, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
+two_step_conv(Bid(state = 'M'),                    BclxL(state='C'), Bid(bf = 1,                    state = 'M')%BclxL(bf = 1, state='M'), kd['Bid_BclxL_RA'])
+two_step_conv(Bax(state = 'A', bh3=None, d2=None), BclxL(state='C'), Bax(bf = 1, bh3=None, d2=None, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
 
 
 # Bcl2 inhibitors of Bax, Bak, and Bid

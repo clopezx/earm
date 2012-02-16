@@ -17,8 +17,7 @@ def alias_model_components(model=None):
     if model is None:
         model = SelfExporter.default_model
     caller_globals = inspect.currentframe().f_back.f_globals
-    components = dict((c.name, c) for c in model.all_components())
-    caller_globals.update(components)
+    caller_globals.update(model.all_components())
 
 def two_step_mod(Enz, Sub, Prod, klist,  site='bf'):
     """Automation of the Enz + Sub <> Enz:Sub >> Enz + Prod two-step catalytic reaction.
@@ -124,27 +123,25 @@ def pore_species(Subunit, size):
     formed between bh3 of one unit and d2 of the next.
     """
 
-    #FIXME: the sites here are hard-coded and named _bh3_ and _d2_
-    #not generic and perhaps misleading?
-    M = Subunit.monomer
-    sc = Subunit.site_conditions
+    site1 = 'bh3'
+    site2 = 'd2'
     if size == 0:
         raise ValueError("size must be an integer greater than 0")
     if size == 1:
-        Pore = M(sc, bh3=None, d2=None)
+        Pore = Subunit({site1: None, site2: None})
     elif size == 2:
-        Pore = M(sc, bh3=1, d2=None) % M(sc, d2=1, bh3=None)
+        Pore = Subunit({site1: 1, site2: None}) % Subunit({site1: None, site2: 1})
     else:
         Pore = ComplexPattern([], None, match_once=True)
         for i in range(1, size+1):
-            Pore %= M(sc, bh3=i, d2=i%size+1)
+            Pore %= Subunit({site1: i, site2: i%size+1})
     return Pore
 
 def pore_assembly(Subunit, size, rates):
     """
     Generate rules to chain identical MonomerPatterns <Subunit> into
-    increasingly larger pores of up to <size> units, using sites bh3
-    and d2 to bind the units to each other.
+    increasingly larger pores of up to <size> units, using sites
+    bh3 and d2 to bind the units to each other.
     """
     rules = []
     for i in range(2, size + 1):
@@ -159,8 +156,10 @@ def pore_transport(Subunit, Source, Dest, min_size, max_size, rates, site='bf'):
     """
     Generate rules to transport MonomerPattern <Source> to <Dest>
     through any of a series of pores of at least <min_size> and at
-    most <max_size> subunits, as defined by pore_assembly.  Implicitly
-    uses site 'bf' on both Subunit and Source to bind to each other.
+    most <max_size> subunits, as defined by pore_assembly. Uses site
+    <site> on both Subunit and CargoSource to bind cargo to ONE
+    Subunit during transport. <site> on all other Subunits remains
+    empty.
     """
     assert site in Source.monomer.sites_dict, \
         "Required site %s not present in %s as required"%(site, Source.monomer.name)
@@ -168,26 +167,19 @@ def pore_transport(Subunit, Source, Dest, min_size, max_size, rates, site='bf'):
         "Required site %s not present in %s as required"%(site, Dest.monomer.name)
 
     for i in range(min_size, max_size+1):
-        Pore = pore_species(Subunit, i)
-        # require all pore subunit bf sites to be empty for Pore match
-        for mp in Pore.monomer_patterns:
-            mp.site_conditions[site] = None
-        SM = Source.monomer
-        ssc = Source.site_conditions
-        DM = Dest.monomer
-        dsc = Dest.site_conditions
+        # require all pore subunit <tsite> sites to be empty for Pore match
+        Pore = pore_species(Subunit({site: None}), i)
 
-        r1_name = '%s_pore_%d_transport_%s_cplx' % (SM.name, i, Subunit.monomer.name)
-        r2_name = '%s_pore_%d_transport_%s_dssc' % (SM.name, i, Subunit.monomer.name)
+        r1_name = '%s_pore_%d_transport_%s_cplx' % (Source.monomer.name, i, Subunit.monomer.name)
+        r2_name = '%s_pore_%d_transport_%s_dssc' % (Source.monomer.name, i, Subunit.monomer.name)
 
         rule_rates = rates[i-min_size]
-        CPore = Pore._copy()
-        source_bonds = range(i+1, i+1+i)
-        for b in range(i):
-            CPore.monomer_patterns[b].site_conditions[site] = source_bonds[b]
-        Complex = CPore % SM(ssc, bf=source_bonds)
-        Rule(r1_name, Pore + SM(ssc, bf=None) <> Complex, *rule_rates[0:2])
-        Rule(r2_name, Complex >> Pore + DM(dsc, bf=None), rule_rates[2])
+        CPore = Pore.copy()
+        tbondnum = i + 1
+        CPore.monomer_patterns[0].site_conditions[site] = tbondnum
+        Complex = CPore % Source({site: tbondnum})
+        Rule(r1_name, Pore + Source({site: None}) <> Complex, *rule_rates[0:2])
+        Rule(r2_name, Complex >> Pore + Dest({site: None}), rule_rates[2])
 
 def one_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
     """ Convert two Sub species into one Prod species:
