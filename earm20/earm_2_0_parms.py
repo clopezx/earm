@@ -181,8 +181,8 @@ parameter_dict = {
     # EARM 1.0 HeLa initial conditions
     # Non-zero initial conditions (in molecules per cell):
     #---------------------------------
-    'INIT_AMTS':    [ Parameter('L_0'     ,  3000), # Ligand corresponding to 50 ng/ml SuperKiller TRAIL
-                      Parameter('R_0'     ,   200), # TRAIL receptor 
+    'INIT_AMTS':    [ Parameter('L_0'     ,  3000), # 3000 Ligand correspond to 50 ng/ml SuperKiller TRAIL
+                      Parameter('R_0'     ,   200), # 200 TRAIL receptor 
                       Parameter('flip_0'  , 1.0e2), # Flip
                       Parameter('C8_0'    , 2.0e4), # procaspase-8 
                       Parameter('BAR_0'   , 1.0e3), # Bifunctional apoptosis regulator
