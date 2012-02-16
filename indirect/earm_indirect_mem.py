@@ -38,8 +38,9 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # ======================
 # Bcl2, Bid, Bax migration to mitochondria
 # ----------------------------------------
-Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'A'), kd['BAX_trans'][0], kd['BAX_trans'][1])
-Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
+free_Bax = Bax(bf=None, bh3=None, d2=None)
+Rule('Bax_to_mem', free_Bax(state = 'C') <> free_Bax(state = 'A'), *kd['BAX_trans'])
+Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf = None, state = 'M'), *kd['BCLXL_trans'])
 
 # Bax/Bak form pores
 # ------------------------------------
