@@ -88,7 +88,7 @@ simple_bind_table([[                                            Bcl2,         Bc
 simple_bind_table([[                      Bcl2,         BclxL,  Mcl1],
                    [                        {}, {'state':'M'},    {}],
                    [Bad,  {'state':'M'},  True,          True, False],
-                   [NOXA, {},            False,          True,  True]], 
+                   [NOXA, {},            False,         False,  True]], 
                   kd['BCLs_sens'], model)
 
 # Import necessary modules
