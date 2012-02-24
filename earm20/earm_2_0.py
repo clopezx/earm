@@ -75,7 +75,7 @@ two_step_conv(Bax(state = 'A', bh3=None, d2=None), BclxL(state='C'), Bax(bf = 1,
 # ------------------------------------
 simple_bind_table([[                                            Bcl2,         BclxL,  Mcl1],
                    [                                              {}, {'state':'M'},    {}],
-                   [Bid, {'state':'M'},                         True,          True, False],
+                   [Bid, {'state':'M'},                         True,          True,  True],
                    [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,          True, False],
                    [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,          True,  True]],
                   kd['BID_BAX_BAK_inh'], model)
