@@ -43,8 +43,6 @@ parameter_dict = {
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
     'BCLs_sens':      [[Parameter('kbadbclxlf',  1.428571e-05),
                         Parameter('kbadbclxlr',  1.0e-3      )],
-                       [Parameter('knoxabclxlf', 1.428571e-05),
-                        Parameter('knoxabclxlr', 1.0e-3      )],
                        [Parameter('knoxamcl1f',  1.428571e-05),
                         Parameter('knoxamcl1r',  1.0e-3      )]],
     

@@ -76,7 +76,7 @@ simple_bind_table([[                                                   BclxL,  M
 simple_bind_table([[                  BclxL,  Mcl1], #Note: according to Andrews, these should all be at mitochondria
                    [          {'state':'M'},    {}],
                    [Bad,  {},          True, False],
-                   [NOXA, {},          True,  True]],
+                   [NOXA, {},         False,  True]],
                   kd['BCLs_sens'], model)
 
 # Import necessary modules

@@ -43,7 +43,7 @@ Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf = None, state = 'M'), k
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'][0], kd['BAX_trans'][1])
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
 
-# Mitochondrial tBid activates Bax/Bak
+# Mitochondrial or Cytosolic tBid activates Bax/Bak
 # Bax/Bak form pores
 # ------------------------------------
 #        Bax + tBid <--> Bax:tBid --> Bax* + tBid 
@@ -68,7 +68,7 @@ pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # ------------------------------------
 simple_bind_table([[                                            Bcl2,         BclxL,  Mcl1],
                    [                                              {}, {'state':'M'},    {}],
-                   [Bid, {'state':'M'},                         True,          True, False], #Bax/Bak not inhibited in direct model
+                   [Bid, {'state':'M'},                         True,          True,  True], #Bax/Bak not inhibited in direct model
                    ],
                   kd['BID_BAX_BAK_inh'], model)
 
@@ -80,7 +80,7 @@ simple_bind_table([[                                            Bcl2,         Bc
 simple_bind_table([[           Bcl2,         BclxL,  Mcl1],
                    [             {}, {'state':'M'},    {}],
                    [Bad,  {},  True,          True, False],
-                   [NOXA, {},  False,         True,  True]],
+                   [NOXA, {},  False,        False,  True]],
                   kd['BCLs_sens'], model)
 
 # Import necessary modules

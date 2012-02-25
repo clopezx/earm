@@ -51,14 +51,14 @@ parameter_dict = {
     'BID_BAX_BAK_inh':[[Parameter('kbidbcl2f',  1.428571e-05), #1.0e-6/v
                         Parameter('kbidbcl2r',  1.0e-3      )],
                        [Parameter('kbidbclxlf', 1.428571e-05),#
-                        Parameter('kbidbclxlr', 1.0e-3      )]],
+                        Parameter('kbidbclxlr', 1.0e-3      )],
+                       [Parameter('kbidmcl1f', 1.428571e-05),#
+                        Parameter('kbidmcl1r', 1.0e-3      )]],
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
     'BCLs_sens':      [[Parameter('kbadbcl2f',   1.428571e-05),
                         Parameter('kbadbcl2r',   1.0e-3      )],
                        [Parameter('kbadbclxlf',  1.428571e-05),
                         Parameter('kbadbclxlr',  1.0e-3      )],
-                       [Parameter('knoxabclxlf', 1.428571e-05),
-                        Parameter('knoxabclxlr', 1.0e-3      )],
                        [Parameter('knoxamcl1f',  1.428571e-05),
                         Parameter('knoxamcl1r',  1.0e-3      )]],
     
