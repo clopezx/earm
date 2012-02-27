@@ -124,7 +124,7 @@ Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['C
 #Initial(flip(bf=None), flip_0)
 #Initial(C8(bf=None, state='pro'), C8_0)
 #Initial(BAR(bf=None), BAR_0)
-Initial(Bid(bf=None, state='U'), Bid_0)
+Initial(Bid(bf=None, state='T'), Bid_0)
 Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
 Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bak_0)
 Initial(Bcl2(bf=None), Bcl2_0)
