@@ -83,6 +83,25 @@ simple_bind_table([[           Bcl2,         BclxL,  Mcl1],
                    [NOXA, {},  False,        False,  True]],
                   kd['BCLs_sens'], model)
 
+# CytC, Smac release
+# ----------------------
+#        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
+#        ACytoC <-->  cCytoC
+#        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
+#        ASmac <-->  cSmac
+# ----------------------
+# pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
+pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
+pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
+pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
+pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
+
+# --------------------------------------
+# CytC and Smac activation after release
+# --------------------------------------
+Rule('act_cSmac',  Smac(bf=None, state='C') <> Smac(bf=None, state='A'), kd['SMAC_ACT'][0], kd['SMAC_ACT'][1])
+Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['CYTOC_ACT'][0], kd['CYTOC_ACT'][1])
+
 # Import necessary modules
 # ========================
 # Generate the Receptor to Bid section from the EARM 1.0 module

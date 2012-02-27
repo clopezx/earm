@@ -79,6 +79,25 @@ simple_bind_table([[                  BclxL,  Mcl1], #Note: according to Andrews
                    [NOXA, {},         False,  True]],
                   kd['BCLs_sens'], model)
 
+# CytC, Smac release
+# ----------------------
+#        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
+#        ACytoC <-->  cCytoC
+#        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
+#        ASmac <-->  cSmac
+# ----------------------
+# pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
+pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
+pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
+pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
+pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
+
+# --------------------------------------
+# CytC and Smac activation after release
+# --------------------------------------
+Rule('act_cSmac',  Smac(bf=None, state='C') <> Smac(bf=None, state='A'), kd['SMAC_ACT'][0], kd['SMAC_ACT'][1])
+Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['CYTOC_ACT'][0], kd['CYTOC_ACT'][1])
+
 # Import necessary modules
 # ========================
 # Generate the Receptor to Bid section from the EARM 1.0 module
@@ -95,7 +114,9 @@ Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
 Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
+Initial(Bax(bf=1, bh3=None, d2=None, state='A') % BclxL(bf=1, state='M'), Bax_BclxL_0)
 Initial(Bak(bf=None, bh3=None, d2=None, state='A'), Bak_0)
+Initial(Bak(bf=1, bh3=None, d2=None, state='A') % Mcl1(bf=1), Bak_Mcl1_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
 Initial(Bad(bf=None), Bad_0)
@@ -119,4 +140,5 @@ Initial(XIAP(bf=None), XIAP_0)
 Observe('tBid',  Bid(state='T'))  # 1 no state M in this case!
 Observe('aSmac', Smac(state='A')) # 2
 Observe('cPARP', PARP(state='C')) # 3
-
+Observe('BaxBclxl', Bax(bf=1, bh3=None, d2=None, state='A') % BclxL(bf=1, state='M'))
+Observe('BakMcl1', Bak(bf=1, bh3=None, d2=None, state='A') % Mcl1(bf=1))
