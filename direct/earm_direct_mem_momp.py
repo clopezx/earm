@@ -140,8 +140,8 @@ Initial(Smac(bf=None, state='M'), Smac_0)
 # Observe('PARP',  PARP(bf=None, state='U'))
 # Observe('Smac',  Smac(bf=None, state='mito'))
 # # This is what *should* be observed???
-Observe('tBid',  Bid(state='M'))
+#Observe('tBid',  Bid(state='M'))
 Observe('cSmac', Smac(state='A'))
-Observe('cPARP', PARP(state='C'))
+#Observe('cPARP', PARP(state='C'))
 
 
