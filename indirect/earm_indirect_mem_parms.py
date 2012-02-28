@@ -141,12 +141,14 @@ parameter_dict = {
                       Parameter('C8_0'    , 2.0e4),   # procaspase-8 
                       Parameter('BAR_0'   , 1.0e3),  # Bifunctional apoptosis regulator
                       Parameter('Bid_0'   , 4.0e4),  # Bid
-                      Parameter('Bax_0'   , 0.8e5), # 0.8e5 Bax
-                      Parameter('Bak_0'   , 0.2e5), #  0.2e5 Bak
+                      Parameter('Bax_0'   , 0.0), # 0.8e5 Bax
+                      Parameter('Bax_BclxL_0', 0.8e5), # bax + bclxl
+                      Parameter('Bak_0'   , 0.0), #  0.2e5 Bak
+                      Parameter('Bak_Mcl1_0', 0.2e5), # bak + mcl1
                       Parameter('BclxL_0' , 2.0e4),  # 2.0e4 cytosolic BclxL
                       Parameter('Mcl1_0'  , 2.0e4),   # 2.0e4 mitochondrial Mcl1  
-                      Parameter('Bad_0'   , 1.0e3),  # Bad
-                      Parameter('NOXA_0'  , 1.0e3),  # NOXA
+                      Parameter('Bad_0'   , 1.0e3),  # 1.0e3 Bad
+                      Parameter('NOXA_0'  , 1.0e3),  # 1.0e3 NOXA
                       Parameter('CytoC_0' , 5.0e5),  # cytochrome c
                       Parameter('Smac_0'  , 1.0e5),  # Smac    
                       Parameter('Apaf_0'  , 1.0e5),  # Apaf-1

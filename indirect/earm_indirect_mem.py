@@ -114,7 +114,9 @@ Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
 Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
+Initial(Bax(bf=1, bh3=None, d2=None, state='A') % BclxL(bf=1, state='M'), Bax_BclxL_0)
 Initial(Bak(bf=None, bh3=None, d2=None, state='A'), Bak_0)
+Initial(Bak(bf=1, bh3=None, d2=None, state='A') % Mcl1(bf=1), Bak_Mcl1_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
 Initial(Bad(bf=None), Bad_0)
@@ -138,5 +140,5 @@ Initial(XIAP(bf=None), XIAP_0)
 Observe('tBid',  Bid(state='T'))  # 1 no state M in this case!
 Observe('aSmac', Smac(state='A')) # 2
 Observe('cPARP', PARP(state='C')) # 3
-Observe('BaxBclxl', Bax(bf=1, bh3=None, d2=None, state='A') % BclxL(bf=1, state='M'))
+Observe('BaxBclxl',  Bax(bf=1, bh3=None, d2=None, state='A') % BclxL(bf=1, state='M'))
 Observe('BakMcl1', Bak(bf=1, bh3=None, d2=None, state='A') % Mcl1(bf=1))
