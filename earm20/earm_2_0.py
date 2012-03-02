@@ -55,8 +55,8 @@ two_step_mod(Bak(state = 'A', bh3=None, d2=None), Bak(state='M'), Bak(bf = None,
 
 # pore_assembly(Subunit, size, rates):
 # ------------------------------------
-pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
-pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
+ringp_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
+ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition

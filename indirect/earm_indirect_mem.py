@@ -51,8 +51,8 @@ Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf = None, state = '
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
 # pore_assembly(Subunit, size, rates):
-pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
-pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
+ringp_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
+ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition
