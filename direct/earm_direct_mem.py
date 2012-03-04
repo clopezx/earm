@@ -52,9 +52,9 @@ Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'
 #        Bak + Bak <--> Bak:Bak + Bak <--> Bak:Bak:Bak + Bak <--> Bak:Bak:Bak:Bak
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
-two_step_mod(Bid(state = 'T'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDt_BAX'])
+# two_step_mod(Bid(state = 'T'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDt_BAX'])
 two_step_mod(Bid(state = 'M'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDm_BAX'])
-two_step_mod(Bid(state = 'T'), Bak(state = 'M'), Bak(bf = None, state = 'A'), kd['BIDt_BAK'])
+two_step_mod(Bid(state = 'M'), Bak(state = 'M'), Bak(bf = None, state = 'A'), kd['BIDt_BAK'])
 # pore_assembly(Subunit, size, rates):
 pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
 pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
