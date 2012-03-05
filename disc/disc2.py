@@ -1,24 +1,20 @@
 from pysb import *
 from pysbhelperfuncs import *
 
-Parameter('ec_size', 1.0e6)   # 1.0e6 um^3 = 1 pL
-Parameter('cytoM_size', 483.6 * .0030) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
-Parameter('cyto_size', 1.0e3) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
-Parameter('mito_size', 70.0)  # mitochondria is ~7% of citoplasm (ref)
-Parameter('mitoM_size', 82.14 * .0042) # mitochondria SA (2.55um radius) * membrane thicknes ~4.2 nm
-                                       # J. Phys. Chem. B, 2009, 113 (11), pp 3413–3422 DOI: 10.1021/jp8077369
+#Parameter('ec_size', 1.0e6)   # 1.0e6 um^3 = 1 pL
+#Parameter('cytoM_size', 483.6 * .0030) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
+#Parameter('cyto_size', 1.0e3) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
+#Parameter('mito_size', 70.0)  # mitochondria is ~7% of citoplasm (ref)
+#Parameter('mitoM_size', 82.14 * .0042) # mito SA (2.55um radius) x 'brane thicknes ~4.2 nm JPC-B(2009)113-11p3413
+#Compartment('ec', dimension = 3, size = ec_size, parent = None)    # extra cellular compartment
+#Compartment('cytM', dimension = 2, size = cytoM_size, parent = ec) # cytoplasmic membrane
+#Compartment('cyt', dimension = 3, size = cyto_size, parent = cyM)  # cytoplasm
+#Compartment('mitM', dimension = 2, size = mitoM_size, parent = cy) # mitochondrial membrane
+#Compartment('mit', dimension = 3, size = mito_size, parent = mitM) # mitochondrion
 
-Compartment('ec', dimension = 3, size = ec_size, parent = None)    # extra cellular compartment
-Compartment('cytM', dimension = 2, size = cytoM_size, parent = ec) # cytoplasmic membrane
-Compartment('cyt', dimension = 3, size = cyto_size, parent = cyM)  # cytoplasm
-Compartment('mitM', dimension = 2, size = mitoM_size, parent = cy) # mitochondrial membrane
-Compartment('mit', dimension = 3, size = mito_size, parent = mitM) # mitochondrion
-
-Monomer('TRAIL', [b])  # TRAIL trimerized ligand (??? check)
-Monomer('DR', [b], {'T':[4,5]})    # Death receptor 4
+Monomer('TRAIL', [b, s1, s2])  # TRAIL monomer, start with pre-trimerized ligand
+Monomer('DR', [bl, bf], {'T':[4,5]})    # Death receptor 4 or 5. bl: ligand binding site, bf: fadd binding site
 Monomer('Fadd', [b])   # FADD
-Monomer('LDRC', [b])   # Ligand :: Death receptor complex
-Monomer('LFDRC', [b])  # Ligand :: Fadd :: Death receptor
 # MONOMERS FROM EARM2
 
 # Parameters and Modules 
@@ -27,16 +23,71 @@ from earm_2_disc_parms import parameter_dict as kd
 import earm_2_disc_modules # Must be called after the Monomers and Parameters are defined
 
 # Trail binding to DR
-Rule('TRAIL_bind', TRAIL(b=None) + DR(b=None, T=any) <> TRAIL(b=1) % DR(b=1, T=any),
-     kd['TRAIL_bind'])
+# Another way to do this:
+# bla= TTrail_unbound.copy()
+# bla.monomer_patterns[0].site_conditions['bf']=1
 
-*** CAN TRAIL BE BOUND INDIVIDUALLY TO EACH DR? OR TO JUST ONE?
+# aliases for easier rule ennumeration
+# -------------------------------------
+# Trail unbound/bound aliases
+TTrail_U  = MatchOnce(Trail(b=None, s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
+TTrail_B1 = MatchOnce(Trail(b=4, s1=1, s2=2)    % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
+TTrail_B2 = MatchOnce(Trail(b=4, s1=1, s2=2)    % Trail(b=5, s1=2, s2=3)    % Trail(b=None, s1=3, s2=1))
+TTrail_B3 = MatchOnce(Trail(b=4, s1=1, s2=2)    % Trail(b=5, s1=2, s2=3)    % Trail(b=6, s1=3, s2=1))
+
+# DR monomer, dimer, trimer aliases:
+# ----------------------------------
+DR_mono_U = DR(bl=None, s1=None, s2=None, bd=None)
+DR_dim_U  = DR(bl=None, s1=1, s2=None, bd=None)  % DR(bl=None, s1=None, s2=1, bd=None)
+DR_trim_U = DR(bl=None, s1=1, s2=2)     % DR(bl=None, s1=2, s2=3, bd=None)    % DR(bl=None, s1=3, s2=1, bd=None))
+DR_mono_B = DR(bl=4, bh3=None, d2=None, bd=None)
+DR_dim_B  = DR(bl=4, s1=1, s2=None, bd=None)     % DR(bl=5, s1=None, s2=1, bd=None)
+DR_trim_B = DR(bl=4, s1=1, s2=2, bd=None)        % DR(bl=5, s1=2, s2=3, bd=None)       % DR(bl=6, s1=3, s2=1, bd=None)
+
+# Trail binding to DR rules:
+# --------------------------
+Rule('TRAIL_DRmono', TTrail_U + DR_mono_U <> TTrail_B1 % DR_mono_B,  *kd[TTrail_DRmono])
+Rule('TRAIL_DRdim',  TTrail_U + DR_dim_U  <> TTrail_B2 % DR_dim_B,  *kd[TTrail_DRdim])
+Rule('TRAIL_DRtrim', TTrail_U + DR_trim_U <> TTrail_B3 % DR_trim_B, *kd[TTrail_DRtrim])
+    
+# DR multimers
+--------------
+ringp_assembly(DR(bf=None, T='4'), 3, kd['DR4_RINGP'])
+ringp_assembly(DR(bf=None, T='5'), 3, kd['DR5_RINGP'])
+
+# DR DISC aliases:
+# ----------------
+LDRC = DR_trim_B % TTrail_B3
+
+LDRC_F = LDRC % Fadd(bd = 7)
+LDRC_F.monomer_patterns[0].site_conditions['bd'] = 7
+
+# Fadd binding LDRC rule
+# ----------------------
+# This should create a species which binds a Fadd to LDRC
+Rule("Fadd_LDRC", LDRC + Fadd(bd = None) <> LDRC_F, kf, kr)
+
+# Caspase 8 binding to Fadd, creates DISC
+# ---------------------------------------
+Rule("pC8_fadd_b", Fadd(bd=ANY, bc=None) + C8(bf=None, state='pro') <> Fadd(bd=ANY, bc=1) % C8(bf=1, state='pro'), kf, kr)
+
+# Caspase 8 activation within the same DISC
+# ------------------------------------------
+Rule("pC8_dim_act_s", C8(bf=ANY) % C8(bf=ANY) >> C8(bd=1, bf=None, state='act') % C8(bd=1, bf=None, state='act')
+
+# Caspase 8 activation across separate DISC
+# -----------------------------------------
+Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bd=1, bf=None, state='act') % C8(bd=1, bf=None, state='act')
+
+
+
+# *** CAN TRAIL BE BOUND INDIVIDUALLY TO EACH DR? OR TO JUST ONE?
 
 # Trail assembly (use oligomerization function)
-complex_assembly(DR(b=None, T=Any), 3, kd['DR_oligomer']) #*** CHECK REVERSIBLE
+# complex_assembly(DR(b=None), 3, kd['DR_oligomer']) #*** CHECK REVERSIBLE
 
 # Fadd assembly
-Rule('Fadd_bind', Fadd(b=None) + [])
+# Rule('Fadd_bind', Fadd(b=None) + [])
 
 # C8 binding
 
@@ -51,5 +102,7 @@ Rule('Fadd_bind', Fadd(b=None) + [])
 # IC-RP Activated by C8
 
 
-
-
+# Initial non-zero species
+# ========================
+Initial(Trail(bf=None, s1=1, s2=2) % Trail(bf=None, s1=2, s2=3) % Trail(bf=None, s1=3, s2=1), Trail_0)
+Initial(R(bf=None), R_0)
