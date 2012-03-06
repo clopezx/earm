@@ -43,7 +43,7 @@ Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf = None, state = 'M'), k
 Rule('Bax_to_mem', Bax(bf = None, state = 'C') <> Bax(bf=None, state = 'M'), kd['BAX_trans'][0], kd['BAX_trans'][1])
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'), kd['BCLXL_trans'][0], kd['BCLXL_trans'][1])
 
-# Mitochondrial tBid activates Bax/Bak
+# Mitochondrial or Cytosolic tBid activates Bax/Bak
 # Bax/Bak form pores
 # ------------------------------------
 #        Bax + tBid <--> Bax:tBid --> Bax* + tBid 
@@ -52,9 +52,9 @@ Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf=None, state = 'M'
 #        Bak + Bak <--> Bak:Bak + Bak <--> Bak:Bak:Bak + Bak <--> Bak:Bak:Bak:Bak
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
-two_step_mod(Bid(state = 'T'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDt_BAX'])
+# two_step_mod(Bid(state = 'T'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDt_BAX'])
 two_step_mod(Bid(state = 'M'), Bax(state = 'M'), Bax(bf = None, state = 'A'), kd['BIDm_BAX'])
-two_step_mod(Bid(state = 'T'), Bak(state = 'M'), Bak(bf = None, state = 'A'), kd['BIDt_BAK'])
+two_step_mod(Bid(state = 'M'), Bak(state = 'M'), Bak(bf = None, state = 'A'), kd['BIDt_BAK'])
 # pore_assembly(Subunit, size, rates):
 ringp_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
 ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
@@ -68,7 +68,7 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # ------------------------------------
 simple_bind_table([[                                            Bcl2,         BclxL,  Mcl1],
                    [                                              {}, {'state':'M'},    {}],
-                   [Bid, {'state':'M'},                         True,          True, False], #Bax/Bak not inhibited in direct model
+                   [Bid, {'state':'M'},                         True,          True,  True], #Bax/Bak not inhibited in direct model
                    ],
                   kd['BID_BAX_BAK_inh'], model)
 
@@ -80,8 +80,27 @@ simple_bind_table([[                                            Bcl2,         Bc
 simple_bind_table([[           Bcl2,         BclxL,  Mcl1],
                    [             {}, {'state':'M'},    {}],
                    [Bad,  {},  True,          True, False],
-                   [NOXA, {},  False,         True,  True]],
+                   [NOXA, {},  False,        False,  True]],
                   kd['BCLs_sens'], model)
+
+# CytC, Smac release
+# ----------------------
+#        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
+#        ACytoC <-->  cCytoC
+#        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
+#        ASmac <-->  cSmac
+# ----------------------
+# pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
+pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
+pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
+pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
+pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
+
+# --------------------------------------
+# CytC and Smac activation after release
+# --------------------------------------
+Rule('act_cSmac',  Smac(bf=None, state='C') <> Smac(bf=None, state='A'), kd['SMAC_ACT'][0], kd['SMAC_ACT'][1])
+Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['CYTOC_ACT'][0], kd['CYTOC_ACT'][1])
 
 # Import necessary modules
 # ========================

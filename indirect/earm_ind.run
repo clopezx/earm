@@ -6,9 +6,12 @@ from earm_indirect_mem import model
 envlist, paramarr = pysb.anneal_sundials.annlinit(model)
 xpfile = numpy.load('EC-RP_IMS-RP_IC-RP_data_for_models.npz')
 xpnormdata = xpfile['arr_0']
-parmfile = numpy.load('earm_indirect_momp_prminfo.npz')
-parmidx = parmfile['arr_0']
-lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=1, N=1000, useparams = parmidx, usemag = 3, useN=1000)
+mompfile = numpy.load('earm_indirect_momp_prminfo.npz')
+mompidx = mompfile['arr_0']
+import pylab
+pylab.ion()
+
+lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=1, N=1000, useparams = mompidx, usemag = 3, useN=1000)
 # DATA IS ALREADY NORMALIZED
 # WE ARE USING THE EXPERIMENTAL VARIANCES
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 20000, model, envlist, xpnormdata, [(2,1),(5,2),(8,3)], lb, ub, True, True), lower=lower, upper=upper, full_output=1)

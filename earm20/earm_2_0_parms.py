@@ -11,7 +11,7 @@ from pysb import *
 # Reaction rates
 parameter_dict = {
     #--------------------
-    # EARM 2.0 bcl2 module parameters
+    # EARM 2.0 bcl2 module parameters, allowed to vary O(3) during annealing
     #--------------------
     # Bid transport to mitochondria
     'BID_trans':  [ Parameter('kbidTbidMf',  .01), #Lovell, Andrews Cell 2008 says 1e12?
@@ -79,18 +79,42 @@ parameter_dict = {
                         Parameter('baxbclxlr', 1.0e-3      )],
                        [Parameter('bakbclxlf', 1.428571e-05),#
                         Parameter('bakbclxlr', 1.0e-3      )],
+                       [Parameter('bidmcl1f',  1.428571e-05),#
+                        Parameter('bidmcl1r',  1.0e-3      )],
                        [Parameter('bakmcl1f',  1.428571e-05),#
                         Parameter('bakmcl1r',  1.0e-3      )]],
+
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
     'BCLs_sens':      [[Parameter('kbadbcl2f',  1.428571e-05),
                         Parameter('kbadbcl2r',  1.0e-3      )],
                        [Parameter('kbadbclxlf', 1.428571e-05),
                         Parameter('kbadbclxlr', 1.0e-3      )],
-                       [Parameter('knoxabcl2f', 1.428571e-05),
-                        Parameter('knoxabcl2r', 1.0e-3      )],
                        [Parameter('knoxamcl1f', 1.428571e-05),
                         Parameter('knoxamcl1r', 1.0e-3      )]],
     
+     # CytoC transport by Bax
+    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf', 2.857143e-05),   #same as Bax-SMAC
+                     Parameter('kbaxcytocMCr', 1.0e-03     ),   #same as Bax-SMAC
+                     Parameter('kbaxcytocMCc', 1.0         )]], #same as Bax-SMAC
+    # Smac transport by Bax
+    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf',  2.857143e-05),
+                     Parameter('kbaxsmacCAr',  1.0e-03     ),
+                     Parameter('kbaxsmacCAc',  1.0         )]],
+    # CytoC transport activation by Bak 
+    'BAK_CYTC':   [[ Parameter('kbakcytocMCf', 2.857143e-05),
+                     Parameter('kbakcytocMCr', 1.0e-03     ),
+                     Parameter('kbakcytocMCc', 1.0         )]],
+    # Smac transport by Bak  **
+    'BAK_SMAC':   [[ Parameter('kbaksmacCAf',  2.857143e-05),   #same as Bak-SMAC
+                     Parameter('kbaksmacCAr',  1.0e-03     ),   #same as Bak-SMAC
+                     Parameter('kbaksmacCAc',  1.0         )]], #same as Bak-SMAC
+    # CytoC activation
+    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.01), #transloc
+                    Parameter('kcytocCcytoAr', 0.01)], 
+    # Smac activation
+    'SMAC_ACT':  [ Parameter('ksmacCsmacAf', .01), #transloc
+                   Parameter('ksmacCsmacAr', .01)],
+
     #---------------------------
     # EARM 1.0 legacy parameters
     #---------------------------
@@ -117,28 +141,6 @@ parameter_dict = {
     #---------------------------
     # pore_to_parp module parameters
     #---------------------------
-    # CytoC transport by Bax
-    'BAX_CYTC':   [[ Parameter('kbaxcytocMCf', 2.857143e-05),   #same as Bax-SMAC
-                     Parameter('kbaxcytocMCr', 1.0e-03     ),   #same as Bax-SMAC
-                     Parameter('kbaxcytocMCc', 1.0         )]], #same as Bax-SMAC
-    # Smac transport by Bax
-    'BAX_SMAC':   [[ Parameter('kbaxsmacCAf',  2.857143e-05),
-                     Parameter('kbaxsmacCAr',  1.0e-03     ),
-                     Parameter('kbaxsmacCAc',  1.0         )]],
-    # CytoC transport activation by Bak 
-    'BAK_CYTC':   [[ Parameter('kbakcytocMCf', 2.857143e-05),
-                     Parameter('kbakcytocMCr', 1.0e-03     ),
-                     Parameter('kbakcytocMCc', 1.0         )]],
-    # Smac transport by Bak  **
-    'BAK_SMAC':   [[ Parameter('kbaksmacCAf',  2.857143e-05),   #same as Bak-SMAC
-                     Parameter('kbaksmacCAr',  1.0e-03     ),   #same as Bak-SMAC
-                     Parameter('kbaksmacCAc',  1.0         )]], #same as Bak-SMAC
-    # CytoC activation
-    'CYTOC_ACT':  [ Parameter('kcytocCcytoAf', 0.01), #transloc
-                    Parameter('kcytocCcytoAr', 0.01)], 
-    # Smac activation
-    'SMAC_ACT':  [ Parameter('ksmacCsmacAf', .01), #transloc
-                   Parameter('ksmacCsmacAr', .01)],
     # Apaf activation by CytC
     'APAF_CYTC':  [ Parameter('kcytocCapaff', 5e-07),
                     Parameter('kcytocCapafr', 1e-03),

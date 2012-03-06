@@ -62,23 +62,6 @@ def pore_to_parp(model, kd):
     """
     # FXR CASPASES CLEAVE PARP 
     # ========================
-    # CytC, Smac release
-    # ----------------------
-    #        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
-    #        ACytoC <-->  cCytoC
-    #        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
-    #        ASmac <-->  cSmac
-    # ----------------------
-    #pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
-    ringp_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
-    ringp_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
-    ringp_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
-    ringp_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
-    # --------------------------------------
-    # CytC and Smac activation after release
-    # --------------------------------------
-    Rule('act_cSmac',  Smac(bf=None, state='C') <> Smac(bf=None, state='A'), kd['SMAC_ACT'][0], kd['SMAC_ACT'][1])
-    Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['CYTOC_ACT'][0], kd['CYTOC_ACT'][1])
     # ---------------------------
     # Apoptosome formation
     # ---------------------------

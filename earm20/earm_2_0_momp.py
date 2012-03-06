@@ -6,12 +6,12 @@ from pysbhelperfuncs import *
 Model()
 # Monomers for all modules (including imported modules)
 # =====================================================
-Monomer('L', ['bf']) # Ligand
-Monomer('R', ['bf']) # Receptor
-Monomer('DISC', ['bf']) # DISC
-Monomer('flip', ['bf']) # flip
-Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
-Monomer('BAR', ['bf']) # BAR
+#Monomer('L', ['bf']) # Ligand
+#Monomer('R', ['bf']) # Receptor
+#Monomer('DISC', ['bf']) # DISC
+#Monomer('flip', ['bf']) # flip
+#Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
+#Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
 Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
 Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
@@ -22,13 +22,13 @@ Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']})
 Monomer('NOXA', ['bf']) 
 Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
 Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
-Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
-Monomer('Apop', ['bf'])
-Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
-Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, active
-Monomer('C9', ['bf'])
-Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
-Monomer('XIAP', ['bf'])
+#Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
+#Monomer('Apop', ['bf'])
+#Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
+#Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, active
+#Monomer('C9', ['bf'])
+#Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
+#Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
@@ -55,8 +55,8 @@ two_step_mod(Bak(state = 'A', bh3=None, d2=None), Bak(state='M'), Bak(bf = None,
 
 # pore_assembly(Subunit, size, rates):
 # ------------------------------------
-ringp_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
-ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
+pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
+pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition
@@ -113,18 +113,18 @@ Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['C
 # Import necessary modules
 # ========================
 # Generate the Receptor to Bid section from the EARM 1.0 module
-earm_1_0modules.rec_to_bid(model, kd)
+#earm_1_0modules.rec_to_bid(model, kd)
 # Generate the Pore to MOMP section from the EARM 1.0 module
-earm_1_0modules.pore_to_parp(model, kd)
+#earm_1_0modules.pore_to_parp(model, kd)
 
 # Initial non-zero species
 # ========================
-Initial(L(bf=None), L_0)
-Initial(R(bf=None), R_0)
-Initial(flip(bf=None), flip_0)
-Initial(C8(bf=None, state='pro'), C8_0)
-Initial(BAR(bf=None), BAR_0)
-Initial(Bid(bf=None, state='U'), Bid_0)
+#Initial(L(bf=None), L_0)
+#Initial(R(bf=None), R_0)
+#Initial(flip(bf=None), flip_0)
+#Initial(C8(bf=None, state='pro'), C8_0)
+#Initial(BAR(bf=None), BAR_0)
+Initial(Bid(bf=None, state='T'), Bid_0)
 Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
 Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bak_0)
 Initial(Bcl2(bf=None), Bcl2_0)
@@ -134,12 +134,12 @@ Initial(Bad(bf=None, state='C'), Bad_0)
 Initial(NOXA(bf=None), NOXA_0)
 Initial(CytoC(bf=None, state='M'), CytoC_0)
 Initial(Smac(bf=None, state='M'), Smac_0)
-Initial(Apaf(bf=None, state='I'), Apaf_0)
-Initial(C3(bf=None, state='pro'), C3_0)
-Initial(C6(bf=None, state='pro'), C6_0)
-Initial(C9(bf=None), C9_0)
-Initial(PARP(bf=None, state='U'), PARP_0)
-Initial(XIAP(bf=None), XIAP_0)
+#Initial(Apaf(bf=None, state='I'), Apaf_0)
+#Initial(C3(bf=None, state='pro'), C3_0)
+#Initial(C6(bf=None, state='pro'), C6_0)
+#Initial(C9(bf=None), C9_0)
+#Initial(PARP(bf=None, state='U'), PARP_0)
+#Initial(XIAP(bf=None), XIAP_0)
 
 # Observables
 # ===========
@@ -148,6 +148,7 @@ Initial(XIAP(bf=None), XIAP_0)
 # Observe('PARP',  PARP(bf=None, state='U'))
 # Observe('Smac',  Smac(bf=None, state='mito'))
 # # This is what *should* be observed???
-Observe('mBid',  Bid(state='M'))
+#Observe('mBid',  Bid(state='M'))
 Observe('cSmac', Smac(state='A'))
-Observe('cPARP', PARP(state='C'))
+#Observe('cPARP', PARP(state='C'))
+
