@@ -1,6 +1,9 @@
 from pysb import *
 from pysbhelperfuncs import *
 
+# Instantiate model, default name is "model"
+Model()
+
 #Parameter('ec_size', 1.0e6)   # 1.0e6 um^3 = 1 pL
 #Parameter('cytoM_size', 483.6 * .0030) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
 #Parameter('cyto_size', 1.0e3) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
@@ -12,14 +15,15 @@ from pysbhelperfuncs import *
 #Compartment('mitM', dimension = 2, size = mitoM_size, parent = cy) # mitochondrial membrane
 #Compartment('mit', dimension = 3, size = mito_size, parent = mitM) # mitochondrion
 
-Monomer('TRAIL', [b, s1, s2])  # TRAIL monomer, start with pre-trimerized ligand
-Monomer('DR', [bl, bf], {'T':[4,5]})    # Death receptor 4 or 5. bl: ligand binding site, bf: fadd binding site
-Monomer('Fadd', [b])   # FADD
+#Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
+Monomer('TRAIL', ['b', 's1', 's2'])  # TRAIL monomer, start with pre-trimerized ligand
+Monomer('DR', ['bl', 'bf', 'T'], {'T':['4','5']})    # Death receptor 4 or 5. bl: ligand binding site, bf: fadd binding site
+Monomer('Fadd', ['bx', 'bc'])   # FADD bx: binding to complex, bc: binding to caspase 8
 # MONOMERS FROM EARM2
 
 # Parameters and Modules 
 # ===============================
-from earm_2_disc_parms import parameter_dict as kd 
+from disc2_parms import parameter_dict as kd 
 import earm_2_disc_modules # Must be called after the Monomers and Parameters are defined
 
 # Trail binding to DR
@@ -37,12 +41,12 @@ TTrail_B3 = MatchOnce(Trail(b=4, s1=1, s2=2)    % Trail(b=5, s1=2, s2=3)    % Tr
 
 # DR monomer, dimer, trimer aliases:
 # ----------------------------------
-DR_mono_U = DR(bl=None, s1=None, s2=None, bd=None)
-DR_dim_U  = DR(bl=None, s1=1, s2=None, bd=None)  % DR(bl=None, s1=None, s2=1, bd=None)
-DR_trim_U = DR(bl=None, s1=1, s2=2)     % DR(bl=None, s1=2, s2=3, bd=None)    % DR(bl=None, s1=3, s2=1, bd=None))
-DR_mono_B = DR(bl=4, bh3=None, d2=None, bd=None)
-DR_dim_B  = DR(bl=4, s1=1, s2=None, bd=None)     % DR(bl=5, s1=None, s2=1, bd=None)
-DR_trim_B = DR(bl=4, s1=1, s2=2, bd=None)        % DR(bl=5, s1=2, s2=3, bd=None)       % DR(bl=6, s1=3, s2=1, bd=None)
+DR_mono_U = DR(bl=None, s1=None, s2=None, bf=None)
+DR_dim_U  = DR(bl=None, s1=1, s2=None, bf=None)  % DR(bl=None, s1=None, s2=1, bf=None)
+DR_trim_U = DR(bl=None, s1=1, s2=2)     % DR(bl=None, s1=2, s2=3, bf=None)    % DR(bl=None, s1=3, s2=1, bf=None)
+DR_mono_B = DR(bl=4, bh3=None, d2=None, bf=None)
+DR_dim_B  = DR(bl=4, s1=1, s2=None, bf=None)     % DR(bl=5, s1=None, s2=1, bf=None)
+DR_trim_B = DR(bl=4, s1=1, s2=2, bf=None)        % DR(bl=5, s1=2, s2=3, bf=None)       % DR(bl=6, s1=3, s2=1, bf=None)
 
 # Trail binding to DR rules:
 # --------------------------
@@ -51,7 +55,7 @@ Rule('TRAIL_DRdim',  TTrail_U + DR_dim_U  <> TTrail_B2 % DR_dim_B,  *kd[TTrail_D
 Rule('TRAIL_DRtrim', TTrail_U + DR_trim_U <> TTrail_B3 % DR_trim_B, *kd[TTrail_DRtrim])
     
 # DR multimers
---------------
+# ------------
 ringp_assembly(DR(bf=None, T='4'), 3, kd['DR4_RINGP'])
 ringp_assembly(DR(bf=None, T='5'), 3, kd['DR5_RINGP'])
 
@@ -59,25 +63,25 @@ ringp_assembly(DR(bf=None, T='5'), 3, kd['DR5_RINGP'])
 # ----------------
 LDRC = DR_trim_B % TTrail_B3
 
-LDRC_F = LDRC % Fadd(bd = 7)
-LDRC_F.monomer_patterns[0].site_conditions['bd'] = 7
+LDRC_F = LDRC % Fadd(bx = 7)
+LDRC_F.monomer_patterns[0].site_conditions['bf'] = 7
 
 # Fadd binding LDRC rule
 # ----------------------
 # This should create a species which binds a Fadd to LDRC
-Rule("Fadd_LDRC", LDRC + Fadd(bd = None) <> LDRC_F, kf, kr)
+Rule("Fadd_LDRC", LDRC + Fadd(bx = None) <> LDRC_F, kf, kr)
 
 # Caspase 8 binding to Fadd, creates DISC
 # ---------------------------------------
-Rule("pC8_fadd_b", Fadd(bd=ANY, bc=None) + C8(bf=None, state='pro') <> Fadd(bd=ANY, bc=1) % C8(bf=1, state='pro'), kf, kr)
+Rule("pC8_fadd_b", Fadd(bx=ANY, bc=None) + C8(bf=None, state='pro') <> Fadd(bx=ANY, bc=1) % C8(bf=1, state='pro'), kf, kr)
 
 # Caspase 8 activation within the same DISC
 # ------------------------------------------
-Rule("pC8_dim_act_s", C8(bf=ANY) % C8(bf=ANY) >> C8(bd=1, bf=None, state='act') % C8(bd=1, bf=None, state='act')
+Rule("pC8_dim_act_s", C8(bf=ANY) % C8(bf=ANY) >> C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='act'))
 
 # Caspase 8 activation across separate DISC
 # -----------------------------------------
-Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bd=1, bf=None, state='act') % C8(bd=1, bf=None, state='act')
+Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='act'))
 
 
 
