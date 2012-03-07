@@ -62,7 +62,7 @@ def pore_to_parp(model, kd):
     """
     # FXR CASPASES CLEAVE PARP 
     # ========================
-    # ---------------------------
+    #
     # Apoptosome formation
     # ---------------------------
     #        Apaf + cCytoC <-->  Apaf:cCytoC --> aApaf + cCytoC

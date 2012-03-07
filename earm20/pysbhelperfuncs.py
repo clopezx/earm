@@ -118,7 +118,7 @@ def simple_dim(Sub, Prod, klist, site='bf'):
 
 def ringp_species(Subunit, size):
     """
-    Generate a single species representing a homomeric ring polymer, composed
+    Generate a single species representing a homomeric ringp, composed
     of <size> copies of <Subunit> bound together in a ring, with bonds
     formed between bh3 of one unit and d2 of the next.
     """
@@ -140,7 +140,7 @@ def ringp_species(Subunit, size):
 def ringp_assembly(Subunit, size, rates):
     """
     Generate rules to chain identical MonomerPatterns <Subunit> into
-    increasingly larger ring polymers of up to <size> units, using sites
+    increasingly larger ringps of up to <size> units, using sites
     bh3 and d2 to bind the units to each other.
     """
     rules = []
@@ -155,7 +155,7 @@ def ringp_assembly(Subunit, size, rates):
 def ringp_transport(Subunit, Source, Dest, min_size, max_size, rates, site='bf'):
     """
     Generate rules to transport MonomerPattern <Source> to <Dest>
-    through any of a series of ring polymers of at least <min_size> and at
+    through any of a series of ringps of at least <min_size> and at
     most <max_size> subunits, as defined by ringp_assembly. Uses site
     <site> on both Subunit and CargoSource to bind cargo to ONE
     Subunit during transport. <site> on all other Subunits remains
