@@ -16,15 +16,15 @@ Model()
 #Compartment('mit', dimension = 3, size = mito_size, parent = mitM) # mitochondrion
 
 #Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
-Monomer('TRAIL', ['b', 's1', 's2'])  # TRAIL monomer, start with pre-trimerized ligand
-Monomer('DR', ['bl', 'bf', 'T'], {'T':['4','5']})    # Death receptor 4 or 5. bl: ligand binding site, bf: fadd binding site
+Monomer('Trail', ['b', 's1', 's2'])  # TRAIL monomer, start with pre-trimerized ligand
+Monomer('DR', ['bl', 'bf', 's1', 's2', 'T'], {'T':['4','5']})    # Death receptor 4 or 5. bl: ligand binding site, bf: fadd binding site
 Monomer('Fadd', ['bx', 'bc'])   # FADD bx: binding to complex, bc: binding to caspase 8
 # MONOMERS FROM EARM2
 
 # Parameters and Modules 
 # ===============================
 from disc2_parms import parameter_dict as kd 
-import earm_2_disc_modules # Must be called after the Monomers and Parameters are defined
+import earm_2_emb_modules # Must be called after the Monomers and Parameters are defined
 
 # Trail binding to DR
 # Another way to do this:
@@ -33,26 +33,26 @@ import earm_2_disc_modules # Must be called after the Monomers and Parameters ar
 
 # aliases for easier rule ennumeration
 # -------------------------------------
-# Trail unbound/bound aliases
+# Trimerized Trail unbound/bound aliases
 TTrail_U  = MatchOnce(Trail(b=None, s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
-TTrail_B1 = MatchOnce(Trail(b=4, s1=1, s2=2)    % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
-TTrail_B2 = MatchOnce(Trail(b=4, s1=1, s2=2)    % Trail(b=5, s1=2, s2=3)    % Trail(b=None, s1=3, s2=1))
-TTrail_B3 = MatchOnce(Trail(b=4, s1=1, s2=2)    % Trail(b=5, s1=2, s2=3)    % Trail(b=6, s1=3, s2=1))
+TTrail_B1 = MatchOnce(Trail(b=4,    s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
+TTrail_B2 = MatchOnce(Trail(b=5,    s1=1, s2=2) % Trail(b=6,    s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
+TTrail_B3 = MatchOnce(Trail(b=4,    s1=1, s2=2) % Trail(b=5,    s1=2, s2=3) % Trail(b=6,    s1=3, s2=1))
 
 # DR monomer, dimer, trimer aliases:
 # ----------------------------------
-DR_mono_U = DR(bl=None, s1=None, s2=None, bf=None)
-DR_dim_U  = DR(bl=None, s1=1, s2=None, bf=None)  % DR(bl=None, s1=None, s2=1, bf=None)
-DR_trim_U = DR(bl=None, s1=1, s2=2)     % DR(bl=None, s1=2, s2=3, bf=None)    % DR(bl=None, s1=3, s2=1, bf=None)
-DR_mono_B = DR(bl=4, bh3=None, d2=None, bf=None)
-DR_dim_B  = DR(bl=4, s1=1, s2=None, bf=None)     % DR(bl=5, s1=None, s2=1, bf=None)
-DR_trim_B = DR(bl=4, s1=1, s2=2, bf=None)        % DR(bl=5, s1=2, s2=3, bf=None)       % DR(bl=6, s1=3, s2=1, bf=None)
+DR_mono_U = DR(bl=None, bf=None, s1=None, s2=None, T=ANY)
+DR_dim_U  = DR(bl=None, bf=None, s1=1,    s2=None, T=ANY) % DR(bl=None, bf=None, s1=None, s2=1, T=ANY)
+DR_trim_U = DR(bl=None, bf=None, s1=1,    s2=2,    T=ANY) % DR(bl=None, bf=None, s1=2,    s2=3, T=ANY) % DR(bl=None, bf=None, s1=3, s2=1, T=ANY)
+DR_mono_B = DR(bl=4,    bf=None, s1=None, s2=None, T=ANY)
+DR_dim_B  = DR(bl=5,    bf=None, s1=4,    s2=None, T=ANY) % DR(bl=6,    bf=None, s1=None, s2=4, T=ANY)
+DR_trim_B = DR(bl=4,    bf=None, s1=1,    s2=2,    T=ANY) % DR(bl=5,    bf=None, s1=2,    s2=3, T=ANY) % DR(bl=6,    bf=None, s1=3, s2=1, T=ANY)
 
 # Trail binding to DR rules:
 # --------------------------
-Rule('TRAIL_DRmono', TTrail_U + DR_mono_U <> TTrail_B1 % DR_mono_B,  *kd[TTrail_DRmono])
-Rule('TRAIL_DRdim',  TTrail_U + DR_dim_U  <> TTrail_B2 % DR_dim_B,  *kd[TTrail_DRdim])
-Rule('TRAIL_DRtrim', TTrail_U + DR_trim_U <> TTrail_B3 % DR_trim_B, *kd[TTrail_DRtrim])
+Rule('TRAIL_DRmono', TTrail_U + DR_mono_U <> TTrail_B1 % DR_mono_B, *kd['TT_DRmono'])
+Rule('TRAIL_DRdim',  TTrail_U + DR_dim_U  <> TTrail_B2 % DR_dim_B,  *kd['TT_DRdim'])
+Rule('TRAIL_DRtrim', TTrail_U + DR_trim_U <> TTrail_B3 % DR_trim_B, *kd['TT_DRtrim'])
     
 # DR multimers
 # ------------
@@ -83,27 +83,19 @@ Rule("pC8_dim_act_s", C8(bf=ANY) % C8(bf=ANY) >> C8(bc=1, bf=None, state='act') 
 # -----------------------------------------
 Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='act'))
 
+# Truncation of Bid
+# ------------------
+Rule("C8_bid_cplx", C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = None, state='U') <>
+     C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = 2, state='U'))
+Rule("C8_cplx_act", C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = 2, state='U') >>
+     C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = None, state='T'))
 
-
-# *** CAN TRAIL BE BOUND INDIVIDUALLY TO EACH DR? OR TO JUST ONE?
-
-# Trail assembly (use oligomerization function)
-# complex_assembly(DR(b=None), 3, kd['DR_oligomer']) #*** CHECK REVERSIBLE
-
-# Fadd assembly
-# Rule('Fadd_bind', Fadd(b=None) + [])
-
-# C8 binding
-
-# C8 activation within same DISC
-
-# C8 cross activation across two DISC
-
-# Bid truncated by C8
-
-# C3 Activated by C8
-
-# IC-RP Activated by C8
+# Import necessary modules
+# ========================
+# Generate the Receptor to Bid section from the EARM 1.0 module
+earm_2_emb_modules.bid_to_momp(model, kd)
+# Generate the Pore to MOMP section from the EARM 1.0 module
+earm_2_emb_modules.pore_to_parp(model, kd)
 
 
 # Initial non-zero species

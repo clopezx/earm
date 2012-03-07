@@ -24,7 +24,7 @@ def two_step_mod(Enz, Sub, Prod, klist,  site='bf'):
     This function assumes that there is a site named 'bf' (bind site for fxn)
     which it uses by default. This also assume Enz returns to its original state.
     In an aim for simplicity, site 'bf' need not be passed when calling the function by
-    the reactants, but THE FULL STATE OF THE PRODUCT must be specified"""
+    the reactants"""
     
     kf, kr, kc = klist #forward, reverse, catalytic
     
