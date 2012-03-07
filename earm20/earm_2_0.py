@@ -53,10 +53,10 @@ two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['
 two_step_mod(Bax(state = 'A', bh3=None, d2=None), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
 two_step_mod(Bak(state = 'A', bh3=None, d2=None), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
 
-# pore_assembly(Subunit, size, rates):
+# ringp_assembly(Subunit, size, rates):
 # ------------------------------------
-pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
-pore_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
+ringp_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
+ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition
@@ -98,11 +98,11 @@ simple_bind_table([[                      Bcl2,         BclxL,  Mcl1],
 #        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
 #        ASmac <-->  cSmac
 # ----------------------
-#pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
-pore_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
-pore_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
-pore_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
-pore_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
+#ringp_transport(Subunit, Source, Dest, min_size, max_size, rates):
+ringp_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
+ringp_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
+ringp_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
+ringp_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
 
 # --------------------------------------
 # CytC and Smac activation after release

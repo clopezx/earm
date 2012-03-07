@@ -49,8 +49,8 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 #        Bax:Bax:Bax:Bax --> BaxPore
 #        Bak:Bak:Bak:Bak --> BakPore
 two_step_mod(Bid(state = 'T'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BID_BAX']) #does not differentiate b/w cyto or membrane bax
-# pore_assembly(Subunit, size, rates):
-pore_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
+# ringp_assembly(Subunit, size, rates):
+ringp_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
 
 # ------------------------------------
 # MOMP Inhibition
