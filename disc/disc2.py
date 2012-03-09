@@ -66,6 +66,7 @@ LDRC = DR_trim_B % TTrail_B3
 LDRC_F = LDRC % Fadd(bx = 7)
 LDRC_F.monomer_patterns[0].site_conditions['bf'] = 7
 
+# FIXME: Can these all be replaced with simple-bind calls?
 # Fadd binding LDRC rule
 # ----------------------
 # This should create a species which binds a Fadd to LDRC
@@ -90,6 +91,14 @@ Rule("C8_bid_cplx", C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='ac
 Rule("C8_cplx_act", C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = 2, state='U') >>
      C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = None, state='T'))
 
+# flip takes a C8 spot in DISC
+# ----------------------------
+Rule("flip_fadd_b", Fadd(bx=ANY, bc=None) + C8(bf=None, state='pro') <> Fadd(bx=ANY, bc=1) % C8(bf=1, state='pro'), *kd['pC8_fadd_b'])
+
+simple_bind(BAR(), C8(state='A'), kd['BAR_C8'])
+
+
+#
 # Import necessary modules
 # ========================
 # Generate the Receptor to Bid section from the EARM 1.0 module
