@@ -4,21 +4,41 @@ from pysbhelperfuncs import *
 # Instantiate model, default name is "model"
 Model()
 
-#Parameter('ec_size', 1.0e6)   # 1.0e6 um^3 = 1 pL
-#Parameter('cytoM_size', 483.6 * .0030) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
-#Parameter('cyto_size', 1.0e3) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
-#Parameter('mito_size', 70.0)  # mitochondria is ~7% of citoplasm (ref)
-#Parameter('mitoM_size', 82.14 * .0042) # mito SA (2.55um radius) x 'brane thicknes ~4.2 nm JPC-B(2009)113-11p3413
-#Compartment('ec', dimension = 3, size = ec_size, parent = None)    # extra cellular compartment
-#Compartment('cytM', dimension = 2, size = cytoM_size, parent = ec) # cytoplasmic membrane
-#Compartment('cyt', dimension = 3, size = cyto_size, parent = cyM)  # cytoplasm
-#Compartment('mitM', dimension = 2, size = mitoM_size, parent = cy) # mitochondrial membrane
-#Compartment('mit', dimension = 3, size = mito_size, parent = mitM) # mitochondrion
+Parameter('ec_size', 1.0e6)   # 1.0e6 um^3 = 1 pL
+Parameter('cytoM_size', 483.6 * .0030) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
+Parameter('cyto_size', 1.0e3) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
+Parameter('mito_size', 70.0)  # mitochondria is ~7% of citoplasm (ref)
+Parameter('mitoM_size', 82.14 * .0042) # mito SA (2.55um radius) x 'brane thicknes ~4.2 nm JPC-B(2009)113-11p3413
+Compartment('ec', dimension = 3, size = ec_size, parent = None)    # extra cellular compartment
+Compartment('cyM', dimension = 2, size = cytoM_size, parent = ec) # cytoplasmic membrane
+Compartment('cy', dimension = 3, size = cyto_size, parent = cyM)  # cytoplasm
+Compartment('mitM', dimension = 2, size = mitoM_size, parent = cy) # mitochondrial membrane
+Compartment('mit', dimension = 3, size = mito_size, parent = mitM) # mitochondrion
 
-#Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('Trail', ['b', 's1', 's2'])  # TRAIL monomer, start with pre-trimerized ligand
 Monomer('DR', ['bl', 'bf', 's1', 's2', 'T'], {'T':['4','5']})    # Death receptor 4 or 5. bl: ligand binding site, bf: fadd binding site
 Monomer('Fadd', ['bx', 'bc'])   # FADD bx: binding to complex, bc: binding to caspase 8
+Monomer('flip', ['bf']) # flip
+Monomer('C8', ['bc', 'bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
+Monomer('BAR', ['bf']) # BAR
+Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
+Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bcl2', ['bf']) # Bcl2, states: Cytoplasm, Mitochondria
+Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
+Monomer('Mcl1', ['bf']) 
+Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']}) 
+Monomer('NOXA', ['bf']) 
+Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
+Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
+Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
+Monomer('Apop', ['bf'])
+Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
+Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, active
+Monomer('C9', ['bf'])
+Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
+Monomer('XIAP', ['bf'])
+
 # MONOMERS FROM EARM2
 
 # Parameters and Modules 
@@ -59,8 +79,8 @@ Rule('TRAIL_DRtrim', TTrail_U + DR_trim_U <> TTrail_B3 % DR_trim_B, *kd['TT_DRtr
 ringp_assembly(DR(bf=None, T='4'), 3, kd['DR4_RINGP'])
 ringp_assembly(DR(bf=None, T='5'), 3, kd['DR5_RINGP'])
 
-# DR DISC aliases:
-# ----------------
+# Ligand Death-receptor complex: 
+# ------------------------------
 LDRC = DR_trim_B % TTrail_B3
 
 LDRC_F = LDRC % Fadd(bx = 7)
@@ -70,31 +90,34 @@ LDRC_F.monomer_patterns[0].site_conditions['bf'] = 7
 # Fadd binding LDRC rule
 # ----------------------
 # This should create a species which binds a Fadd to LDRC
-Rule("Fadd_LDRC", LDRC + Fadd(bx = None) <> LDRC_F, kf, kr)
+Rule("Fadd_LDRC_cplx", LDRC + Fadd(bx = None) <> LDRC_F, *kd['Fadd_LDRC'])
 
 # Caspase 8 binding to Fadd, creates DISC
 # ---------------------------------------
-Rule("pC8_fadd_b", Fadd(bx=ANY, bc=None) + C8(bf=None, state='pro') <> Fadd(bx=ANY, bc=1) % C8(bf=1, state='pro'), kf, kr)
+Rule("pC8_fadd_b", Fadd(bx=ANY, bc=None) + C8(bf=None, state='pro') <> Fadd(bx=ANY, bc=1) % C8(bf=1, state='pro'), *kd['pC8_fadd_b'])
 
 # Caspase 8 activation within the same DISC
 # ------------------------------------------
-Rule("pC8_dim_act_s", C8(bf=ANY) % C8(bf=ANY) >> C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='act'))
+Rule("pC8_dim_act_s", C8(bc=1, bf=ANY) % C8(bc=1, bf=ANY) >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), *kd['pC8_dim_act_s'])
 
 # Caspase 8 activation across separate DISC
 # -----------------------------------------
-Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='act'))
+Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), *kd['pC8_dim_act_o'])
 
 # Truncation of Bid
-# ------------------
-Rule("C8_bid_cplx", C8(bc=1, bf=None, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = None, state='U') <>
-     C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = 2, state='U'))
-Rule("C8_cplx_act", C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = 2, state='U') >>
-     C8(bc=1, bf=2, state='act') % C8(bc=1, bf=None, state='act') + Bid(bf = None, state='T'))
+# FIXME: use catalysis function here
+# ----------------------------------
+Rule("C8_bid_cplx", C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = None, state='U') <>
+     C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = 2, state='U'), kd['C8_BID'][0], kd['C8_BID'][1])
+Rule("C8_cplx_act", C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = 2, state='U') >>
+     C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = None, state='T'), kd['C8_BID'][2])
 
 # flip takes a C8 spot in DISC
 # ----------------------------
 Rule("flip_fadd_b", Fadd(bx=ANY, bc=None) + C8(bf=None, state='pro') <> Fadd(bx=ANY, bc=1) % C8(bf=1, state='pro'), *kd['pC8_fadd_b'])
 
+# BAR inhibits C8
+# ---------------
 simple_bind(BAR(), C8(state='A'), kd['BAR_C8'])
 
 
