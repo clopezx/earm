@@ -40,7 +40,6 @@ Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved
 Monomer('XIAP', ['bf'])
 
 # MONOMERS FROM EARM2
-
 # Parameters and Modules 
 # ===============================
 from disc2_parms import parameter_dict as kd 
@@ -130,7 +129,36 @@ earm_2_emb_modules.bid_to_momp(model, kd)
 earm_2_emb_modules.pore_to_parp(model, kd)
 
 
+# ===================================
+# 'ec'   # extra cellular compartment
+# 'cyM'  # cytoplasmic membrane
+# 'cy'   # cytoplasm
+# 'mitM' # mitochondrial membrane
+# 'mit'  # mitochondrion
+# 
 # Initial non-zero species
-# ========================
-Initial(Trail(bf=None, s1=1, s2=2) % Trail(bf=None, s1=2, s2=3) % Trail(bf=None, s1=3, s2=1), Trail_0)
-Initial(R(bf=None), R_0)
+# ===================================
+Initial(Trail(b=None, s1=1, s2=2) % Trail(bf=None, s1=2, s2=3) % Trail(bf=None, s1=3, s2=1) ** ec , Trail_0)
+Initial(DR(bl=None, bf=None, s1=None, s2=None, T='4') ** cyM, DR4_0)
+Initial(DR(bl=None, bf=None, s1=None, s2=None, T='5') ** cyM, DR5_0)
+Initial(Fadd(bx=None, bc=None) ** cyM, Fadd_0)
+Initial(flip(bf=None) ** cyM, flip_0)
+Initial(C8(bc=None, bf=None, state='pro') ** cy, C8_0)
+Initial(BAR(bf=None) ** cy, BAR_0)
+Initial(Bid(bf=None, state='U') ** cy, Bid_0)
+Initial(Bax(bf=None, bh3=None, d2=None, state='C') ** cy, Bax_0)
+Initial(Bak(bf=None, bh3=None, d2=None, state='M') ** mitM, Bak_0)
+Initial(Bcl2(bf=None) ** mitM, Bcl2_0)
+Initial(BclxL (bf=None, state='C') ** cy, BclxL_0)
+Initial(Mcl1(bf=None) ** mitM, Mcl1_0)
+Initial(Bad(bf=None, state='C') ** cy, Bad_0) 
+Initial(NOXA(bf=None) ** mitM, NOXA_0)
+Initial(CytoC(bf=None, state='M') ** mit, CytoC_0)
+Initial(Smac(bf=None, state='M') ** mit, Smac_0)
+Initial(Apaf(bf=None, state='I') ** cy, Apaf_0)
+Initial(C3(bf=None, state='pro') ** cy, C3_0)
+Initial(C6(bf=None, state='pro') ** cy, C6_0)
+Initial(C9(bf=None) ** cy, C9_0)
+Initial(PARP(bf=None, state='U') ** cy, PARP_0)
+Initial(XIAP(bf=None) ** cy, XIAP_0)
+

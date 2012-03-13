@@ -32,23 +32,23 @@ def bid_to_momp(model, kd):
     # ======================
     # tBid and Bad spontaneously insert into the mito membrane
     # --------------------------------------------------------
-    Rule('Bid_to_mem', Bid(bf = None, state = 'T') <> Bid(bf = None, state = 'M'), kd['BID_trans'][0],kd['BID_trans'][1])
-    Rule('Bad_to_mem', Bad(bf = None, state = 'C') <> Bad(bf = None, state = 'M'), kd['BAD_trans'][0],kd['BAD_trans'][1])
+    Rule('Bid_to_mem', Bid(bf = None, state = 'T') ** cy <> Bid(bf = None, state = 'M') ** mitM, kd['BID_trans'][0],kd['BID_trans'][1])
+    Rule('Bad_to_mem', Bad(bf = None, state = 'C') ** cy <> Bad(bf = None, state = 'M') ** mitM, kd['BAD_trans'][0],kd['BAD_trans'][1])
     
     # tBid in the mitochondria activates Bax(C) and Bak(M)
     #-----------------------------------------------------
-    two_step_mod(Bid(state = 'M'), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BID_BAX'])
-    two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
+    two_step_mod(Bid(state = 'M') ** mitM, Bax(state='C') ** cy, Bax(bf = None, state = 'A') ** mitM, kd['BID_BAX'])
+    two_step_mod(Bid(state = 'M') ** mitM, Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
     
     # Autoactivation, Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
     # ------------------------------------------------------------------
-    two_step_mod(Bax(state = 'A', s1=None, s2=None), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
+    two_step_mod(Bax(state = 'A', s1=None, s2=None) ** mitM, Bax(state='C') ** cy, Bax(bf = None, state = 'A') ** mitM, kd['BAX_BAX'])
     two_step_mod(Bak(state = 'A', s1=None, s2=None), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
     
     # pore_assembly(Subunit, size, rates):
     # ------------------------------------
-    ringp_assembly(Bax(bf=None, state='A'), 4, kd['BAX_PORE'])
+    ringp_assembly(Bax(bf=None, state='A') ** mitM, 4, kd['BAX_PORE'])
     ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
     
     # ------------------------------------
@@ -58,8 +58,8 @@ def bid_to_momp(model, kd):
     #        Bid/Bax + BclxL <> Bid/Bax:BclxL(C) >> Bid/Bax:BclxL(M)
     #        Notice the product of this feeds into the product of the inh rxns
     # ------------------------------------------------------------------------
-    two_step_conv(Bid(state = 'M'),                    BclxL(state='C'), Bid(bf = 1,                    state = 'M')%BclxL(bf = 1, state='M'), kd['Bid_BclxL_RA'])
-    two_step_conv(Bax(state = 'A', s1=None, s2=None), BclxL(state='C'), Bax(bf = 1, s1=None, s2=None, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
+    two_step_conv(Bid(state = 'M') ** mitM,           BclxL(state='C') ** cy, Bid(bf = 1,             state = 'M')%BclxL(bf = 1, state='M') ** mitM, kd['Bid_BclxL_RA'])
+    two_step_conv(Bax(state = 'A', s1=None, s2=None) ** mitM, BclxL(state='C') ** cy, Bax(bf = 1, s1=None, s2=None, state = 'A')%BclxL(bf = 1, state='M') ** mitM, kd['Bax_BclxL_RA'])
     
     
     # Bcl2 inhibitors of Bax, Bak, and Bid
@@ -84,6 +84,8 @@ def bid_to_momp(model, kd):
                         [NOXA, {},            False,         False,  True]], 
                         kd['BCLs_sens'], model)
     
+    # FXR CASPASES CLEAVE PARP 
+    # ========================
     # CytC, Smac release
     # ----------------------
     #        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
@@ -96,7 +98,6 @@ def bid_to_momp(model, kd):
     ringp_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
     ringp_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
     ringp_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
-    
     # --------------------------------------
     # CytC and Smac activation after release
     # --------------------------------------
@@ -112,25 +113,6 @@ def pore_to_parp(model, kd):
     active pore activation of Caspase3, loopback through Caspase 6,
     and some inhibitions as specified in EARM1.0.
     """
-    # FXR CASPASES CLEAVE PARP 
-    # ========================
-    # CytC, Smac release
-    # ----------------------
-    #        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
-    #        ACytoC <-->  cCytoC
-    #        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
-    #        ASmac <-->  cSmac
-    # ----------------------
-    #pore_transport(Subunit, Source, Dest, min_size, max_size, rates):
-    ringp_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
-    ringp_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
-    ringp_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
-    ringp_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
-    # --------------------------------------
-    # CytC and Smac activation after release
-    # --------------------------------------
-    Rule('act_cSmac',  Smac(bf=None, state='C') <> Smac(bf=None, state='A'), kd['SMAC_ACT'][0], kd['SMAC_ACT'][1])
-    Rule('act_cCytoC', CytoC(bf=None, state='C') <> CytoC(bf=None, state='A'), kd['CYTOC_ACT'][0], kd['CYTOC_ACT'][1])
     # ---------------------------
     # Apoptosome formation
     # ---------------------------
