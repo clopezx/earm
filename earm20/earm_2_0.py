@@ -13,8 +13,8 @@ Monomer('flip', ['bf']) # flip
 Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
-Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
-Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
 Monomer('Bcl2', ['bf']) # Bcl2, states: Cytoplasm, Mitochondria
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
 Monomer('Mcl1', ['bf']) 
@@ -50,8 +50,8 @@ two_step_mod(Bid(state = 'M'), Bak(state='M'), Bak(bf = None, state = 'A'), kd['
 # Autoactivation, Bax and Bak activate their own kind, but only when
 # free (i.e. not part of a pore complex)
 # ------------------------------------------------------------------
-two_step_mod(Bax(state = 'A', bh3=None, d2=None), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
-two_step_mod(Bak(state = 'A', bh3=None, d2=None), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
+two_step_mod(Bax(state = 'A', s1=None, s2=None), Bax(state='C'), Bax(bf = None, state = 'A'), kd['BAX_BAX'])
+two_step_mod(Bak(state = 'A', s1=None, s2=None), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
 
 # ringp_assembly(Subunit, size, rates):
 # ------------------------------------
@@ -66,7 +66,7 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 #        Notice the product of this feeds into the product of the inh rxns
 # ------------------------------------------------------------------------
 two_step_conv(Bid(state = 'M'),                    BclxL(state='C'), Bid(bf = 1,                    state = 'M')%BclxL(bf = 1, state='M'), kd['Bid_BclxL_RA'])
-two_step_conv(Bax(state = 'A', bh3=None, d2=None), BclxL(state='C'), Bax(bf = 1, bh3=None, d2=None, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
+two_step_conv(Bax(state = 'A', s1=None, s2=None), BclxL(state='C'), Bax(bf = 1, s1=None, s2=None, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
 
 
 # Bcl2 inhibitors of Bax, Bak, and Bid
@@ -76,8 +76,8 @@ two_step_conv(Bax(state = 'A', bh3=None, d2=None), BclxL(state='C'), Bax(bf = 1,
 simple_bind_table([[                                            Bcl2,         BclxL,  Mcl1],
                    [                                              {}, {'state':'M'},    {}],
                    [Bid, {'state':'M'},                         True,          True,  True],
-                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},  True,          True, False],
-                   [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,          True,  True]],
+                   [Bax, {'s1':None, 's2':None, 'state':'A'},   True,          True, False],
+                   [Bak, {'s1':None, 's2':None, 'state':'A'},  False,          True,  True]],
                   kd['BID_BAX_BAK_inh'], model)
 
 # Sensitizers
@@ -125,8 +125,8 @@ Initial(flip(bf=None), flip_0)
 Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
-Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
-Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bak_0)
+Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
 Initial(Bcl2(bf=None), Bcl2_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)

@@ -148,7 +148,7 @@ def ringp_assembly(Subunit, size, rates):
         S2 = ringp_species(Subunit, i)
         # ensure the rule name is different for monomers with differing states
         rname = Subunit.monomer.name + "_" + "_".join(["".join(map(str, j)) for j in Subunit.site_conditions.iteritems()]) + "_" + str(i) + "mer"
-        print rname
+        #print rname
         rules.append(Rule(rname, M + S1 <> S2, *rates[i-2]))
     return rules
 
