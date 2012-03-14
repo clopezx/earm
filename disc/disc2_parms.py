@@ -4,8 +4,8 @@ from pysb import *
 #
 
 # Old parameters parameters
-#v = .07; # mitochondria compartment volume/cell volume
-#tranloc = .01
+# v = .07; # mitochondria compartment volume/cell volume
+# tranloc = .01
 
 # EARM 1.0 parameters
 # Reaction rates

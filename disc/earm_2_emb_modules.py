@@ -93,7 +93,7 @@ def bid_to_momp(model, kd):
     #        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
     #        ASmac <-->  cSmac
     # ----------------------
-    #ringp_transport(Subunit, Source, Dest, min_size, max_size, rates):
+    # ringp_transport(Subunit, Source, Dest, min_size, max_size, rates):
     ringp_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
     ringp_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
     ringp_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])

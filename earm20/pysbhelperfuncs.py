@@ -307,7 +307,7 @@ def get_param_num(model, name):
     return i
 
 def plotoutput(simout, norm=True):
-    """ Assume norm is true for now
+    """ Assume norm is true for now...
     """
     pylab.ion()
     pylab.figure()

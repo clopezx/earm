@@ -138,7 +138,7 @@ earm_2_emb_modules.pore_to_parp(model, kd)
 # 
 # Initial non-zero species
 # ===================================
-Initial((Trail(b=None, s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1)) ** ec , Trail_0)
+Initial((Trail(b=None, s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1)) ** ec, Trail_0)
 Initial(DR(bl=None, bf=None, s1=None, s2=None, T='4') ** cyM, DR4_0)
 Initial(DR(bl=None, bf=None, s1=None, s2=None, T='5') ** cyM, DR5_0)
 Initial(Fadd(bx=None, bc=None) ** cyM, Fadd_0)
