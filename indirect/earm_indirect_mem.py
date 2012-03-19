@@ -62,8 +62,8 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 #        Inh + Act <--> Inh:Act
 # ------------------------------------
 simple_bind_table([[                                                   BclxL,  Mcl1],
-                   [                                           {'state':'M'},    {}], #NOTE: indirect not clear about state of Bcl-xL
-                   [Bid, {'state':'T'},                                 True,  True],
+                   [                                           {'state':'M'},    {}], 
+                   [Bid, {'state':'T'},                                 True,  True], #NOTE: MOVE TO SENSITIZER 
                    [Bax, {'s1':None, 's2':None, 'state':'A'},           True, False],
                    [Bak, {'s1':None, 's2':None, 'state':'A'},           True,  True]],
                   kd['BID_BAX_BAK_inh'], model)

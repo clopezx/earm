@@ -65,8 +65,8 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 #        Bid/Bax + BclxL <> Bid/Bax:BclxL(C) >> Bid/Bax:BclxL(M)
 #        Notice the product of this feeds into the product of the inh rxns
 # ------------------------------------------------------------------------
-two_step_conv(Bid(state = 'M'),                    BclxL(state='C'), Bid(bf = 1,                    state = 'M')%BclxL(bf = 1, state='M'), kd['Bid_BclxL_RA'])
-two_step_conv(Bax(state = 'A', s1=None, s2=None), BclxL(state='C'), Bax(bf = 1, s1=None, s2=None, state = 'A')%BclxL(bf = 1, state='M'), kd['Bax_BclxL_RA'])
+two_step_mod(Bid(state = 'M'),BclxL(state='C'), BclxL(bf=None, state='M'), kd['Bid_BclxL_RA'])
+two_step_mod(Bax(state = 'A', s1=None, s2=None), BclxL(state='C'), BclxL(bf=None, state='M'), kd['Bax_BclxL_RA'])
 
 
 # Bcl2 inhibitors of Bax, Bak, and Bid
