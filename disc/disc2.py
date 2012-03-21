@@ -61,11 +61,11 @@ TTrail_B3 = MatchOnce(Trail(b=4,    s1=1, s2=2) % Trail(b=5,    s1=2, s2=3) % Tr
 # DR monomer, dimer, trimer aliases:
 # ----------------------------------
 DR_mono_U = DR(bl=None, bf=None, s1=None, s2=None, T=ANY)
-DR_dim_U  = DR(bl=None, bf=None, s1=1,    s2=None, T=ANY) % DR(bl=None, bf=None, s1=None, s2=1, T=ANY)
+DR_dim_U  = DR(bl=None, bf=None, s1=4,    s2=None, T=ANY) % DR(bl=None, bf=None, s1=None, s2=4, T=ANY)
 DR_trim_U = DR(bl=None, bf=None, s1=1,    s2=2,    T=ANY) % DR(bl=None, bf=None, s1=2,    s2=3, T=ANY) % DR(bl=None, bf=None, s1=3, s2=1, T=ANY)
 DR_mono_B = DR(bl=4,    bf=None, s1=None, s2=None, T=ANY)
-DR_dim_B  = DR(bl=5,    bf=None, s1=4,    s2=None, T=ANY) % DR(bl=6,    bf=None, s1=None, s2=4, T=ANY)
-DR_trim_B = DR(bl=4,    bf=None, s1=1,    s2=2,    T=ANY) % DR(bl=5,    bf=None, s1=2,    s2=3, T=ANY) % DR(bl=6,    bf=None, s1=3, s2=1, T=ANY)
+DR_dim_B  = MatchOnce(DR(bl=5,    bf=None, s1=4,    s2=None, T=ANY) % DR(bl=6,    bf=None, s1=None, s2=4, T=ANY))
+DR_trim_B = MatchOnce(DR(bl=4,    bf=None, s1=1,    s2=2,    T=ANY) % DR(bl=5,    bf=None, s1=2,    s2=3, T=ANY) % DR(bl=6,    bf=None, s1=3, s2=1, T=ANY))
 
 # Trail binding to DR rules:
 # --------------------------
@@ -146,8 +146,8 @@ Initial(flip(bf=None) ** cyM, flip_0)
 Initial(C8(bc=None, bf=None, state='pro') ** cy, C8_0)
 Initial(BAR(bf=None) ** cy, BAR_0)
 Initial(Bid(bf=None, state='U') ** cy, Bid_0)
-Initial(Bax(bf=None, bh3=None, d2=None, state='C') ** cy, Bax_0)
-Initial(Bak(bf=None, bh3=None, d2=None, state='M') ** mitM, Bak_0)
+Initial(Bax(bf=None, s1=None, s2=None, state='C') ** cy, Bax_0)
+Initial(Bak(bf=None, s1=None, s2=None, state='M') ** mitM, Bak_0)
 Initial(Bcl2(bf=None) ** mitM, Bcl2_0)
 Initial(BclxL (bf=None, state='C') ** cy, BclxL_0)
 Initial(Mcl1(bf=None) ** mitM, Mcl1_0)
