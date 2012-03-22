@@ -61,16 +61,12 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # ------------------------------------
 # MOMP Inhibition
 # -----------------------------------------------------
-# tBid and free Bax recruit Bcl-xL(C) and autoinhibit themselves
-#        Bid/Bax + BclxL <> Bid/Bax:BclxL(C) >> Bid/Bax:BclxL(M)
-#        Notice the product of this feeds into the product of the inh rxns
+# tBid and free Bax recruit Bcl-xL(C)
 # ------------------------------------------------------------------------
 two_step_mod(Bid(state = 'M'),BclxL(state='C'), BclxL(bf=None, state='M'), kd['Bid_BclxL_RA'])
 two_step_mod(Bax(state = 'A', s1=None, s2=None), BclxL(state='C'), BclxL(bf=None, state='M'), kd['Bax_BclxL_RA'])
 
 # Bcl2 inhibitors of Bax, Bak, and Bid
-# a set of simple bind reactions:
-#        Inh + Act <--> Inh:Act
 # ------------------------------------
 simple_bind_table([[                                            Bcl2,         BclxL,  Mcl1],
                    [                                              {}, {'state':'M'},    {}],
@@ -79,10 +75,7 @@ simple_bind_table([[                                            Bcl2,         Bc
                    [Bak, {'bh3':None, 'd2':None, 'state':'A'}, False,          True,  True]],
                   kd['BID_BAX_BAK_inh'], model)
 
-# Sensitizers
-# Bcl2 sensitizers bind through a simple bind resction: 
-#        Inh + Act <--> Inh:Act
-# This goes through the list in row-major order (as it should be)
+# Bcl2 sensitizers 
 # ---------------------------------------------------------------
 simple_bind_table([[                      Bcl2,         BclxL,  Mcl1],
                    [                        {}, {'state':'M'},    {}],
@@ -91,11 +84,6 @@ simple_bind_table([[                      Bcl2,         BclxL,  Mcl1],
                   kd['BCLs_sens'], model)
 
 # CytC, Smac release
-# ----------------------
-#        AMito + mCytoC <-->  AMito:mCytoC --> AMito + ACytoC  
-#        ACytoC <-->  cCytoC
-#        AMito + mSmac <-->  AMito:mSmac --> AMito + ASmac  
-#        ASmac <-->  cSmac
 # ----------------------
 #ringp_transport(Subunit, Source, Dest, min_size, max_size, rates):
 ringp_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
