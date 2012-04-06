@@ -37,14 +37,14 @@ def bid_to_momp(model, kd):
     
     # tBid in the mitochondria activates Bax(C) and Bak(M)
     #-----------------------------------------------------
-    two_step_mod(Bid(state = 'M') ** mitM, Bax(state='C') ** cy, Bax(bf = None, state = 'A') ** mitM, kd['BID_BAX'])
-    two_step_mod(Bid(state = 'M') ** mitM, Bak(state='M'), Bak(bf = None, state = 'A'), kd['BID_BAK'])
+    two_step_mod(Bid(state = 'M') ** mitM, Bax(state='C') ** cy, Bax(state = 'A') ** mitM, kd['BID_BAX'])
+    two_step_mod(Bid(state = 'M') ** mitM, Bak(state='M'), Bak(state = 'A'), kd['BID_BAK'])
     
     # Autoactivation, Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
     # ------------------------------------------------------------------
-    two_step_mod(Bax(state = 'A', s1=None, s2=None) ** mitM, Bax(state='C') ** cy, Bax(bf = None, state = 'A') ** mitM, kd['BAX_BAX'])
-    two_step_mod(Bak(state = 'A', s1=None, s2=None), Bak(state='M'), Bak(bf = None, state = 'A'), kd['BAK_BAK'])
+    two_step_mod(Bax(state = 'A', s1=None, s2=None) ** mitM, Bax(state='C') ** cy, Bax(state = 'A') ** mitM, kd['BAX_BAX'])
+    two_step_mod(Bak(state = 'A', s1=None, s2=None), Bak(state='M'), Bak(state = 'A'), kd['BAK_BAK'])
     
     # pore_assembly(Subunit, size, rates):
     # ------------------------------------
@@ -58,10 +58,9 @@ def bid_to_momp(model, kd):
     #        Bid/Bax + BclxL <> Bid/Bax:BclxL(C) >> Bid/Bax:BclxL(M)
     #        Notice the product of this feeds into the product of the inh rxns
     # ------------------------------------------------------------------------
-    two_step_conv(Bid(state = 'M') ** mitM,           BclxL(state='C') ** cy, Bid(bf = 1,             state = 'M')%BclxL(bf = 1, state='M') ** mitM, kd['Bid_BclxL_RA'])
-    two_step_conv(Bax(state = 'A', s1=None, s2=None) ** mitM, BclxL(state='C') ** cy, Bax(bf = 1, s1=None, s2=None, state = 'A')%BclxL(bf = 1, state='M') ** mitM, kd['Bax_BclxL_RA'])
-    
-    
+    two_step_mod(Bid(state = 'M') ** mitM, BclxL(state='C') ** cy, BclxL(state='M') ** mitM, kd['Bid_BclxL_RA'])
+    two_step_mod(Bax(state = 'A', s1=None, s2=None) ** mitM, BclxL(state='C') ** cy, BclxL(state='M') ** mitM, kd['Bax_BclxL_RA'])
+
     # Bcl2 inhibitors of Bax, Bak, and Bid
     # a set of simple bind reactions:
     #        Inh + Act <--> Inh:Act
@@ -94,10 +93,10 @@ def bid_to_momp(model, kd):
     #        ASmac <-->  cSmac
     # ----------------------
     # ringp_transport(Subunit, Source, Dest, min_size, max_size, rates):
-    ringp_transport(Bax(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAX_CYTC']) 
-    ringp_transport(Bax(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAX_SMAC']) 
-    ringp_transport(Bak(bf=None), CytoC(state='M'), CytoC(state='C'), 4, 4, kd['BAK_CYTC'])
-    ringp_transport(Bak(bf=None),  Smac(state='M'),  Smac(state='C'), 4, 4, kd['BAK_SMAC'])
+    ringp_transport(Bax(bf=None), CytoC(state='M') ** mit, CytoC(state='C') ** cy, 4, 4, kd['BAX_CYTC']) 
+    ringp_transport(Bax(bf=None),  Smac(state='M') ** mit,  Smac(state='C') ** cy, 4, 4, kd['BAX_SMAC']) 
+    ringp_transport(Bak(bf=None), CytoC(state='M') ** mit, CytoC(state='C') ** cy, 4, 4, kd['BAK_CYTC'])
+    ringp_transport(Bak(bf=None),  Smac(state='M') ** mit,  Smac(state='C') ** cy, 4, 4, kd['BAK_SMAC'])
     # --------------------------------------
     # CytC and Smac activation after release
     # --------------------------------------
@@ -120,9 +119,9 @@ def pore_to_parp(model, kd):
     #        aApaf + pC9 <-->  Apop
     #        Apop + pC3 <-->  Apop:pC3 --> Apop + C3
     # ---------------------------
-    two_step_mod(CytoC(state='A'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kd['APAF_CYTC'])
+    two_step_mod(CytoC(state='A'), Apaf(state='I'), Apaf(state = 'A'), kd['APAF_CYTC'])
     one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), kd['APOP_C9:APAF'])
-    two_step_mod(Apop(), C3(state='pro'), C3(bf = None, state='A'), kd['APOP_C3'])
+    two_step_mod(Apop(), C3(state='pro'), C3(state='A'), kd['APOP_C3'])
     # -----------------------------
     # Apoptosome related inhibitors
     # -----------------------------
@@ -139,8 +138,8 @@ def pore_to_parp(model, kd):
     #        PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
     #        pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
     # ---------------------------
-    two_step_mod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), kd['C3_C8'])
-    two_step_mod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'), kd['C6_C3'])
-    two_step_mod(XIAP(), C3(state = 'A'), C3(bf = None, state = 'ub'), kd['C3_XIAP'])
-    two_step_mod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), kd['PARP_C3'])
-    two_step_mod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kd['C8_C6'])
+    two_step_mod(C8(state='A'), C3(state='pro'), C3(state='A'), kd['C3_C8'])
+    two_step_mod(C3(state='A'), C6(state='pro'), C6(state='A'), kd['C6_C3'])
+    two_step_mod(XIAP(), C3(state = 'A'), C3(state = 'ub'), kd['C3_XIAP'])
+    two_step_mod(C3(state = 'A'), PARP(state='U'), PARP(state='C'), kd['PARP_C3'])
+    two_step_mod(C6(state='A'), C8(state='pro'), C8(state = 'A'), kd['C8_C6'])

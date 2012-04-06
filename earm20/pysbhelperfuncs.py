@@ -19,7 +19,7 @@ def alias_model_components(model=None):
     caller_globals = inspect.currentframe().f_back.f_globals
     caller_globals.update(model.all_components())
 
-def two_step_mod(Enz, Sub, Prod, klist,  site='bf'):
+def two_step_mod(Enz, Sub, Prod, klist,  site='bf', intloc=None):
     """Automation of the Enz + Sub <> Enz:Sub >> Enz + Prod two-step catalytic reaction.
     This function assumes that there is a site named 'bf' (bind site for fxn)
     which it uses by default. This also assume Enz returns to its original state.
@@ -40,25 +40,17 @@ def two_step_mod(Enz, Sub, Prod, klist,  site='bf'):
     assert site in Sub.monomer.sites_dict, \
         "Required site %s not present in %s as required"%(site, Sub.monomer.name)
 
-    # make the intermediate complex components
-    etmpdict = Enz.site_conditions.copy()
-    stmpdict = Sub.site_conditions.copy()
-    
-    etmpdict[site] = 1
-    stmpdict[site] = 1
-
-    EnzCplx = Enz.monomer(etmpdict)
-    SubCplx = Sub.monomer(stmpdict)
-
-    # add the 'bf' site to the patterns
-    Enz.site_conditions[site] = None
-    Sub.site_conditions[site] = None
+    ES = Enz({site: 1}) % Sub({site: 1})
+    # automatically require binding site to be empty on all non-complex species/patterns
+    Enz = Enz({site: None})
+    Sub = Sub({site: None})
+    Prod = Prod({site: None})
 
     # now that we have the complex elements formed we can write the first step rule
-    Rule(r1_name, Enz + Sub <> EnzCplx % SubCplx, kf, kr)
+    Rule(r1_name, Enz + Sub <> ES, kf, kr)
     
     # and finally the rule for the catalytic transformation
-    Rule(r2_name, EnzCplx % SubCplx >> Enz + Prod, kc)
+    Rule(r2_name, ES >> Enz + Prod, kc)
 
 def two_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction (i.e. dimerization).
