@@ -32,7 +32,8 @@ Monomer('XIAP', ['bf'])
 
 # EARM 1.0 Parameters and Modules 
 # ===============================
-from earm_2_0_parms import parameter_dict as kd 
+#from earm_2_0_parms import parameter_dict as kd 
+from earm_2_0_parms_m2 import parameter_dict as kd
 import earm_1_0modules # Must be called after the Monomers and Parameters are defined
 
 # tBID to MOMP 
