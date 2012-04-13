@@ -12,8 +12,8 @@ Monomer('DISC', ['bf']) # DISC
 Monomer('flip', ['bf']) # flip
 Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('BAR', ['bf']) # BAR
-Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
-Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
 Monomer('Mcl1', ['bf']) 
 Monomer('Bad', ['bf']) 
@@ -38,7 +38,7 @@ import earm_1_0modules # Must be called after the Monomers and Parameters are de
 # ======================
 # Bcl2, Bid, Bax migration to mitochondria
 # ----------------------------------------
-free_Bax = Bax(bf=None, bh3=None, d2=None)
+free_Bax = Bax(bf=None, s1=None, s2=None)
 Rule('Bax_to_mem', free_Bax(state = 'C') <> free_Bax(state = 'A'), *kd['BAX_trans'])
 Rule('BclxL_to_mem', BclxL(bf = None, state = 'C') <> BclxL(bf = None, state = 'M'), *kd['BCLXL_trans'])
 
@@ -56,8 +56,8 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 simple_bind_table([[                                                   BclxL,  Mcl1],
                    [                                           {'state':'M'},    {}], #NOTE: indirect not clear about state of Bcl-xL
                    [Bid, {'state':'T'},                                 True,  True],
-                   [Bax, {'bh3':None, 'd2':None, 'state':'A'},          True, False],
-                   [Bak, {'bh3':None, 'd2':None, 'state':'A'},          True,  True]],
+                   [Bax, {'s1':None, 's2':None, 'state':'A'},           True, False],
+                   [Bak, {'s1':None, 's2':None, 'state':'A'},           True,  True]],
                   kd['BID_BAX_BAK_inh'], model)
 
 # Bcl2 sensitizers 
@@ -97,10 +97,10 @@ Initial(flip(bf=None), flip_0)
 Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
-Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
-Initial(Bax(bf=1, bh3=None, d2=None, state='A') % BclxL(bf=1, state='M'), Bax_BclxL_0)
-Initial(Bak(bf=None, bh3=None, d2=None, state='A'), Bak_0)
-Initial(Bak(bf=1, bh3=None, d2=None, state='A') % Mcl1(bf=1), Bak_Mcl1_0)
+Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+Initial(Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'), Bax_BclxL_0)
+Initial(Bak(bf=None, s1=None, s2=None, state='A'), Bak_0)
+Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1), Bak_Mcl1_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
 Initial(Bad(bf=None), Bad_0)
@@ -124,5 +124,5 @@ Initial(XIAP(bf=None), XIAP_0)
 Observe('tBid',  Bid(state='T'))  # 1 no state M in this case!
 Observe('aSmac', Smac(state='A')) # 2
 Observe('cPARP', PARP(state='C')) # 3
-Observe('BaxBclxl',  Bax(bf=1, bh3=None, d2=None, state='A') % BclxL(bf=1, state='M'))
-Observe('BakMcl1', Bak(bf=1, bh3=None, d2=None, state='A') % Mcl1(bf=1))
+Observe('BaxBclxl',  Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'))
+Observe('BakMcl1', Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1))

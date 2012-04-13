@@ -24,7 +24,7 @@ def two_step_mod(Enz, Sub, Prod, klist,  site='bf'):
     This function assumes that there is a site named 'bf' (bind site for fxn)
     which it uses by default. This also assume Enz returns to its original state.
     In an aim for simplicity, site 'bf' need not be passed when calling the function by
-    the reactants, but THE FULL STATE OF THE PRODUCT must be specified"""
+    the reactants"""
     
     kf, kr, kc = klist #forward, reverse, catalytic
     
@@ -116,15 +116,13 @@ def simple_dim(Sub, Prod, klist, site='bf'):
     # combine the monomers into a product step rule
     Rule(r1_name, Sub + Sub <> Prod, kf, kr)
 
-def ringp_species(Subunit, size):
+def ringp_species(Subunit, size, site1 = 's1', site2 = 's2'):
     """
     Generate a single species representing a homomeric ringp, composed
     of <size> copies of <Subunit> bound together in a ring, with bonds
-    formed between bh3 of one unit and d2 of the next.
+    formed between s1 of one unit and s2 of the next.
     """
 
-    site1 = 'bh3'
-    site2 = 'd2'
     if size == 0:
         raise ValueError("size must be an integer greater than 0")
     if size == 1:
@@ -148,8 +146,10 @@ def ringp_assembly(Subunit, size, rates):
         M = ringp_species(Subunit, 1)
         S1 = ringp_species(Subunit, i-1)
         S2 = ringp_species(Subunit, i)
-        rules.append(Rule('%s_ringp_assembly_%d' % (Subunit.monomer.name, i),
-                          M + S1 <> S2, *rates[i-2]))
+        # ensure the rule name is different for monomers with differing states
+        rname = Subunit.monomer.name + "_" + "_".join(["".join(map(str, j)) for j in Subunit.site_conditions.iteritems()]) + "_" + str(i) + "mer"
+        #print rname
+        rules.append(Rule(rname, M + S1 <> S2, *rates[i-2]))
     return rules
 
 def ringp_transport(Subunit, Source, Dest, min_size, max_size, rates, site='bf'):
@@ -170,16 +170,18 @@ def ringp_transport(Subunit, Source, Dest, min_size, max_size, rates, site='bf')
         # require all ringp subunit <tsite> sites to be empty for Ringp match
         Ringp = ringp_species(Subunit({site: None}), i)
 
-        r1_name = '%s_ringp_%d_transport_%s_cplx' % (Source.monomer.name, i, Subunit.monomer.name)
-        r2_name = '%s_ringp_%d_transport_%s_dssc' % (Source.monomer.name, i, Subunit.monomer.name)
+        #r1name = '%s_ringp_%d_transport_%s_cplx' % (Source.monomer.name, i, Subunit.monomer.name)
+        r1name = Source.monomer.name + "_" + Subunit.monomer.name + "_".join(["".join(map(str, j)) for j in Subunit.site_conditions.iteritems()]) + "_" + str(i) + "mer_cplx"
+        #r2_name = '%s_ringp_%d_transport_%s_dssc' % (Source.monomer.name, i, Subunit.monomer.name)
+        r2name = Source.monomer.name + "_" + Subunit.monomer.name + "_".join(["".join(map(str, j)) for j in Subunit.site_conditions.iteritems()]) + "_" + str(i) + "mer_dssc"
 
         rule_rates = rates[i-min_size]
         CRingp = Ringp.copy()
         tbondnum = i + 1
         CRingp.monomer_patterns[0].site_conditions[site] = tbondnum
         Complex = CRingp % Source({site: tbondnum})
-        Rule(r1_name, Ringp + Source({site: None}) <> Complex, *rule_rates[0:2])
-        Rule(r2_name, Complex >> Ringp + Dest({site: None}), rule_rates[2])
+        Rule(r1name, Ringp + Source({site: None}) <> Complex, *rule_rates[0:2])
+        Rule(r2name, Complex >> Ringp + Dest({site: None}), rule_rates[2])
 
 def one_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
     """ Convert two Sub species into one Prod species:

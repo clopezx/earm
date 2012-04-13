@@ -13,8 +13,8 @@ Monomer('flip', ['bf']) # flip
 Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
 Monomer('BAR', ['bf']) # BAR
 Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
-Monomer('Bax', ['bf', 'bh3', 'd2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
-Monomer('Bak', ['bf', 'bh3', 'd2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
 Monomer('Bcl2', ['bf']) 
 Monomer('BclxL', ['bf', 'state'], {'state':['C','M']}) # No difference if it is Cyto or Mito
 Monomer('Mcl1', ['bf']) 
@@ -100,8 +100,8 @@ Initial(flip(bf=None), flip_0)
 Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
-Initial(Bax(bf=None, bh3=None, d2=None, state='C'), Bax_0)
-Initial(Bak(bf=None, bh3=None, d2=None, state='M'), Bak_0)
+Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
 Initial(Bcl2(bf=None), Bcl2_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
 Initial(Mcl1(bf=None), Mcl1_0)
