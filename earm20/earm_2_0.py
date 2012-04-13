@@ -64,7 +64,7 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # tBid and free Bax recruit Bcl-xL(C)
 # ------------------------------------------------------------------------
 two_step_mod(Bid(state = 'M'),BclxL(state='C'), BclxL(bf=None, state='M'), kd['Bid_BclxL_RA'])
-two_step_mod(Bax(state = 'A', s1=None, s2=None), BclxL(state='C'), BclxL(bf=None, state='M'), kd['Bax_BclxL_RA'])
+two_step_mod(Bax(state = 'A', bh3=None, d2=None), BclxL(state='C'), BclxL(bf=None, state='M'), kd['Bax_BclxL_RA'])
 
 # Bcl2 inhibitors of Bax, Bak, and Bid
 # ------------------------------------
