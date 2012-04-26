@@ -1,5 +1,6 @@
 import inspect
 from pysb import *
+from pysb.core import SelfExporter, ComplexPattern, MonomerPattern
 
 def del_rule(model, rname):
     """delete rules by name 'rname'"""
@@ -122,7 +123,7 @@ def ringp_species(Subunit, size, site1 = 's1', site2 = 's2'):
     elif size == 2:
         Ringp = Subunit({site1: 1, site2: None}) % Subunit({site1: None, site2: 1})
     else:
-        Ringp = ComplexPattern([], None, match_once=True)
+        Ringp = ComplexPattern([], None, match_once=True) #FIXME: UPDATE FROM macros.py in pysb/master branch
         for i in range(1, size+1):
             Ringp %= Subunit({site1: i, site2: i%size+1})
     return Ringp
