@@ -6,18 +6,33 @@ from earm_2_0 import model
 envlist, paramarr = pysb.anneal_sundials.annlinit(model)
 xpfile = numpy.load('EC-RP_IMS-RP_IC-RP_data_for_models.npz')
 xpnormdata = xpfile['arr_0']
-mompfile = numpy.load('earm_2_0_momp_parminfo.npz')
-mompidx = mompfile['arr_0']
-lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=1, N=5000, useparams = mompidx, usemag = 3, useN=2500)
+
+
+initfile = numpy.load('earm2_0_init_parminfo.npz')
+initidx = initfile['arr_0']
+
+lb, ub = pysb.anneal_sundials.logparambounds(paramarr, omag=1, useparams=initidx, usemag=0)
+
+initarr = numpy.zeros_like(paramarr) + 0.5
+lower = numpy.zeros(len(paramarr))
+upper = numpy.ones(len(paramarr))
+
 # DATA IS ALREADY NORMALIZED, NORM = TRUE
 # envlist is a list of tuples which says which array from xpdata corresponds to simulation observables
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, initarr, args=(20000, model, envlist, xpnormdata, [(2,1), (5,2), (8,3)], lb, ub), lower=0.0, upper=1.0, full_output=1)
+
+
+
+######OLD
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, paramarr, args=(None, 20000, model, envlist, xpnormdata, [(2,1),(5,2),(8,3)], lb, ub, True, True), lower=lower, upper=upper, full_output=1)
 #for annealfxncust, Td=9810, Tdvar=2691^2, Ts=180, Tsvar=60^2
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxncust, paramarr, args=(None, 20000, model, envlist, xpnormdata, [(2,1),(8,3)],[2,9810,7245000,180,3600], lb, ub, True, True), lower=lower, upper=upper, full_output=1)
 
 
 
-
+# mompfile = numpy.load('earm_2_0_momp_parminfo.npz')
+# mompidx = mompfile['arr_0']
+# lb, ub, lower, upper = pysb.anneal_sundials.getgenparambounds(paramarr, omag=1, N=5000, useparams = mompidx, usemag = 3, useN=2500)
 #----------bid annealing section
 prmfile = numpy.load('annl_bid_prmlst.npz')
 bidprm = prmfile['arr_0']
