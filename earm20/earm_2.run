@@ -21,6 +21,8 @@ upper = numpy.ones(len(paramarr))
 # envlist is a list of tuples which says which array from xpdata corresponds to simulation observables
 annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, initarr, args=(20000, model, envlist, xpnormdata, [(2,1), (5,2), (8,3)], lb, ub), lower=0.0, upper=1.0, full_output=1)
 
+annlout = scipy.optimize.anneal(pysb.anneal_sundials.annealfxn, initarr, args=(20000, model, envlist, xpnormdata, [(2,1), (5,2), (8,3)], lb, ub, tn=[2,9810,7245000,180,3600]), lower=0.0, upper=1.0, full_output=1)
+
 
 
 ######OLD
