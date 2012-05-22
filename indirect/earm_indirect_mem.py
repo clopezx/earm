@@ -124,5 +124,5 @@ Initial(XIAP(bf=None), XIAP_0)
 Observe('tBid',  Bid(state='T'))  # 1 no state M in this case!
 Observe('aSmac', Smac(state='A')) # 2
 Observe('cPARP', PARP(state='C')) # 3
-Observe('BaxBclxl',  Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'))
-Observe('BakMcl1', Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1))
+#Observe('BaxBclxl',  Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'))
+#Observe('BakMcl1', Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1))
