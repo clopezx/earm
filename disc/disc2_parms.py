@@ -10,15 +10,24 @@ parameter_dict = OrderedDict([
     # Trail to Bid parameters
     # -----------------------
     # rec_to_bid module parameters
-    # TT binding to DR monomer- 4,5
-   ('TT_DRmono',  [ Parameter('ttdrmf', 4.0e-07),       
-                    Parameter('ttdrmr', 1.0e-03)]),
-    # TT binding to DR dimers- 4,5
-   ('TT_DRdim',   [ Parameter('ttdrdf', 4.0e-07),     
-                    Parameter('ttdrdr', 1.0e-03)]),
-    # TT binding to DR trimers- 4,5
-   ('TT_DRtrim',  [ Parameter('ttdrtf', 4.0e-07),     
-                    Parameter('ttdrtr', 1.0e-03)]),
+    # TT binding to DR monomer- 4
+   ('TT_DR4mono',  [ Parameter('ttdr4mf', 4.0e-07),       
+                     Parameter('ttdr4mr', 1.0e-03)]),
+    # TT binding to DR dimers- 4
+   ('TT_DR4dim',   [ Parameter('ttdr4df', 4.0e-07),     
+                     Parameter('ttdr4dr', 1.0e-03)]),
+    # TT binding to DR trimers- 4
+   ('TT_DR4trim',  [ Parameter('ttdr4tf', 4.0e-07),     
+                     Parameter('ttdr4tr', 1.0e-03)]),
+    # TT binding to DR monomer- 5
+   ('TT_DR5mono',  [ Parameter('ttdr5mf', 4.0e-07),       
+                     Parameter('ttdr5mr', 1.0e-03)]),
+    # TT binding to DR dimers- 5
+   ('TT_DR5dim',   [ Parameter('ttdr5df', 4.0e-07),     
+                     Parameter('ttdr5dr', 1.0e-03)]),
+    # TT binding to DR trimers- 5
+   ('TT_DR5trim',  [ Parameter('ttdr5tf', 4.0e-07),     
+                     Parameter('ttdr5tr', 1.0e-03)]),
     # DR4 trimerization
    ('DR4_RINGP',  [[Parameter('kdr4dimf',  2.040816e-04), #1.0e-6/v**2
                     Parameter('kdr4dimr',  1.0e-3      )],

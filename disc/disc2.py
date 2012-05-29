@@ -61,16 +61,28 @@ TTrail_B3N = Trail(b=4,    s1=1, s2=2) % Trail(b=5,    s1=2, s2=3) % Trail(b=6, 
 
 # DR monomer, dimer, trimer aliases:
 # ----------------------------------
-DR_mono_U = DR(bl=None, bf=None, s1=None, s2=None)
-DR_dim_U  = DR(bl=None, bf=None, s1=1,    s2=None) % DR(bl=None, bf=None, s1=None, s2=1)
-DR_trim_U = MatchOnce(DR(bl=None, bf=None, s1=1,    s2=2) % DR(bl=None, bf=None, s1=2,    s2=3) % DR(bl=None, bf=None, s1=3, s2=1))
-DR_mono_B = DR(bl=4,    bf=None, s1=None, s2=None)
-DR_dim_B  = MatchOnce(DR(bl=5,    bf=None, s1=4,    s2=None) % DR(bl=6, bf=None, s1=None, s2=4))
-DR_trim_B = MatchOnce(DR(bl=4,    bf=None, s1=7,    s2=8   ) % DR(bl=5, bf=None, s1=8,    s2=9) % DR(bl=6,    bf=None, s1=9, s2=7))
-DR_trim_BN =  DR(bl=4, bf=None, s1=7, s2=8  ) % DR(bl=5, bf=None, s1=8, s2=9) % DR(bl=6, bf=None, s1=9, s2=7)
-DR_trim_BB1 = DR(bl=4,   bf=10, s1=7, s2=8  ) % DR(bl=5, bf=None, s1=8, s2=9) % DR(bl=6, bf=None,   s1=9, s2=7)
-DR_trim_BB2 = DR(bl=4,   bf=10, s1=7, s2=8  ) % DR(bl=5, bf=11,   s1=8, s2=9) % DR(bl=6, bf=None, s1=9, s2=7)
-DR_trim_BB3 = DR(bl=4,   bf=10, s1=7, s2=8  ) % DR(bl=5, bf=11,   s1=8, s2=9) % DR(bl=6, bf=12,   s1=9, s2=7)
+DR4_mono_U = DR(bl=None, bf=None, s1=None, s2=None,           T='4')
+DR4_dim_U  = DR(bl=None, bf=None, s1=1,    s2=None,           T='4') % DR(bl=None, bf=None, s1=None, s2=1, T='4')
+DR4_trim_U = MatchOnce(DR(bl=None, bf=None, s1=1,    s2=2,    T='4') % DR(bl=None, bf=None, s1=2,    s2=3, T='4') % DR(bl=None, bf=None, s1=3, s2=1, T='4'))
+DR5_mono_U = DR(bl=None, bf=None, s1=None, s2=None,           T='5')
+DR5_dim_U  = DR(bl=None, bf=None, s1=1,    s2=None,           T='5') % DR(bl=None, bf=None, s1=None, s2=1, T='5')
+DR5_trim_U = MatchOnce(DR(bl=None, bf=None, s1=1,    s2=2,    T='5') % DR(bl=None, bf=None, s1=2,    s2=3, T='5') % DR(bl=None, bf=None, s1=3, s2=1, T='5'))
+
+DR4_mono_B = DR(bl=4,    bf=None, s1=None, s2=None,           T='4')
+DR4_dim_B  = MatchOnce(DR(bl=5,    bf=None, s1=4,    s2=None, T='4') % DR(bl=6, bf=None, s1=None, s2=4, T='4'))
+DR4_trim_B = MatchOnce(DR(bl=4,    bf=None, s1=7,    s2=8   , T='4') % DR(bl=5, bf=None, s1=8,    s2=9, T='4') % DR(bl=6,    bf=None, s1=9, s2=7, T='4'))
+DR5_mono_B = DR(bl=4,    bf=None, s1=None, s2=None,           T='5')
+DR5_dim_B  = MatchOnce(DR(bl=5,    bf=None, s1=4,    s2=None, T='5') % DR(bl=6, bf=None, s1=None, s2=4, T='5'))
+DR5_trim_B = MatchOnce(DR(bl=4,    bf=None, s1=7,    s2=8,    T='5') % DR(bl=5, bf=None, s1=8,    s2=9, T='5') % DR(bl=6,    bf=None, s1=9, s2=7, T='5'))
+
+DR4_trim_BN =  DR(bl=4, bf=None, s1=7, s2=8, T='4') % DR(bl=5, bf=None, s1=8, s2=9, T='4') % DR(bl=6, bf=None, s1=9, s2=7, T='4')
+DR4_trim_BB1 = DR(bl=4,   bf=10, s1=7, s2=8, T='4') % DR(bl=5, bf=None, s1=8, s2=9, T='4') % DR(bl=6, bf=None, s1=9, s2=7, T='4')
+DR4_trim_BB2 = DR(bl=4,   bf=10, s1=7, s2=8, T='4') % DR(bl=5, bf=11,   s1=8, s2=9, T='4') % DR(bl=6, bf=None, s1=9, s2=7, T='4')
+DR4_trim_BB3 = DR(bl=4,   bf=10, s1=7, s2=8, T='4') % DR(bl=5, bf=11,   s1=8, s2=9, T='4') % DR(bl=6, bf=12,   s1=9, s2=7, T='4')
+DR5_trim_BN =  DR(bl=4, bf=None, s1=7, s2=8, T='5') % DR(bl=5, bf=None, s1=8, s2=9, T='5') % DR(bl=6, bf=None, s1=9, s2=7, T='5')
+DR5_trim_BB1 = DR(bl=4,   bf=10, s1=7, s2=8, T='5') % DR(bl=5, bf=None, s1=8, s2=9, T='5') % DR(bl=6, bf=None, s1=9, s2=7, T='5')
+DR5_trim_BB2 = DR(bl=4,   bf=10, s1=7, s2=8, T='5') % DR(bl=5, bf=11,   s1=8, s2=9, T='5') % DR(bl=6, bf=None, s1=9, s2=7, T='5')
+DR5_trim_BB3 = DR(bl=4,   bf=10, s1=7, s2=8, T='5') % DR(bl=5, bf=11,   s1=8, s2=9, T='5') % DR(bl=6, bf=12,   s1=9, s2=7, T='5')
 
 # DR multimers
 # ------------
@@ -80,25 +92,37 @@ ringp_assembly(DR(bl = None, bf=None, T='5'), 3, kd['DR5_RINGP'])
 # Trail binding to DR rules:
 # --------------------------
 # Paper Carlos R. Reis, Robbert H. Cool rates 2011
-Rule('TRAIL_DRmono', TTrail_U + DR_mono_U <> TTrail_B1 % DR_mono_B, *kd['TT_DRmono'])
-Rule('TRAIL_DRdim',  TTrail_U + DR_dim_U  <> TTrail_B2 % DR_dim_B,  *kd['TT_DRdim'])
-Rule('TRAIL_DRtrim', TTrail_U + DR_trim_U <> TTrail_B3 % DR_trim_B, *kd['TT_DRtrim'])
+Rule('TRAIL_DR4mono', TTrail_U + DR4_mono_U <> TTrail_B1 % DR4_mono_B, *kd['TT_DR4mono'])
+Rule('TRAIL_DR4dim',  TTrail_U + DR4_dim_U  <> TTrail_B2 % DR4_dim_B,  *kd['TT_DR4dim'])
+Rule('TRAIL_DR4trim', TTrail_U + DR4_trim_U <> TTrail_B3 % DR4_trim_B, *kd['TT_DR4trim'])
+Rule('TRAIL_DR5mono', TTrail_U + DR5_mono_U <> TTrail_B1 % DR5_mono_B, *kd['TT_DR5mono'])
+Rule('TRAIL_DR5dim',  TTrail_U + DR5_dim_U  <> TTrail_B2 % DR5_dim_B,  *kd['TT_DR5dim'])
+Rule('TRAIL_DR5trim', TTrail_U + DR5_trim_U <> TTrail_B3 % DR5_trim_B, *kd['TT_DR5trim'])
     
 # Ligand Death-receptor complex: 
 # ------------------------------
-LDRC =   TTrail_B3N % DR_trim_BN
-LDRC_B1 = TTrail_B3N % DR_trim_BB1
-LDRC_B2 = TTrail_B3N % DR_trim_BB2
-LDRC_B3 = TTrail_B3N % DR_trim_BB3
+LDR4C =    TTrail_B3N % DR4_trim_BN
+LDR4C_B1 = TTrail_B3N % DR4_trim_BB1
+LDR4C_B2 = TTrail_B3N % DR4_trim_BB2
+LDR4C_B3 = TTrail_B3N % DR4_trim_BB3
+LDR5C =    TTrail_B3N % DR5_trim_BN
+LDR5C_B1 = TTrail_B3N % DR5_trim_BB1
+LDR5C_B2 = TTrail_B3N % DR5_trim_BB2
+LDR5C_B3 = TTrail_B3N % DR5_trim_BB3
 
 # FIXME: Can these all be replaced with simple-bind calls?
 # Fadd binding LDRC rule
 # -------------------------------------------------------
-Rule("Fadd_LDRC_cplx1", LDRC + Fadd(bx = None, bc=None) <> LDRC_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDRC'])
-Rule("Fadd_LDRC_cplx2", LDRC_B1 % Fadd(bx=10, bc=None) + Fadd(bx = None, bc=None) <>
-                        LDRC_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDRC'])
-Rule("Fadd_LDRC_cplx3", LDRC_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) + Fadd(bx = None, bc=None) <>
-                        LDRC_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDRC'])
+Rule("Fadd_LDR4C_cplx1", LDR4C + Fadd(bx = None, bc=None) <> LDR4C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR4C'])
+Rule("Fadd_LDR4C_cplx2", LDR4C_B1 % Fadd(bx=10, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR4C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR4C'])
+Rule("Fadd_LDR4C_cplx3", LDR4C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR4C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR4C'])
+Rule("Fadd_LDR5C_cplx1", LDR5C + Fadd(bx = None, bc=None) <> LDR5C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR5C'])
+Rule("Fadd_LDR5C_cplx2", LDR5C_B1 % Fadd(bx=10, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR5C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR5C'])
+Rule("Fadd_LDR5C_cplx3", LDR5C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR5C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR5C'])
 
 # Caspase 8 binding to Fadd, creates DISC
 # ---------------------------------------
@@ -139,6 +163,7 @@ earm_2_emb_modules.bid_to_momp(model, kd)
 # Generate the Pore to MOMP section from the EARM 1.0 module
 earm_2_emb_modules.pore_to_parp(model, kd)
 
+# Add synthesis and degradation:
 
 # ===================================
 # 'ec'   # extra cellular compartment
