@@ -10,24 +10,25 @@ parameter_dict = OrderedDict([
     # Trail to Bid parameters
     # -----------------------
     # rec_to_bid module parameters
-    # TT binding to DR monomer- 4
-   ('TT_DR4mono',  [ Parameter('ttdr4mf', 4.0e-07),       
-                     Parameter('ttdr4mr', 1.0e-03)]),
+    # TRAIL trimer binding to DR monomer- 4, values from Reis + Cool 2011
+   ('TT_DR4mono',  [ Parameter('ttdr4mf', 1.04e-06), # 6.3E5 1/M 1/s      
+                     Parameter('ttdr4mr', 1.10e-04)]),
     # TT binding to DR dimers- 4
-   ('TT_DR4dim',   [ Parameter('ttdr4df', 4.0e-07),     
-                     Parameter('ttdr4dr', 1.0e-03)]),
+   ('TT_DR4dim',   [ Parameter('ttdr4df', 5.00e-07),     
+                     Parameter('ttdr4dr', 1.10e-04)]),
     # TT binding to DR trimers- 4
-   ('TT_DR4trim',  [ Parameter('ttdr4tf', 4.0e-07),     
-                     Parameter('ttdr4tr', 1.0e-03)]),
+   ('TT_DR4trim',  [ Parameter('ttdr4tf', 1.04e-07),     
+                     Parameter('ttdr4tr', 1.10e-04)]),
+    # TRAIL trimer binding to DR monomer- 5
     # TT binding to DR monomer- 5
-   ('TT_DR5mono',  [ Parameter('ttdr5mf', 4.0e-07),       
-                     Parameter('ttdr5mr', 1.0e-03)]),
+   ('TT_DR5mono',  [ Parameter('ttdr5mf', 1.97e-06), # 11.9E5 1/M 1/s
+                     Parameter('ttdr5mr', 0.36e-04)]),
     # TT binding to DR dimers- 5
-   ('TT_DR5dim',   [ Parameter('ttdr5df', 4.0e-07),     
-                     Parameter('ttdr5dr', 1.0e-03)]),
+   ('TT_DR5dim',   [ Parameter('ttdr5df', 2.07e-06),     
+                     Parameter('ttdr5dr', 1.10e-04)]),
     # TT binding to DR trimers- 5
-   ('TT_DR5trim',  [ Parameter('ttdr5tf', 4.0e-07),     
-                     Parameter('ttdr5tr', 1.0e-03)]),
+   ('TT_DR5trim',  [ Parameter('ttdr5tf', 1.97e-07),     
+                     Parameter('ttdr5tr', 0.36e-04)]),
     # DR4 trimerization
    ('DR4_RINGP',  [[Parameter('kdr4dimf',  2.040816e-04), #1.0e-6/v**2
                     Parameter('kdr4dimr',  1.0e-3      )],
@@ -38,9 +39,20 @@ parameter_dict = OrderedDict([
                     Parameter('kdr5dimr',  1.0e-3      )],
                    [Parameter('kdr5trimf', 2.040816e-04),
                     Parameter('kdr5trimr', 1.0e-3      )]]),
-    # Fadd LDRC complex
-   ('Fadd_LDRC',  [ Parameter('faddldrcf', 4.0e-07),       
-                    Parameter('faddldrcr', 1.0e-03)]),
+   # Fadd LDR4C complex
+   ('Fadd_LDR4C_C1', [Parameter('faddldr4c1f', 4.0e-07),       
+                      Parameter('faddldr4c1r', 1.0e-03)]),
+   ('Fadd_LDR4C_C2', [Parameter('faddldr4c2f', 4.0e-07),       
+                      Parameter('faddldr4c2r', 1.0e-03)]),
+   ('Fadd_LDR4C_C3', [Parameter('faddldr4c3f', 4.0e-07),       
+                      Parameter('faddldr4c3r', 1.0e-03)]),
+   # Fadd LDR5C complex
+   ('Fadd_LDR5C_C1', [Parameter('faddldr5c1f', 4.0e-07),       
+                      Parameter('faddldr5c1r', 1.0e-03)]),
+   ('Fadd_LDR5C_C2', [Parameter('faddldr5c2f', 4.0e-07),       
+                      Parameter('faddldr5c2r', 1.0e-03)]),
+   ('Fadd_LDR5C_C3', [Parameter('faddldr5c3f', 4.0e-07),       
+                      Parameter('faddldr5c3r', 1.0e-03)]),
     # pC8 FADD binding pC8_fadd_b
    ('pC8_fadd_b', [ Parameter('pc8faddf', 4.0e-07),       
                     Parameter('pc8faddr', 1.0e-03)]),

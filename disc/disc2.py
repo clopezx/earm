@@ -113,16 +113,16 @@ LDR5C_B3 = TTrail_B3N % DR5_trim_BB3
 # FIXME: Can these all be replaced with simple-bind calls?
 # Fadd binding LDRC rule
 # -------------------------------------------------------
-Rule("Fadd_LDR4C_cplx1", LDR4C + Fadd(bx = None, bc=None) <> LDR4C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR4C'])
+Rule("Fadd_LDR4C_cplx1", LDR4C + Fadd(bx = None, bc=None) <> LDR4C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR4C_C1'])
 Rule("Fadd_LDR4C_cplx2", LDR4C_B1 % Fadd(bx=10, bc=None) + Fadd(bx = None, bc=None) <>
-                         LDR4C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR4C'])
+                         LDR4C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR4C_C2'])
 Rule("Fadd_LDR4C_cplx3", LDR4C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) + Fadd(bx = None, bc=None) <>
-                         LDR4C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR4C'])
-Rule("Fadd_LDR5C_cplx1", LDR5C + Fadd(bx = None, bc=None) <> LDR5C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR5C'])
+                         LDR4C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR4C_C3'])
+Rule("Fadd_LDR5C_cplx1", LDR5C + Fadd(bx = None, bc=None) <> LDR5C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR5C_C1'])
 Rule("Fadd_LDR5C_cplx2", LDR5C_B1 % Fadd(bx=10, bc=None) + Fadd(bx = None, bc=None) <>
-                         LDR5C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR5C'])
+                         LDR5C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR5C_C2'])
 Rule("Fadd_LDR5C_cplx3", LDR5C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) + Fadd(bx = None, bc=None) <>
-                         LDR5C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR5C'])
+                         LDR5C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR5C_C3'])
 
 # Caspase 8 binding to Fadd, creates DISC
 # ---------------------------------------
@@ -200,11 +200,6 @@ Initial(XIAP(bf=None) ** cy, XIAP_0)
 
 # Observables
 # ===========
-# Fig 4B from Albeck observes these, normalizes and inverts them
-# Observe('Bid',   Bid(bf=None, state='U'))
-# Observe('PARP',  PARP(bf=None, state='U'))
-# Observe('Smac',  Smac(bf=None, state='mito'))
-# # This is what *should* be observed???
-Observe('mBid',  Bid(state='M') ** mitM)
-Observe('cSmac', Smac(state='A') ** cy)
-Observe('cPARP', PARP(state='C') ** cy)
+Observable('mBid',  Bid(state='M') ** mitM)
+Observable('cSmac', Smac(state='A') ** cy)
+Observable('cPARP', PARP(state='C') ** cy)
