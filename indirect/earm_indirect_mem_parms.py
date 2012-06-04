@@ -40,12 +40,18 @@ parameter_dict = OrderedDict([
                        [Parameter('bidmcl1f',  1.428571e-05),
                         Parameter('bidmcl1r',  1.0e-3      )],
                        [Parameter('bakmcl1f',  1.428571e-05),
-                        Parameter('bakmcl1r',  1.0e-3      )]]),
+                        Parameter('bakmcl1r',  1.0e-3      )],
+                       [Parameter('bidbcl2f',  1.428571e-05),
+                        Parameter('bidbcl2r',  1.0e-3      )],                        
+                       [Parameter('baxbcl2f',  1.428571e-05),
+                        Parameter('baxbcl2r',  1.0e-3      )]]),
     # Sensitizers of Bcl2/BclxL/Mcl1 by Bad/NOXA
     ('BCLs_sens',      [[Parameter('kbadbclxlf',  1.428571e-05),
-                        Parameter('kbadbclxlr',  1.0e-3      )],
-                       [Parameter('knoxamcl1f',  1.428571e-05),
-                        Parameter('knoxamcl1r',  1.0e-3      )]]),
+                         Parameter('kbadbclxlr',  1.0e-3      )],
+                        [Parameter('knoxamcl1f',  1.428571e-05),
+                         Parameter('knoxamcl1r',  1.0e-3      )],
+                        [Parameter('kbadbcl2f',   1.428571e-05),
+                         Parameter('kbadbcl2r',   1.0e-3      )]]),
      # CytoC transport by Bax
     ('BAX_CYTC',   [[ Parameter('kbaxcytocMCf',  2.857143e-05),   #same as Bax-SMAC
                      Parameter('kbaxcytocMCr',  1.0e-03     ),   #same as Bax-SMAC
@@ -136,18 +142,19 @@ parameter_dict = OrderedDict([
     # EARM 1.0 HeLa initial conditions
     # Non-zero initial conditions (in molecules per cell):
     #---------------------------------
-    ('INIT_AMTS',    [ Parameter('L_0'     ,  3000), # 3000 Ligand corresponding to 50 ng/ml SuperKiller TRAIL
-                      Parameter('R_0'     ,   200),   # TRAIL receptor 
-                      Parameter('flip_0'  , 1.0e2),  # Flip
-                      Parameter('C8_0'    , 2.0e4),   # procaspase-8 
-                      Parameter('BAR_0'   , 1.0e3),  # Bifunctional apoptosis regulator
-                      Parameter('Bid_0'   , 4.0e4),  # Bid
-                      Parameter('Bax_0'   , 0.0), # 0.8e5 Bax
-                      Parameter('Bax_BclxL_0', 0.8e5), # bax + bclxl
-                      Parameter('Bak_0'   , 0.0), #  0.2e5 Bak
-                      Parameter('Bak_Mcl1_0', 0.2e5), # bak + mcl1
+    ('INIT_AMTS',    [ Parameter('L_0'      ,  3000), # 3000 Ligand corresponding to 50 ng/ml SuperKiller TRAIL
+                      Parameter('R_0'       ,   200),   # TRAIL receptor 
+                      Parameter('flip_0'    , 1.0e2),  # Flip
+                      Parameter('C8_0'      , 2.0e4),   # procaspase-8 
+                      Parameter('BAR_0'     , 1.0e3),  # Bifunctional apoptosis regulator
+                      Parameter('Bid_0'     , 4.0e4),  # Bid
+                      Parameter('Bax_0'     , 0.00001), # start with no Bax unbound
+                      Parameter('Bax_Bcl2_0', 0.8e5), #  0.8e5 Bax bax + blc2
+                      Parameter('Bak_0'     , 0.00001), #  start with no Bak unbound
+                      Parameter('Bak_Mcl1_0', 0.2e5), # 0.2e5 Bak + mcl1
                       Parameter('BclxL_0' , 2.0e4),  # 2.0e4 cytosolic BclxL
-                      Parameter('Mcl1_0'  , 2.0e4),   # 2.0e4 mitochondrial Mcl1  
+                      Parameter('Mcl1_0'  , 2.0e4),  # 2.0e4 mitochondrial Mcl1  
+                      Parameter('Bcl2_0'  , 2.0e4),  # 2.0e4 mitochondrial Bcl2  
                       Parameter('Bad_0'   , 1.0e3),  # 1.0e3 Bad
                       Parameter('NOXA_0'  , 1.0e3),  # 1.0e3 NOXA
                       Parameter('CytoC_0' , 5.0e5),  # cytochrome c

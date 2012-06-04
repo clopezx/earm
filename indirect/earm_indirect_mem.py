@@ -15,6 +15,7 @@ Monomer('BAR', ['bf']) # BAR
 Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
 Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
 Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
+Monomer('Bcl2', ['bf']) 
 Monomer('Mcl1', ['bf']) 
 Monomer('Bad', ['bf']) 
 Monomer('NOXA', ['bf']) 
@@ -53,19 +54,19 @@ ringp_assembly(Bak(bf=None, state='A'), 4, kd['BAK_PORE'])
 # ------------------------------------
 # Bcl2 inhibitors of Bax, Bak, and Bid
 # ------------------------------------
-simple_bind_table([[                                                   BclxL,  Mcl1],
-                   [                                           {'state':'M'},    {}], 
-                   [Bid, {'state':'T'},                                 True,  True], #NOTE: MOVE TO SENSITIZER 
-                   [Bax, {'s1':None, 's2':None, 'state':'A'},           True, False],
-                   [Bak, {'s1':None, 's2':None, 'state':'A'},           True,  True]],
+simple_bind_table([[                                                   BclxL,  Mcl1,  Bcl2],
+                   [                                           {'state':'M'},    {},    {}], 
+                   [Bid, {'state':'T'},                                 True,  True,  True], #NOTE: MOVE TO SENSITIZER 
+                   [Bax, {'s1':None, 's2':None, 'state':'A'},           True, False,  True],
+                   [Bak, {'s1':None, 's2':None, 'state':'A'},           True,  True, False]],
                   kd['BID_BAX_BAK_inh'], model)
 
 # Bcl2 sensitizers 
 # ---------------------------------------------------------------
-simple_bind_table([[                  BclxL,  Mcl1], #Note: according to Andrews, these should all be at mitochondria
-                   [          {'state':'M'},    {}],
-                   [Bad,  {},          True, False],
-                   [NOXA, {},         False,  True]],
+simple_bind_table([[                  BclxL,  Mcl1,  Bcl2], #Note: according to Andrews, these should all be at mitochondria
+                   [          {'state':'M'},    {},    {}],
+                   [Bad,  {},          True, False,  True],
+                   [NOXA, {},         False,  True, False]],
                   kd['BCLs_sens'], model)
 
 # CytC, Smac release
@@ -98,7 +99,7 @@ Initial(C8(bf=None, state='pro'), C8_0)
 Initial(BAR(bf=None), BAR_0)
 Initial(Bid(bf=None, state='U'), Bid_0)
 Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
-Initial(Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'), Bax_BclxL_0)
+Initial(Bax(bf=1, s1=None, s2=None, state='A') % Bcl2(bf=1), Bax_Bcl2_0)
 Initial(Bak(bf=None, s1=None, s2=None, state='A'), Bak_0)
 Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1), Bak_Mcl1_0)
 Initial(BclxL (bf=None, state='C'), BclxL_0)
