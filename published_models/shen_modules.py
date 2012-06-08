@@ -31,7 +31,7 @@ def chen2007FEBS_indirect():
     bind_table([[         tBid,  Bax(state='C')],
                 [Bcl2,  (1, 1),          (1, 1)]])
 
-    assemble_pore(Bax(state='A'), Pore(), 4, [1, 1])
+    assemble_pore(Bax(state='C'), Pore(), 4, [1, 1])
 
 
 def chen2007FEBS_direct():
