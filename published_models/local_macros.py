@@ -28,7 +28,7 @@ def bind(a, b, klist):
 def bind_table(table):
     return macros.bind_table(table, site_name, site_name)
 
-def pore_assembly(monomer, size, pore, klist):
+def assemble_pore(monomer, size, pore, klist):
     #Rule
     pass
 
