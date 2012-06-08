@@ -39,3 +39,13 @@ def displace_reversibly(target, lig1, lig2, klist):
          target({site_name:1}) % lig1({site_name:1}) + lig2({site_name:None}) <>
          target({site_name:1}) % lig2({site_name:1}) + lig1({site_name:None}),
          Parameter('displace_kf'), Parameter('displace_kr'))
+
+def synthesize_degrade(species, ksynth, kdeg):
+    ksynth = Parameter('%s_ksynth' % species().monomer.name, ksynth)
+    kdeg = Parameter('%s_kdeg' % species().monomer.name, kdeg)
+
+    Rule('synthesize_%s' % species().monomer.name,
+         None >> species(), ksynth) 
+    Rule('degrade_%s' % species().monomer.name,
+         species() >> None, kdeg) 
+
