@@ -16,7 +16,8 @@
 # http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
 #
 #
-from pysbhelperfuncs import *
+from pysbhelperfuncs import two_step_mod, two_step_conv, simple_bind
+from pysb.macros import alias_model_components
 
 # get model components accessible in this scope
 alias_model_components()
