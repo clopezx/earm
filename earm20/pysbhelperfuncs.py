@@ -1,5 +1,6 @@
 import inspect
 from pysb import *
+from pysb.core import SelfExporter
 
 def del_rule(model, rname):
     """delete rules by name 'rname'"""
