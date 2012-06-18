@@ -1,5 +1,8 @@
 from pysb import *
 from local_macros import *
+from earm_2_0_macros import declare_monomers
+import earm_1_0modules as earm_modules
+import shen_modules
 
 """
 Model drawn from:
@@ -13,19 +16,15 @@ Model()
 
 declare_monomers()
 
-# MODEL TOPOLOGY
-catalyze_one_step_reversible(tBid, Bax(state='C'), Bax(state='A'), [1, 1])
-
-bind_table([[  tBid,  Bax(state='A')],
-     [Bcl2,  (1, 1),          (1, 1)]])
-
-pore_assembly(Bax(state='A'), Pore(), 4, [1, 1])
-
-displace_reversibly(Bcl2, Bax(state='A'), tBid, [1, 1])
-
+from earm_2_0_parms import parameter_dict as kd
 
 # Initial conditions
-Initial(tBid(b=None), Parameter('tBid_0', 100))
-Initial(Bax(b=None, state='C'), Parameter('Bax_0', 100))
-Initial(Bcl2(b=None), Parameter('Bcl2_0', 100))
+#Initial(tBid(b=None), Parameter('tBid_0', 100))
+#Initial(Bax(b=None, state='C'), Parameter('Bax_0', 100))
+#Initial(Bcl2(b=None), Parameter('Bcl2_0', 100))
 
+earm_modules.rec_to_bid(kd)
+
+shen_modules.chen2007BiophysJ()
+
+earm_modules.pore_to_parp(kd)

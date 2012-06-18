@@ -16,21 +16,22 @@
 # http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
 #
 #
-from pysbhelperfuncs import two_step_mod, two_step_conv, simple_bind
-from pysb.macros import alias_model_components
+#from pysbhelperfuncs import catalyze, two_step_conv, simple_bind
+from pysb.macros import two_step_conv, simple_bind, alias_model_components, one_step_conv
+from local_macros import catalyze
 
 # get model components accessible in this scope
-alias_model_components()
 
 # RECEPTOR TO BID SEGMENT
-def rec_to_bid(model, kd):
-    """ This is a very specific function which depends on specifically
+def rec_to_bid(kd):
+    """ This function depends specifically
     on the parameters and monomers of earm_1_0 to work. This function
     uses L, R, DISC, flip, C8, BAR, and Bid monomers and their
     associated parameters to generate the rules that describe Ligand
     to Receptor binding, DISC formation, Caspase8 activation and
     inhibition by flip and BAR as specified in EARM1.0.
     """
+    alias_model_components()
     # RECEPTOR TO tBID
     # =====================
     # tBID Activation Rules
@@ -40,8 +41,8 @@ def rec_to_bid(model, kd):
     #        Bid + C8 <--> Bid:C8 --> tBid + C8
     # ---------------------
     two_step_conv(L(), R(), DISC(bf = None ), kd['L_R_DISC'])
-    two_step_mod(DISC(), C8(state='pro'), C8(bf = None, state='A'), kd['DISC_C8'])
-    two_step_mod(C8(state='A'), Bid(state='U'), Bid(bf = None, state='T'), kd['C8_BID'])
+    catalyze(DISC(), C8(state='pro'), C8(bf = None, state='A'), kd['DISC_C8'])
+    catalyze(C8(state='A'), Bid(state='U'), Bid(bf = None, state='T'), kd['C8_BID'])
     # ---------------------
     # Inhibition Rules
     # ---------------------
@@ -52,7 +53,7 @@ def rec_to_bid(model, kd):
     simple_bind(BAR(), C8(state='A'), kd['BAR_C8'])
     # ---------------------
 
-def pore_to_parp(model, kd):
+def pore_to_parp(kd):
     """ This is a very specific function which depends on specifically
     on the parameters and monomers of earm_1_0 to work. This function
     uses, CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP
@@ -61,6 +62,7 @@ def pore_to_parp(model, kd):
     active pore activation of Caspase3, loopback through Caspase 6,
     and some inhibitions as specified in EARM1.0.
     """
+    alias_model_components()
     # FXR CASPASES CLEAVE PARP 
     # ========================
     #
@@ -70,9 +72,9 @@ def pore_to_parp(model, kd):
     #        aApaf + pC9 <-->  Apop
     #        Apop + pC3 <-->  Apop:pC3 --> Apop + C3
     # ---------------------------
-    two_step_mod(CytoC(state='A'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kd['APAF_CYTC'])
+    catalyze(CytoC(state='A'), Apaf(state='I'), Apaf(bf = None, state = 'A'), kd['APAF_CYTC'])
     one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), kd['APOP_C9:APAF'])
-    two_step_mod(Apop(), C3(state='pro'), C3(bf = None, state='A'), kd['APOP_C3'])
+    catalyze(Apop(), C3(state='pro'), C3(bf = None, state='A'), kd['APOP_C3'])
     # -----------------------------
     # Apoptosome related inhibitors
     # -----------------------------
@@ -89,8 +91,8 @@ def pore_to_parp(model, kd):
     #        PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
     #        pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
     # ---------------------------
-    two_step_mod(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), kd['C3_C8'])
-    two_step_mod(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'), kd['C6_C3'])
-    two_step_mod(XIAP(), C3(state = 'A'), C3(bf = None, state = 'ub'), kd['C3_XIAP'])
-    two_step_mod(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), kd['PARP_C3'])
-    two_step_mod(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kd['C8_C6'])
+    catalyze(C8(state='A'), C3(state='pro'), C3(bf = None, state='A'), kd['C3_C8'])
+    catalyze(C3(state='A'), C6(state='pro'), C6(bf = None, state='A'), kd['C6_C3'])
+    catalyze(XIAP(), C3(state = 'A'), C3(bf = None, state = 'ub'), kd['C3_XIAP'])
+    catalyze(C3(state = 'A'), PARP(state='U'), PARP(bf = None, state='C'), kd['PARP_C3'])
+    catalyze(C6(state='A'), C8(state='pro'), C8(bf = None, state = 'A'), kd['C8_C6'])

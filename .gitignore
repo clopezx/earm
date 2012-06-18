@@ -1,4 +1,11 @@
 *~
 *pyc
 *#
+*.swp
 .DS_Store
+*.ka
+*.out
+*.gv
+*.jpg
+*.dot
+*.pdf
