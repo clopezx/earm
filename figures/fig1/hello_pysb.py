@@ -33,18 +33,3 @@ plot(time, x['LR'])
 xlabel('Time (seconds)')
 ylabel('Amount of LR')
 
-def synthetic_data(tspan):
-    seed = 1
-    random = numpy.random.RandomState(seed)
-    sigma = 0.1
-    ntimes = 20
-    #tspan = linspace(0, 40, ntimes)
-    x = odesolve(model, tspan)
-    lr_data = x['LR'] 
-    lr_data = lr_data * (random.randn(len(lr_data)) * sigma + 1);
-    #ysim_array = ysim.view().reshape(len(tspan), len(ysim.dtype))
-    #yspecies = ysim_array[:, :len(model.species)]
-    #ydata = yspecies * (random.randn(*yspecies.shape) * sigma + 1);
-    #ysim_max = yspecies.max(0)
-    #ydata_norm = ydata / ysim_max
-    return lr_data
