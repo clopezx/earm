@@ -33,23 +33,15 @@ def declare_all_monomers():
     Monomer('XIAP', ['bf'])
 
 def declare_MOMP_monomers():
-    Monomer('tBid', ['bf'])
-    Monomer('Bax', ['bf', 'state'], {'state':['C', 'A']})
-    Monomer('Bcl2', ['bf'])
-    Monomer('Bad', ['bf'])
-    Monomer('Pore')
-
-def catalyze_one_step_reversible(enz, sub, prod, klist):
-    kcat, krev = klist
-
-    Rule('catalyze1',
-         enz({site_name:None}) + sub({site_name:None}) >>
-         enz({site_name:None}) + prod({site_name:None}),
-         Parameter('catalyze1_kcat', kcat))
-
-    Rule('catalyze1_rev',
-         prod({site_name:None}) >> sub({site_name:None}),
-         Parameter('cat1_rev_krev', krev))
+    Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
+    Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+    Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+    Monomer('Bcl2', ['bf']) # Bcl2, states: Cytoplasm, Mitochondria
+    Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
+    Monomer('Mcl1', ['bf'])
+    Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']})
+    Monomer('NOXA', ['bf'])
+    Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 
 def catalyze(enz, sub, product, klist):
     return macros.catalyze(enz, 'bf', sub, 'bf', product, klist)
@@ -84,7 +76,7 @@ def synthesize_degrade(species, ksynth, kdeg):
     Rule('degrade_%s' % species().monomer.name,
          species() >> None, kdeg) 
 
-
+# Functions required by Albeck
 def two_step_conv(sub1, sub2, product, klist, site='bf'):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction (i.e. dimerization).
     This function assumes that there is a site named 'bf' (bind site for fxn)
@@ -104,7 +96,6 @@ def two_step_conv(sub1, sub2, product, klist, site='bf'):
                               [klist[2]], ['kc'])
     return components
 
-
 def one_step_conv(sub1, sub2, product, klist, site='bf'):
     """ Bind sub1 and sub2 to form one product: sub1 + sub2 <> product.
     """
@@ -117,3 +108,8 @@ def one_step_conv(sub1, sub2, product, klist, site='bf'):
                        sub1({site: None}) + sub2({site: None}) <> product,
                        klist, ['kf', 'kr']) 
 
+def dimerize(*args):
+    pass
+
+def bind_and_convert(*args):
+    pass
