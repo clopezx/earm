@@ -82,3 +82,62 @@ def synthesize_degrade(species, ksynth, kdeg):
     Rule('degrade_%s' % species().monomer.name,
          species() >> None, kdeg) 
 
+def two_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
+    """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction (i.e. dimerization).
+    This function assumes that there is a site named 'bf' (bind site for fxn)
+    which it uses by default. Site 'bf' need not be passed when calling the function."""
+
+    kf, kr, kc = klist
+
+    r1_name = 'cplx_%s_%s' % (Sub2.monomer.name, Sub1.monomer.name)
+
+    #FIXME: this is a bit dirty but it fixes the problem when prod is a pattern
+    if isinstance(Prod, MonomerPattern):
+        r2_name = 'cplx_%s_via_%s__%s' % (Prod.monomer.name, Sub1.monomer.name, Sub2.monomer.name)
+    elif isinstance(Prod, ComplexPattern):
+        r2_name = 'cplx_%s_via_%s__%s' % (("_".join([sub.monomer.name for sub in Prod.monomer_patterns])),
+                                          Sub1.monomer.name, Sub2.monomer.name)
+
+    assert site in Sub1.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub1.monomer.name)
+    assert site in Sub2.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub2.monomer.name)
+
+    # make the intermediate complex components
+    s1tmpdict = Sub1.site_conditions.copy()
+    s2tmpdict = Sub2.site_conditions.copy()
+
+    s1tmpdict[site] = 1
+    s2tmpdict[site] = 1
+
+    Sub1Cplx = Sub1.monomer(s1tmpdict)
+    Sub2Cplx = Sub2.monomer(s2tmpdict)
+
+    # add the site to the patterns
+    Sub1.site_conditions[site] = None
+    Sub2.site_conditions[site] = None
+
+    # now that we have the complex elements formed we can write the first step rule
+    Rule(r1_name, Sub1 + Sub2 <> Sub1Cplx % Sub2Cplx, kf, kr)
+
+    # and finally the rule for the catalytic transformation
+    Rule(r2_name, Sub1Cplx % Sub2Cplx >> Prod, kc)
+
+def one_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
+    """ Convert two Sub species into one Prod species:
+    Sub + Sub <> Prod
+    """
+    kf, kr = klist
+    r1_name = 'conv_%s_%s_to_%s'%(Sub1.monomer.name, Sub2.monomer.name, Prod.monomer.name)
+    assert site in Sub1.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub.monomer.name)
+    assert site in Sub2.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub.monomer.name)
+    # create the sites for the monomers
+
+    Sub1.site_conditions[site] = None
+    Sub2.site_conditions[site] = None
+
+    # combine the monomers into a product step rule
+    Rule(r1_name, Sub1 + Sub2 <> Prod, kf, kr)
+
