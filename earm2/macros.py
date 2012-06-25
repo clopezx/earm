@@ -1,6 +1,5 @@
+import pysb.macros as macros
 from pysb import *
-import pysb.macros
-from pysb.util import alias_model_components
 
 site_name = 'bf'
 
@@ -38,31 +37,6 @@ def declare_MOMP_monomers():
     Monomer('Bad', ['bf'])
     Monomer('Pore')
 
-def declare_all_initial_conditions():
-    alias_model_components()
-    # TODO: make local macro "initial" which takes a float and automatically create a Parameter
-    Initial(L(bf=None), L_0)
-    Initial(R(bf=None), R_0)
-    Initial(flip(bf=None), flip_0)
-    Initial(C8(bf=None, state='pro'), C8_0)
-    Initial(BAR(bf=None), BAR_0)
-    Initial(Bid(bf=None, state='U'), Bid_0)
-    Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
-    Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
-    Initial(Bcl2(bf=None), Bcl2_0)
-    Initial(BclxL (bf=None, state='C'), BclxL_0)
-    Initial(Mcl1(bf=None), Mcl1_0)
-    Initial(Bad(bf=None, state='C'), Bad_0)
-    Initial(NOXA(bf=None), NOXA_0)
-    Initial(CytoC(bf=None, state='M'), CytoC_0)
-    Initial(Smac(bf=None, state='M'), Smac_0)
-    Initial(Apaf(bf=None, state='I'), Apaf_0)
-    Initial(C3(bf=None, state='pro'), C3_0)
-    Initial(C6(bf=None, state='pro'), C6_0)
-    Initial(C9(bf=None), C9_0)
-    Initial(PARP(bf=None, state='U'), PARP_0)
-    Initial(XIAP(bf=None), XIAP_0)    
-
 def catalyze_one_step_reversible(enz, sub, prod, klist):
     kcat, krev = klist
 
@@ -76,13 +50,13 @@ def catalyze_one_step_reversible(enz, sub, prod, klist):
          Parameter('cat1_rev_krev', krev))
 
 def catalyze(enz, sub, product, klist):
-    return pysb.macros.catalyze(enz, 'bf', sub, 'bf', product, klist)
+    return macros.catalyze(enz, 'bf', sub, 'bf', product, klist)
 
 def bind(a, b, klist):
-    return pysb.macros.bind(a, site_name, b, site_name, klist)
+    return macros.bind(a, site_name, b, site_name, klist)
 
 def bind_table(table):
-    return pysb.macros.bind_table(table, site_name, site_name)
+    return macros.bind_table(table, site_name, site_name)
 
 def assemble_pore(monomer, size, pore, klist):
     monomerp = monomer()
@@ -90,10 +64,6 @@ def assemble_pore(monomer, size, pore, klist):
     Rule('%s_simple_pore' % monomerp.monomer.name,
          monomerp + monomerp + monomerp + monomerp <> pore,
          kf , kr)
-
-def assemble_pore_sequential(monomer, size, klist):
-    return pysb.macros.assemble_pore_sequential(monomer, 's1', 's2', size,
-                                                klist)
 
 def displace_reversibly(target, lig1, lig2, klist):
     kf, kr = klist
@@ -112,6 +82,62 @@ def synthesize_degrade(species, ksynth, kdeg):
     Rule('degrade_%s' % species().monomer.name,
          species() >> None, kdeg) 
 
-def translocate(sub, state1, state2, kf=1e-2, kr=1e-2):
-    return pysb.macros.two_state_equilibrium(sub(state=state1),
-                                             sub(state=state2), [kf, kr])
+def two_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
+    """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction (i.e. dimerization).
+    This function assumes that there is a site named 'bf' (bind site for fxn)
+    which it uses by default. Site 'bf' need not be passed when calling the function."""
+
+    kf, kr, kc = klist
+
+    r1_name = 'cplx_%s_%s' % (Sub2.monomer.name, Sub1.monomer.name)
+
+    #FIXME: this is a bit dirty but it fixes the problem when prod is a pattern
+    if isinstance(Prod, MonomerPattern):
+        r2_name = 'cplx_%s_via_%s__%s' % (Prod.monomer.name, Sub1.monomer.name, Sub2.monomer.name)
+    elif isinstance(Prod, ComplexPattern):
+        r2_name = 'cplx_%s_via_%s__%s' % (("_".join([sub.monomer.name for sub in Prod.monomer_patterns])),
+                                          Sub1.monomer.name, Sub2.monomer.name)
+
+    assert site in Sub1.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub1.monomer.name)
+    assert site in Sub2.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub2.monomer.name)
+
+    # make the intermediate complex components
+    s1tmpdict = Sub1.site_conditions.copy()
+    s2tmpdict = Sub2.site_conditions.copy()
+
+    s1tmpdict[site] = 1
+    s2tmpdict[site] = 1
+
+    Sub1Cplx = Sub1.monomer(s1tmpdict)
+    Sub2Cplx = Sub2.monomer(s2tmpdict)
+
+    # add the site to the patterns
+    Sub1.site_conditions[site] = None
+    Sub2.site_conditions[site] = None
+
+    # now that we have the complex elements formed we can write the first step rule
+    Rule(r1_name, Sub1 + Sub2 <> Sub1Cplx % Sub2Cplx, kf, kr)
+
+    # and finally the rule for the catalytic transformation
+    Rule(r2_name, Sub1Cplx % Sub2Cplx >> Prod, kc)
+
+def one_step_conv(Sub1, Sub2, Prod, klist, site='bf'):
+    """ Convert two Sub species into one Prod species:
+    Sub + Sub <> Prod
+    """
+    kf, kr = klist
+    r1_name = 'conv_%s_%s_to_%s'%(Sub1.monomer.name, Sub2.monomer.name, Prod.monomer.name)
+    assert site in Sub1.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub.monomer.name)
+    assert site in Sub2.monomer.sites_dict, \
+        "Required site %s not present in %s as required"%(site, Sub.monomer.name)
+    # create the sites for the monomers
+
+    Sub1.site_conditions[site] = None
+    Sub2.site_conditions[site] = None
+
+    # combine the monomers into a product step rule
+    Rule(r1_name, Sub1 + Sub2 <> Prod, kf, kr)
+
