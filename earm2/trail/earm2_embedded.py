@@ -1,9 +1,9 @@
 """'embedded together' w earm1.0"""
 
 from pysb import *
-from . import macros
-from . import earm2_modules
-from . import albeck_modules
+from earm2 import macros
+from earm2 import earm2_modules
+from earm2 import albeck_modules
 
 Model()
 
@@ -19,6 +19,6 @@ macros.declare_all_initial_conditions()
 
 # Observables
 # TODO: figure out where these should live
-Observe('mBid',  Bid(state='M'))
-Observe('cSmac', Smac(state='A'))
-Observe('cPARP', PARP(state='C'))
+Observable('mBid',  Bid(state='M'))
+Observable('cSmac', Smac(state='A'))
+Observable('cPARP', PARP(state='C'))
