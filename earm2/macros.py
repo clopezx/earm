@@ -43,6 +43,10 @@ def declare_MOMP_monomers():
     Monomer('NOXA', ['bf'])
     Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 
+def declare_all_initial_conditions():
+    pass
+
+## Aliases to pysb.macros
 def catalyze(enz, sub, product, klist):
     return macros.catalyze(enz, 'bf', sub, 'bf', product, klist)
 
@@ -52,6 +56,14 @@ def bind(a, b, klist):
 def bind_table(table):
     return macros.bind_table(table, site_name, site_name)
 
+def assemble_pore_sequential(subunit, size, klist):
+    return macros.assemble_pore_sequential(subunit, 's1', 's2', size, klist)
+
+def pore_transport(subunit, min_size, max_size, csource, cdest, klist):
+    return macro.pore_transport(subunit, 's1', 's2', 'bf', min_size, max_size,
+                                csource, cdest, 'bf', klist):
+
+## Macros for the Shen models
 def assemble_pore(monomer, size, pore, klist):
     monomerp = monomer()
     kf, kr = klist
@@ -76,7 +88,7 @@ def synthesize_degrade(species, ksynth, kdeg):
     Rule('degrade_%s' % species().monomer.name,
          species() >> None, kdeg) 
 
-# Functions required by Albeck
+## Macros for the Albeck models
 def two_step_conv(sub1, sub2, product, klist, site='bf'):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction (i.e. dimerization).
     This function assumes that there is a site named 'bf' (bind site for fxn)
