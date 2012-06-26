@@ -1,6 +1,7 @@
 from pysb import *
 from pysb.util import alias_model_components
 from earm2.macros import *
+from pysb.macros import equilibrate
 
 transloc_rates = [0.01, 0.01]
 bcl2_rates = [1.428571e-05, 1e-3] # #1.0e-6/v
@@ -93,7 +94,7 @@ def embedded():
     # ---------------------------------------------------------------
     bind_table([[                       Bcl2,  BclxL(state='M'),        Mcl1],
                 [Bad(state='M'),  bcl2_rates,        bcl2_rates,        None],
-                [NOXA,                  None,              None,  bcl2_rates]], 
+                [NOXA,                  None,              None,  bcl2_rates]])
 
 
 def indirect():
@@ -117,17 +118,16 @@ def indirect():
     #NOTE: indirect not clear about state of Bcl-xL
     bind_table([[                                   BclxL(state='M'),        Mcl1],
                 [Bid(state='T'),                          bcl2_rates,  bcl2_rates],
-                [Bax(s1=None, s2=None, state='A'),        bcl2_rates,       False],
-                [Bak(s1=None, s2=None, state='A'),        bcl2_rates,  bcl2_rates]],
+                [Bax(s1=None, s2=None, state='A'),        bcl2_rates,        None],
+                [Bak(s1=None, s2=None, state='A'),        bcl2_rates,  bcl2_rates]])
 
     # Bcl2 sensitizers 
     # ---------------------------------------------------------------
     #Note: according to Andrews, these should all be at mitochondria
     bind_table([[       BclxL(state='M'),        Mcl1],
-                [Bad,         bcl2_rates,       False],
-                [NOXA,             False,  bcl2_rates]])
+                [Bad,         bcl2_rates,        None],
+                [NOXA,             None,  bcl2_rates]])
 
-         
 def direct():
     alias_model_components()
     # tBID to MOMP 
