@@ -1,7 +1,7 @@
 import pysb.macros as macros
 from pysb import *
 from pysb import MonomerPattern, ComplexPattern
-from pysb.macros import _macro_rule, _verify_sites
+from pysb.util import alias_model_components
 
 site_name = 'bf'
 
@@ -43,8 +43,85 @@ def declare_MOMP_monomers():
     Monomer('NOXA', ['bf'])
     Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 
-def declare_all_initial_conditions():
-    pass
+def declare_all_initial_conditions(model_type):
+    if model_type not in ['indirect', 'direct', 'embedded']:
+        raise ValueError("model_type must be one of 'direct', 'indirect', or 'embedded'.")
+
+    Parameter('L_0',       3000) # 3000 Ligand correspond to 50 ng/ml SuperKiller TRAIL
+    Parameter('R_0'     ,   200) # 200 TRAIL receptor 
+    Parameter('flip_0'  , 1.0e2) # Flip
+    Parameter('C8_0'    , 2.0e4) # procaspase-8 
+    Parameter('BAR_0'   , 1.0e3) # Bifunctional apoptosis regulator
+    Parameter('Bid_0'   , 4.0e4) # Bid
+    Parameter('Bax_0'   , 0.8e5) # Bax
+    Parameter('Bak_0'   , 0.2e5) # Bak
+    Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
+    Parameter('Mcl1_0'  , 2.0e4) # mitochondrial Mcl1  
+    Parameter('Bad_0'   , 1.0e3) # Bad
+    Parameter('NOXA_0'  , 1.0e3) # NOXA
+    Parameter('CytoC_0' , 5.0e5) # cytochrome c
+    Parameter('Smac_0'  , 1.0e5) # Smac    
+    Parameter('Apaf_0'  , 1.0e5) # Apaf-1
+    Parameter('C3_0'    , 1.0e4) # procaspase-3 (pro-C3)
+    Parameter('C6_0'    , 1.0e4) # procaspase-6 (pro-C6)  
+    Parameter('C9_0'    , 1.0e5) # procaspase-9 (pro-C9)
+    Parameter('XIAP_0'  , 1.0e5) # X-linked inhibitor of apoptosis protein  
+    Parameter('PARP_0'  , 1.0e6) # C3* substrate
+
+    if model_type == 'indirect':
+        Parameter('Bax_BclxL_0', 0.8e5), # bax + bclxl
+        Parameter('Bak_Mcl1_0', 0.2e5), # bak + mcl1
+    else:
+        Parameter('Bcl2_0'  , 2.0e4) # cytosolic Bcl2
+
+    alias_model_components()    
+
+    # Initial non-zero species
+    # ========================
+    Initial(L(bf=None), L_0)
+    Initial(R(bf=None), R_0)
+    Initial(flip(bf=None), flip_0)
+    Initial(C8(bf=None, state='pro'), C8_0)
+    Initial(BAR(bf=None), BAR_0)
+    Initial(Bid(bf=None, state='U'), Bid_0)
+    Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+    Initial(BclxL (bf=None, state='C'), BclxL_0)
+    Initial(Mcl1(bf=None), Mcl1_0)
+    Initial(NOXA(bf=None), NOXA_0)
+    Initial(CytoC(bf=None, state='M'), CytoC_0)
+    Initial(Smac(bf=None, state='M'), Smac_0)
+    Initial(Apaf(bf=None, state='I'), Apaf_0)
+    Initial(C3(bf=None, state='pro'), C3_0)
+    Initial(C6(bf=None, state='pro'), C6_0)
+    Initial(C9(bf=None), C9_0)
+    Initial(PARP(bf=None, state='U'), PARP_0)
+    Initial(XIAP(bf=None), XIAP_0)
+
+    if model_type == 'indirect':
+        # Bak is constitutively active
+        Initial(Bak(bf=None, s1=None, s2=None, state='A'), Bak_0)
+        # Bad starts out at the membrane
+        Initial(Bad(bf=None, state='M'), Bad_0)
+        # Subpopulations of Bax and Bak are in complex with inhibitors
+        Initial(Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'), Bax_BclxL_0)
+        Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1), Bak_Mcl1_0)
+    else:
+        Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
+        Initial(Bad(bf=None, state='C'), Bad_0)
+        Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
+
+def declare_all_observables():
+    alias_model_components()
+    # Observables
+    # ===========
+    # Fig 4B from Albeck observes these, normalizes and inverts them
+    # Observe('Bid',   Bid(bf=None, state='U'))
+    # Observe('PARP',  PARP(bf=None, state='U'))
+    # Observe('Smac',  Smac(bf=None, state='mito'))
+    # # This is what *should* be observed???
+    Observable('mBid',  Bid(state='M'))
+    Observable('cSmac', Smac(state='A'))
+    Observable('cPARP', PARP(state='C'))
 
 ## Aliases to pysb.macros
 def catalyze(enz, sub, product, klist):
@@ -60,7 +137,7 @@ def assemble_pore_sequential(subunit, size, klist):
     return macros.assemble_pore_sequential(subunit, 's1', 's2', size, klist)
 
 def pore_transport(subunit, min_size, max_size, csource, cdest, klist):
-    return macro.pore_transport(subunit, 's1', 's2', 'bf', min_size, max_size,
+    return macros.pore_transport(subunit, 's1', 's2', 'bf', min_size, max_size,
                                 csource, cdest, 'bf', klist)
 
 ## Macros for the Shen models
@@ -96,14 +173,14 @@ def two_step_conv(sub1, sub2, product, klist, site='bf'):
     Because product is created by the function, it must be fully specified.
     """
 
-    _verify_sites(sub1, site)
-    _verify_sites(sub2, site)
+    macros._verify_sites(sub1, site)
+    macros._verify_sites(sub2, site)
 
-    components = _macro_rule('complex',
+    components = macros._macro_rule('complex',
                              sub1({site: None}) + sub2({site: None}) <>
                              sub1({site: 1}) % sub2({site: 1}),
                              klist[0:2], ['kf', 'kr'])
-    components |= _macro_rule('convert',
+    components |= macros._macro_rule('convert',
                               sub1({site: 1}) % sub2({site: 1}) >> product,
                               [klist[2]], ['kc'])
     return components
@@ -113,10 +190,10 @@ def one_step_conv(sub1, sub2, product, klist, site='bf'):
     """
     kf, kr = klist
 
-    _verify_sites(sub1, site)
-    _verify_sites(sub2, site)
+    macros._verify_sites(sub1, site)
+    macros._verify_sites(sub2, site)
 
-    return _macro_rule('convert',
+    return macros._macro_rule('convert',
                        sub1({site: None}) + sub2({site: None}) <> product,
                        klist, ['kf', 'kr']) 
 
