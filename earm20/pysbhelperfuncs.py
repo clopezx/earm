@@ -1,6 +1,6 @@
 import inspect
 from pysb import *
-from pysb.core import SelfExporter
+from pysb.core import SelfExporter, MonomerPattern, ComplexPattern
 
 def del_rule(model, rname):
     """delete rules by name 'rname'"""
