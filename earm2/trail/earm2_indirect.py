@@ -1,4 +1,4 @@
-"""'embedded together' w earm1.0"""
+"""'indirect' w earm1.0"""
 
 from pysb import *
 from earm2 import macros
@@ -15,7 +15,7 @@ albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
 # The specific MOMP model to use
-earm2_modules.embedded()
-macros.declare_all_initial_conditions('embedded')
+earm2_modules.indirect()
+macros.declare_all_initial_conditions('indirect')
 
 
