@@ -45,7 +45,7 @@ def rec_to_bid():
     # ---------------------
     two_step_conv(L(), R(), DISC(bf=None ), [4e-7, KR, 1e-5])
     catalyze(DISC(), C8(state='pro'), C8(state='A'), [KF, KR, KC])
-    catalyze(C8(state='A'), Bid(state='U'), Bid(state='T'), [1e-7, KR, KC])
+    catalyze(C8(state='A'), Bid(state='U'), Bid(state='T'), [KF, KR, KC])
     # ---------------------
     # Inhibition Rules
     # ---------------------
@@ -76,14 +76,14 @@ def pore_to_parp():
     # ---------------------------
     catalyze(CytoC(state='A'), Apaf(state='I'), Apaf(state='A'), [5e-7, KR, KC])
     one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), [5e-8, KR])
-    catalyze(Apop(), C3(state='pro'), C3(bf=None, state='A'), [5e-9, KR, KC])
+    catalyze(Apop(), C3(state='pro'), C3(bf=None, state='A'), [5e-9, KR, KC]) # TODO
     # -----------------------------
     # Apoptosome related inhibitors
     # -----------------------------
     #        Apop + XIAP <-->  Apop:XIAP  
     #        cSmac + XIAP <-->  cSmac:XIAP  
-    bind(Apop(), XIAP(), [2e-6, KR])
-    bind(Smac(state='A'), XIAP(), [7e-6, 1e-3])
+    bind(Apop(), XIAP(), [2e-6, KR]) # TODO?
+    bind(Smac(state='A'), XIAP(), [7e-6, KR]) # TODO?
     # ---------------------------
     # Caspase reactions (effectors, inhibitors, and loopback initiators)
     # ---------------------------
@@ -95,7 +95,7 @@ def pore_to_parp():
     # ---------------------------
     catalyze(C8(state='A'), C3(state='pro'), C3(state='A'), [1e-7, KR, KC])
     catalyze(XIAP(), C3(state='A'), C3(state = 'ub'), [2e-6, KR, 1e-1])
-    catalyze(C3(state='A'), PARP(state='U'), PARP(state='C'), [1e-6, 1e-2, KC])
+    catalyze(C3(state='A'), PARP(state='U'), PARP(state='C'), [KF, 1e-2, KC])
     catalyze(C3(state='A'), C6(state='pro'), C6(state='A'), [KF, KR, KC])
     catalyze(C6(state='A'), C8(state='pro'), C8(state='A'), [3e-8, KR, KC])
 
