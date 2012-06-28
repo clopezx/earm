@@ -53,8 +53,6 @@ def declare_all_initial_conditions(model_type):
     Parameter('C8_0'    , 2.0e4) # procaspase-8 
     Parameter('BAR_0'   , 1.0e3) # Bifunctional apoptosis regulator
     Parameter('Bid_0'   , 4.0e4) # Bid
-    Parameter('Bax_0'   , 0.8e5) # Bax
-    Parameter('Bak_0'   , 0.2e5) # Bak
     Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
     Parameter('Mcl1_0'  , 2.0e4) # mitochondrial Mcl1  
     Parameter('Bad_0'   , 1.0e3) # Bad
@@ -71,8 +69,12 @@ def declare_all_initial_conditions(model_type):
     if model_type == 'indirect':
         Parameter('Bax_BclxL_0', 0.8e5), # bax + bclxl
         Parameter('Bak_Mcl1_0', 0.2e5), # bak + mcl1
+        Parameter('Bax_0'   , 0) # Bax
+        Parameter('Bak_0'   , 0) # Bak
     else:
         Parameter('Bcl2_0'  , 2.0e4) # cytosolic Bcl2
+        Parameter('Bax_0'   , 0.8e5) # Bax
+        Parameter('Bak_0'   , 0.2e5) # Bak
 
     alias_model_components()    
 
