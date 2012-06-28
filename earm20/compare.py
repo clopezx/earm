@@ -32,13 +32,13 @@ rates_new = [a['rate'] for a in new_model.reactions]
 # Can't do diff because of the extra parameters in the old model
 #diff = numpy.array([x[0] for x in p_new]) - numpy.array([x[0] for x in p_old])
 
-f_old = open('old_params.txt', 'w')
-f_old.write('\n'.join([str(p) for p in p_old]))
-f_old.close()
+#f_old = open('old_params.txt', 'w')
+#f_old.write('\n'.join([str(p) for p in p_old]))
+#f_old.close()
 
-f_new = open('new_params.txt', 'w')
-f_new.write('\n'.join([str(p) for p in p_new]))
-f_new.close()
+#f_new = open('new_params.txt', 'w')
+#f_new.write('\n'.join([str(p) for p in p_new]))
+#f_new.close()
 
 #print 'old model species: %d' % len(old_model.species)
 #print 'new model species: %d' % len(new_model.species)
