@@ -127,7 +127,7 @@ def all_initial_conditions(model_type):
                         "'embedded'.")
 
     ligand_to_c8_initial_conditions()
-    momp_initial_conditions(model_type)
+    momp_initial_conditions(model_type, bid_state='U')
     apaf1_to_parp_initial_conditions()
 
 def ligand_to_c8_initial_conditions():
@@ -148,7 +148,7 @@ def ligand_to_c8_initial_conditions():
     Initial(C8(bf=None, state='pro'), C8_0)
     Initial(BAR(bf=None), BAR_0)
 
-def momp_initial_conditions(model_type):
+def momp_initial_conditions(model_type, bid_state='U'):
     """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
 
     Parameters
@@ -182,7 +182,7 @@ def momp_initial_conditions(model_type):
 
     alias_model_components()
 
-    Initial(Bid(bf=None, state='U'), Bid_0)
+    Initial(Bid(bf=None, state=bid_state), Bid_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
