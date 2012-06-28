@@ -96,19 +96,19 @@ parameter_dict = OrderedDict([
      # CytoC transport by Bax
     ('BAX_CYTC',   [[ Parameter('kbaxcytocMCf', 2.857143e-05),   #same as Bax-SMAC
                      Parameter('kbaxcytocMCr', 1.0e-03     ),   #same as Bax-SMAC
-                     Parameter('kbaxcytocMCc', 1.0         )]]), #same as Bax-SMAC
+                     Parameter('kbaxcytocMCc', 10.0         )]]), #same as Bax-SMAC # TODO: Note: was 1
     # Smac transport by Bax
     ('BAX_SMAC',   [[ Parameter('kbaxsmacCAf',  2.857143e-05),
                      Parameter('kbaxsmacCAr',  1.0e-03     ),
-                     Parameter('kbaxsmacCAc',  1.0         )]]),
+                     Parameter('kbaxsmacCAc',  10.0         )]]), # TODO: Note: was 1
     # CytoC transport activation by Bak 
     ('BAK_CYTC',   [[ Parameter('kbakcytocMCf', 2.857143e-05),
                      Parameter('kbakcytocMCr', 1.0e-03     ),
-                     Parameter('kbakcytocMCc', 1.0         )]]),
+                     Parameter('kbakcytocMCc', 10.0         )]]), # TODO: Note: was 1
     # Smac transport by Bak  **
     ('BAK_SMAC',   [[ Parameter('kbaksmacCAf',  2.857143e-05),   #same as Bak-SMAC
                      Parameter('kbaksmacCAr',  1.0e-03     ),   #same as Bak-SMAC
-                     Parameter('kbaksmacCAc',  1.0         )]]), #same as Bak-SMAC
+                     Parameter('kbaksmacCAc',  10.0         )]]), #same as Bak-SMAC # TODO: Note: was 1
     # CytoC activation
     ('CYTOC_ACT',  [ Parameter('kcytocCcytoAf', 0.01), #transloc
                     Parameter('kcytocCcytoAr', 0.01)]), 
@@ -129,7 +129,7 @@ parameter_dict = OrderedDict([
                     Parameter('kdiscc8r', 1.0e-03),
                     Parameter('kdiscc8c', 1.0    )]),
     # Bid cleavage by C8
-    ('C8_BID',     [ Parameter('kc8bidf', 1.0e-07),
+    ('C8_BID',     [ Parameter('kc8bidf', 1.0e-06), # TODO: Note: was 1e-7
                     Parameter('kc8bidr', 1.0e-03),
                     Parameter('kc8bidc', 1.0    )]),
     # DISC inhibition by FLIP

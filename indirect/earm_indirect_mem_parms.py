@@ -81,7 +81,7 @@ parameter_dict = OrderedDict([
                     Parameter('kdiscc8r', 1e-03),
                     Parameter('kdiscc8c', 1e+00)]),
     # Bid cleavage by C8
-    ('C8_BID',     [ Parameter('kc8bidf', 1.0e-7),
+    ('C8_BID',     [ Parameter('kc8bidf', 1.0e-6), # TODO: Note: was 1e-7
                     Parameter('kc8bidr', 1.0e-3),
                     Parameter('kc8bidc', 1.0)]),
     # DISC inhibition by FLIP
