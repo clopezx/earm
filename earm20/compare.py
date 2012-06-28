@@ -22,6 +22,9 @@ print('(Note that old embedded has 6 extra (unused) parameters)')
 print
 print('old embedded reactions: %d' % len(old_model.reactions))
 print('new embedded reactions: %d' % len(new_model.reactions))
+print
+print('old embedded initial conditions: %d' % len(old_model.initial_conditions))
+print('new embedded initial conditions: %d' % len(new_model.initial_conditions))
 
 p_old = sorted([(p.value, p.name) for p in old_model.parameters])
 p_new = sorted([(p.value, p.name) for p in new_model.parameters])

@@ -21,6 +21,9 @@ print('new direct parameters: %d' % len(new_model.parameters))
 print
 print('old direct reactions: %d' % len(old_model.reactions))
 print('new direct reactions: %d' % len(new_model.reactions))
+print
+print('old direct initial conditions: %d' % len(old_model.initial_conditions))
+print('new direct initial conditions: %d' % len(new_model.initial_conditions))
 
 p_old = sorted([(p.value, p.name) for p in old_model.parameters])
 p_new = sorted([(p.value, p.name) for p in new_model.parameters])

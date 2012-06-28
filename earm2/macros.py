@@ -3,68 +3,168 @@ from pysb import *
 from pysb import MonomerPattern, ComplexPattern
 from pysb.util import alias_model_components
 
+# The default site name to be used for binding reactions
 site_name = 'bf'
 
-def declare_all_monomers():
-    # Monomers for all modules (including imported modules)
-    # =====================================================
-    Monomer('L', ['bf']) # Ligand
-    Monomer('R', ['bf']) # Receptor
-    Monomer('DISC', ['bf']) # DISC
-    Monomer('flip', ['bf']) # flip
-    Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
-    Monomer('BAR', ['bf']) # BAR
-    Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
-    Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
-    Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
-    Monomer('Bcl2', ['bf']) # Bcl2, states: Cytoplasm, Mitochondria
-    Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
-    Monomer('Mcl1', ['bf'])
-    Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']})
-    Monomer('NOXA', ['bf'])
-    Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
-    Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
-    Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
-    Monomer('Apop', ['bf'])
-    Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
-    Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, active
-    Monomer('C9', ['bf'])
-    Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
-    Monomer('XIAP', ['bf'])
+## Monomer declarations ========================
+def all_monomers():
+    """Declare the monomers used for the full model, including Bcl-2 proteins.
 
-def declare_MOMP_monomers():
-    Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
-    Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
-    Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
-    Monomer('Bcl2', ['bf']) # Bcl2, states: Cytoplasm, Mitochondria
-    Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
-    Monomer('Mcl1', ['bf'])
-    Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']})
-    Monomer('NOXA', ['bf'])
-    Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
+    Internally calls the macros ligand_to_c8_monomers(),
+    bcl2_monomers(), and cytoc_to_parp_monomers() to
+    instantiate the monomers for each portion of the pathway.
 
-def declare_all_initial_conditions(model_type):
+    The package variable site_name specifies the name of the site to be used
+    for all binding reactions (with the exception of Bax and Bak, which have
+    additional sites used for oligomerization).
+
+    The 'state' site denotes various localization and/or activity states of a
+    Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
+    localization.
+    """
+
+    ligand_to_c8_monomers()
+    bcl2_monomers()
+    cytoc_to_parp_monomers()
+
+def ligand_to_c8_monomers():
+    """ Declares ligand, receptor, DISC, Flip, Bar and Caspase 8.
+
+    The package variable site_name specifies the name of the site to be used
+    for all binding reactions.
+
+    The 'state' site denotes various localization and/or activity states of a
+    Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
+    localization.
+    """
+
+    Monomer('L', [site_name]) # Ligand
+    Monomer('R', [site_name]) # Receptor
+    Monomer('DISC', [site_name]) # Death-Inducing Signaling Complex
+    Monomer('flip', [site_name])
+    # Caspase 8, states: pro, Active
+    Monomer('C8', [site_name, 'state'], {'state':['pro', 'A']})
+    Monomer('BAR', [site_name])
+
+def bcl2_monomers():
+    """Declare the monomers for the Bcl-2 family proteins.
+
+    The package variable site_name specifies the name of the site to be used
+    for all binding reactions (with the exception of Bax and Bak, which have
+    additional sites used for oligomerization).
+
+    The 'state' site denotes various localization and/or activity states of a
+    Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
+    localization. Most Bcl-2 proteins have the potential for both cytoplasmic
+    and mitochondrial localization, with the exceptions of Bak and Bcl-2,
+    which are apparently constitutively mitochondrial.
+    """
+
+    # == Activators ===================
+    # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
+    Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
+    # TODO: Bim
+    # TODO: Puma
+    # == Effectors ====================
+    # Bax, states: Cytoplasmic, Mitochondrial, Active
+    # sites 's1' and 's2' are used for pore formation
+    Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
+    # Bak, states: inactive and Mitochondrial, Active (and mitochondrial)
+    # sites 's1' and 's2' are used for pore formation
+    Monomer('Bak', [site_name, 's1', 's2', 'state'], {'state':['M', 'A']})
+    # == Anti-Apoptotics ==============
+    Monomer('Bcl2', [site_name])
+    Monomer('BclxL', [site_name, 'state'], {'state':['C', 'M']})
+    Monomer('Mcl1', [site_name, 'state'], {'state':['M', 'C']})
+    # TODO: Add BclW and Bfl1?
+    # == Sensitizers ==================
+    Monomer('Bad', [site_name, 'state'], {'state':['C', 'M']})
+    Monomer('NOXA', [site_name, 'state'], {'state': ['C', 'M']})
+    # TODO: Others???
+
+def cytoc_to_parp_monomers():
+    """ Declares CytochromeC, Smac, Apaf-1, the Apoptosome, Caspases 3, 6, 9,
+    XIAP and PARP.
+
+    The package variable site_name specifies the name of the site to be used
+    for all binding reactions.
+
+    The 'state' site denotes various localization and/or activity states of a
+    Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
+    localization.
+    """
+
+    # Cytochrome C
+    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Apaf', [site_name, 'state'], {'state':['I', 'A']}) # Apaf-1
+    Monomer('Apop', [site_name]) # Apoptosome (activated Apaf-1 + caspase 9)
+    # Csp 3, states: pro, active, ubiquitinated
+    Monomer('C3', [site_name, 'state'], {'state':['pro', 'A', 'ub']})
+    # Caspase 6, states: pro-, Active
+    Monomer('C6', [site_name, 'state'], {'state':['pro', 'A']})
+    Monomer('C9', [site_name]) # Caspase 9
+    # PARP, states: Uncleaved, Cleaved
+    Monomer('PARP', [site_name, 'state'], {'state':['U', 'C']})
+    Monomer('XIAP', [site_name]) # X-linked Inhibitor of Apoptosis Protein
+
+## Initial condition declarations =============
+def all_initial_conditions(model_type):
+    """Declare initial conditions for the full extrinsic apoptosis model.
+
+    Parameters
+    ==========
+    model_type : string, one of 'indirect', 'direct', or 'embedded'.
+        Since the initial conditions for the Bcl-2 submodule are different for
+        the different Bcl-2 model topologies, the Bcl2 model type must be
+        specified as an argument.
+    """
+
     if model_type not in ['indirect', 'direct', 'embedded']:
-        raise ValueError("model_type must be one of 'direct', 'indirect', or 'embedded'.")
+        raise ValueError("model_type must be one of 'direct', 'indirect', or " +
+                        "'embedded'.")
 
-    Parameter('L_0',       3000) # 3000 Ligand correspond to 50 ng/ml SuperKiller TRAIL
-    Parameter('R_0'     ,   200) # 200 TRAIL receptor 
+    ligand_to_c8_initial_conditions()
+    bcl2_initial_conditions(model_type)
+    cytoc_to_parp_initial_conditions()
+
+def ligand_to_c8_initial_conditions():
+    """Declare initial conditions for ligand, receptor, Flip, C8, and Bar.
+    """
+
+    Parameter('L_0',       3000) # 3000 Ligand corresponds to 50 ng/ml SK-TRAIL
+    Parameter('R_0'     ,   200) # 200 TRAIL receptor
     Parameter('flip_0'  , 1.0e2) # Flip
-    Parameter('C8_0'    , 2.0e4) # procaspase-8 
+    Parameter('C8_0'    , 2.0e4) # procaspase-8
     Parameter('BAR_0'   , 1.0e3) # Bifunctional apoptosis regulator
+
+    alias_model_components()
+
+    Initial(L(bf=None), L_0)
+    Initial(R(bf=None), R_0)
+    Initial(flip(bf=None), flip_0)
+    Initial(C8(bf=None, state='pro'), C8_0)
+    Initial(BAR(bf=None), BAR_0)
+
+def bcl2_initial_conditions(model_type):
+    """Declare initial conditions for Bcl-2 family proteins.
+
+    Parameters
+    ==========
+    model_type : string, one of 'indirect', 'direct', or 'embedded'.
+        Since the initial conditions are different for the different model
+        topologies, the Bcl2 model type must be specified as an argument.
+    """
+
+    if model_type not in ['indirect', 'direct', 'embedded']:
+        raise ValueError("model_type must be one of 'direct', 'indirect', or " +
+                         "'embedded'.")
+
     Parameter('Bid_0'   , 4.0e4) # Bid
     Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
-    Parameter('Mcl1_0'  , 2.0e4) # mitochondrial Mcl1  
+    Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1  
     Parameter('Bad_0'   , 1.0e3) # Bad
     Parameter('NOXA_0'  , 1.0e3) # NOXA
-    Parameter('CytoC_0' , 5.0e5) # cytochrome c
-    Parameter('Smac_0'  , 1.0e5) # Smac    
-    Parameter('Apaf_0'  , 1.0e5) # Apaf-1
-    Parameter('C3_0'    , 1.0e4) # procaspase-3 (pro-C3)
-    Parameter('C6_0'    , 1.0e4) # procaspase-6 (pro-C6)  
-    Parameter('C9_0'    , 1.0e5) # procaspase-9 (pro-C9)
-    Parameter('XIAP_0'  , 1.0e5) # X-linked inhibitor of apoptosis protein  
-    Parameter('PARP_0'  , 1.0e6) # C3* substrate
 
     if model_type == 'indirect':
         Parameter('Bax_BclxL_0', 0.8e5), # bax + bclxl
@@ -76,20 +176,44 @@ def declare_all_initial_conditions(model_type):
         Parameter('Bax_0'   , 0.8e5) # Bax
         Parameter('Bak_0'   , 0.2e5) # Bak
 
-    alias_model_components()    
+    alias_model_components()
 
-    # Initial non-zero species
-    # ========================
-    Initial(L(bf=None), L_0)
-    Initial(R(bf=None), R_0)
-    Initial(flip(bf=None), flip_0)
-    Initial(C8(bf=None, state='pro'), C8_0)
-    Initial(BAR(bf=None), BAR_0)
     Initial(Bid(bf=None, state='U'), Bid_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(BclxL (bf=None, state='C'), BclxL_0)
-    Initial(Mcl1(bf=None), Mcl1_0)
-    Initial(NOXA(bf=None), NOXA_0)
+    Initial(Mcl1(bf=None, state='M'), Mcl1_0)
+    Initial(NOXA(bf=None, state='M'), NOXA_0)
+
+    if model_type == 'indirect':
+        # Bak is constitutively active
+        Initial(Bak(bf=None, s1=None, s2=None, state='A'), Bak_0)
+        # Bad starts out at the membrane
+        Initial(Bad(bf=None, state='M'), Bad_0)
+        # Subpopulations of Bax and Bak are in complex with inhibitors
+        Initial(Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'),
+                Bax_BclxL_0)
+        Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1),
+                Bak_Mcl1_0)
+    else:
+        Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
+        Initial(Bad(bf=None, state='C'), Bad_0)
+        Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
+
+def cytoc_to_parp_initial_conditions():
+    """Declare initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases
+       3, 6, and 9, XIAP, and PARP.
+    """
+    Parameter('CytoC_0' , 5.0e5) # cytochrome c
+    Parameter('Smac_0'  , 1.0e5) # Smac
+    Parameter('Apaf_0'  , 1.0e5) # Apaf-1
+    Parameter('C3_0'    , 1.0e4) # procaspase-3 (pro-C3)
+    Parameter('C6_0'    , 1.0e4) # procaspase-6 (pro-C6)
+    Parameter('C9_0'    , 1.0e5) # procaspase-9 (pro-C9)
+    Parameter('XIAP_0'  , 1.0e5) # X-linked inhibitor of apoptosis protein
+    Parameter('PARP_0'  , 1.0e6) # C3* substrate
+
+    alias_model_components()
+
     Initial(CytoC(bf=None, state='M'), CytoC_0)
     Initial(Smac(bf=None, state='M'), Smac_0)
     Initial(Apaf(bf=None, state='I'), Apaf_0)
@@ -99,20 +223,8 @@ def declare_all_initial_conditions(model_type):
     Initial(PARP(bf=None, state='U'), PARP_0)
     Initial(XIAP(bf=None), XIAP_0)
 
-    if model_type == 'indirect':
-        # Bak is constitutively active
-        Initial(Bak(bf=None, s1=None, s2=None, state='A'), Bak_0)
-        # Bad starts out at the membrane
-        Initial(Bad(bf=None, state='M'), Bad_0)
-        # Subpopulations of Bax and Bak are in complex with inhibitors
-        Initial(Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'), Bax_BclxL_0)
-        Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1), Bak_Mcl1_0)
-    else:
-        Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
-        Initial(Bad(bf=None, state='C'), Bad_0)
-        Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
-
-def declare_all_observables():
+## Observables declarations ===================
+def all_observables():
     alias_model_components()
     # Observables
     # ===========
@@ -125,9 +237,10 @@ def declare_all_observables():
     Observable('cSmac', Smac(state='A'))
     Observable('cPARP', PARP(state='C'))
 
-## Aliases to pysb.macros
+## Aliases to pysb.macros =====================
+# TODO use site_name for all of these
 def catalyze(enz, sub, product, klist):
-    return macros.catalyze(enz, 'bf', sub, 'bf', product, klist)
+    return macros.catalyze(enz, site_name, sub, site_name, product, klist)
 
 def bind(a, b, klist):
     return macros.bind(a, site_name, b, site_name, klist)
@@ -168,10 +281,9 @@ def synthesize_degrade(species, ksynth, kdeg):
          species() >> None, kdeg) 
 
 ## Macros for the Albeck models
-def two_step_conv(sub1, sub2, product, klist, site='bf'):
-    """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction (i.e. dimerization).
-    This function assumes that there is a site named 'bf' (bind site for fxn)
-    which it uses by default. Site 'bf' need not be passed when calling the function.
+def two_step_conv(sub1, sub2, product, klist, site=site_name):
+    """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction.
+
     Because product is created by the function, it must be fully specified.
     """
 
@@ -187,7 +299,7 @@ def two_step_conv(sub1, sub2, product, klist, site='bf'):
                               [klist[2]], ['kc'])
     return components
 
-def one_step_conv(sub1, sub2, product, klist, site='bf'):
+def one_step_conv(sub1, sub2, product, klist, site=site_name):
     """ Bind sub1 and sub2 to form one product: sub1 + sub2 <> product.
     """
     kf, kr = klist
@@ -198,9 +310,3 @@ def one_step_conv(sub1, sub2, product, klist, site='bf'):
     return macros._macro_rule('convert',
                        sub1({site: None}) + sub2({site: None}) <> product,
                        klist, ['kf', 'kr']) 
-
-def dimerize(*args):
-    pass
-
-def bind_and_convert(*args):
-    pass

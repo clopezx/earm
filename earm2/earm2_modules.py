@@ -1,3 +1,8 @@
+"""TODO: Write docstring for earm2_modules
+
+More stuff here.
+"""
+
 from pysb import *
 from pysb.util import alias_model_components
 from earm2.macros import *

@@ -1,21 +1,5 @@
-from pysb import *
-from pysb.util import alias_model_components
-from earm2.macros import *
+"""EARM 1.0 MODULES
 
-# get model components accessible in this scope
-KF = 1e-6
-KR = 1e-3
-KC = 1
-
-# EARM 1.0 MODULES
-# Notice the alias_model_components function is needed to recognize the monomer and 
-# parameter names in the present scope
-#
-# rec_to_bid: This module defines the interactions from the ligand insult (e.g. TRAIL)
-#             to Bid activation as per EARM 1.0
-#
-# fxrcsp_to_parp: This module defines what happens after the pore is activated and 
-#                 CytC and Smac are released
 #
 # These segments are adapted from:
 # Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
@@ -23,10 +7,24 @@ KC = 1
 # Cell Death. PLoS Biol 6(12): e299. doi:10.1371/journal.pbio.0060299
 #
 # http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
+"""
+
+from pysb import *
+from pysb.util import alias_model_components
+from earm2.macros import *
+
+# Default forward, reverse, and catalytic rates
+KF = 1e-6
+KR = 1e-3
+KC = 1
+
 #
 # RECEPTOR TO BID SEGMENT
 def rec_to_bid():
-    """ This function depends specifically
+    """Defines the interactions from the ligand insult (e.g. TRAIL) to Bid
+    activation as per EARM 1.0.
+
+    This function depends specifically
     on the parameters and monomers of earm_1_0 to work. This function
     uses L, R, DISC, flip, C8, BAR, and Bid monomers and their
     associated parameters to generate the rules that describe Ligand
@@ -34,8 +32,9 @@ def rec_to_bid():
     inhibition by flip and BAR as specified in EARM1.0.
     """
 
+    # Needed to recognize the monomer and parameter names in the present scope
     alias_model_components()
-    # RECEPTOR TO tBID
+
     # =====================
     # tBID Activation Rules
     # ---------------------
@@ -56,7 +55,10 @@ def rec_to_bid():
     bind(BAR(), C8(state='A'), [KF, KR])
 
 def pore_to_parp():
-    """ This is a very specific function which depends on specifically
+    """ This module defines what happens after the pore is activated and CytC
+    and Smac are released.
+
+    This is a very specific function which depends on specifically
     on the parameters and monomers of earm_1_0 to work. This function
     uses, CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP
     monomers and their associated parameters to generate the rules
@@ -64,10 +66,9 @@ def pore_to_parp():
     active pore activation of Caspase3, loopback through Caspase 6,
     and some inhibitions as specified in EARM1.0.
     """
+
     alias_model_components()
-    # FXR CASPASES CLEAVE PARP 
     # ========================
-    #
     # Apoptosome formation
     # ---------------------------
     #        Apaf + cCytoC <-->  Apaf:cCytoC --> aApaf + cCytoC
@@ -76,14 +77,14 @@ def pore_to_parp():
     # ---------------------------
     catalyze(CytoC(state='A'), Apaf(state='I'), Apaf(state='A'), [5e-7, KR, KC])
     one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), [5e-8, KR])
-    catalyze(Apop(), C3(state='pro'), C3(bf=None, state='A'), [5e-9, KR, KC]) # TODO
+    catalyze(Apop(), C3(state='pro'), C3(bf=None, state='A'), [5e-9, KR, KC]) 
     # -----------------------------
     # Apoptosome related inhibitors
     # -----------------------------
     #        Apop + XIAP <-->  Apop:XIAP  
     #        cSmac + XIAP <-->  cSmac:XIAP  
-    bind(Apop(), XIAP(), [2e-6, KR]) # TODO?
-    bind(Smac(state='A'), XIAP(), [7e-6, KR]) # TODO?
+    bind(Apop(), XIAP(), [2e-6, KR]) 
+    bind(Smac(state='A'), XIAP(), [7e-6, KR]) 
     # ---------------------------
     # Caspase reactions (effectors, inhibitors, and loopback initiators)
     # ---------------------------
