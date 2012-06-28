@@ -11,7 +11,7 @@ def all_monomers():
     """Declare the monomers used for the full model, including Bcl-2 proteins.
 
     Internally calls the macros ligand_to_c8_monomers(),
-    bcl2_monomers(), and cytoc_to_parp_monomers() to
+    bcl2_monomers(), and apaf1_to_parp_monomers() to
     instantiate the monomers for each portion of the pathway.
 
     The package variable site_name specifies the name of the site to be used
@@ -24,8 +24,8 @@ def all_monomers():
     """
 
     ligand_to_c8_monomers()
-    bcl2_monomers()
-    cytoc_to_parp_monomers()
+    momp_monomers()
+    apaf1_to_parp_monomers()
 
 def ligand_to_c8_monomers():
     """ Declares ligand, receptor, DISC, Flip, Bar and Caspase 8.
@@ -46,8 +46,8 @@ def ligand_to_c8_monomers():
     Monomer('C8', [site_name, 'state'], {'state':['pro', 'A']})
     Monomer('BAR', [site_name])
 
-def bcl2_monomers():
-    """Declare the monomers for the Bcl-2 family proteins.
+def momp_monomers():
+    """Declare the monomers for the Bcl-2 family proteins, Cyto c, and Smac.
 
     The package variable site_name specifies the name of the site to be used
     for all binding reactions (with the exception of Bax and Bak, which have
@@ -82,7 +82,11 @@ def bcl2_monomers():
     Monomer('NOXA', [site_name, 'state'], {'state': ['C', 'M']})
     # TODO: Others???
 
-def cytoc_to_parp_monomers():
+    # == Cytochrome C and Smac ========
+    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+
+def apaf1_to_parp_monomers():
     """ Declares CytochromeC, Smac, Apaf-1, the Apoptosome, Caspases 3, 6, 9,
     XIAP and PARP.
 
@@ -95,8 +99,6 @@ def cytoc_to_parp_monomers():
     """
 
     # Cytochrome C
-    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
-    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Apaf', [site_name, 'state'], {'state':['I', 'A']}) # Apaf-1
     Monomer('Apop', [site_name]) # Apoptosome (activated Apaf-1 + caspase 9)
     # Csp 3, states: pro, active, ubiquitinated
@@ -125,8 +127,8 @@ def all_initial_conditions(model_type):
                         "'embedded'.")
 
     ligand_to_c8_initial_conditions()
-    bcl2_initial_conditions(model_type)
-    cytoc_to_parp_initial_conditions()
+    momp_initial_conditions(model_type)
+    apaf1_to_parp_initial_conditions()
 
 def ligand_to_c8_initial_conditions():
     """Declare initial conditions for ligand, receptor, Flip, C8, and Bar.
@@ -146,8 +148,8 @@ def ligand_to_c8_initial_conditions():
     Initial(C8(bf=None, state='pro'), C8_0)
     Initial(BAR(bf=None), BAR_0)
 
-def bcl2_initial_conditions(model_type):
-    """Declare initial conditions for Bcl-2 family proteins.
+def momp_initial_conditions(model_type):
+    """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
 
     Parameters
     ==========
@@ -165,6 +167,8 @@ def bcl2_initial_conditions(model_type):
     Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1  
     Parameter('Bad_0'   , 1.0e3) # Bad
     Parameter('NOXA_0'  , 1.0e3) # NOXA
+    Parameter('CytoC_0' , 5.0e5) # cytochrome c
+    Parameter('Smac_0'  , 1.0e5) # Smac
 
     if model_type == 'indirect':
         Parameter('Bax_BclxL_0', 0.8e5), # bax + bclxl
@@ -182,7 +186,9 @@ def bcl2_initial_conditions(model_type):
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
-    Initial(NOXA(bf=None, state='M'), NOXA_0)
+    Initial(NOXA(bf=None, state='C'), NOXA_0)
+    Initial(CytoC(bf=None, state='M'), CytoC_0)
+    Initial(Smac(bf=None, state='M'), Smac_0)
 
     if model_type == 'indirect':
         # Bak is constitutively active
@@ -199,12 +205,11 @@ def bcl2_initial_conditions(model_type):
         Initial(Bad(bf=None, state='C'), Bad_0)
         Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
 
-def cytoc_to_parp_initial_conditions():
+def apaf1_to_parp_initial_conditions():
     """Declare initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases
        3, 6, and 9, XIAP, and PARP.
     """
-    Parameter('CytoC_0' , 5.0e5) # cytochrome c
-    Parameter('Smac_0'  , 1.0e5) # Smac
+
     Parameter('Apaf_0'  , 1.0e5) # Apaf-1
     Parameter('C3_0'    , 1.0e4) # procaspase-3 (pro-C3)
     Parameter('C6_0'    , 1.0e4) # procaspase-6 (pro-C6)
@@ -214,8 +219,6 @@ def cytoc_to_parp_initial_conditions():
 
     alias_model_components()
 
-    Initial(CytoC(bf=None, state='M'), CytoC_0)
-    Initial(Smac(bf=None, state='M'), Smac_0)
     Initial(Apaf(bf=None, state='I'), Apaf_0)
     Initial(C3(bf=None, state='pro'), C3_0)
     Initial(C6(bf=None, state='pro'), C6_0)
