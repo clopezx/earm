@@ -164,7 +164,8 @@ def momp_initial_conditions(model_type, bid_state='U'):
 
     Parameter('Bid_0'   , 4.0e4) # Bid
     Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
-    Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1  
+    Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1
+    Parameter('Bcl2_0'  , 2.0e4) # Mitochondrial Bcl2
     Parameter('Bad_0'   , 1.0e3) # Bad
     Parameter('NOXA_0'  , 1.0e3) # NOXA
     Parameter('CytoC_0' , 5.0e5) # cytochrome c
@@ -176,14 +177,15 @@ def momp_initial_conditions(model_type, bid_state='U'):
         Parameter('Bax_0'   , 0) # Bax
         Parameter('Bak_0'   , 0) # Bak
     else:
-        Parameter('Bcl2_0'  , 2.0e4) # cytosolic Bcl2
         Parameter('Bax_0'   , 0.8e5) # Bax
         Parameter('Bak_0'   , 0.2e5) # Bak
 
     alias_model_components()
 
     Initial(Bid(bf=None, state=bid_state), Bid_0)
+    Initial(Bad(bf=None, state='C'), Bad_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+    Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
     Initial(NOXA(bf=None, state='C'), NOXA_0)
@@ -193,17 +195,13 @@ def momp_initial_conditions(model_type, bid_state='U'):
     if model_type == 'indirect':
         # Bak is constitutively active
         Initial(Bak(bf=None, s1=None, s2=None, state='A'), Bak_0)
-        # Bad starts out at the membrane
-        Initial(Bad(bf=None, state='M'), Bad_0)
         # Subpopulations of Bax and Bak are in complex with inhibitors
         Initial(Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'),
                 Bax_BclxL_0)
-        Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1),
+        Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1, state='M'),
                 Bak_Mcl1_0)
     else:
         Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
-        Initial(Bad(bf=None, state='C'), Bad_0)
-        Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
 
 def apaf1_to_parp_initial_conditions():
     """Declare initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases

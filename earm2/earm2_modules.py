@@ -15,7 +15,7 @@ bid_effector_rates = [        1e-7, 1e-3, 1] # Generalize to catalysis rates?
 # yet oligomerized
 active_monomer = {'s1': None, 's2': None, 'state': 'A'}
 
-def earm2_pores():
+def earm2_pore_formation():
     """ Pore formation and transport process used by all modules.
     """
 
@@ -53,146 +53,122 @@ def earm2_pores():
     equilibrate(CytoC(bf=None, state='C'), CytoC(bf=None, state='A'),
                           transloc_rates)
 
+def translocate_tBid_Bax_BclxL():
+    #equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'),
+    #            transloc_rates)
+    # Previous indirect model had more membrane-favorable rates for tBid
+    equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
+
+    free_Bax = Bax(bf=None, s1=None, s2=None) # Alias for readability
+    equilibrate(free_Bax(state='C'), free_Bax(state='M'),
+                transloc_rates)
+
+    equilibrate(BclxL(bf=None, state='C'), BclxL(bf=None, state='M'),
+                transloc_rates)
+
+
+def tBid_activates_Bax_and_Bak():
+    catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
+    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
+
+def sensitizers_bind_anti_apoptotics():
+    bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
+                [NOXA(state='M'),       None,              None,       bcl2_rates]])
+
+# Embedded Model ===================================================
 def embedded():
     """ Direct and indirect modes of action, occurring at the membrane.
     """
     alias_model_components()
 
-    # All three EARM2 MOMP models use the same model for pore formation
-    # and transport:
-    earm2_pores()
+    translocate_tBid_Bax_BclxL()
 
-    # tBID to MOMP 
-    # ======================
-    # tBid and Bad spontaneously insert into the mito membrane
-    # --------------------------------------------------------
-    # TODO: Bid translocation rates?
-    equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'),
-                transloc_rates)
-    equilibrate(Bad(bf=None, state='C'), Bad(bf=None, state='M'),
-                transloc_rates)
-
-    # tBid in the mitochondria activates Bax(C) and Bak(M)
-    #-----------------------------------------------------
-    catalyze(Bid(state='M'), Bax(state='C'), Bax(state='A'), bid_effector_rates)
-    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
+    tBid_activates_Bax_and_Bak()
 
     # Autoactivation, Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
-    # ------------------------------------------------------------------
     effector_auto_rates = [1e-7, 1e-3, 1]
     catalyze(Bax(active_monomer), Bax(state='C'), Bax(state='A'),
              effector_auto_rates)
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'),
              effector_auto_rates)
 
-    # ------------------------------------
-    # MOMP Inhibition
-    # -----------------------------------------------------
     # tBid and free Bax recruit Bcl-xL(C)
-    # ------------------------------------------------------------------------
     bclxl_recruitment_rates = [2.040816e-04, 1e-3, 1]
     catalyze(Bid(state='M'), BclxL(state='C'), BclxL(state='M'),
              bclxl_recruitment_rates)
     catalyze(Bax(active_monomer), BclxL(state='C'), BclxL(state='M'),
              bclxl_recruitment_rates)
 
-    # Bcl2 inhibitors of Bax, Bak, and Bid
-    # ------------------------------------
-    bind_table([[                              Bcl2,  BclxL(state='M'),        Mcl1],
-                [Bid(state='M'),         bcl2_rates,        bcl2_rates,  bcl2_rates],
+    # Role of activator tBid is to bind all anti-apoptotics
+    # NOTE: Doug Green's MODE 1 inhibition
+    bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bid(state='M'),       bcl2_rates,        bcl2_rates,       bcl2_rates]])
+
+    # Anti-apoptotics bind activated effectors
+    # NOTE: Doug Green's MODE 2 inhibition
+    bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
                 [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
                 [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
-                      
-    # Bcl2 sensitizers 
-    # ---------------------------------------------------------------
-    bind_table([[                       Bcl2,  BclxL(state='M'),        Mcl1],
-                [Bad(state='M'),  bcl2_rates,        bcl2_rates,        None],
-                [NOXA,                  None,              None,  bcl2_rates]])
+
+    sensitizers_bind_anti_apoptotics()
+
+    # Bax and Bak form pores by sequential addition
+    earm2_pore_formation()
 
 def indirect():
-    """Anti-apoptotics don't inhibit the activator tBid.
+    """Bax and Bak spontaneously form pores without activation.
+       The "activator" tBid binds all of the anti-apoptotics.
     """
+
     alias_model_components()
 
-    # All three EARM2 MOMP models use the same model for pore formation
-    # and transport:
-    earm2_pores()
+    translocate_tBid_Bax_BclxL()
 
-    # tBID to MOMP 
-    # ======================
-    # BclxL, Bid, Bax migration to mitochondria
-    # ----------------------------------------
-    # TODO: Bid doesn't migrate? Should BclXL migrate?
-    free_Bax = Bax(bf=None, s1=None, s2=None)
-    equilibrate(free_Bax(state='C'), free_Bax(state='A'),
+    # Bax and Bak spontaneously become activated
+    free_Bax = Bax(bf=None, s1=None, s2=None) # Alias
+    free_Bak = Bak(bf=None, s1=None, s2=None) # Alias
+    equilibrate(free_Bax(state='M'), free_Bax(state='A'),
                 transloc_rates)
-    equilibrate(BclxL(bf=None, state='C'), BclxL(bf=None, state='M'),
+    equilibrate(free_Bak(state='M'), free_Bak(state='A'),
                 transloc_rates)
 
-    # ------------------------------------
-    # MOMP Inhibition
-    # ------------------------------------
-    # Bcl2 inhibitors of Bax, Bak, and Bid
-    # ------------------------------------
-    #NOTE: indirect not clear about state of Bcl-xL
-    bind_table([[                        BclxL(state='M'),        Mcl1],
-                [Bid(state='T'),               bcl2_rates,  bcl2_rates],
-                [Bax(active_monomer),        bcl2_rates,        None],
-                [Bak(active_monomer),        bcl2_rates,  bcl2_rates]])
+    # Role of activator tBid is to bind all anti-apoptotics
+    bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bid(state='M'),       bcl2_rates,        bcl2_rates,       bcl2_rates]])
 
-    # Bcl2 sensitizers 
-    # ---------------------------------------------------------------
-    #Note: according to Andrews, these should all be at mitochondria
-    bind_table([[       BclxL(state='M'),        Mcl1],
-                [Bad,         bcl2_rates,        None],
-                [NOXA,              None,  bcl2_rates]])
+    # Anti-apoptotics bind "active" Bax and Bak to prevent pore formation
+    bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bax(active_monomer),  bcl2_rates,        bcl2_rates,             None],
+                [Bak(active_monomer),        None,        bcl2_rates,       bcl2_rates]])
+
+    sensitizers_bind_anti_apoptotics()
+
+    # Bax and Bak form pores by sequential addition
+    earm2_pore_formation()
 
 def direct():
-    """Anti-apoptotics don't inhibit activated Bax and Bak.
+    """Anti-apoptotics prevent BH3-onlies from activating Bax and Bak.
+
+    Bax and Bak require activation to be able to form pores.
+    The anti-apoptotics don't inhibit activated Bax and Bak; their only role
+    is to bind BH3-onlies.
     """
+
     alias_model_components()
 
-    # All three EARM2 MOMP models use the same model for pore formation
-    # and transport:
-    earm2_pores()
+    translocate_tBid_Bax_BclxL()
 
-    # tBID to MOMP 
-    # ======================
-    # Bid, Bax, BclxL migration to mitochondria
-    # ----------------------------------------
-    # NOTE non-default translocation rates for tBid, suggesting equilibrium
-    # strongly favoring membrane binding
-    equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
+    tBid_activates_Bax_and_Bak()
 
-    free_Bax = Bax(bf=None, s1=None, s2=None) # Alias for readability
-    equilibrate(free_Bax(state='C'), free_Bax(state='M'), transloc_rates)
+    # Anti-apoptotics bind and inhibit the activator tBid
+    # Doug Green's "Mode 1" inhibition
+    bind_table([[                       Bcl2, BclxL(state='M'),  Mcl1(state='M')],
+                [Bid(state='M'),  bcl2_rates,       bcl2_rates,       bcl2_rates]])
 
-    equilibrate(BclxL(bf=None, state='C'), BclxL(bf=None, state='M'),
-                transloc_rates)
+    # Non-"activator" BH3-onlies (i.e., "sensitizers") bind the anti-apoptotics
+    sensitizers_bind_anti_apoptotics()
 
-    # Mitochondrial or Cytosolic tBid activates Bax/Bak
-    # Bax/Bak form pores
-    # ------------------------------------
-    catalyze(Bid(state='M'), Bax(state='M'), Bax(bf=None, state='A'),
-             bid_effector_rates)
-    catalyze(Bid(state='M'), Bak(state='M'), Bak(bf=None, state='A'),
-             bid_effector_rates)
-
-    # ------------------------------------
-    # MOMP Inhibition
-    # ------------------------------------
-    # Bcl2 inhibitors of Bax, Bak, and Bid
-    # ------------------------------------
-    # TODO: Bax/Bak not inhibited in direct model
-    bind_table([[                       Bcl2, BclxL(state='M'),        Mcl1],
-                [Bid(state='M'),  bcl2_rates,       bcl2_rates,  bcl2_rates]])
-
-    # Bcl2 sensitizers
-    # ---------------------------------------------------------------
-    bind_table([[             Bcl2,  BclxL(state='M'),        Mcl1],
-                [Bad,   bcl2_rates,        bcl2_rates,        None],
-                [NOXA,        None,              None,  bcl2_rates]])
-
-
-
+    # Bax and Bak form pores by sequential addition
+    earm2_pore_formation()
