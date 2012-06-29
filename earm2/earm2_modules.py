@@ -54,10 +54,9 @@ def earm2_pore_formation():
                           transloc_rates)
 
 def translocate_tBid_Bax_BclxL():
-    #equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'),
-    #            transloc_rates)
-    # Previous indirect model had more membrane-favorable rates for tBid
     equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
+    # equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), transloc_rates)
+    # Previous indirect model had more membrane-favorable rates for tBid
 
     free_Bax = Bax(bf=None, s1=None, s2=None) # Alias for readability
     equilibrate(free_Bax(state='C'), free_Bax(state='M'),
@@ -65,7 +64,6 @@ def translocate_tBid_Bax_BclxL():
 
     equilibrate(BclxL(bf=None, state='C'), BclxL(bf=None, state='M'),
                 transloc_rates)
-
 
 def tBid_activates_Bax_and_Bak():
     catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
@@ -117,6 +115,7 @@ def embedded():
     # Bax and Bak form pores by sequential addition
     earm2_pore_formation()
 
+# Indirect Model ===================================================
 def indirect():
     """Bax and Bak spontaneously form pores without activation.
        The "activator" tBid binds all of the anti-apoptotics.
@@ -148,6 +147,7 @@ def indirect():
     # Bax and Bak form pores by sequential addition
     earm2_pore_formation()
 
+# Direct Model ===================================================
 def direct():
     """Anti-apoptotics prevent BH3-onlies from activating Bax and Bak.
 
