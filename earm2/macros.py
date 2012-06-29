@@ -140,7 +140,7 @@ def assemble_pore_sequential(subunit, size, klist):
 
 def pore_transport(subunit, min_size, max_size, csource, cdest, klist):
     return macros.pore_transport(subunit, 's1', 's2', 'bf', min_size, max_size,
-                                csource, cdest, 'bf', klist)
+                                csource, 'bf', cdest, klist)
 
 ## Macros for the Shen models
 def assemble_pore(monomer, size, pore, klist):

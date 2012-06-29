@@ -20,9 +20,7 @@ def earm2_pores():
     pore_max_size = 4
     pore_rates = [[2.040816e-04,  # 1.0e-6/v**2
                    1e-3]] * (pore_max_size - 1)
-    # TODO:CHANGE BACK when poretransport is refactored!
-    pore_transport_rates = [[4*2.857143e-5, 4*1e-3, 4*10]] # 2e-6 / v?
-    #pore_transport_rates = [[2.857143e-5, 1e-3, 10]] # 2e-6 / v?
+    pore_transport_rates = [[2.857143e-5, 1e-3, 10]] # 2e-6 / v?
 
     # Pore formation by effectors
     # ------------------------------------
