@@ -1,6 +1,7 @@
 from pysb import *
-from local_macros import *
+from macros import *
 import pysb.macros as macros
+from pysb.util import alias_model_components
 #from pysb.macros import catalyze_one_step_reversible
 
 # Nomenclature from the paper:
@@ -11,20 +12,27 @@ import pysb.macros as macros
 # AcBax = Bax(state='A')
 # MAC = Pore()
 
+transloc_rates = [1e-2, 1e-2]
 
 def chen2007BiophysJ():
-    Monomer('Pore', ['bf'])
-    macros.alias_model_components()
+    alias_model_components()
 
-    Rule('trans_bid', Bid(state='T') >> Bid(state='M'), Parameter('p', 1))
-    tBid = Bid(state='M')
-    catalyze_one_step_reversible(tBid, Bax(state='C'), Bax(state='A'), [1, 1])
-    bind_table([[         tBid,  Bax(state='A')],
-                [Bcl2,  (1, 1),         (1, 1)]])
-    displace_reversibly(Bcl2, Bax(state='A'), tBid, [1, 1])
-    assemble_pore(Bax(state='A'), 4, Pore(), 
-                  [Parameter('p1',1), Parameter('pr', 1)])
-    catalyze(Pore(), CytoC(state='M'), CytoC(state='C'), [1, 1, 1])
+    # One-step activation of Bax by tBid
+    macros.catalyze_one_step_reversible(
+        Bid(state='T', bf=None), Bax(state='C', bf=None),
+        Bax(state='A', bf=None), [1, 1])
+
+    active_monomer = {'state': 'A', 's1': None, 's2': None}
+    bind_table([[                        Bcl2],
+                [Bid(state='T'),       (1, 1)],
+                [Bax(active_monomer),  (1, 1)]])
+
+    displace_reversibly(Bcl2, Bax(active_monomer), Bid(state='T'), [1, 1])
+
+    #assemble_pore(Bax(state='A'), 4, Pore(),
+    #              [Parameter('p1',1), Parameter('pr', 1)])
+
+    #catalyze(Pore(), CytoC(state='M'), CytoC(state='C'), [1, 1, 1])
 
 def howells2011():
     chen2007BiophysJ()
@@ -38,13 +46,13 @@ def howells2011():
     #                  [Bad, pBad, kBADphos1]])
 
 def chen2007FEBS_indirect():
-    macros.alias_model_components()
+    alias_model_components()
     bind_table([[         tBid,  Bax(state='C')],
                 [Bcl2,  (1, 1),          (1, 1)]])
     assemble_pore(Bax(state='C'), Pore(), 4, [1, 1])
 
 def chen2007FEBS_direct():
-    macros.alias_model_components()
+    alias_model_components()
     catalyze_one_step_reversible(tBid, Bax(state='C'), Bax(state='A'),
                                 [1, 1])
     bind_table([[         tBid,     Bad],
@@ -52,7 +60,7 @@ def chen2007FEBS_direct():
     assemble_pore(Bax(state='A'), Pore(), 4, [1, 1])
 
 def cui2008_direct():
-    macros.alias_model_components()
+    alias_model_components()
     chen2007FEBS_direct()
     synthesize_degrade_table(
        [[Bax(state='C'),                   0.06,  0.001],
@@ -66,12 +74,12 @@ def cui2008_direct():
         [Pore,                             None, 0.0005]])
 
 def cui2008_direct1():
-    macros.alias_model_components()
+    alias_model_components()
     cui2008_direct()
     bind(Bax(state='A'), Bcl2, [1, 1])
 
 def cui2008_direct2():
-    macros.alias_model_components()
+    alias_model_components()
     cui2008_direct1()
     catalyze(Bax(state='A'), Bax(state='C'), Bax(state='A'), [1, 1, 1])
 

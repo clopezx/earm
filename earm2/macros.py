@@ -265,12 +265,12 @@ def assemble_pore(monomer, size, pore, klist):
          kf , kr)
 
 def displace_reversibly(target, lig1, lig2, klist):
-    kf, kr = klist
-
-    r = Rule('displacement',
+    """Generate displacement reaction T:L1 + L2 <> L1 + T:L2
+    """
+    return macros._macro_rule('displace',
          target({site_name:1}) % lig1({site_name:1}) + lig2({site_name:None}) <>
          target({site_name:1}) % lig2({site_name:1}) + lig1({site_name:None}),
-         Parameter('displace_kf'), Parameter('displace_kr'))
+         klist, ['kf', 'kr'])
 
 def synthesize_degrade(species, ksynth, kdeg):
     ksynth = Parameter('%s_ksynth' % species().monomer.name, ksynth)
