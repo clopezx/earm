@@ -137,7 +137,7 @@ def ligand_to_c8_initial_conditions():
     Initial(C8(bf=None, state='pro'), C8_0)
     Initial(BAR(bf=None), BAR_0)
 
-def momp_initial_conditions(model_type=None, bid_state='U'):
+def momp_initial_conditions(bid_state='U'):
     """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
 
     Parameters
@@ -161,7 +161,7 @@ def momp_initial_conditions(model_type=None, bid_state='U'):
     Initial(Bad(bf=None, state='C'), Bad_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
-    Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
+    Initial(Bcl2(bf=None), Bcl2_0)
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
     Initial(NOXA(bf=None, state='C'), NOXA_0)
@@ -222,9 +222,9 @@ def pore_transport(subunit, min_size, max_size, csource, cdest, klist):
                                 csource, 'bf', cdest, klist)
 
 ## Macros for the Shen models
-def assemble_pore_spontaneously(subunit, klist):
+def assemble_pore_spontaneous(subunit, klist):
     free_subunit = subunit(s1=None, s2=None)
-    macros._macro_rule('assemble_pore_spontaneously',
+    macros._macro_rule('assemble_pore_spontaneous',
         free_subunit + free_subunit + free_subunit + free_subunit <>
         subunit(s1=1, s2=4) % subunit(s1=2, s2=1) % \
         subunit(s1=3, s2=2) % subunit(s1=4, s2=3),
