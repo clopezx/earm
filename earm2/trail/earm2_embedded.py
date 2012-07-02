@@ -16,6 +16,6 @@ albeck_modules.pore_to_parp()
 
 # The specific MOMP model to use
 earm2_modules.embedded()
-macros.all_initial_conditions('embedded')
+macros.all_initial_conditions()
 
 

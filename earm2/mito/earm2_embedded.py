@@ -13,6 +13,6 @@ Observable('cSmac', Smac(state='A'))
 
 # The specific MOMP model to use
 earm2_modules.embedded()
-macros.momp_initial_conditions('embedded', bid_state='T')
+macros.momp_initial_conditions(bid_state='T')
 
 

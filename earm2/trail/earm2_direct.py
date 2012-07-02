@@ -16,5 +16,5 @@ albeck_modules.pore_to_parp()
 
 # The specific MOMP model to use
 earm2_modules.direct()
-macros.all_initial_conditions('direct')
+macros.all_initial_conditions()
 

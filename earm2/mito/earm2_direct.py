@@ -13,6 +13,6 @@ Observable('cSmac', Smac(state='A'))
 
 # The specific MOMP model to use
 earm2_modules.direct()
-macros.momp_initial_conditions('direct', bid_state='T')
+macros.momp_initial_conditions(bid_state='T')
 
 

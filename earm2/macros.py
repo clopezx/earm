@@ -111,23 +111,12 @@ def apaf1_to_parp_monomers():
     Monomer('XIAP', [site_name]) # X-linked Inhibitor of Apoptosis Protein
 
 ## Initial condition declarations =============
-def all_initial_conditions(model_type):
+def all_initial_conditions():
     """Declare initial conditions for the full extrinsic apoptosis model.
-
-    Parameters
-    ==========
-    model_type : string, one of 'indirect', 'direct', or 'embedded'.
-        Since the initial conditions for the Bcl-2 submodule are different for
-        the different Bcl-2 model topologies, the Bcl2 model type must be
-        specified as an argument.
     """
 
-    if model_type not in ['indirect', 'direct', 'embedded']:
-        raise ValueError("model_type must be one of 'direct', 'indirect', or " +
-                        "'embedded'.")
-
     ligand_to_c8_initial_conditions()
-    momp_initial_conditions(model_type, bid_state='U')
+    momp_initial_conditions(bid_state='U')
     apaf1_to_parp_initial_conditions()
 
 def ligand_to_c8_initial_conditions():
@@ -148,20 +137,13 @@ def ligand_to_c8_initial_conditions():
     Initial(C8(bf=None, state='pro'), C8_0)
     Initial(BAR(bf=None), BAR_0)
 
-def momp_initial_conditions(model_type, bid_state='U'):
+def momp_initial_conditions(model_type=None, bid_state='U'):
     """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
 
     Parameters
     ==========
-    model_type : string, one of 'indirect', 'direct', or 'embedded'.
-        Since the initial conditions are different for the different model
-        topologies, the Bcl2 model type must be specified as an argument.
+
     """
-
-    if model_type not in ['indirect', 'direct', 'embedded']:
-        raise ValueError("model_type must be one of 'direct', 'indirect', or " +
-                         "'embedded'.")
-
     Parameter('Bid_0'   , 4.0e4) # Bid
     Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
     Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1
@@ -170,38 +152,21 @@ def momp_initial_conditions(model_type, bid_state='U'):
     Parameter('NOXA_0'  , 1.0e3) # NOXA
     Parameter('CytoC_0' , 5.0e5) # cytochrome c
     Parameter('Smac_0'  , 1.0e5) # Smac
-
-    if model_type == 'indirect':
-        Parameter('Bax_BclxL_0', 0.8e5), # bax + bclxl
-        Parameter('Bak_Mcl1_0', 0.2e5), # bak + mcl1
-        Parameter('Bax_0'   , 0) # Bax
-        Parameter('Bak_0'   , 0) # Bak
-    else:
-        Parameter('Bax_0'   , 0.8e5) # Bax
-        Parameter('Bak_0'   , 0.2e5) # Bak
+    Parameter('Bax_0'   , 0.8e5) # Bax
+    Parameter('Bak_0'   , 0.2e5) # Bak
 
     alias_model_components()
 
     Initial(Bid(bf=None, state=bid_state), Bid_0)
     Initial(Bad(bf=None, state='C'), Bad_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+    Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
     Initial(Bcl2(bf=None), Bcl2_0) # not used in indirect
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
     Initial(NOXA(bf=None, state='C'), NOXA_0)
     Initial(CytoC(bf=None, state='M'), CytoC_0)
     Initial(Smac(bf=None, state='M'), Smac_0)
-
-    if model_type == 'indirect':
-        # Bak is constitutively active
-        Initial(Bak(bf=None, s1=None, s2=None, state='A'), Bak_0)
-        # Subpopulations of Bax and Bak are in complex with inhibitors
-        Initial(Bax(bf=1, s1=None, s2=None, state='A') % BclxL(bf=1, state='M'),
-                Bax_BclxL_0)
-        Initial(Bak(bf=1, s1=None, s2=None, state='A') % Mcl1(bf=1, state='M'),
-                Bak_Mcl1_0)
-    else:
-        Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
 
 def apaf1_to_parp_initial_conditions():
     """Declare initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases
@@ -257,12 +222,13 @@ def pore_transport(subunit, min_size, max_size, csource, cdest, klist):
                                 csource, 'bf', cdest, klist)
 
 ## Macros for the Shen models
-def assemble_pore(monomer, size, pore, klist):
-    monomerp = monomer()
-    kf, kr = klist
-    Rule('%s_simple_pore' % monomerp.monomer.name,
-         monomerp + monomerp + monomerp + monomerp <> pore,
-         kf , kr)
+def assemble_pore_spontaneously(subunit, klist):
+    free_subunit = subunit(s1=None, s2=None)
+    macros._macro_rule('assemble_pore_spontaneously',
+        free_subunit + free_subunit + free_subunit + free_subunit <>
+        subunit(s1=1, s2=4) % subunit(s1=2, s2=1) % \
+        subunit(s1=3, s2=2) % subunit(s1=4, s2=3),
+        klist, ['kf', 'kr'])
 
 def displace_reversibly(target, lig1, lig2, klist):
     """Generate displacement reaction T:L1 + L2 <> L1 + T:L2
