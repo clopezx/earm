@@ -28,15 +28,21 @@ Observable('Bcl2_Bax_', Bcl2(bf=1) % Bax(bf=1))
 def print_original_odes():
     """Show the ODEs using the nomenclature from the paper.
 
-        >>> import earm2.mito.chen2007FEBS_indirect as i
-        >>> i.print_original_odes()
-        d[BH3]/dt = -k_BH3_Bcl2*BH3*Bcl2 + kr_BH3Bcl2*BH3Bcl2
-        d[Bax]/dt = -k_Bax_Bcl2*Bax*Bcl2 + kr_BaxBcl2*BaxBcl2 - 1.0*Bax**4*k_o + 4*MAC*kr_o
-        d[Bcl2]/dt = -k_Bax_Bcl2*Bax*Bcl2 + kr_BaxBcl2*BaxBcl2 - k_BH3_Bcl2*BH3*Bcl2 + kr_BH3Bcl2*BH3Bcl2
-        d[BH3Bcl2]/dt = k_BH3_Bcl2*BH3*Bcl2 - kr_BH3Bcl2*BH3Bcl2
-        d[BaxBcl2]/dt = k_Bax_Bcl2*Bax*Bcl2 - kr_BaxBcl2*BaxBcl2
-        d[MAC]/dt = 0.25*Bax**4*k_o - MAC*kr_o
+    Example
+    -------
+    Note that the coefficient of 0.25 in the final equation
+    (for the pore, a.k.a. MAC) that is introduced by BNG is accounted
+    for by multiplying the forward rate of pore formation, k_o,
+    by 4 (see chen2007FEBS_direct() in shen_modules.py):
 
+    >>> import earm2.mito.chen2007FEBS_indirect as i
+    >>> i.print_original_odes()
+    d[BH3]/dt = -k_BH3_Bcl2*BH3*Bcl2 + kr_BH3Bcl2*BH3Bcl2
+    d[Bax]/dt = -k_Bax_Bcl2*Bax*Bcl2 + kr_BaxBcl2*BaxBcl2 - 1.0*Bax**4*k_o + 4*MAC*kr_o
+    d[Bcl2]/dt = -k_Bax_Bcl2*Bax*Bcl2 + kr_BaxBcl2*BaxBcl2 - k_BH3_Bcl2*BH3*Bcl2 + kr_BH3Bcl2*BH3Bcl2
+    d[BH3Bcl2]/dt = k_BH3_Bcl2*BH3*Bcl2 - kr_BH3Bcl2*BH3Bcl2
+    d[BaxBcl2]/dt = k_Bax_Bcl2*Bax*Bcl2 - kr_BaxBcl2*BaxBcl2
+    d[MAC]/dt = 0.25*Bax**4*k_o - MAC*kr_o
     """
 
     p_name_map = {
