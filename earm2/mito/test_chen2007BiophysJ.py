@@ -20,6 +20,8 @@ p_name_map = {
     'bind_BaxA_Bcl2_to_BaxABcl2_kr': 'k4',
     'displace_Bcl2BaxA_BidT_to_Bcl2BidT_BaxA_kf': 'k8',
     'displace_Bcl2BaxA_BidT_to_Bcl2BidT_BaxA_kr': 'k7'
+    'assemble_pore_spontaneous_BaxA_BaxA_BaxA_BaxA_to_BaxABaxABaxABaxA_kf': 'k9',
+    'assemble_pore_spontaneous_BaxA_BaxA_BaxA_BaxA_to_BaxABaxABaxABaxA_kr': 'k10'
 }
 
 s_name_map = {'s0': 'Act',

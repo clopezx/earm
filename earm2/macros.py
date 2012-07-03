@@ -223,12 +223,20 @@ def pore_transport(subunit, min_size, max_size, csource, cdest, klist):
 
 ## Macros for the Shen models
 def assemble_pore_spontaneous(subunit, klist):
+
+    def pore_rule_name(rule_expression):
+        react_p = rule_expression.reactant_pattern
+        mp = react_p.complex_patterns[0].monomer_patterns[0]
+        subunit_name = macros._monomer_pattern_label(mp)
+        pore_name = mp.monomer.name
+        return '%s_to_%s%d' % (subunit_name, mp.monomer.name, 4)
+
     free_subunit = subunit(s1=None, s2=None)
-    macros._macro_rule('assemble_pore_spontaneous',
+    macros._macro_rule('spontaneous_pore',
         free_subunit + free_subunit + free_subunit + free_subunit <>
         subunit(s1=1, s2=4) % subunit(s1=2, s2=1) % \
         subunit(s1=3, s2=2) % subunit(s1=4, s2=3),
-        klist, ['kf', 'kr'])
+        klist, ['kf', 'kr'], name_func=pore_rule_name)
 
 def displace_reversibly(target, lig1, lig2, klist):
     """Generate displacement reaction T:L1 + L2 <> L1 + T:L2
