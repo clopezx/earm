@@ -1,6 +1,6 @@
 import pysb.macros as macros
 from pysb import *
-from pysb import MonomerPattern, ComplexPattern, ComponentSet, as_reaction_pattern, Monomer
+from pysb import MonomerPattern, ComplexPattern
 from pysb.util import alias_model_components
 
 # The default site name to be used for binding reactions
