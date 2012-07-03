@@ -1,10 +1,72 @@
 import pysb.macros as macros
 from pysb import *
-from pysb import MonomerPattern, ComplexPattern
+from pysb import MonomerPattern, ComplexPattern, ComponentSet, as_reaction_pattern, Monomer
 from pysb.util import alias_model_components
 
 # The default site name to be used for binding reactions
 site_name = 'bf'
+
+## TODO: Have synth and deg check that patterns are concrete so that
+## the user gets a real error, not a BNG error. Ideally, should use
+## the default states of unspecified sites.
+
+## TODO: Move to pysb
+def synthesize(species, ksynth):
+    # TODO: May fail if given a complex pattern
+
+    def synthesize_name_func(rule_expression):
+        prod_p = rule_expression.product_pattern
+        label = [macros._complex_pattern_label(cp)
+                     for cp in prod_p.complex_patterns]
+        label = '_'.join(label)
+        return label
+
+    # TODO: the >> operator should work with a monomer, or complexpattern
+    # shouldn't blow up if it is called
+    if isinstance(species, Monomer):
+        species = species()
+
+    species_rp = as_reaction_pattern(species)
+    return macros._macro_rule('synthesize', None >> species_rp, [ksynth], ['k'],
+                       name_func=synthesize_name_func)
+
+## TODO: Move to pysb
+def degrade(species, kdeg):
+    # TODO: May fail if given a complex pattern
+    def degrade_name_func(rule_expression):
+        react_p = rule_expression.reactant_pattern
+        label = [macros._complex_pattern_label(cp)
+                     for cp in react_p.complex_patterns]
+        label = '_'.join(label)
+        return label
+
+    # TODO: the >> operator should work with a monomer, or complexpattern
+    # shouldn't blow up if it is called
+    if isinstance(species, Monomer):
+        species = species()
+
+    species_rp = as_reaction_pattern(species)
+    return macros._macro_rule('degrade', species_rp >> None, [kdeg], ['k'],
+                       name_func=degrade_name_func)
+
+def synthesize_degrade_table(table):
+    """TODO: Docstring
+    """
+    # extract species lists and matrix of rates
+    s_rows = [row[0] for row in table]
+    kmatrix = [row[1:] for row in table]
+
+    # loop over interactions
+    components = ComponentSet()
+    for r, s_row in enumerate(s_rows):
+        ksynth, kdeg = kmatrix[r]
+        #print (r, s_row)
+        if ksynth is not None:
+            components |= synthesize(s_row, ksynth)
+        if kdeg is not None:
+            components |= degrade(s_row, kdeg)
+
+    return components
 
 ## Monomer declarations ========================
 def all_monomers():
@@ -238,22 +300,20 @@ def assemble_pore_spontaneous(subunit, klist):
         subunit(s1=3, s2=2) % subunit(s1=4, s2=3),
         klist, ['kf', 'kr'], name_func=pore_rule_name)
 
-def displace_reversibly(target, lig1, lig2, klist):
-    """Generate displacement reaction T:L1 + L2 <> L1 + T:L2
+def displace_reversibly(lig1, lig2, target, klist):
+    """Generate displacement reaction L1 + L2:T <> L1:T + L2.
+
+    The signature can be remembered with the following formula:
+    "lig1 displaces lig2 from target." The first rate given in
+    in klist specifies the forward rate of this reaction; the second
+    specifies the reverse rate.
     """
+
     return macros._macro_rule('displace',
-         target({site_name:1}) % lig1({site_name:1}) + lig2({site_name:None}) <>
-         target({site_name:1}) % lig2({site_name:1}) + lig1({site_name:None}),
+         lig1({site_name:None}) + lig2({site_name:1}) % target({site_name:1}) <>
+         lig1({site_name:1}) % target({site_name:1}) + lig2({site_name:None}),
          klist, ['kf', 'kr'])
 
-def synthesize_degrade(species, ksynth, kdeg):
-    ksynth = Parameter('%s_ksynth' % species().monomer.name, ksynth)
-    kdeg = Parameter('%s_kdeg' % species().monomer.name, kdeg)
-
-    Rule('synthesize_%s' % species().monomer.name,
-         None >> species(), ksynth) 
-    Rule('degrade_%s' % species().monomer.name,
-         species() >> None, kdeg) 
 
 ## Macros for the Albeck models
 def two_step_conv(sub1, sub2, product, klist, site=site_name):
