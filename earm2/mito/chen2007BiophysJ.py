@@ -82,8 +82,8 @@ def print_original_odes():
         'bind_BidT_Bcl2_kr': 'k6',
         'bind_BaxA_Bcl2_kf': 'k3',
         'bind_BaxA_Bcl2_kr': 'k4',
-        'displace_Bcl2BidT_BaxA_to_Bcl2BaxA_BidT_kf': 'k7',
-        'displace_Bcl2BidT_BaxA_to_Bcl2BaxA_BidT_kr': 'k8',
+        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kf': 'k7',
+        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kr': 'k8',
         'spontaneous_pore_BaxA_to_Bax4_kf': 'k9',
         'spontaneous_pore_BaxA_to_Bax4_kr': 'k10'
     }
