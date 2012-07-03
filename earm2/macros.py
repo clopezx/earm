@@ -6,68 +6,6 @@ from pysb.util import alias_model_components
 # The default site name to be used for binding reactions
 site_name = 'bf'
 
-## TODO: Have synth and deg check that patterns are concrete so that
-## the user gets a real error, not a BNG error. Ideally, should use
-## the default states of unspecified sites.
-
-## TODO: Move to pysb
-def synthesize(species, ksynth):
-    # TODO: May fail if given a complex pattern
-
-    def synthesize_name_func(rule_expression):
-        prod_p = rule_expression.product_pattern
-        label = [macros._complex_pattern_label(cp)
-                     for cp in prod_p.complex_patterns]
-        label = '_'.join(label)
-        return label
-
-    # TODO: the >> operator should work with a monomer, or complexpattern
-    # shouldn't blow up if it is called
-    if isinstance(species, Monomer):
-        species = species()
-
-    species_rp = as_reaction_pattern(species)
-    return macros._macro_rule('synthesize', None >> species_rp, [ksynth], ['k'],
-                       name_func=synthesize_name_func)
-
-## TODO: Move to pysb
-def degrade(species, kdeg):
-    # TODO: May fail if given a complex pattern
-    def degrade_name_func(rule_expression):
-        react_p = rule_expression.reactant_pattern
-        label = [macros._complex_pattern_label(cp)
-                     for cp in react_p.complex_patterns]
-        label = '_'.join(label)
-        return label
-
-    # TODO: the >> operator should work with a monomer, or complexpattern
-    # shouldn't blow up if it is called
-    if isinstance(species, Monomer):
-        species = species()
-
-    species_rp = as_reaction_pattern(species)
-    return macros._macro_rule('degrade', species_rp >> None, [kdeg], ['k'],
-                       name_func=degrade_name_func)
-
-def synthesize_degrade_table(table):
-    """TODO: Docstring
-    """
-    # extract species lists and matrix of rates
-    s_rows = [row[0] for row in table]
-    kmatrix = [row[1:] for row in table]
-
-    # loop over interactions
-    components = ComponentSet()
-    for r, s_row in enumerate(s_rows):
-        ksynth, kdeg = kmatrix[r]
-        #print (r, s_row)
-        if ksynth is not None:
-            components |= synthesize(s_row, ksynth)
-        if kdeg is not None:
-            components |= degrade(s_row, kdeg)
-
-    return components
-
 ## Monomer declarations ========================
 def all_monomers():
     """Declare the monomers used for the full model, including Bcl-2 proteins.
