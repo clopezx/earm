@@ -12,7 +12,7 @@ Model()
 shen_modules.momp_monomers()
 
 # The specific MOMP model to use
-shen_modules.cui2008_direct()
+shen_modules.cui2008_direct1()
 
 # Observables
 Observable('AcBax_', Bax(bf=None, state='A'))
@@ -26,4 +26,3 @@ Observable('Bcl2_', Bcl2(bf=None))
 Observable('Bcl2_Bad_', Bcl2(bf=1) % Bad(bf=1))
 Observable('Bcl2_Bid_', Bcl2(bf=1) % Bid(bf=1))
 Observable('Bcl2_Bax_', Bcl2(bf=1) % Bax(bf=1))
-
