@@ -10,6 +10,18 @@ from earm2.mito.howells2011 import model as howells2011_model
 from pysb.bng import generate_equations
 import re
 
+def convert_odes(model, p_name_map, s_name_map):
+    name_map = {}
+    name_map.update(p_name_map)
+    name_map.update(s_name_map)
+    generate_equations(model)
+    ode_list = []
+    for i, ode in enumerate(model.odes):
+        new_ode = ode.subs(name_map)
+        new_ode = 'd[%s]/dt = %s' % (s_name_map['s%d' % i], str(new_ode))
+        ode_list.append(new_ode)
+
+    return ode_list
 
 def chen2007BiophysJ_convert_odes(model):
     # Examine the structure of the equations after converting the nomenclature
@@ -33,18 +45,7 @@ def chen2007BiophysJ_convert_odes(model):
         's4': 'ActBcl2',
         's5': 'AcBaxBcl2',
         's6': 'Bax4'}
-
-    generate_equations(model)
-    ode_list = []
-    for i, ode in enumerate(model.odes):
-        new_ode = 'd[s%d]/dt = %s' % (i, str(ode))
-        for old_s in s_name_map:
-            new_ode = re.sub(old_s, s_name_map[old_s], new_ode)
-        for old_p in p_name_map:
-            new_ode = re.sub(old_p, p_name_map[old_p], new_ode)
-        ode_list.append(new_ode)
-
-    return ode_list
+    return convert_odes(model, p_name_map, s_name_map)
 
 def chen2007FEBS_convert_odes(model, model_type):
     """Substitute species/parameter names with ones from Chen et al., FEBS.
@@ -72,6 +73,8 @@ def chen2007FEBS_convert_odes(model, model_type):
         'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
         'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
         'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
+        'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
+        'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
         'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
         'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
 
@@ -96,17 +99,7 @@ def chen2007FEBS_convert_odes(model, model_type):
     else:
         raise ValueError("model_type must be either 'direct' or 'indirect'.")
 
-    generate_equations(model)
-    ode_list = []
-    for i, ode in enumerate(model.odes):
-        new_ode = 'd[s%d]/dt = %s' % (i, str(ode))
-        for old_s in s_name_map:
-            new_ode = re.sub(old_s, s_name_map[old_s], new_ode)
-        for old_p in p_name_map:
-            new_ode = re.sub(old_p, p_name_map[old_p], new_ode)
-        ode_list.append(new_ode)
-
-    return ode_list
+    return convert_odes(model, p_name_map, s_name_map)
 
 def cui_convert_odes(model):
     """Substitutes species and parameter names with ones from Cui 2008.
@@ -154,7 +147,7 @@ def cui_convert_odes(model):
         'degrade_BaxBax_k': 'u9',
         'bind_BaxA_Bcl2_kf': 'k2',
         'bind_BaxA_Bcl2_kr': 'k3',
-        'one_step_BaxA_BaxC_to_BaxA_BaxA_kf': 'k15' }
+        'Bax_autoactivation_dimerization_k': 'k15' }
     # Mapping of species names
     s_name_map = {
         's0': 'Act',
@@ -166,19 +159,10 @@ def cui_convert_odes(model):
         's6': 'ActBcl2',
         's7': 'EnaBcl2',
         's8': '__sink',
-        's10': 'MAC',
-        's9': 'AcBaxBcl2'}
-    generate_equations(model)
-    ode_list = []
-    for i, ode in enumerate(model.odes):
-        new_ode = 'd[s%d]/dt = %s' % (i, str(ode))
-        for old_s in s_name_map:
-            new_ode = re.sub(old_s, s_name_map[old_s], new_ode)
-        for old_p in p_name_map:
-            new_ode = re.sub(old_p, p_name_map[old_p], new_ode)
-        ode_list.append(new_ode)
+        's9': 'MAC',
+        's10': 'AcBaxBcl2'}
 
-    return ode_list
+    return convert_odes(model, p_name_map, s_name_map)
 
 def howells_convert_odes(model):
     """Substitutes species and parameter names with ones from Howells 20011.
@@ -218,7 +202,7 @@ def howells_convert_odes(model):
     # Mapping of species names
     s_name_map = {
         's0': 'tBid',
-        's1': 'Bax_inac',
+        's1': 'Bak_inac',
         's2': 'Bcl2',
         's3': 'Bad_m',
         's4': 'Bak',
@@ -228,37 +212,52 @@ def howells_convert_odes(model):
         's8': 'pBad',
         's9': 'BakBcl2',
         's10': 'Bak_poly',
-        's11': 'pBad14-3-3'}
-    generate_equations(model)
-    ode_list = []
-    for i, ode in enumerate(model.odes):
-        new_ode = 'd[s%d]/dt = %s' % (i, str(ode))
-        for old_s in s_name_map:
-            new_ode = re.sub(old_s, s_name_map[old_s], new_ode)
-        for old_p in p_name_map:
-            new_ode = re.sub(old_p, p_name_map[old_p], new_ode)
-        ode_list.append(new_ode)
+        's11': 'pBad1433'}
+    return convert_odes(model, p_name_map, s_name_map)
 
-    return ode_list
+## TESTS ===============================================================
 
-# TODO: Verify correctness of output
 class TestChen2007BiophysJ(unittest.TestCase):
     def setUp(self):
         self.model = chen2007BiophysJ_model
 
     def test_odes(self):
+        """These ODEs match those of the paper with the caveat that in the
+        equation for d[Bcl2]/dt, in the paper the authors group the terms
+
+            + AcBaxBcl2*k4 + ActBcl2*k6'
+
+        into the single term
+
+            + k_Bcl2 * Bcl2_nonfree
+
+        with the comment that "Bcl2_nonfree indicates the total concentration
+        of Bcl2 associated with both activated Bax and Activator
+        ([Bcl2_nonfree] = [AcBaxBcl2] + [ActBcl2]). We use k_bcl2 to represent
+        the rate of non-free Bcl2 shifting to free Bcl2, assuming that free
+        Bcl2 originates from both Bcl2 non-free forms at the same rate."
+
+        In addition, in the legend for Table 1 (which lists parameters) they
+        state that: "We set k_bcl2 (the rate of non-free Bcl2 shifting to
+        free Bcl2)... equal to k6 assuming that free Bcl2 originate [sic] from
+        AcBaxBcl2 at the same rate with ActBcl2."
+
+        So, obviously this substitution of Bcl2_nonfree for AcBaxBcl2 and
+        ActBcl2 works if k4 and k6 are equal, which they claim as an
+        assumption; however, in their table of parameter values, they list k4
+        as having a value of 0.001 s^-1, and k6 as having a value of 0.04 s^-1.
+        """
+
         ode_list = chen2007BiophysJ_convert_odes(self.model)
         self.assertEqual(ode_list,
-            ['d[Act]/dt = -k5*Act*Bcl2 + k6*ActBcl2 + k7*AcBax*ActBcl2',
-             'd[InBax]/dt = -k1*Act*InBax + k2*AcBax',
-             'd[Bcl2]/dt = -k3*Bcl2*AcBax + k4*AcBaxBcl2 - k5*Act*Bcl2 + k6*ActBcl2',
-             'd[AcBax]/dt = -k3*Bcl2*AcBax + k4*AcBaxBcl2 - k7*AcBax*ActBcl2 + k1*Act*InBax - k2*AcBax - 1.0*AcBax**4*k9 + 4*Bax4*k10',
-             'd[ActBcl2]/dt = k5*Act*Bcl2 - k6*ActBcl2 - k7*AcBax*ActBcl2',
-             'd[AcBaxBcl2]/dt = k3*Bcl2*AcBax - k4*AcBaxBcl2 + k7*AcBax*ActBcl2',
+            ['d[Act]/dt = AcBax*ActBcl2*k7 - Act*Bcl2*k5 + ActBcl2*k6',
+             'd[InBax]/dt = AcBax*k2 - Act*InBax*k1',
+             'd[Bcl2]/dt = -AcBax*Bcl2*k3 + AcBaxBcl2*k4 - Act*Bcl2*k5 + ActBcl2*k6',
+             'd[AcBax]/dt = -1.0*AcBax**4*k9 - AcBax*ActBcl2*k7 - AcBax*Bcl2*k3 - AcBax*k2 + AcBaxBcl2*k4 + Act*InBax*k1 + 4*Bax4*k10',
+             'd[ActBcl2]/dt = -AcBax*ActBcl2*k7 + Act*Bcl2*k5 - ActBcl2*k6',
+             'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k7 + AcBax*Bcl2*k3 - AcBaxBcl2*k4',
              'd[Bax4]/dt = 0.25*AcBax**4*k9 - Bax4*k10'])
 
-
-# TODO: Verify correctness of output
 class TestChen2007FEBS_Indirect(unittest.TestCase):
     def setUp(self):
         self.model = chen2007FEBS_indirect_model
@@ -266,14 +265,13 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
     def test_odes(self):
         ode_list = chen2007FEBS_convert_odes(self.model, 'indirect')
         self.assertEqual(ode_list,
-            ['d[BH3]/dt = -k_BH3_Bcl2*BH3*Bcl2 + kr_BH3Bcl2*BH3Bcl2',
-             'd[Bax]/dt = -k_Bax_Bcl2*Bax*Bcl2 + kr_BaxBcl2*BaxBcl2 - 1.0*Bax**4*spontaneous_pore_BaxC_to_Bax4_kf + 4*MAC*spontaneous_pore_BaxC_to_Bax4_kr',
-             'd[Bcl2]/dt = -k_Bax_Bcl2*Bax*Bcl2 + kr_BaxBcl2*BaxBcl2 - k_BH3_Bcl2*BH3*Bcl2 + kr_BH3Bcl2*BH3Bcl2',
-             'd[BH3Bcl2]/dt = k_BH3_Bcl2*BH3*Bcl2 - kr_BH3Bcl2*BH3Bcl2',
-             'd[BaxBcl2]/dt = k_Bax_Bcl2*Bax*Bcl2 - kr_BaxBcl2*BaxBcl2',
-             'd[MAC]/dt = 0.25*Bax**4*spontaneous_pore_BaxC_to_Bax4_kf - MAC*spontaneous_pore_BaxC_to_Bax4_kr'])
+            ['d[BH3]/dt = -BH3*Bcl2*k_BH3_Bcl2 + BH3Bcl2*kr_BH3Bcl2',
+             'd[Bax]/dt = -1.0*Bax**4*k_o - Bax*Bcl2*k_Bax_Bcl2 + BaxBcl2*kr_BaxBcl2 + 4*MAC*kr_o',
+             'd[Bcl2]/dt = -BH3*Bcl2*k_BH3_Bcl2 + BH3Bcl2*kr_BH3Bcl2 - Bax*Bcl2*k_Bax_Bcl2 + BaxBcl2*kr_BaxBcl2',
+             'd[BH3Bcl2]/dt = BH3*Bcl2*k_BH3_Bcl2 - BH3Bcl2*kr_BH3Bcl2',
+             'd[BaxBcl2]/dt = Bax*Bcl2*k_Bax_Bcl2 - BaxBcl2*kr_BaxBcl2',
+             'd[MAC]/dt = 0.25*Bax**4*k_o - MAC*kr_o'])
 
-# TODO: Verify correctness of output
 class TestChen2007FEBS_Direct(unittest.TestCase):
     def setUp(self):
         self.model = chen2007FEBS_direct_model
@@ -281,16 +279,15 @@ class TestChen2007FEBS_Direct(unittest.TestCase):
     def test_odes(self):
         ode_list = chen2007FEBS_convert_odes(self.model, 'direct')
         self.assertEqual(ode_list,
-            ['d[Act]/dt = -k_BH3_Bcl2*Act*Bcl2 + kr_BH3Bcl2*ActBcl2',
-             'd[Ena]/dt = -k_BH3_Bcl2*Ena*Bcl2 + kr_BH3Bcl2*EnaBcl2',
-             'd[InBax]/dt = -k_InBax*Act*InBax + k_Bax*Bax',
-             'd[Bcl2]/dt = -k_BH3_Bcl2*Ena*Bcl2 + kr_BH3Bcl2*EnaBcl2 - k_BH3_Bcl2*Act*Bcl2 + kr_BH3Bcl2*ActBcl2',
-             'd[Bax]/dt = k_InBax*Act*InBax - k_Bax*Bax - 1.0*Bax**4*k_o + 4*MAC*kr_o',
-             'd[ActBcl2]/dt = k_BH3_Bcl2*Act*Bcl2 - kr_BH3Bcl2*ActBcl2',
-             'd[EnaBcl2]/dt = k_BH3_Bcl2*Ena*Bcl2 - kr_BH3Bcl2*EnaBcl2',
+            ['d[Act]/dt = -Act*Bcl2*k_BH3_Bcl2 + ActBcl2*kr_BH3Bcl2',
+             'd[Ena]/dt = -Bcl2*Ena*k_BH3_Bcl2 + EnaBcl2*kr_BH3Bcl2',
+             'd[InBax]/dt = -Act*InBax*k_InBax + Bax*k_Bax',
+             'd[Bcl2]/dt = -Act*Bcl2*k_BH3_Bcl2 + ActBcl2*kr_BH3Bcl2 - Bcl2*Ena*k_BH3_Bcl2 + EnaBcl2*kr_BH3Bcl2',
+             'd[Bax]/dt = Act*InBax*k_InBax - 1.0*Bax**4*k_o - Bax*k_Bax + 4*MAC*kr_o',
+             'd[ActBcl2]/dt = Act*Bcl2*k_BH3_Bcl2 - ActBcl2*kr_BH3Bcl2',
+             'd[EnaBcl2]/dt = Bcl2*Ena*k_BH3_Bcl2 - EnaBcl2*kr_BH3Bcl2',
              'd[MAC]/dt = 0.25*Bax**4*k_o - MAC*kr_o'])
 
-# TODO: Verify correctness of output
 class TestCui2008_Direct(unittest.TestCase):
     def setUp(self):
         self.model = cui2008_direct_model
@@ -298,18 +295,17 @@ class TestCui2008_Direct(unittest.TestCase):
     def test_odes(self):
         ode_list = cui_convert_odes(self.model)
         self.assertEqual(ode_list,
-            ['d[Act]/dt = -k4*Act*Bcl2 + k5*ActBcl2 - u3*Act + k11*Ena*ActBcl2 - k12*Act*EnaBcl2 + __source*p2',
-             'd[Ena]/dt = -k9*Ena*Bcl2 + k10*EnaBcl2 - u7*Ena - k11*Ena*ActBcl2 + k12*Act*EnaBcl2 + __source*p4',
-             'd[InBax]/dt = -u1*InBax - k1*Act*InBax + k8*AcBax + __source*p1',
-             'd[Bcl2]/dt = -k9*Ena*Bcl2 + k10*EnaBcl2 - k4*Act*Bcl2 + k5*ActBcl2 - u4*Bcl2 + __source*p3',
+            ['d[Act]/dt = -Act*Bcl2*k4 - Act*EnaBcl2*k12 - Act*u3 + ActBcl2*Ena*k11 + ActBcl2*k5 + __source*p2',
+             'd[Ena]/dt = Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - Bcl2*Ena*k9 - Ena*u7 + EnaBcl2*k10 + __source*p4',
+             'd[InBax]/dt = AcBax*k8 - Act*InBax*k1 - InBax*u1 + __source*p1',
+             'd[Bcl2]/dt = -Act*Bcl2*k4 + ActBcl2*k5 - Bcl2*Ena*k9 - Bcl2*u4 + EnaBcl2*k10 + __source*p3',
              'd[__source]/dt = 0',
-             'd[AcBax]/dt = -u2*AcBax - 1.0*k16*AcBax**2 + 2*k17*AcBaxBcl2 + k1*Act*InBax - k8*AcBax',
-             'd[ActBcl2]/dt = k4*Act*Bcl2 - k5*ActBcl2 - u5*ActBcl2 - k11*Ena*ActBcl2 + k12*Act*EnaBcl2',
-             'd[EnaBcl2]/dt = k9*Ena*Bcl2 - k10*EnaBcl2 - u8*EnaBcl2 + k11*Ena*ActBcl2 - k12*Act*EnaBcl2',
-             'd[__sink]/dt = u8*EnaBcl2 + u7*Ena + u2*AcBax + u9*AcBaxBcl2 + u1*InBax + u4*Bcl2 + u5*ActBcl2 + u3*Act',
-             'd[AcBaxBcl2]/dt = -u9*AcBaxBcl2 + 0.5*k16*AcBax**2 - k17*AcBaxBcl2'])
+             'd[AcBax]/dt = -1.0*AcBax**2*k16 - AcBax*k8 - AcBax*u2 + Act*InBax*k1 + 2*MAC*k17',
+             'd[ActBcl2]/dt = Act*Bcl2*k4 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - ActBcl2*k5 - ActBcl2*u5',
+             'd[EnaBcl2]/dt = -Act*EnaBcl2*k12 + ActBcl2*Ena*k11 + Bcl2*Ena*k9 - EnaBcl2*k10 - EnaBcl2*u8',
+             'd[__sink]/dt = AcBax*u2 + Act*u3 + ActBcl2*u5 + Bcl2*u4 + Ena*u7 + EnaBcl2*u8 + InBax*u1 + MAC*u9',
+             'd[MAC]/dt = 0.5*AcBax**2*k16 - MAC*k17 - MAC*u9'])
 
-# TODO: Verify correctness of output
 class TestCui2008_Direct1(unittest.TestCase):
     def setUp(self):
         self.model = cui2008_direct1_model
@@ -317,19 +313,18 @@ class TestCui2008_Direct1(unittest.TestCase):
     def test_odes(self):
         ode_list = cui_convert_odes(self.model)
         self.assertEqual(ode_list,
-            ['d[Act]/dt = -k4*Act*Bcl2 + k5*ActBcl2 - u3*Act + k11*Ena*ActBcl2 - k12*Act*EnaBcl2 + k6*AcBax*ActBcl2 - k7*Act*MAC + __source*p2',
-             'd[Ena]/dt = -k9*Ena*Bcl2 + k10*EnaBcl2 - u7*Ena - k13*Ena*MAC + k14*AcBax*EnaBcl2 - k11*Ena*ActBcl2 + k12*Act*EnaBcl2 + __source*p4',
-             'd[InBax]/dt = -u1*InBax - k1*Act*InBax + k8*AcBax + __source*p1',
-             'd[Bcl2]/dt = -k9*Ena*Bcl2 + k10*EnaBcl2 - k2*Bcl2*AcBax + k3*MAC - k4*Act*Bcl2 + k5*ActBcl2 - u4*Bcl2 + __source*p3',
+            ['d[Act]/dt = AcBax*ActBcl2*k6 - AcBaxBcl2*Act*k7 - Act*Bcl2*k4 - Act*EnaBcl2*k12 - Act*u3 + ActBcl2*Ena*k11 + ActBcl2*k5 + __source*p2',
+             'd[Ena]/dt = AcBax*EnaBcl2*k14 - AcBaxBcl2*Ena*k13 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - Bcl2*Ena*k9 - Ena*u7 + EnaBcl2*k10 + __source*p4',
+             'd[InBax]/dt = AcBax*k8 - Act*InBax*k1 - InBax*u1 + __source*p1',
+             'd[Bcl2]/dt = -AcBax*Bcl2*k2 + AcBaxBcl2*k3 - Act*Bcl2*k4 + ActBcl2*k5 - Bcl2*Ena*k9 - Bcl2*u4 + EnaBcl2*k10 + __source*p3',
              'd[__source]/dt = 0',
-             'd[AcBax]/dt = -k2*Bcl2*AcBax + k3*MAC - u2*AcBax - 1.0*k16*AcBax**2 + 2*k17*AcBaxBcl2 + k13*Ena*MAC - k14*AcBax*EnaBcl2 - k6*AcBax*ActBcl2 + k7*Act*MAC + k1*Act*InBax - k8*AcBax',
-             'd[ActBcl2]/dt = k4*Act*Bcl2 - k5*ActBcl2 - u5*ActBcl2 - k11*Ena*ActBcl2 + k12*Act*EnaBcl2 - k6*AcBax*ActBcl2 + k7*Act*MAC',
-             'd[EnaBcl2]/dt = k9*Ena*Bcl2 - k10*EnaBcl2 - u8*EnaBcl2 + k13*Ena*MAC - k14*AcBax*EnaBcl2 + k11*Ena*ActBcl2 - k12*Act*EnaBcl2',
-             'd[__sink]/dt = u8*EnaBcl2 + u7*Ena + u2*AcBax + u9*AcBaxBcl2 + u6*MAC + u1*InBax + u4*Bcl2 + u5*ActBcl2 + u3*Act',
-             'd[AcBaxBcl2]/dt = -u9*AcBaxBcl2 + 0.5*k16*AcBax**2 - k17*AcBaxBcl2',
-             'd[MAC]/dt = k2*Bcl2*AcBax - k3*MAC - u6*MAC - k13*Ena*MAC + k14*AcBax*EnaBcl2 + k6*AcBax*ActBcl2 - k7*Act*MAC'])
+             'd[AcBax]/dt = -1.0*AcBax**2*k16 - AcBax*ActBcl2*k6 - AcBax*Bcl2*k2 - AcBax*EnaBcl2*k14 - AcBax*k8 - AcBax*u2 + AcBaxBcl2*Act*k7 + AcBaxBcl2*Ena*k13 + AcBaxBcl2*k3 + Act*InBax*k1 + 2*MAC*k17',
+             'd[ActBcl2]/dt = -AcBax*ActBcl2*k6 + AcBaxBcl2*Act*k7 + Act*Bcl2*k4 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - ActBcl2*k5 - ActBcl2*u5',
+             'd[EnaBcl2]/dt = -AcBax*EnaBcl2*k14 + AcBaxBcl2*Ena*k13 - Act*EnaBcl2*k12 + ActBcl2*Ena*k11 + Bcl2*Ena*k9 - EnaBcl2*k10 - EnaBcl2*u8',
+             'd[__sink]/dt = AcBax*u2 + AcBaxBcl2*u6 + Act*u3 + ActBcl2*u5 + Bcl2*u4 + Ena*u7 + EnaBcl2*u8 + InBax*u1 + MAC*u9',
+             'd[MAC]/dt = 0.5*AcBax**2*k16 - MAC*k17 - MAC*u9',
+             'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k6 + AcBax*Bcl2*k2 + AcBax*EnaBcl2*k14 - AcBaxBcl2*Act*k7 - AcBaxBcl2*Ena*k13 - AcBaxBcl2*k3 - AcBaxBcl2*u6'])
 
-# TODO: Verify correctness of output
 class TestCui2008_Direct2(unittest.TestCase):
     def setUp(self):
         self.model = cui2008_direct2_model
@@ -337,18 +332,19 @@ class TestCui2008_Direct2(unittest.TestCase):
     def test_odes(self):
         ode_list = cui_convert_odes(self.model)
         self.assertEqual(ode_list,
-            ['d[Act]/dt = -k4*Act*Bcl2 + k5*ActBcl2 - u3*Act + k11*Ena*ActBcl2 - k12*Act*EnaBcl2 + k6*AcBax*ActBcl2 - k7*Act*MAC + __source*p2',
-             'd[Ena]/dt = -k9*Ena*Bcl2 + k10*EnaBcl2 - u7*Ena - k13*Ena*MAC + k14*AcBax*EnaBcl2 - k11*Ena*ActBcl2 + k12*Act*EnaBcl2 + __source*p4',
-             'd[InBax]/dt = -u1*InBax - k15*InBax*AcBax - k1*Act*InBax + k8*AcBax + __source*p1',
-             'd[Bcl2]/dt = -k9*Ena*Bcl2 + k10*EnaBcl2 - k2*Bcl2*AcBax + k3*MAC - k4*Act*Bcl2 + k5*ActBcl2 - u4*Bcl2 + __source*p3',
+            ['d[Act]/dt = AcBax*ActBcl2*k6 - AcBaxBcl2*Act*k7 - Act*Bcl2*k4 - Act*EnaBcl2*k12 - Act*u3 + ActBcl2*Ena*k11 + ActBcl2*k5 + __source*p2',
+             'd[Ena]/dt = AcBax*EnaBcl2*k14 - AcBaxBcl2*Ena*k13 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - Bcl2*Ena*k9 - Ena*u7 + EnaBcl2*k10 + __source*p4',
+             'd[InBax]/dt = -AcBax*InBax*k15 + AcBax*k8 - Act*InBax*k1 - InBax*u1 + __source*p1',
+             'd[Bcl2]/dt = -AcBax*Bcl2*k2 + AcBaxBcl2*k3 - Act*Bcl2*k4 + ActBcl2*k5 - Bcl2*Ena*k9 - Bcl2*u4 + EnaBcl2*k10 + __source*p3',
              'd[__source]/dt = 0',
-             'd[AcBax]/dt = -k2*Bcl2*AcBax + k3*MAC - u2*AcBax - 1.0*k16*AcBax**2 + 2*k17*AcBaxBcl2 + k13*Ena*MAC - k14*AcBax*EnaBcl2 - k6*AcBax*ActBcl2 + k7*Act*MAC + k15*InBax*AcBax + k1*Act*InBax - k8*AcBax',
-             'd[ActBcl2]/dt = k4*Act*Bcl2 - k5*ActBcl2 - u5*ActBcl2 - k11*Ena*ActBcl2 + k12*Act*EnaBcl2 - k6*AcBax*ActBcl2 + k7*Act*MAC',
-             'd[EnaBcl2]/dt = k9*Ena*Bcl2 - k10*EnaBcl2 - u8*EnaBcl2 + k13*Ena*MAC - k14*AcBax*EnaBcl2 + k11*Ena*ActBcl2 - k12*Act*EnaBcl2',
-             'd[__sink]/dt = u8*EnaBcl2 + u7*Ena + u2*AcBax + u9*AcBaxBcl2 + u6*MAC + u1*InBax + u4*Bcl2 + u5*ActBcl2 + u3*Act',
-             'd[AcBaxBcl2]/dt = -u9*AcBaxBcl2 + 0.5*k16*AcBax**2 - k17*AcBaxBcl2',
-             'd[MAC]/dt = k2*Bcl2*AcBax - k3*MAC - u6*MAC - k13*Ena*MAC + k14*AcBax*EnaBcl2 + k6*AcBax*ActBcl2 - k7*Act*MAC'])
+             'd[AcBax]/dt = -1.0*AcBax**2*k16 - AcBax*ActBcl2*k6 - AcBax*Bcl2*k2 - AcBax*EnaBcl2*k14 - AcBax*InBax*k15 - AcBax*k8 - AcBax*u2 + AcBaxBcl2*Act*k7 + AcBaxBcl2*Ena*k13 + AcBaxBcl2*k3 + Act*InBax*k1 + 2*MAC*k17',
+             'd[ActBcl2]/dt = -AcBax*ActBcl2*k6 + AcBaxBcl2*Act*k7 + Act*Bcl2*k4 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - ActBcl2*k5 - ActBcl2*u5',
+             'd[EnaBcl2]/dt = -AcBax*EnaBcl2*k14 + AcBaxBcl2*Ena*k13 - Act*EnaBcl2*k12 + ActBcl2*Ena*k11 + Bcl2*Ena*k9 - EnaBcl2*k10 - EnaBcl2*u8',
+             'd[__sink]/dt = AcBax*u2 + AcBaxBcl2*u6 + Act*u3 + ActBcl2*u5 + Bcl2*u4 + Ena*u7 + EnaBcl2*u8 + InBax*u1 + MAC*u9',
+             'd[MAC]/dt = 0.5*AcBax**2*k16 + AcBax*InBax*k15 - MAC*k17 - MAC*u9',
+             'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k6 + AcBax*Bcl2*k2 + AcBax*EnaBcl2*k14 - AcBaxBcl2*Act*k7 - AcBaxBcl2*Ena*k13 - AcBaxBcl2*k3 - AcBaxBcl2*u6'])
 
+# TODO: Verify correctness of output
 class TestHowells2011(unittest.TestCase):
     def setUp(self):
         self.model = howells2011_model
@@ -356,18 +352,19 @@ class TestHowells2011(unittest.TestCase):
     def test_odes(self):
         ode_list = howells_convert_odes(self.model)
         self.assertEqual(ode_list,
-            ['d[tBid]/dt = -ka_tBid_Bcl2*tBid*Bcl2 + kd_tBid_Bcl2*tBidBcl2 + k_tBid_rel1*Bad_m*tBidBcl2 + k_tBid_rel2*Bak*tBidBcl2',
-             'd[Bax_inac]/dt = -k_Bak_cat*tBid*Bax_inac + k_Bak_inac*Bak',
-             'd[Bcl2]/dt = -ka_Bad_Bcl2*Bcl2*Bad_m + kd_Bad_Bcl2*BadBcl2 - ka_Bak_Bcl2*Bcl2*Bak + kd_Bak_Bcl2*BakBcl2 - ka_tBid_Bcl2*tBid*Bcl2 + kd_tBid_Bcl2*tBidBcl2 + k_Bad_phos2*BadBcl2',
-             'd[Bad_m]/dt = -ka_Bad_Bcl2*Bcl2*Bad_m + kd_Bad_Bcl2*BadBcl2 - k_tBid_rel1*Bad_m*tBidBcl2 + t_Bad_in*Bad - t_Bad_out*Bad_m - k_Bad_phos1*Bad_m',
-             'd[Bak]/dt = -ka_Bak_Bcl2*Bcl2*Bak + kd_Bak_Bcl2*BakBcl2 - k_tBid_rel2*Bak*tBidBcl2 + k_Bak_cat*tBid*Bax_inac - k_Bak_inac*Bak + 4*Bak_poly*kd_Bak_poly - 1.0*Bak**4*ka_Bak_poly',
-             'd[tBidBcl2]/dt = ka_tBid_Bcl2*tBid*Bcl2 - kd_tBid_Bcl2*tBidBcl2 - k_tBid_rel1*Bad_m*tBidBcl2 - k_tBid_rel2*Bak*tBidBcl2',
-             'd[Bad]/dt = -t_Bad_in*Bad + t_Bad_out*Bad_m - k_Bad_phos1*Bad',
-             'd[BadBcl2]/dt = ka_Bad_Bcl2*Bcl2*Bad_m - kd_Bad_Bcl2*BadBcl2 + k_tBid_rel1*Bad_m*tBidBcl2 - k_Bad_phos2*BadBcl2',
-             'd[pBad]/dt = k_Bad_phos1*Bad + k_Bad_phos2*BadBcl2 + k_Bad_phos1*Bad_m - k_Bad_rel*pBad - pBad*k_Bad_seq',
-             'd[BakBcl2]/dt = ka_Bak_Bcl2*Bcl2*Bak - kd_Bak_Bcl2*BakBcl2 + k_tBid_rel2*Bak*tBidBcl2',
-             'd[Bak_poly]/dt = -Bak_poly*kd_Bak_poly + 0.25*Bak**4*ka_Bak_poly',
-             'd[pBad14-3-3]/dt = k_Bad_rel*pBad + pBad*k_Bad_seq'])
+            ['d[tBid]/dt = Bad_m*k_tBid_rel1*tBidBcl2 + Bak*k_tBid_rel2*tBidBcl2 - Bcl2*ka_tBid_Bcl2*tBid + kd_tBid_Bcl2*tBidBcl2',
+             'd[Bak_inac]/dt = Bak*k_Bak_inac - Bak_inac*k_Bak_cat*tBid',
+             'd[Bcl2]/dt = BadBcl2*k_Bad_phos2 + BadBcl2*kd_Bad_Bcl2 - Bad_m*Bcl2*ka_Bad_Bcl2 - Bak*Bcl2*ka_Bak_Bcl2 + BakBcl2*kd_Bak_Bcl2 - Bcl2*ka_tBid_Bcl2*tBid + kd_tBid_Bcl2*tBidBcl2',
+             'd[Bad_m]/dt = Bad*t_Bad_in + BadBcl2*kd_Bad_Bcl2 - Bad_m*Bcl2*ka_Bad_Bcl2 - Bad_m*k_Bad_phos1 - Bad_m*k_tBid_rel1*tBidBcl2 - Bad_m*t_Bad_out',
+             'd[Bak]/dt = -1.0*Bak**4*ka_Bak_poly - Bak*Bcl2*ka_Bak_Bcl2 - Bak*k_Bak_inac - Bak*k_tBid_rel2*tBidBcl2 + BakBcl2*kd_Bak_Bcl2 + Bak_inac*k_Bak_cat*tBid + 4*Bak_poly*kd_Bak_poly',
+             'd[tBidBcl2]/dt = -Bad_m*k_tBid_rel1*tBidBcl2 - Bak*k_tBid_rel2*tBidBcl2 + Bcl2*ka_tBid_Bcl2*tBid - kd_tBid_Bcl2*tBidBcl2',
+             'd[Bad]/dt = -Bad*k_Bad_phos1 - Bad*t_Bad_in + Bad_m*t_Bad_out + k_Bad_rel*pBad1433',
+             'd[BadBcl2]/dt = -BadBcl2*k_Bad_phos2 - BadBcl2*kd_Bad_Bcl2 + Bad_m*Bcl2*ka_Bad_Bcl2 + Bad_m*k_tBid_rel1*tBidBcl2',
+             'd[pBad]/dt = Bad*k_Bad_phos1 + BadBcl2*k_Bad_phos2 + Bad_m*k_Bad_phos1 - k_Bad_seq*pBad',
+             'd[BakBcl2]/dt = Bak*Bcl2*ka_Bak_Bcl2 + Bak*k_tBid_rel2*tBidBcl2 - BakBcl2*kd_Bak_Bcl2',
+             'd[Bak_poly]/dt = 0.25*Bak**4*ka_Bak_poly - Bak_poly*kd_Bak_poly',
+             'd[pBad1433]/dt = -k_Bad_rel*pBad1433 + k_Bad_seq*pBad'])
+
 
 if __name__ == '__main__':
     unittest.main()

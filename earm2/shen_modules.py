@@ -169,11 +169,13 @@ def cui2008_direct2():
     # Build on the "direct 1" model...
     cui2008_direct1()
 
-    # By adding auto-activation of Bax
-    catalyze_one_step(Bax(state='A', bf=None, s1=None, s2=None),
-                      Bax(state='C', bf=None, s1=None, s2=None),
-                      Bax(state='A', bf=None, s1=None, s2=None),
-                      0.0002)
+    # By adding simultaneous auto-activation and dimerization of Bax
+    Rule('Bax_autoactivation_dimerization',
+        Bax(state='A', bf=None, s1=None, s2=None) +
+        Bax(state='C', bf=None, s1=None, s2=None) >>
+        Bax(state='A', bf=None, s1=1, s2=2) %
+        Bax(state='A', bf=None, s1=2, s2=1),
+        Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
 def howells2011():
     # Build on the model from Chen et al. (2007) Biophys J:
@@ -215,5 +217,5 @@ def howells2011():
 
     # Release of Bad from 14-3-3 domains
     Rule('release_BadC1433_to_BadCU',
-         Bad(state='C', serine='P') >> Bad(state='C', serine='B'),
+         Bad(state='C', serine='B') >> Bad(state='C', serine='U'),
          Parameter('release_BadC1433_to_BadCU_k', 1))
