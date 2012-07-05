@@ -1,10 +1,11 @@
 from pysb import *
 from macros import *
 from pysb.macros import catalyze_one_step_reversible, catalyze_one_step, \
-                        synthesize_degrade_table, degrade
+                        synthesize_degrade_table, degrade, equilibrate
 from pysb.util import alias_model_components
 
 transloc_rates = [1e-2, 1e-2]
+
 # Useful aliases for Bax state
 inactive_monomer = {'state':'C', 's1': None, 's2': None}
 active_monomer = {'state':'A', 's1': None, 's2': None}
@@ -20,7 +21,9 @@ def momp_monomers():
     # == Anti-Apoptotics ==============
     Monomer('Bcl2', [site_name])
     # == Sensitizers ==================
-    Monomer('Bad', [site_name, 'state'], {'state':['C', 'M']})
+    Monomer('Bad',
+            [site_name, 'state', 'serine'],
+            {'state':['C', 'M'], 'serine':['U', 'P', 'B']})
 
     # == Cytochrome C and Smac ========
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
@@ -51,7 +54,7 @@ def chen2007BiophysJ(pore_assembly=True):
                 [Bax(active_monomer),  (2, 1e-3)]])
 
     # Bax can displace Bid from Bcl2
-    displace_reversibly(Bax(active_monomer), Bid(state='T'), Bcl2, [2, 0])
+    displace(Bax(active_monomer), Bid(state='T'), Bcl2, 2)
 
     if pore_assembly:
         # Four Bax monomers cooperatively bind to form a tetramer
@@ -90,7 +93,7 @@ def chen2007FEBS_direct(pore_assembly=True):
     Parameter('Bax_0'   , 60) # InBax
     alias_model_components()
     Initial(Bid(bf=None, state='T'), Bid_0)
-    Initial(Bad(bf=None, state='M'), Bad_0)
+    Initial(Bad(bf=None, state='M', serine='U'), Bad_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(Bcl2(bf=None), Bcl2_0)
 
@@ -133,14 +136,14 @@ def cui2008_direct():
     # 4. Adding synthesis and degradation reactions
     Bax2 = Bax(s1=1, s2=2) % Bax(s1=2, s2=1)
     synthesize_degrade_table(
-       [[Bax(bf=None, **inactive_monomer),   0.06,  0.001],
-        [Bax(bf=None, **active_monomer),     None,  0.001],
-        [Bid(state='T', bf=None),           0.001,  0.001],
-        [Bcl2(bf=None),                      0.03,  0.001],
-        [Bid(state='T', bf=1) % Bcl2(bf=1),  None,  0.005],
-        [Bad(state='M', bf=None),           0.001,  0.001],
-        [Bad(bf=1) % Bcl2(bf=1),             None,  0.005],
-        [Bax2,                               None, 0.0005]])
+       [[Bax(bf=None, **inactive_monomer),      0.06,  0.001],
+        [Bax(bf=None, **active_monomer),        None,  0.001],
+        [Bid(state='T', bf=None),              0.001,  0.001],
+        [Bcl2(bf=None),                         0.03,  0.001],
+        [Bid(state='T', bf=1) % Bcl2(bf=1),     None,  0.005],
+        [Bad(state='M', bf=None, serine='U'),  0.001,  0.001],
+        [Bad(bf=1) % Bcl2(bf=1),                None,  0.005],
+        [Bax2,                                  None, 0.0005]])
 
 def cui2008_direct1():
     alias_model_components()
@@ -160,7 +163,6 @@ def cui2008_direct1():
     # ...and degradation of the active Bax:Bcl2 complex
     degrade(Bax(bf=1) % Bcl2(bf=1), 0.005)
 
-
 def cui2008_direct2():
     alias_model_components()
 
@@ -174,14 +176,44 @@ def cui2008_direct2():
                       0.0002)
 
 def howells2011():
+    # Build on the model from Chen et al. (2007) Biophys J:
     chen2007BiophysJ()
-    # Reactions regarding Bad
-    #bind(Bcl2, Bad, [1, 1])
-    #displace(tBid(s=1) % Bcl2(s=1), Bad, Bad(s=1) % Bcl2(s = 1), k)
-    #two_state_equilibrium(Bad(loc='M'), Bad(loc='C'), [kf, kr])
-    #transition_table([[Bad(s=1) % Bcl2(s=1), Bad()????
-    #                  [pBad, pBad:14-3-3, k]
-    #                  [pBad:14-3-3, Bad, kBadRel],
-    #                  [Bad, pBad, kBADphos1]])
 
+    # Add initial condition for Bad
+    Parameter('Bad_0', 0) # Ena
+    alias_model_components()
+    Initial(Bad(bf=None, state='M', serine='U'), Bad_0)
 
+    # Translocation equilibrium between unphosphorylated cytosolic and
+    # mitochondrial Bad
+    equilibrate(Bad(state='C', serine='U', bf=None),
+                Bad(state='M', serine='U', bf=None), [1, 1])
+
+    # Bad binds Bcl2
+    bind(Bad(state='M'), Bcl2, [1, 1])
+
+    # Bad displaces tBid from Bcl2
+    displace(Bad(state='M'), Bid(state='T'), Bcl2, 1)
+
+    # Phosphorylation of Bad
+    Rule('phosphorylate_BadCU_to_BadCP',     # Cytosolic Bad
+         Bad(state='C', serine='U') >> Bad(state='C', serine='P'),
+         Parameter('phosphorylate_BadC_k', 1))
+    Rule('phosphorylate_BadMU_to_BadCP',     # Mitochondrial Bad
+         Bad(state='M', serine='U', bf=None) >>
+         Bad(state='C', serine='P', bf=None),
+         Parameter('phosphorylate_BadM_k', 1))
+    Rule('phosphorylate_BadMUBcl2_to_BadCP', # Mitochondrial Bad:Bcl2
+         Bad(state='M', serine='U', bf=1) % Bcl2(bf=1) >>
+         Bad(state='C', serine='P', bf=None) + Bcl2(bf=None),
+         Parameter('phosphorylate_BadMUBcl2_to_BadCP_k', 1))
+
+    # Sequester phospho-Bad by "binding" 14-3-3 domains
+    Rule('sequester_BadCP_to_BadC1433',
+         Bad(state='C', serine='P') >> Bad(state='C', serine='B'),
+         Parameter('sequester_BadCP_to_BadC1433_k', 1))
+
+    # Release of Bad from 14-3-3 domains
+    Rule('release_BadC1433_to_BadCU',
+         Bad(state='C', serine='P') >> Bad(state='C', serine='B'),
+         Parameter('release_BadC1433_to_BadCU_k', 1))
