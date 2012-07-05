@@ -24,8 +24,19 @@ def convert_odes(model, p_name_map, s_name_map):
     return ode_list
 
 def chen2007BiophysJ_convert_odes(model):
-    # Examine the structure of the equations after converting the nomenclature
-    # to the one used in the paper
+    """Substitute species/parameter names with ones from Chen et al., Biophys J.
+
+    Parameters
+    ----------
+    model : pysb.core.Model
+        The model derived from Chen et al. (2007) Biophysical Journal.
+
+    Returns
+    -------
+    A list of strings, with one entry for each ODE in the model. Each ODE
+    is represented as a string, e.g. "d[Act]/dt = ..."
+    """
+
     p_name_map = {
         'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
         'reverse_BaxA_to_BaxC_k': 'k2',
@@ -102,7 +113,7 @@ def chen2007FEBS_convert_odes(model, model_type):
     return convert_odes(model, p_name_map, s_name_map)
 
 def cui_convert_odes(model):
-    """Substitutes species and parameter names with ones from Cui 2008.
+    """Substitutes species and parameter names with ones from Cui et al., 2008.
 
     Parameters
     ----------
@@ -161,16 +172,16 @@ def cui_convert_odes(model):
         's8': '__sink',
         's9': 'MAC',
         's10': 'AcBaxBcl2'}
-
     return convert_odes(model, p_name_map, s_name_map)
 
 def howells_convert_odes(model):
-    """Substitutes species and parameter names with ones from Howells 20011.
+    """Substitutes species and parameter names with ones from Howells 2011.
 
     Parameters
     ----------
     model : pysb.core.Model
-        The model from howells2011.py
+        The model derived from Howells et al. (2011) Journal of Theoretical
+        Biology.
 
     Returns
     -------
