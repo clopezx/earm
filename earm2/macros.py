@@ -238,8 +238,20 @@ def assemble_pore_spontaneous(subunit, klist):
         subunit(s1=3, s2=2) % subunit(s1=4, s2=3),
         klist, ['kf', 'kr'], name_func=pore_rule_name)
 
+def displace(lig1, lig2, target, k):
+    """Generate unidirectional displacement reaction L1 + L2:T >> L1:T + L2.
+
+    The signature can be remembered with the following formula:
+    "lig1 displaces lig2 from target."
+    """
+
+    return macros._macro_rule('displace',
+         lig1({site_name:None}) + lig2({site_name:1}) % target({site_name:1}) >>
+         lig1({site_name:1}) % target({site_name:1}) + lig2({site_name:None}),
+         [k], ['k'])
+
 def displace_reversibly(lig1, lig2, target, klist):
-    """Generate displacement reaction L1 + L2:T <> L1:T + L2.
+    """Generate reversible displacement reaction L1 + L2:T <> L1:T + L2.
 
     The signature can be remembered with the following formula:
     "lig1 displaces lig2 from target." The first rate given in
