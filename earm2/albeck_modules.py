@@ -100,14 +100,45 @@ def pore_to_parp():
     catalyze(C3(state='A'), C6(state='pro'), C6(state='A'), [KF, KR, KC])
     catalyze(C6(state='A'), C8(state='pro'), C8(state='A'), [3e-8, KR, KC])
 
+def momp_monomers():
+    # == Activators ===================
+    # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
+    Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
+    # == Effectors ====================
+    # Bax, states: Cytoplasmic, Mitochondrial, Active
+    # sites 's1' and 's2' are used for pore formation
+    Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
+    # == Anti-Apoptotics ==============
+    Monomer('Bcl2', [site_name])
+
+    # == Cytochrome C and Smac ========
+    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+
+
 ## MOMP Module Implementations
-def albeck2008_11b():
+def albeck_11b(pore_transport=False):
+    """ TODO: Docstring """
     alias_model_components()
-    catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])
-    bind(Bax(state='A'), Bcl2, [KF, KR])
-    #catalyze(Bax(state='A'), Smac(loc='c'), Smac(loc='r'), [KF, KR, KC])
-    
-def albeck2008_11c():
+    Initial(Bid(state='U', bf=None), Parameter('Bid_0', 1e5))
+    Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
+    Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
+
+
+    catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
+             Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
+    bind(Bid(state='T'), Bcl2, [0, KR])
+    bind(Bax(state='A', s1=None, s2=None), Bcl2, [KF, KR])
+
+    if pore_transport:
+        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
+        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
+        catalyze(Bax(state='A'), Smac(state='M'), Smac(state='C'),
+            [KF, KR, 10])
+        catalyze(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+            [KF, KR, 10])
+
+def albeck_11c():
     alias_model_components()
     catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])
 
@@ -120,7 +151,7 @@ def albeck2008_11c():
     #catalyze(Bax4, Smac(loc='c'), Smac(loc='r'), [KF, KR, KC])
 
 # Needs separate mitochondrial compartment--by rate scaling?
-def albeck2008_11d():
+def albeck_11d():
     alias_model_components()
     catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])
 
@@ -132,7 +163,7 @@ def albeck2008_11d():
 
     #catalyze(Bax4, Smac(loc='c'), Smac(loc='r'), [KF, KR, KC])
         
-def albeck2008_11e():
+def albeck_11e():
     alias_model_components()
     catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])
 
@@ -146,7 +177,7 @@ def albeck2008_11e():
 
     #catalyze(Pore, Smac(loc='c'), Smac(loc='r'), [KF, KR, KC])
 
-def albeck2008_11f():
+def albeck_11f():
     alias_model_components()
     pass
 
