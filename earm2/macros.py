@@ -1,7 +1,8 @@
 import pysb.macros as macros
 from pysb import *
-from pysb import MonomerPattern, ComplexPattern
+from pysb import MonomerPattern, ComplexPattern, ComponentSet
 from pysb.util import alias_model_components
+import functools
 
 # The default site name to be used for binding reactions
 site_name = 'bf'
@@ -217,9 +218,9 @@ def bind_table(table):
 def assemble_pore_sequential(subunit, size, klist):
     return macros.assemble_pore_sequential(subunit, 's1', 's2', size, klist)
 
-def pore_transport(subunit, min_size, max_size, csource, cdest, klist):
-    return macros.pore_transport(subunit, 's1', 's2', 'bf', min_size, max_size,
-                                csource, 'bf', cdest, klist)
+def pore_transport(subunit, csource, cdest, ktable):
+    return macros.pore_transport(subunit, 's1', 's2', 'bf', 4, 4,
+                                csource, 'bf', cdest, ktable)
 
 ## Macros for the Shen models
 def assemble_pore_spontaneous(subunit, klist):
@@ -294,4 +295,106 @@ def one_step_conv(sub1, sub2, product, klist, site=site_name):
 
     return macros._macro_rule('convert',
                        sub1({site: None}) + sub2({site: None}) <> product,
-                       klist, ['kf', 'kr']) 
+                       klist, ['kf', 'kr'])
+
+
+def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, csource, c_site,
+              klist):
+    """Generate rules to transport cargo through a circular homomeric pore.
+
+    The pore structure is defined by the `pore_species` macro -- `subunit`
+    monomers bind to each other from `sp_site1` to `sp_site2` to form a closed
+    ring. The transport reaction is modeled as a catalytic process of the form
+    pore + csource <> pore:csource >> pore + cdest
+
+    Parameters
+    ----------
+    subunit : Monomer or MonomerPattern
+        Subunit of which the pore is composed.
+    sp_site1, sp_site2 : string
+        Names of the sites where one copy of `subunit` binds to the next.
+    sc_site : string
+        Name of the site on `subunit` where it binds to the cargo `csource`.
+    min_size, max_size : integer
+        Minimum and maximum number of subunits in the pore at which transport
+        will occur.
+    csource : Monomer or MonomerPattern
+        Cargo "source", i.e. the entity to be transported.
+    c_site : string
+        Name of the site on `csource` where it binds to `subunit`.
+    cdest : Monomer or MonomerPattern
+        Cargo "destination", i.e. the resulting state after the transport event.
+    ktable : list of lists of Parameters or numbers
+        Table of forward, reverse and catalytic rate constants for the transport
+        reactions. The outer list must be of length `max_size` - `min_size` + 1,
+        and the inner lists must all be of length 3. In the outer list, the
+        first element corresponds to the transport through the pore of size
+        `min_size` and the last element to that of size `max_size`. Each inner
+        list contains the forward, reverse and catalytic rate constants (in that
+        order) for the corresponding transport reaction, and each of these pairs
+        must comprise solely Parameter objects or solely numbers (never some of
+        each). If Parameters are passed, they will be used directly in the
+        generated Rules. If numbers are passed, Parameters will be created with
+        automatically generated names based on <TODO> and these parameters will
+        be included at the end of the returned component list.
+
+    """
+
+    macros._verify_sites(subunit, sc_site)
+    macros._verify_sites(csource, c_site)
+
+    def pore_transport_rule_name(rule_expression, size):
+        # Get ReactionPatterns
+        react_p = rule_expression.reactant_pattern
+        prod_p = rule_expression.product_pattern
+        # Build the label components
+        # Pore is always first complex of LHS due to how we build the rules
+        subunit = react_p.complex_patterns[0].monomer_patterns[0].monomer
+        if len(react_p.complex_patterns) == 2:
+            # This is the complexation reaction
+            cargo = react_p.complex_patterns[1].monomer_patterns[0]
+        else:
+            # This is the dissociation reaction
+            cargo = prod_p.complex_patterns[1].monomer_patterns[0]
+        return '%s_%d_%s' % (subunit.name, size,
+                             macros._monomer_pattern_label(cargo))
+
+    components = ComponentSet()
+    # Set up some aliases that are invariant with pore size
+    subunit_free = subunit({sc_site: None})
+    csource_free = csource({c_site: None})
+
+    #for size, klist in zip(range(min_size, max_size + 1), ktable):
+
+    # More aliases which do depend on pore size
+    pore_free = macros.pore_species(subunit_free, sp_site1, sp_site2, size)
+
+    # This one is a bit tricky. The pore:csource complex must only introduce
+    # one additional bond even though there are multiple subunits in the
+    # pore. We create partial patterns for bound pore and csource, using a
+    # bond number that is high enough not to conflict with the bonds within
+    # the pore ring itself.
+    # Start by copying pore_free, which has all cargo binding sites empty
+    pore_bound = pore_free.copy()
+    # Get the next bond number not yet used in the pore structure itself
+    cargo_bond_num = size + 1
+    # Assign that bond to the first subunit in the pore
+    pore_bound.monomer_patterns[0].site_conditions[sc_site] = cargo_bond_num
+    # Create a cargo source pattern with that same bond
+    csource_bound = csource({c_site: cargo_bond_num})
+    # Finally we can define the complex trivially; the bond numbers are
+    # already present in the patterns
+    pc_complex = pore_bound % csource_bound
+
+    # Create the rules (just like catalyze)
+    name_func = functools.partial(pore_transport_rule_name, size=size)
+    components |= macros._macro_rule('pore_transport_complex',
+                              pore_free + csource_free <> pc_complex,
+                              klist[0:2], ['kf', 'kr'],
+                              name_func=name_func)
+    #components |= _macro_rule('pore_transport_dissociate',
+    #                          pc_complex >> pore_free + cdest,
+    #                          [klist[2]], ['kc'],
+    #                          name_func=name_func)
+
+    return components
