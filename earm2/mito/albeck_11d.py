@@ -42,12 +42,11 @@ p_name_map = {
 
 s_index_map = [2, 4, 11, 9, 1, 12, 3, 13, 5, 6, 7, 15, 8, 16, 17, 14, 10]
 
-
 # The list of ODEs from John Albeck's Matlab file
 m_ode_list = [
     '-k(1)*x(1)*x(2) +k_(1)*x(12)+kc(1)*x(12)', # cCasp8
     '-k(1)*x(1)*x(2) +k_(1)*x(12)', # Bid
-    'kc(1)*x(12) -k(2)*x(3)*x(4) +k_(2)*x(13)+kc(2)*x(13)' # tBid
+    'kc(1)*x(12) -k(2)*x(3)*x(4) +k_(2)*x(13)+kc(2)*x(13)', # tBid
     '-k(2)*x(3)*x(4)+k_(2)*x(13)', # Bax
     'kc(2)*x(13)-k(3)*x(5)+k_(3)*x(6)', # aBax
     'k(3)*x(5)-k_(3)*x(6) -1/v*2*k(4)*x(6)**2+2*k_(4)*x(7) -1/v*k(7)*x(6)*x(11)+k_(7)*x(15)', # mBax
