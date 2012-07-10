@@ -343,7 +343,7 @@ def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, csource, c_site,
     macros._verify_sites(subunit, sc_site)
     macros._verify_sites(csource, c_site)
 
-    def pore_transport_rule_name(rule_expression, size):
+    def pore_bind_rule_name(rule_expression, size):
         # Get ReactionPatterns
         react_p = rule_expression.reactant_pattern
         prod_p = rule_expression.product_pattern
@@ -387,8 +387,8 @@ def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, csource, c_site,
     pc_complex = pore_bound % csource_bound
 
     # Create the rules (just like catalyze)
-    name_func = functools.partial(pore_transport_rule_name, size=size)
-    components |= macros._macro_rule('pore_transport_complex',
+    name_func = functools.partial(pore_bind_rule_name, size=size)
+    components |= macros._macro_rule('pore_bind',
                               pore_free + csource_free <> pc_complex,
                               klist[0:2], ['kf', 'kr'],
                               name_func=name_func)

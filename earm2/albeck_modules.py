@@ -12,6 +12,7 @@
 from pysb import *
 from pysb.util import alias_model_components
 from earm2.macros import *
+from pysb.macros import equilibrate
 
 # Default forward, reverse, and catalytic rates
 KF = 1e-6
@@ -115,22 +116,48 @@ def momp_monomers():
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
 
+def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
+    active_unbound = {'state': bax_active_state, 'bf': None}
+    active_bax_monomer = Bax(s1=None, s2=None, **active_unbound)
+    bax2 =(Bax(s1=1, s2=None, **active_unbound) %
+           Bax(s1=None, s2=1, **active_unbound))
+    bax4 =(Bax(s1=1, s2=4, **active_unbound) %
+           Bax(s1=2, s2=1, **active_unbound) %
+           Bax(s1=3, s2=2, **active_unbound) %
+           Bax(s1=4, s2=3, **active_unbound))
+    Rule('Bax_dimerization', active_bax_monomer + active_bax_monomer <> bax2,
+         Parameter('Bax_dimerization_kf', KF*rate_scaling_factor),
+         Parameter('Bax_dimerization_kr', KR))
+    Rule('Bax_tetramerization', bax2 + bax2 <> bax4,
+         Parameter('Bax_tetramerization_kf', 2*KF*rate_scaling_factor),
+         Parameter('Bax_tetramerization_kr', 0.5*KR))
+
+def Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A', rate_scaling_factor=1):
+    bind(Bax(state=bax_active_state, s1=None, s2=None), Bcl2,
+         [KF*rate_scaling_factor, KR])
+    pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 2, Bcl2, 'bf',
+         [KF*rate_scaling_factor, KR])
+    pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 4, Bcl2, 'bf',
+         [KF*rate_scaling_factor, KR])
 
 ## MOMP Module Implementations
-def albeck_11b(pore_transport=False):
+def albeck_11b(do_pore_transport=False):
     """ TODO: Docstring """
     alias_model_components()
+
+    # Set initial conditions
     Initial(Bid(state='U', bf=None), Parameter('Bid_0', 1e5))
     Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
     Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
 
-
+    # MOMP Mechanism
     catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
              Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
     bind(Bid(state='T'), Bcl2, [0, KR])
     bind(Bax(state='A', s1=None, s2=None), Bcl2, [KF, KR])
 
-    if pore_transport:
+    # Transport of Smac and Cytochrome C
+    if do_pore_transport:
         Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
         Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
         catalyze(Bax(state='A'), Smac(state='M'), Smac(state='C'),
@@ -138,31 +165,67 @@ def albeck_11b(pore_transport=False):
         catalyze(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
             [KF, KR, 10])
 
-def albeck_11c():
+def albeck_11c(do_pore_transport=False):
+    """ TODO: Docstring """
     alias_model_components()
-    catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])
+    Initial(Bid(state='U', bf=None), Parameter('Bid_0', 4e4))
+    Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
+    Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
 
-    dimerize(Bax(state='A'), Bax2, [KF, KR])
-    dimerize(Bax2, Bax4, [KF, KR])
+    # tBid activates Bax
+    catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
+             Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
 
-    bind_table([[            Bax,      Bax2,     Bax4],
-                [Bcl2,  [KF, KR],  [KF, KR],  [KF, KR]]])
+    # Bax tetramerizes
+    Bax_tetramerizes(bax_active_state='A')
 
-    #catalyze(Bax4, Smac(loc='c'), Smac(loc='r'), [KF, KR, KC])
+    # Bcl2 inhibits Bax, Bax2, and Bax4
+    Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A')
+
+    if do_pore_transport:
+        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
+        #Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
+        # NOTE change in KF here from previous model!!!!
+        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
+            [[2*KF, KR, 10]])
+        #pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+        #    [[KF, KR, 10]])
 
 # Needs separate mitochondrial compartment--by rate scaling?
-def albeck_11d():
+def albeck_11d(do_pore_transport=False):
     alias_model_components()
-    catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])
+    Initial(Bid(state='U', bf=None), Parameter('Bid_0', 4e4))
+    Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
+    Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
 
-    dimerize(Bax(state='A'), Bax2, [KF, KR])
-    dimerize(Bax2, Bax4, [KF, KR])
+    v = 0.07
+    rate_scaling_factor = 1./v
 
-    bind_table([[            Bax,      Bax2,     Bax4],
-                [Bcl2,  [KF, KR],  [KF, KR],  [KF, KR]]])
+    # tBid activates Bax in the cytosol
+    catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
+             Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
 
-    #catalyze(Bax4, Smac(loc='c'), Smac(loc='r'), [KF, KR, KC])
-        
+    # Active Bax translocates to the mitochondria
+    equilibrate(Bax(state='A', bf=None, s1=None, s2=None),
+                Bax(state='M', bf=None, s1=None, s2=None),
+                [1e-2, 1e-2])
+
+    # Bax tetramerizes
+    Bax_tetramerizes(bax_active_state='M', rate_scaling_factor=rate_scaling_factor)
+
+    # Bcl2 inhibits Bax, Bax2, and Bax4
+    Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='M',
+                                  rate_scaling_factor=rate_scaling_factor)
+
+    if do_pore_transport:
+        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
+        #Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
+        # NOTE change in KF here from previous model!!!!
+        pore_transport(Bax(state='M'), Smac(state='M'), Smac(state='C'),
+            [[rate_scaling_factor*2*KF, KR, 10]])
+        #pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+        #    [[KF, KR, 10]])
+
 def albeck_11e():
     alias_model_components()
     catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])

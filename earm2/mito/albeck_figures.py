@@ -7,22 +7,30 @@ from earm2 import albeck_modules
 from pysb.bng import generate_equations
 from earm2.macros import catalyze
 from pysb.integrate import odesolve
-from matplotlib.pyplot import figure, ion, plot
+from matplotlib.pyplot import figure, ion, plot, legend
 import numpy as np
 from sympy.parsing.sympy_parser import parse_expr
 
-import albeck_11b
+
+#import albeck_11b
+#import albeck_11c
+import albeck_11d
 
 rtol = 1e-6
-m = albeck_11b.model
 
-def run_figure_sim(model):
+m = albeck_11d.model
+p_name_map = albeck_11d.p_name_map
+s_index_map = albeck_11d.s_index_map
+m_ode_list = albeck_11d.m_ode_list
+
+
+def add_caspase8(model):
     # Add upstream caspase reaction to model
     if model.monomers.get('C8') is None:
         Bid = model.monomers.get('Bid')
         C8 = Monomer('C8', ['state', 'bf'], {'state': ['pro', 'A']})
         model.add_component(C8)
-        C8_0 = Parameter('C8_0', 0)
+        C8_0 = Parameter('C8_0', 1)
         model.add_component(C8_0)
         model.initial(C8(state='A', bf=None), C8_0)
         for component in catalyze(C8(state='A'), Bid(state='U'),
@@ -30,7 +38,11 @@ def run_figure_sim(model):
             model.add_component(component)
 
     # Set CytoC to 0 so transport is only of Smac
-    model.parameters['CytoC_0'].value = 0
+    #model.parameters['CytoC_0'].value = 0
+
+
+def run_figure_sim(model):
+    add_caspase8(model)
 
     # Set timepoints and c8 doses
     tf = 15 * 3600 # 15 hours
@@ -46,6 +58,7 @@ def run_figure_sim(model):
 
     return [t, outputs]
 
+
 def plot_figure(model, data_file):
     [t, pysb_data] = run_figure_sim(model)
     figure()
@@ -59,8 +72,11 @@ def plot_figure(model, data_file):
                         'files.')
 
     for i in range(pysb_num_doses):
-        plot(t, pysb_data[:,i], 'r')
-        plot(t, mat_data[:,i], 'b')
+        plot(t, pysb_data[:,i], 'r', label='PySB')
+        plot(t, mat_data[:,i], 'b', label='Matlab')
+
+    #legend(loc='lower right')
+
 
 def matches_figure(model, data_file):
     [t, pysb_data] = run_figure_sim(model)
@@ -73,41 +89,10 @@ def matches_figure(model, data_file):
     diffs = mat_data - pysb_data
     return (diffs < rtol * 10).all()
 
-def convert_odes():
-    p_name_map = {
-        'bind_BidT_BaxC_to_BidTBaxC_kf': 'k(2)',
-        'bind_BidT_BaxC_to_BidTBaxC_kr': 'k_(2)',
-        'catalyze_BidTBaxC_to_BidT_BaxA_kc': 'kc(2)',
-        'bind_BidT_Bcl2_kf': 'k(4)',
-        'bind_BidT_Bcl2_kr': 'k_(4)',
-        'bind_BaxA_Bcl2_kf': 'k(5)',
-        'bind_BaxA_Bcl2_kr': 'k_(5)',
-        'bind_BaxA_SmacM_to_BaxASmacM_kf': 'k(3)',
-        'bind_BaxA_SmacM_to_BaxASmacM_kr': 'k_(3)',
-        'catalyze_BaxASmacM_to_BaxA_SmacC_kc': 'kc(3)',
-        'bind_C8A_BidU_to_C8ABidU_kf': 'k(1)',
-        'bind_C8A_BidU_to_C8ABidU_kr': 'k_(1)',
-        'catalyze_C8ABidU_to_C8A_BidT_kc': 'kc(1)'}
-    s_index_map = [2, 4, 8, 6, 1, 9, 3, 10, 12, 5, 13, 11, 7]
+
+def compare_odes(model, p_name_map, s_index_map, m_ode_list):
+    add_caspase8(model)
     s_name_map = [('s%d' % i, 'x(%d)' % j) for i, j in enumerate(s_index_map)]
-
-    # The list of ODEs from John Albeck's Matlab file
-    m_ode_list = [
-        '-k(1)*x(1)*x(2) +k_(1)*x(9)+kc(1)*x(9)',
-        '-k(1)*x(1)*x(2) +k_(1)*x(9)',
-        'kc(1)*x(9) -k(2)*x(3)*x(4) +k_(2)*x(10)+kc(2)*x(10) - k(4)*x(3)*x(8)+ k_(5)*x(12)',
-        '-k(2)*x(3)*x(4)+k_(2)*x(10)',
-        'kc(2)*x(10) -  k(3)*x(5)*x(6)  + k_(3)*x(11) +kc(3)*x(11) - k(5)*x(5)*x(8)+ k_(5)*x(13)',
-        '-k(3)*x(5)*x(6) +k_(3)*x(11)',
-        'kc(3)*x(11)',
-        '-k(4)*x(3)*x(8)+k_(4)*x(12) - k(5)*x(5)*x(8)+k_(5)*x(13)',
-        'k(1)*x(1)*x(2)-k_(1)*x(9)-kc(1)*x(9)',
-        'k(2)*x(3)*x(4)-k_(2)*x(10)-kc(2)*x(10)',
-        'k(3)*x(5)*x(6)-k_(3)*x(11)-kc(3)*x(11)',
-        'k(4)*x(3)*x(8)-k_(4)*x(12)',
-        'k(5)*x(5)*x(8)-k_(5)*x(13)']
-    m_ode_list = [parse_expr(ode) for ode in m_ode_list]
-
     name_map = {}
     name_map.update(p_name_map)
     name_map.update(s_name_map)
@@ -120,9 +105,13 @@ def convert_odes():
         #ode_list.append(new_ode)
         old_ode = m_ode_list[s_index_map[i] - 1]
         result = new_ode == old_ode
+        result_list.append(result)
         if not result:
-            print new_ode
-            print old_ode
+            print "Mismatch for species " + str(i) + ": "
+            print "Pysb ODE   : %s" % str(new_ode)
+            print "Matlab ODE : %s" % str(old_ode)
 
     return result_list
 
+#compare_odes(m, p_name_map, s_index_map, m_ode_list)
+plot_figure(m, 'albeck_11d.tsv')
