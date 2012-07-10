@@ -159,11 +159,11 @@ def albeck_11b(do_pore_transport=False):
     # Transport of Smac and Cytochrome C
     if do_pore_transport:
         Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
-        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
+        #Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
         catalyze(Bax(state='A'), Smac(state='M'), Smac(state='C'),
             [KF, KR, 10])
-        catalyze(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
-            [KF, KR, 10])
+        #catalyze(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+        #    [KF, KR, 10])
 
 def albeck_11c(do_pore_transport=False):
     """ TODO: Docstring """
