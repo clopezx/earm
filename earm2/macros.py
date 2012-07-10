@@ -276,7 +276,7 @@ def catalyze_convert(sub1, sub2, product, klist, site=site_name):
     macros._verify_sites(sub1, site)
     macros._verify_sites(sub2, site)
 
-    components = macros._macro_rule('complex',
+    components = macros._macro_rule('bind',
                              sub1({site: None}) + sub2({site: None}) <>
                              sub1({site: 1}) % sub2({site: 1}),
                              klist[0:2], ['kf', 'kr'])
