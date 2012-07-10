@@ -1,12 +1,11 @@
 import unittest
-from earm2.mito.chen2007BiophysJ import model as chen2007BiophysJ_model
-from earm2.mito.chen2007FEBS_direct import model as chen2007FEBS_direct_model
-from earm2.mito.chen2007FEBS_indirect import model \
-                                          as chen2007FEBS_indirect_model
-from earm2.mito.cui2008_direct import model as cui2008_direct_model
-from earm2.mito.cui2008_direct1 import model as cui2008_direct1_model
-from earm2.mito.cui2008_direct2 import model as cui2008_direct2_model
-from earm2.mito.howells2011 import model as howells2011_model
+from earm2.mito import chen2007BiophysJ
+from earm2.mito import chen2007FEBS_direct
+from earm2.mito import chen2007FEBS_indirect
+from earm2.mito import cui2008_direct
+from earm2.mito import cui2008_direct1
+from earm2.mito import cui2008_direct2
+from earm2.mito import howells2011
 from pysb.bng import generate_equations
 import re
 
@@ -230,7 +229,7 @@ def howells_convert_odes(model):
 
 class TestChen2007BiophysJ(unittest.TestCase):
     def setUp(self):
-        self.model = chen2007BiophysJ_model
+        self.model = chen2007BiophysJ.model
 
     def test_odes(self):
         """These ODEs match those of the paper with the caveat that in the
@@ -271,7 +270,7 @@ class TestChen2007BiophysJ(unittest.TestCase):
 
 class TestChen2007FEBS_Indirect(unittest.TestCase):
     def setUp(self):
-        self.model = chen2007FEBS_indirect_model
+        self.model = chen2007FEBS_indirect.model
 
     def test_odes(self):
         ode_list = chen2007FEBS_convert_odes(self.model, 'indirect')
@@ -285,7 +284,7 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
 
 class TestChen2007FEBS_Direct(unittest.TestCase):
     def setUp(self):
-        self.model = chen2007FEBS_direct_model
+        self.model = chen2007FEBS_direct.model
 
     def test_odes(self):
         ode_list = chen2007FEBS_convert_odes(self.model, 'direct')
@@ -301,7 +300,7 @@ class TestChen2007FEBS_Direct(unittest.TestCase):
 
 class TestCui2008_Direct(unittest.TestCase):
     def setUp(self):
-        self.model = cui2008_direct_model
+        self.model = cui2008_direct.model
 
     def test_odes(self):
         ode_list = cui_convert_odes(self.model)
@@ -319,7 +318,7 @@ class TestCui2008_Direct(unittest.TestCase):
 
 class TestCui2008_Direct1(unittest.TestCase):
     def setUp(self):
-        self.model = cui2008_direct1_model
+        self.model = cui2008_direct1.model
 
     def test_odes(self):
         ode_list = cui_convert_odes(self.model)
@@ -338,7 +337,7 @@ class TestCui2008_Direct1(unittest.TestCase):
 
 class TestCui2008_Direct2(unittest.TestCase):
     def setUp(self):
-        self.model = cui2008_direct2_model
+        self.model = cui2008_direct2.model
 
     def test_odes(self):
         ode_list = cui_convert_odes(self.model)
@@ -358,7 +357,7 @@ class TestCui2008_Direct2(unittest.TestCase):
 # TODO: Verify correctness of output
 class TestHowells2011(unittest.TestCase):
     def setUp(self):
-        self.model = howells2011_model
+        self.model = howells2011.model
 
     def test_odes(self):
         ode_list = howells_convert_odes(self.model)
