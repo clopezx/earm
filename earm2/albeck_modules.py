@@ -260,9 +260,14 @@ def albeck_11e(do_pore_transport=False):
         #pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
         #    [[KF, KR, 10]])
 
-def albeck_11f():
+def albeck_11f(do_pore_transport=False):
+    albeck_11e(do_pore_transport=do_pore_transport)
     alias_model_components()
-    pass
 
+    # Set parameter values for cooperative pore formation
+    equilibrate_BaxA_to_BaxM_kf.value = 1e-4  # was 1e-2 in 11e
+    equilibrate_BaxA_to_BaxM_kr.value = 1e-4  # was 1e-2 in 11e
+    Bax_dimerization_kf.value /= 100          # was 1e-6 in 11e
+    Bax_tetramerization_kf.value /= 10      # was 1e-6 in 11e
 
 

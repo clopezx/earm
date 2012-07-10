@@ -15,12 +15,12 @@ rtol = 1e-6
 
 #import albeck_11b
 #import albeck_11c
-import albeck_11e
+import albeck_11f
 
-m = albeck_11e.model
-p_name_map = albeck_11e.p_name_map
-s_index_map = albeck_11e.s_index_map
-m_ode_list = albeck_11e.m_ode_list
+m = albeck_11f.model
+#p_name_map = albeck_11e.p_name_map
+#s_index_map = albeck_11e.s_index_map
+#m_ode_list = albeck_11e.m_ode_list
 
 
 def add_caspase8(model):
@@ -113,6 +113,6 @@ def compare_odes(model, p_name_map, s_index_map, m_ode_list):
 
     return result_list
 
-compare_odes(m, p_name_map, s_index_map, m_ode_list)
-plot_figure(m, 'albeck_11e.tsv')
-print matches_figure(m, 'albeck_11e.tsv')
+#compare_odes(m, p_name_map, s_index_map, m_ode_list)
+plot_figure(m, 'albeck_11f.tsv')
+print matches_figure(m, 'albeck_11f.tsv')
