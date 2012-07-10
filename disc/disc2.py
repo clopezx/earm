@@ -4,11 +4,9 @@ from pysbhelperfuncs import *
 # Instantiate model, default name is "model"
 Model()
 
-Parameter('ec_size', 1.0e6)   # 1.0e6 um^3 = 1 pL
-Parameter('cytoM_size', 483.6 * .0030) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
-Parameter('cyto_size', 1.0e3) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
-Parameter('mito_size', 70.0)  # mitochondria is ~7% of cytoplasm (ref)
-Parameter('mitoM_size', 82.14 * .0042) # mito SA (2.55um radius) x 'brane thicknes ~4.2 nm JPC-B(2009)113-11p3413
+# Import model parameters
+from disc2_parms_vc import parameter_dict as kd 
+
 Compartment('ec', dimension = 3, size = ec_size, parent = None)    # extra cellular compartment
 Compartment('cyM', dimension = 2, size = cytoM_size, parent = ec) # cytoplasmic membrane
 Compartment('cy', dimension = 3, size = cyto_size, parent = cyM)  # cytoplasm
@@ -39,10 +37,8 @@ Monomer('C9', ['bf'])
 Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
 Monomer('XIAP', ['bf'])
 
-# MONOMERS FROM EARM2
-# Parameters and Modules 
-# ===============================
-from disc2_parms import parameter_dict as kd 
+# EARM2 Modules 
+# =============
 import earm_2_emb_modules # Must be called after the Monomers and Parameters are defined
 
 # Trail binding to DR

@@ -5,37 +5,49 @@ from collections import OrderedDict
 # from simulated annealing fits to experimental data using a sum of chi-sq objective functions
 #
 
+# Compartment parameters
+# Parameter('ec_size', 1.0e6)   # 1.0e6 um^3 = 1 pL
+# Parameter('cytoM_size', 483.6 * .0030) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
+# Parameter('cyto_size', 1.0e3) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
+# Parameter('mito_size', 70.0)  # mitochondria is ~7% of cytoplasm (ref)
+# Parameter('mitoM_size', 82.14 * .0042) # mito SA (2.55um radius) x 'brane thicknes ~4.2 nm JPC-B(2009)113-11p3413
+Parameter('ec_size', 1)   # 1.0e6 um^3 = 1 pL
+Parameter('cytoM_size',1) # plasma SA (6.22um radius for a 1e3 um^3 cell) * membrane thickness ~3.0nm
+Parameter('cyto_size', 1) # 1.0e3 um^3 --> size of HeLa. Range is 760-2730 um^3 (ref)
+Parameter('mito_size', 1)  # mitochondria is ~7% of cytoplasm (ref)
+Parameter('mitoM_size', 1) # mito SA (2.55um radius) x 'brane thicknes ~4.2 nm JPC-B(2009)113-11p3413
+
 # Reaction rates
 parameter_dict = OrderedDict([
     # Trail to Bid parameters
     # -----------------------
     # rec_to_bid module parameters
     # TRAIL trimer binding to DR monomer- 4, values from Reis + Cool 2011
-   ('TT_DR4mono',  [ Parameter('ttdr4mf', 1.04e-06), # 6.3E5 1/M 1/s      
+   ('TT_DR4mono',  [ Parameter('ttdr4mf', 1.04e-06),     # k / ec_size
                      Parameter('ttdr4mr', 1.10e-04)]),
     # TT binding to DR dimers- 4
-   ('TT_DR4dim',   [ Parameter('ttdr4df', 5.00e-07),     
+   ('TT_DR4dim',   [ Parameter('ttdr4df', 5.00e-07),     # k / ec_size
                      Parameter('ttdr4dr', 1.10e-04)]),
     # TT binding to DR trimers- 4
    ('TT_DR4trim',  [ Parameter('ttdr4tf', 1.04e-07),     
                      Parameter('ttdr4tr', 1.10e-04)]),
     # TRAIL trimer binding to DR monomer- 5
     # TT binding to DR monomer- 5
-   ('TT_DR5mono',  [ Parameter('ttdr5mf', 1.97e-06), # 11.9E5 1/M 1/s
+   ('TT_DR5mono',  [ Parameter('ttdr5mf', 1.97e-06),     # k / ec_size
                      Parameter('ttdr5mr', 0.36e-04)]),
     # TT binding to DR dimers- 5
-   ('TT_DR5dim',   [ Parameter('ttdr5df', 2.07e-06),     
+   ('TT_DR5dim',   [ Parameter('ttdr5df', 2.07e-06),     # k / ec_size
                      Parameter('ttdr5dr', 1.10e-04)]),
     # TT binding to DR trimers- 5
    ('TT_DR5trim',  [ Parameter('ttdr5tf', 1.97e-07),     
                      Parameter('ttdr5tr', 0.36e-04)]),
     # DR4 trimerization
-   ('DR4_RINGP',  [[Parameter('kdr4dimf',  2.040816e-04), #1.0e-6/v**2
+   ('DR4_RINGP',  [[Parameter('kdr4dimf',  2.040816e-04), # k / v**2
                     Parameter('kdr4dimr',  1.0e-3      )],
                     [Parameter('kdr4trimf', 2.040816e-04),
                     Parameter('kdr4trimr', 1.0e-3      )]]),
     # DR5 trimerization
-   ('DR5_RINGP',  [[Parameter('kdr5dimf',  2.040816e-04), #1.0e-6/v**2
+   ('DR5_RINGP',  [[Parameter('kdr5dimf',  2.040816e-04), # k / v**2
                     Parameter('kdr5dimr',  1.0e-3      )],
                    [Parameter('kdr5trimf', 2.040816e-04),
                     Parameter('kdr5trimr', 1.0e-3      )]]),
