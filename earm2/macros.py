@@ -267,7 +267,7 @@ def displace_reversibly(lig1, lig2, target, klist):
 
 
 ## Macros for the Albeck models
-def two_step_conv(sub1, sub2, product, klist, site=site_name):
+def catalyze_convert(sub1, sub2, product, klist, site=site_name):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction.
 
     Because product is created by the function, it must be fully specified.
