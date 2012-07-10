@@ -211,7 +211,8 @@ def albeck_11d(do_pore_transport=False):
                 [1e-2, 1e-2])
 
     # Bax tetramerizes
-    Bax_tetramerizes(bax_active_state='M', rate_scaling_factor=rate_scaling_factor)
+    Bax_tetramerizes(bax_active_state='M',
+                     rate_scaling_factor=rate_scaling_factor)
 
     # Bcl2 inhibits Bax, Bax2, and Bax4
     Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='M',
@@ -226,19 +227,38 @@ def albeck_11d(do_pore_transport=False):
         #pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
         #    [[KF, KR, 10]])
 
-def albeck_11e():
+def albeck_11e(do_pore_transport=False):
+    """ TODO: Docstring """
+    # Build off of the previous model
+    albeck_11d(do_pore_transport=False)
+
+    # Add the "Mito" species, with states "Inactive" and "Active".
+    Monomer('Mito', ['bf', 'state'], {'state': ['I', 'A']})
     alias_model_components()
-    catalyze(Bid(state='T'), Bax(state='C'), Bax(state='A'), [KF, KR, KC])
+    Initial(Mito(state='I', bf=None), Parameter('Mito_0', 5e5))
 
-    dimerize(Bax(state='A'), Bax2, [KF, KR])
-    dimerize(Bax2, Bax4, [KF, KR])
+    v = 0.07
+    rate_scaling_factor = 1./v
 
-    bind_and_convert(Bax4, M, Pore, [KF, KR])
+    # Add Binding of Bax4 to Mito
+    pore_bind(Bax(state='M'), 's1', 's2', 'bf', 4, Mito(state='I'), 'bf',
+         [KF*rate_scaling_factor, KR])
+    Rule('Mito_activation',
+         MatchOnce(Bax(state='M', bf=5, s1=1, s2=4) %
+                   Bax(state='M', bf=None, s1=2, s2=1) %
+                   Bax(state='M', bf=None, s1=3, s2=2) %
+                   Bax(state='M', bf=None, s1=4, s2=3) %
+                   Mito(state='I', bf=5)) >>
+                   Mito(state='A', bf=None),
+         Parameter('Mito_activation_kc', KC))
 
-    bind_table([[            Bax,      Bax2,     Bax4],
-                [Bcl2,  (KF, KR),  (KF, KR),  (KF, KR)]])
-
-    #catalyze(Pore, Smac(loc='c'), Smac(loc='r'), [KF, KR, KC])
+    if do_pore_transport:
+        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
+        #Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
+        catalyze(Mito(state='A'), Smac(state='M'), Smac(state='C'),
+            [rate_scaling_factor*2*KF, KR, 10])
+        #pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+        #    [[KF, KR, 10]])
 
 def albeck_11f():
     alias_model_components()

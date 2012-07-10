@@ -11,26 +11,26 @@ from matplotlib.pyplot import figure, ion, plot, legend
 import numpy as np
 from sympy.parsing.sympy_parser import parse_expr
 
+rtol = 1e-6
 
 #import albeck_11b
 #import albeck_11c
-import albeck_11d
+import albeck_11e
 
-rtol = 1e-6
-
-m = albeck_11d.model
-p_name_map = albeck_11d.p_name_map
-s_index_map = albeck_11d.s_index_map
-m_ode_list = albeck_11d.m_ode_list
+m = albeck_11e.model
+p_name_map = albeck_11e.p_name_map
+s_index_map = albeck_11e.s_index_map
+m_ode_list = albeck_11e.m_ode_list
 
 
 def add_caspase8(model):
     # Add upstream caspase reaction to model
     if model.monomers.get('C8') is None:
         Bid = model.monomers.get('Bid')
-        C8 = Monomer('C8', ['state', 'bf'], {'state': ['pro', 'A']})
+        C8 = Monomer('C8', ['state', 'bf'], {'state': ['pro', 'A']},
+                     _export=False)
         model.add_component(C8)
-        C8_0 = Parameter('C8_0', 1)
+        C8_0 = Parameter('C8_0', 1, _export=False)
         model.add_component(C8_0)
         model.initial(C8(state='A', bf=None), C8_0)
         for component in catalyze(C8(state='A'), Bid(state='U'),
@@ -39,7 +39,6 @@ def add_caspase8(model):
 
     # Set CytoC to 0 so transport is only of Smac
     #model.parameters['CytoC_0'].value = 0
-
 
 def run_figure_sim(model):
     add_caspase8(model)
@@ -57,7 +56,6 @@ def run_figure_sim(model):
         outputs[:,i] = frac_Smac_release
 
     return [t, outputs]
-
 
 def plot_figure(model, data_file):
     [t, pysb_data] = run_figure_sim(model)
@@ -86,8 +84,10 @@ def matches_figure(model, data_file):
         raise Exception('Different number of doses between PySB and MATLAB ' +
                         'files.')
 
-    diffs = mat_data - pysb_data
-    return (diffs < rtol * 10).all()
+    mat_data - pysb_data
+    #import pdb; pdb.set_trace()
+    #return bool((abs(diffs) < rtol * 10).all())
+    return bool(np.allclose(pysb_data, mat_data, atol=rtol*10))
 
 
 def compare_odes(model, p_name_map, s_index_map, m_ode_list):
@@ -113,5 +113,6 @@ def compare_odes(model, p_name_map, s_index_map, m_ode_list):
 
     return result_list
 
-#compare_odes(m, p_name_map, s_index_map, m_ode_list)
-plot_figure(m, 'albeck_11d.tsv')
+compare_odes(m, p_name_map, s_index_map, m_ode_list)
+plot_figure(m, 'albeck_11e.tsv')
+print matches_figure(m, 'albeck_11e.tsv')
