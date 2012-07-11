@@ -190,7 +190,7 @@ def howells2011():
     spontaneous_pore_BaxA_to_Bax4_kr.value = 5e-5   # was 0 in Chen 2007 B.J.
 
     # Add initial condition for Bad
-    Bad_0 = Parameter('Bad_0', 0)
+    Bad_0 = Parameter('Bad_0', 0.025)
     Initial(Bad(bf=None, state='M', serine='U'), Bad_0)
 
     # Translocation equilibrium between unphosphorylated cytosolic and
