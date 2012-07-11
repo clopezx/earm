@@ -14,6 +14,7 @@ from pysb.integrate import odesolve
 from pysb import *
 import numpy as np
 import matplotlib.pyplot as plt
+import re
 
 def convert_odes(model, p_name_map, s_name_map):
     """Substitutes species and parameter names using the given name mappings.
@@ -49,6 +50,15 @@ def convert_odes(model, p_name_map, s_name_map):
         ode_list.append(new_ode)
 
     return ode_list
+
+def convert_parameters(model, p_name_map):
+    """TODO: Docstring"""
+    param_list = []
+    for p in model.parameters:
+        if p.name in p_name_map:
+            original_name = re.sub(p.name, p_name_map[p.name], p.name)
+            param_list.append((original_name, p.value))
+    return param_list
 
 def chen2007BiophysJ_convert_odes(model):
     """Substitute species/parameter names with ones from Chen et al., Biophys J.
@@ -404,6 +414,28 @@ class TestHowells2011(unittest.TestCase):
              'd[BakBcl2]/dt = Bak*Bcl2*ka_Bak_Bcl2 + Bak*k_tBid_rel2*tBidBcl2 - BakBcl2*kd_Bak_Bcl2',
              'd[Bak_poly]/dt = 0.25*Bak**4*ka_Bak_poly - Bak_poly*kd_Bak_poly',
              'd[pBad1433]/dt = -k_Bad_rel*pBad1433 + k_Bad_seq*pBad'])
+
+    def test_parameters(self):
+        param_list = convert_parameters(self.model, self.p_name_map)
+        self.assertEqual(param_list,
+           [('k_Bak_cat', 0.5),
+            ('k_Bak_inac', 0.1),
+            ('ka_tBid_Bcl2', 3),
+            ('kd_tBid_Bcl2', 0.002),
+            ('ka_Bak_Bcl2', 2),
+            ('kd_Bak_Bcl2', 0.002),
+            ('k_tBid_rel2', 2),
+            ('ka_Bak_poly', 8000),
+            ('kd_Bak_poly', 5e-05),
+            ('t_Bad_in', 0.01),
+            ('t_Bad_out', 0.002),
+            ('ka_Bad_Bcl2', 15),
+            ('kd_Bad_Bcl2', 0.002),
+            ('k_tBid_rel1', 5),
+            ('k_Bad_phos1', 0.001),
+            ('k_Bad_phos2', 0.0001),
+            ('k_Bad_seq', 0.001),
+            ('k_Bad_rel', 0.00087)])
 
     def howells_figure2ab(self):
         self.model.parameters['Bcl2_0'].value = 0.1  # Total Bcl2
