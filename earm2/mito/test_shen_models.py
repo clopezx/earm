@@ -10,6 +10,10 @@ from earm2.mito import cui2008_direct1
 from earm2.mito import cui2008_direct2
 from earm2.mito import howells2011
 from pysb.bng import generate_equations
+from pysb.integrate import odesolve
+from pysb import *
+import numpy as np
+import matplotlib.pyplot as plt
 import re
 
 def convert_odes(model, p_name_map, s_name_map):
@@ -208,9 +212,10 @@ def howells_convert_odes(model):
         'bind_BadM_Bcl2_kf': 'ka_Bad_Bcl2',
         'bind_BadM_Bcl2_kr': 'kd_Bad_Bcl2',
         'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_k': 'k_tBid_rel1',
-        'phosphorylate_BadC_k': 'k_Bad_phos1',
-        'phosphorylate_BadM_k': 'k_Bad_phos1',
-        'phosphorylate_BadMUBcl2_to_BadCP_k': 'k_Bad_phos2',
+        'phosphorylate_Bad_k1': 'k_Bad_phos1',
+        #'phosphorylate_BadM_k': 'k_Bad_phos1',
+        #'phosphorylate_BadMUBcl2_to_BadCP_k': 'k_Bad_phos2',
+        'phosphorylate_Bad_k2': 'k_Bad_phos2',
         'sequester_BadCP_to_BadC1433_k': 'k_Bad_seq',
         'release_BadC1433_to_BadCU_k': 'k_Bad_rel'}
     # Mapping of species names
@@ -397,6 +402,43 @@ class TestHowells2011(unittest.TestCase):
              'd[Bak_poly]/dt = 0.25*Bak**4*ka_Bak_poly - Bak_poly*kd_Bak_poly',
              'd[pBad1433]/dt = -k_Bad_rel*pBad1433 + k_Bad_seq*pBad'])
 
+    def howells_figure2ab(self):
+        self.model.parameters['Bcl2_0'].value = 0.1  # Total Bcl2
+        self.model.parameters['Bax_0'].value = 0.2   # Total Bax
+        self.model.parameters['Bid_0'].value = 0.018 # Total tBid
+        self.model.parameters['Bad_0'].value = 0.025 # Total Bad
+        Bcl2_free_0 = Parameter('Bcl2_free_0',
+                self.model.parameters['Bcl2_0'].value -
+                self.model.parameters['Bid_0'].value, _export=False) # free Bcl2
+        self.model.add_component(Bcl2_free_0)
+
+        # Reset initial conditions
+        self.model.initial_conditions = []
+        c = self.model.all_components()
+        # pBad1433_0 = total Bad
+        self.model.initial(c['Bad'](bf=None, state='C', serine='B'), c['Bad_0'])
+        # Bax_inac_0 = total Bax
+        self.model.initial(c['Bax'](bf=None, s1=None, s2=None, state='C'),
+                           c['Bax_0'])
+        # tBid:Bcl2_0 = total tBid
+        self.model.initial(c['Bid'](state='T', bf=1) % c['Bcl2'](bf=1),
+                           c['Bid_0'])
+        # Bcl2_free = Bcl2_0 - tBid_0
+        self.model.initial(c['Bcl2'](bf=None), Bcl2_free_0)
+
+        t = np.linspace(0, 300*60, 101)
+        x = odesolve(self.model, t)
+        plt.figure()
+        plt.ion()
+        plt.plot(t, x['Bax4_'], label='Bak_poly')
+        plt.plot(t, x['Bcl2_'], label='Bcl2')
+        plt.plot(t, x['pBad1433_'], label='pBad:14-3-3')
+        plt.plot(t, x['Bad_Bcl2_'], label='Bad:Bcl2')
+        plt.plot(t, x['Bax_Bcl2_'], label='Bax:Bcl2')
+        plt.legend(loc='upper right')
+
+    def runTest(self):
+        self.howells_figure1ab(self)
 
 if __name__ == '__main__':
     unittest.main()
