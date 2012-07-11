@@ -1,3 +1,4 @@
+"""TODO: Docstring"""
 import pysb.macros as macros
 from pysb import *
 from pysb import MonomerPattern, ComplexPattern, ComponentSet
