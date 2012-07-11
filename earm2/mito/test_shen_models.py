@@ -235,11 +235,12 @@ class TestChen2007BiophysJ(unittest.TestCase):
            0.04 s^-1.
 
         2. It should also be noted that the parameter for spontaneous pore
-           formation, k_o, has already been multiplied by 4 from its nominal
+           formation, k9, has already been multiplied by 4 from its nominal
            value listed in the paper. This accounts for BNG's (appropriate)
            addition of the coefficients of 0.25 to the Bak polymerization
            forward reaction, due to the reaction being a homomeric binding
            reaction.
+
         3. Because the rate of displacement of Bax from Bcl2 by tBid is set
            to 0 in the original model, this reaction and its associated rate
            parameter k8 have been eliminated from the model.
@@ -256,9 +257,21 @@ class TestChen2007BiophysJ(unittest.TestCase):
              'd[Bax4]/dt = 0.25*AcBax**4*k9 - Bax4*k10'])
 
     def test_parameters(self):
-        """TODO: Validate"""
+        """The parameter values in the test below have been verified to match
+        the values listed in Table 1 of Chen et al. (2007) Biophys J."""
         param_list = convert_parameters(self.model, self.p_name_map)
-        self.assertTrue(True)
+        self.assertEqual(param_list, 
+           [('k1', 0.5),
+            ('k2', 0.1),
+            ('k5', 3),
+            ('k6', 0.04),
+            ('k3', 2),
+            ('k4', 0.001),
+            ('k7', 2),
+            ('k9', 8),
+            ('k10', 0)])
+
+(True)
         #self.assertEqual(param_list,
 
 class TestChen2007FEBS_Indirect(unittest.TestCase):
