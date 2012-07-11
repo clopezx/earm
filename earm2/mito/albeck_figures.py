@@ -15,33 +15,16 @@ rtol = 1e-6
 
 #import albeck_11b
 #import albeck_11c
-import albeck_11f
+#import albeck_11f
 
-m = albeck_11f.model
+#m = albeck_11f.model
 #p_name_map = albeck_11e.p_name_map
 #s_index_map = albeck_11e.s_index_map
 #m_ode_list = albeck_11e.m_ode_list
 
 
-def add_caspase8(model):
-    # Add upstream caspase reaction to model
-    if model.monomers.get('C8') is None:
-        Bid = model.monomers.get('Bid')
-        C8 = Monomer('C8', ['state', 'bf'], {'state': ['pro', 'A']},
-                     _export=False)
-        model.add_component(C8)
-        C8_0 = Parameter('C8_0', 1, _export=False)
-        model.add_component(C8_0)
-        model.initial(C8(state='A', bf=None), C8_0)
-        for component in catalyze(C8(state='A'), Bid(state='U'),
-                                Bid(state='T'), [1e-7, 1e-3, 1]):
-            model.add_component(component)
-
-    # Set CytoC to 0 so transport is only of Smac
-    #model.parameters['CytoC_0'].value = 0
-
 def run_figure_sim(model):
-    add_caspase8(model)
+    #add_caspase8(model)
 
     # Set timepoints and c8 doses
     tf = 15 * 3600 # 15 hours
@@ -114,5 +97,5 @@ def compare_odes(model, p_name_map, s_index_map, m_ode_list):
     return result_list
 
 #compare_odes(m, p_name_map, s_index_map, m_ode_list)
-plot_figure(m, 'albeck_11f.tsv')
-print matches_figure(m, 'albeck_11f.tsv')
+#plot_figure(m, 'albeck_11f.tsv')
+#print matches_figure(m, 'albeck_11f.tsv')
