@@ -181,6 +181,7 @@ def cui2008_direct2():
 def howells2011():
     # Build on the model from Chen et al. (2007) Biophys J:
     chen2007BiophysJ()
+    alias_model_components()
 
     # Override a few parameter values from the pre-existing model
     bind_BidT_Bcl2_kr.value = 2e-3 # was 4e-2 in Chen 2007 Biophys J
@@ -189,8 +190,7 @@ def howells2011():
     spontaneous_pore_BaxA_to_Bax4_kr.value = 5e-5   # was 0 in Chen 2007 B.J.
 
     # Add initial condition for Bad
-    Parameter('Bad_0', 0)
-    alias_model_components()
+    Bad_0 = Parameter('Bad_0', 0)
     Initial(Bad(bf=None, state='M', serine='U'), Bad_0)
 
     # Translocation equilibrium between unphosphorylated cytosolic and
@@ -205,8 +205,8 @@ def howells2011():
     displace(Bad(state='M'), Bid(state='T'), Bcl2, 5) # k_tBid_rel1 in paper
 
     # Phosphorylation of Bad
-    Parameter('phosphorylate_Bad_k1', 1e-3)) # k_Bad_phos1 in paper
-    Parameter('phosphorylate_Bad_k2', 1e-4)) # k_Bad_phos2 in paper
+    phosphorylate_Bad_k1 = Parameter('phosphorylate_Bad_k1', 1e-3)
+    phosphorylate_Bad_k2 = Parameter('phosphorylate_Bad_k2', 1e-4)
     Rule('phosphorylate_BadCU_to_BadCP',     # Cytosolic Bad
          Bad(state='C', serine='U') >> Bad(state='C', serine='P'),
          phosphorylate_Bad_k1)
