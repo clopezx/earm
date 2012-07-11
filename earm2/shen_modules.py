@@ -56,9 +56,10 @@ def chen2007BiophysJ(pore_assembly=True):
     # Bax can displace Bid from Bcl2
     displace(Bax(active_monomer), Bid(state='T'), Bcl2, 2)
 
+    ## Shouldn't the forward rate be multiplied by 4??
     if pore_assembly:
         # Four Bax monomers cooperatively bind to form a tetramer
-        assemble_pore_spontaneous(Bax(state='A', bf=None), [2, 0])
+        assemble_pore_spontaneous(Bax(state='A', bf=None), [2*4, 0])
 
 def chen2007FEBS_indirect(pore_assembly=True):
     # TODO: change all initial conditions and param values to Molar
@@ -177,46 +178,53 @@ def cui2008_direct2():
         Bax(state='A', bf=None, s1=2, s2=1),
         Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
-# TODO: All parameter values
 def howells2011():
     # Build on the model from Chen et al. (2007) Biophys J:
     chen2007BiophysJ()
 
+    # Override a few parameter values from the pre-existing model
+    bind_BidT_Bcl2_kr.value = 2e-3 # was 4e-2 in Chen 2007 Biophys J
+    bind_BaxA_Bcl2_kr.value = 2e-3 # was 1e-3 in Chen 2007 Biophys J
+    spontaneous_pore_BaxA_to_Bax4_kf.value = 2000*4 # was 2 in Chen 2007 B.J.
+    spontaneous_pore_BaxA_to_Bax4_kr.value = 5e-5   # was 0 in Chen 2007 B.J.
+
     # Add initial condition for Bad
-    Parameter('Bad_0', 0) # Ena
+    Parameter('Bad_0', 0)
     alias_model_components()
     Initial(Bad(bf=None, state='M', serine='U'), Bad_0)
 
     # Translocation equilibrium between unphosphorylated cytosolic and
     # mitochondrial Bad
     equilibrate(Bad(state='C', serine='U', bf=None),
-                Bad(state='M', serine='U', bf=None), [1, 1])
+                Bad(state='M', serine='U', bf=None), [1e-2, 2e-3])
 
     # Bad binds Bcl2
-    bind(Bad(state='M'), Bcl2, [1, 1])
+    bind(Bad(state='M'), Bcl2, [15, 2e-3])
 
     # Bad displaces tBid from Bcl2
-    displace(Bad(state='M'), Bid(state='T'), Bcl2, 1)
+    displace(Bad(state='M'), Bid(state='T'), Bcl2, 5) # k_tBid_rel1 in paper
 
     # Phosphorylation of Bad
+    Parameter('phosphorylate_Bad_k1', 1e-3)) # k_Bad_phos1 in paper
+    Parameter('phosphorylate_Bad_k2', 1e-4)) # k_Bad_phos2 in paper
     Rule('phosphorylate_BadCU_to_BadCP',     # Cytosolic Bad
          Bad(state='C', serine='U') >> Bad(state='C', serine='P'),
-         Parameter('phosphorylate_BadC_k', 1))
+         phosphorylate_Bad_k1)
     Rule('phosphorylate_BadMU_to_BadCP',     # Mitochondrial Bad
          Bad(state='M', serine='U', bf=None) >>
          Bad(state='C', serine='P', bf=None),
-         Parameter('phosphorylate_BadM_k', 1))
+         phosphorylate_Bad_k1)
     Rule('phosphorylate_BadMUBcl2_to_BadCP', # Mitochondrial Bad:Bcl2
          Bad(state='M', serine='U', bf=1) % Bcl2(bf=1) >>
          Bad(state='C', serine='P', bf=None) + Bcl2(bf=None),
-         Parameter('phosphorylate_BadMUBcl2_to_BadCP_k', 1))
+         phosphorylate_Bad_k2)
 
     # Sequester phospho-Bad by "binding" 14-3-3 domains
     Rule('sequester_BadCP_to_BadC1433',
          Bad(state='C', serine='P') >> Bad(state='C', serine='B'),
-         Parameter('sequester_BadCP_to_BadC1433_k', 1))
+         Parameter('sequester_BadCP_to_BadC1433_k', 1e-3))
 
     # Release of Bad from 14-3-3 domains
     Rule('release_BadC1433_to_BadCU',
          Bad(state='C', serine='B') >> Bad(state='C', serine='U'),
-         Parameter('release_BadC1433_to_BadCU_k', 1))
+         Parameter('release_BadC1433_to_BadCU_k', 8.7e-4))
