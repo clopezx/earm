@@ -54,6 +54,7 @@ def rec_to_bid():
     bind(DISC(), flip(), [KF, KR])
     bind(BAR(), C8(state='A'), [KF, KR])
 
+
 # PORE TO PARP SEGMENT ======================================================
 def pore_to_parp():
     """ This module defines what happens after the pore is activated and CytC
@@ -103,6 +104,8 @@ def pore_to_parp():
 
 
 # MOMP SEGMENT =============================================================
+
+## Macros ------------------------------------------------------------------
 def momp_monomers():
     """Declare the monomers used in the Albeck MOMP modules."""
     # == Activators
