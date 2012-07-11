@@ -177,6 +177,7 @@ def cui2008_direct2():
         Bax(state='A', bf=None, s1=2, s2=1),
         Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
+# TODO: All parameter values
 def howells2011():
     # Build on the model from Chen et al. (2007) Biophys J:
     chen2007BiophysJ()

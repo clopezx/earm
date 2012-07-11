@@ -1,5 +1,5 @@
-"""EARM 1.0 MODULES
-
+"""
+TODO: Docstring
 #
 # These segments are adapted from:
 # Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
@@ -19,8 +19,7 @@ KF = 1e-6
 KR = 1e-3
 KC = 1
 
-#
-# RECEPTOR TO BID SEGMENT
+# RECEPTOR TO BID SEGMENT ===================================================
 def rec_to_bid():
     """Defines the interactions from the ligand insult (e.g. TRAIL) to Bid
     activation as per EARM 1.0.
@@ -55,6 +54,7 @@ def rec_to_bid():
     bind(DISC(), flip(), [KF, KR])
     bind(BAR(), C8(state='A'), [KF, KR])
 
+# PORE TO PARP SEGMENT ======================================================
 def pore_to_parp():
     """ This module defines what happens after the pore is activated and CytC
     and Smac are released.
@@ -101,22 +101,39 @@ def pore_to_parp():
     catalyze(C3(state='A'), C6(state='pro'), C6(state='A'), [KF, KR, KC])
     catalyze(C6(state='A'), C8(state='pro'), C8(state='A'), [3e-8, KR, KC])
 
+
+# MOMP SEGMENT =============================================================
 def momp_monomers():
-    # == Activators ===================
+    """Declare the monomers used in the Albeck MOMP modules."""
+    # == Activators
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
     Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
-    # == Effectors ====================
+    # == Effectors
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
-    # == Anti-Apoptotics ==============
+    # == Anti-Apoptotics
     Monomer('Bcl2', [site_name])
 
-    # == Cytochrome C and Smac ========
+    # == Cytochrome C and Smac
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
 
 def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
+    """TODO: Finish docstring
+    Create the rules for the rxns Bax + Bax <> Bax2, and Bax2 + Bax2 <> Bax4.
+
+    Parameters
+    ----------
+    bax_active_state : string: 'A' or 'M'
+        The state value that should be assigned to the site "state" for
+        dimerization and tetramerization to occur. In the MOMP models shown
+        in Figure 11b and 11c, 
+    rate_scaling_factor : number
+        A scaling factor applied to the forward rate constants for dimerization
+        and tetramerization. 
+    """
+
     active_unbound = {'state': bax_active_state, 'bf': None}
     active_bax_monomer = Bax(s1=None, s2=None, **active_unbound)
     bax2 =(Bax(s1=1, s2=None, **active_unbound) %
@@ -128,11 +145,23 @@ def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
     Rule('Bax_dimerization', active_bax_monomer + active_bax_monomer <> bax2,
          Parameter('Bax_dimerization_kf', KF*rate_scaling_factor),
          Parameter('Bax_dimerization_kr', KR))
+    # Notes on the parameter values used below:
+    #  - The factor 2 is applied to the forward tetramerization rate because
+    #    BNG (correctly) divides the provided forward rate constant by 1/2 to
+    #    account for the fact that Bax2 + Bax2 is a homodimerization reaction,
+    #    and hence the effective rate is half that of an analogous
+    #    heterodimerization reaction. However, Albeck et al. used the same
+    #    default rate constant of 1e-6 for this reaction as well, therefore it
+    #    must be multiplied by 2 in order to match the original model
+    #  - BNG apparently applies a scaling factor of 2 to the reverse reaction
+    #    rate, for reasons we do not entirely understand. The factor of 0.5 is
+    #    applied here to make the rate match the original Albeck ODEs.
     Rule('Bax_tetramerization', bax2 + bax2 <> bax4,
          Parameter('Bax_tetramerization_kf', 2*KF*rate_scaling_factor),
          Parameter('Bax_tetramerization_kr', 0.5*KR))
 
 def Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A', rate_scaling_factor=1):
+    """TODO: Finish docstring."""
     bind(Bax(state=bax_active_state, s1=None, s2=None), Bcl2,
          [KF*rate_scaling_factor, KR])
     pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 2, Bcl2, 'bf',
@@ -140,9 +169,17 @@ def Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A', rate_scaling_factor=1):
     pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 4, Bcl2, 'bf',
          [KF*rate_scaling_factor, KR])
 
-## MOMP Module Implementations
+## MOMP Module Implementations ---------------------------------------------
 def albeck_11b(do_pore_transport=False):
-    """ TODO: Docstring """
+    """Minimal MOMP model shown in Figure 11b.
+
+    Features:
+        - Caspase 8 cleaves Bid to tBid
+        - Bid activates Bax
+        - Active Bax is inhibited by Bcl2
+        - Free active Bax binds to and transports Smac to the cytosol
+    """
+
     alias_model_components()
 
     # Set initial conditions
@@ -166,7 +203,16 @@ def albeck_11b(do_pore_transport=False):
         #    [KF, KR, 10])
 
 def albeck_11c(do_pore_transport=False):
-    """ TODO: Docstring """
+    """Model incorporating Bax oligomerization.
+
+    Features:
+        - Caspase 8 cleaves Bid to tBid
+        - Bid activates Bax
+        - Active Bax dimerizes; Bax dimers dimerize to form tetramers
+        - Bcl2 binds/inhibits Bax monomers, dimers, and tetramers
+        - Bax tetramers bind to and transport Smac to the cytosol
+    """
+
     alias_model_components()
     Initial(Bid(state='U', bf=None), Parameter('Bid_0', 4e4))
     Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
@@ -176,7 +222,7 @@ def albeck_11c(do_pore_transport=False):
     catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
              Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
 
-    # Bax tetramerizes
+    # Bax dimerizes/tetramerizes
     Bax_tetramerizes(bax_active_state='A')
 
     # Bcl2 inhibits Bax, Bax2, and Bax4
@@ -191,13 +237,25 @@ def albeck_11c(do_pore_transport=False):
         #pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
         #    [[KF, KR, 10]])
 
-# Needs separate mitochondrial compartment--by rate scaling?
 def albeck_11d(do_pore_transport=False):
+    """Model incorporating mitochondrial transport.
+
+    Features:
+        - Caspase 8 cleaves Bid to tBid
+        - Bid activates Bax
+        - Active Bax translocates to the mitochondria
+        - All reactions on the mito membrane have increased association rates
+        - Mitochondrial Bax dimerizes; Bax dimers dimerize to form tetramers
+        - Bcl2 binds/inhibits Bax monomers, dimers, and tetramers
+        - Bax tetramers bind to and transport Smac to the cytosol
+    """
+
     alias_model_components()
     Initial(Bid(state='U', bf=None), Parameter('Bid_0', 4e4))
     Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
     Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
 
+    # Fractional volume of the mitochondrial membrane compartment
     v = 0.07
     rate_scaling_factor = 1./v
 
@@ -210,7 +268,7 @@ def albeck_11d(do_pore_transport=False):
                 Bax(state='M', bf=None, s1=None, s2=None),
                 [1e-2, 1e-2])
 
-    # Bax tetramerizes
+    # Bax dimerizes/tetramerizes
     Bax_tetramerizes(bax_active_state='M',
                      rate_scaling_factor=rate_scaling_factor)
 
@@ -228,7 +286,18 @@ def albeck_11d(do_pore_transport=False):
         #    [[KF, KR, 10]])
 
 def albeck_11e(do_pore_transport=False):
-    """ TODO: Docstring """
+    """Model incorporating mitochondrial transport and pore "insertion."
+
+    Features:
+        - Caspase 8 cleaves Bid to tBid
+        - Bid activates Bax
+        - Active Bax translocates to the mitochondria
+        - All reactions on the mitochondria have increased association rates
+        - Mitochondrial Bax dimerizes; Bax dimers dimerize to form tetramers
+        - Bcl2 binds/inhibits Bax monomers, dimers, and tetramers
+        - Bax tetramers bind to mitochondrial "sites" and become active pores
+        - Active pores bind to and transport Smac to the cytosol
+    """
     # Build off of the previous model
     albeck_11d(do_pore_transport=False)
 
@@ -240,7 +309,7 @@ def albeck_11e(do_pore_transport=False):
     v = 0.07
     rate_scaling_factor = 1./v
 
-    # Add Binding of Bax4 to Mito
+    # Add activation of mitochondrial pore sites by Bax4
     pore_bind(Bax(state='M'), 's1', 's2', 'bf', 4, Mito(state='I'), 'bf',
          [KF*rate_scaling_factor, KR])
     Rule('Mito_activation',
@@ -261,6 +330,15 @@ def albeck_11e(do_pore_transport=False):
         #    [[KF, KR, 10]])
 
 def albeck_11f(do_pore_transport=False):
+    """Model as in 11e, but with cooperative assembly of Bax pores.
+
+    Associaton rate constants for Bax dimerization, tetramerization, and
+    insertion are set so that they increase at each step (from 1e-8 to 1e-7 and
+    then 1e-6), thereby creating cooperative assembly.
+
+    See also the documentation for albeck_11e().
+    """
+
     albeck_11e(do_pore_transport=do_pore_transport)
     alias_model_components()
 
@@ -268,6 +346,6 @@ def albeck_11f(do_pore_transport=False):
     equilibrate_BaxA_to_BaxM_kf.value = 1e-4  # was 1e-2 in 11e
     equilibrate_BaxA_to_BaxM_kr.value = 1e-4  # was 1e-2 in 11e
     Bax_dimerization_kf.value /= 100          # was 1e-6 in 11e
-    Bax_tetramerization_kf.value /= 10      # was 1e-6 in 11e
+    Bax_tetramerization_kf.value /= 10        # was 1e-6 in 11e
 
 
