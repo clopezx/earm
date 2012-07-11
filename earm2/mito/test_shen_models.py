@@ -60,41 +60,6 @@ def convert_parameters(model, p_name_map):
             param_list.append((original_name, p.value))
     return param_list
 
-def chen2007BiophysJ_convert_odes(model):
-    """Substitute species/parameter names with ones from Chen et al., Biophys J.
-
-    Parameters
-    ----------
-    model : pysb.core.Model
-        The model derived from Chen et al. (2007) Biophysical Journal.
-
-    Returns
-    -------
-    A list of strings, with one entry for each ODE in the model. Each ODE
-    is represented as a string, e.g. "d[Act]/dt = ..."
-    """
-
-    p_name_map = {
-        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
-        'reverse_BaxA_to_BaxC_k': 'k2',
-        'bind_BidT_Bcl2_kf': 'k5',
-        'bind_BidT_Bcl2_kr': 'k6',
-        'bind_BaxA_Bcl2_kf': 'k3',
-        'bind_BaxA_Bcl2_kr': 'k4',
-        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_k': 'k7',
-        #'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kr': 'k8',
-        'spontaneous_pore_BaxA_to_Bax4_kf': 'k9',
-        'spontaneous_pore_BaxA_to_Bax4_kr': 'k10' }
-    s_name_map = {
-        's0': 'Act',
-        's1': 'InBax',
-        's2': 'Bcl2',
-        's3': 'AcBax',
-        's4': 'ActBcl2',
-        's5': 'AcBaxBcl2',
-        's6': 'Bax4'}
-    return convert_odes(model, p_name_map, s_name_map)
-
 def chen2007FEBS_convert_odes(model, model_type):
     """Substitute species/parameter names with ones from Chen et al., FEBS.
 
@@ -215,6 +180,26 @@ def cui_convert_odes(model):
 ## TESTS ===============================================================
 
 class TestChen2007BiophysJ(unittest.TestCase):
+    p_name_map = {
+        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
+        'reverse_BaxA_to_BaxC_k': 'k2',
+        'bind_BidT_Bcl2_kf': 'k5',
+        'bind_BidT_Bcl2_kr': 'k6',
+        'bind_BaxA_Bcl2_kf': 'k3',
+        'bind_BaxA_Bcl2_kr': 'k4',
+        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_k': 'k7',
+        #'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kr': 'k8',
+        'spontaneous_pore_BaxA_to_Bax4_kf': 'k9',
+        'spontaneous_pore_BaxA_to_Bax4_kr': 'k10' }
+    s_name_map = {
+        's0': 'Act',
+        's1': 'InBax',
+        's2': 'Bcl2',
+        's3': 'AcBax',
+        's4': 'ActBcl2',
+        's5': 'AcBaxBcl2',
+        's6': 'Bax4'}
+
     def setUp(self):
         self.model = chen2007BiophysJ.model
 
@@ -255,9 +240,12 @@ class TestChen2007BiophysJ(unittest.TestCase):
            addition of the coefficients of 0.25 to the Bak polymerization
            forward reaction, due to the reaction being a homomeric binding
            reaction.
+        3. Because the rate of displacement of Bax from Bcl2 by tBid is set
+           to 0 in the original model, this reaction and its associated rate
+           parameter k8 have been eliminated from the model.
         """
-
-        ode_list = chen2007BiophysJ_convert_odes(self.model)
+        ode_list = convert_odes(self.model, self.p_name_map, self.s_name_map)
+        #ode_list = chen2007BiophysJ_convert_odes(self.model)
         self.assertEqual(ode_list,
             ['d[Act]/dt = AcBax*ActBcl2*k7 - Act*Bcl2*k5 + ActBcl2*k6',
              'd[InBax]/dt = AcBax*k2 - Act*InBax*k1',
@@ -266,6 +254,12 @@ class TestChen2007BiophysJ(unittest.TestCase):
              'd[ActBcl2]/dt = -AcBax*ActBcl2*k7 + Act*Bcl2*k5 - ActBcl2*k6',
              'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k7 + AcBax*Bcl2*k3 - AcBaxBcl2*k4',
              'd[Bax4]/dt = 0.25*AcBax**4*k9 - Bax4*k10'])
+
+    def test_parameters(self):
+        """TODO: Validate"""
+        param_list = convert_parameters(self.model, self.p_name_map)
+        self.assertTrue(True)
+        #self.assertEqual(param_list,
 
 class TestChen2007FEBS_Indirect(unittest.TestCase):
     def setUp(self):
