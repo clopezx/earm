@@ -1,4 +1,5 @@
-"""'embedded together' w earm1.0"""
+"""TODO: Docstring
+'embedded together' w earm1.0"""
 
 from pysb import *
 from earm2 import macros

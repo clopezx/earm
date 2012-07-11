@@ -1,3 +1,6 @@
+"""TODO Docstring: Say that this file ensures that the models
+match published ODEs, etc."""
+
 import unittest
 from earm2.mito import chen2007BiophysJ
 from earm2.mito import chen2007FEBS_direct
@@ -10,6 +13,7 @@ from pysb.bng import generate_equations
 import re
 
 def convert_odes(model, p_name_map, s_name_map):
+    """TODO: doc"""
     name_map = {}
     name_map.update(p_name_map)
     name_map.update(s_name_map)

@@ -4,8 +4,6 @@ TODO: Docstring
 
 from pysb import *
 from earm2 import shen_modules
-from pysb.bng import generate_equations
-import re
 
 Model()
 
