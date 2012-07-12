@@ -352,6 +352,8 @@ class TestCui2008_Direct2(unittest.TestCase):
              'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k6 + AcBax*Bcl2*k2 + AcBax*EnaBcl2*k14 - AcBaxBcl2*Act*k7 - AcBaxBcl2*Ena*k13 - AcBaxBcl2*k3 - AcBaxBcl2*u6'])
 
 class TestHowells2011(unittest.TestCase):
+    """TODO: Docstring"""
+
     # Mapping of parameter names
     p_name_map = {
         'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_Bak_cat',
@@ -374,18 +376,18 @@ class TestHowells2011(unittest.TestCase):
         'release_BadC1433_to_BadCU_k': 'k_Bad_rel'}
     # Mapping of species names
     s_name_map = {
-        's0': 'tBid',
-        's1': 'Bak_inac',
-        's2': 'Bcl2',
-        's3': 'Bad_m',
-        's4': 'Bak',
-        's5': 'tBidBcl2',
-        's6': 'Bad',
-        's7': 'BadBcl2',
-        's8': 'pBad',
-        's9': 'BakBcl2',
-        's10': 'Bak_poly',
-        's11': 'pBad1433'}
+        'Bid(bf=None, state=T)': 'tBid',
+        'Bax(bf=None, s1=None, s2=None, state=C)': 'Bak_inac',
+        'Bcl2(bf=None)': 'Bcl2',
+        'Bad(bf=None, state=M, serine=U)': 'Bad_m',
+        'Bax(bf=None, s1=None, s2=None, state=A)': 'Bak',
+        'Bcl2(bf=1) % Bid(bf=1, state=T)': 'tBidBcl2',
+        'Bad(bf=None, state=C, serine=U)': 'Bad',
+        'Bad(bf=1, state=M, serine=U) % Bcl2(bf=1)': 'BadBcl2',
+        'Bad(bf=None, state=C, serine=P)': 'pBad',
+        'Bax(bf=1, s1=None, s2=None, state=A) % Bcl2(bf=1)': 'BakBcl2',
+        'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'Bak_poly',
+        'Bad(bf=None, state=C, serine=B)': 'pBad1433'}
 
     def setUp(self):
         self.model = howells2011.model
@@ -398,7 +400,7 @@ class TestHowells2011(unittest.TestCase):
         to the Bak polymerization forward reaction, due to the reaction being
         a homomeric binding reaction.
         """
-        ode_list = convert_odes(self.model, self.p_name_map, self.s_name_map)
+        ode_list = convert_odes2(self.model, self.p_name_map, self.s_name_map)
         self.assertEqual(ode_list,
             ['d[tBid]/dt = Bad_m*k_tBid_rel1*tBidBcl2 + Bak*k_tBid_rel2*tBidBcl2 - Bcl2*ka_tBid_Bcl2*tBid + kd_tBid_Bcl2*tBidBcl2',
              'd[Bak_inac]/dt = Bak*k_Bak_inac - Bak_inac*k_Bak_cat*tBid',
