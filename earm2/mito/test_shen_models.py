@@ -271,9 +271,6 @@ class TestChen2007BiophysJ(unittest.TestCase):
             ('k9', 8),
             ('k10', 0)])
 
-(True)
-        #self.assertEqual(param_list,
-
 class TestChen2007FEBS_Indirect(unittest.TestCase):
     def setUp(self):
         self.model = chen2007FEBS_indirect.model
