@@ -51,6 +51,29 @@ def convert_odes(model, p_name_map, s_name_map):
 
     return ode_list
 
+def convert_odes2(model, p_name_map, s_name_map_by_pattern):
+    generate_equations(model)
+
+    # Get the index of each species
+    s_name_map_by_num = {}
+    for i, s in enumerate(model.species):
+        for key in s_name_map_by_pattern:
+            if key == str(s):
+                s_name_map_by_num['s%d' % i] = s_name_map_by_pattern[key]
+
+    name_map = {}
+    name_map.update(p_name_map)
+    name_map.update(s_name_map_by_num)
+
+    # Substitute new names into the ODEs
+    ode_list = []
+    for i, ode in enumerate(model.odes):
+        new_ode = ode.subs(name_map)
+        new_ode = 'd[%s]/dt = %s' % (s_name_map_by_num['s%d' % i], str(new_ode))
+        ode_list.append(new_ode)
+
+    return ode_list
+
 def convert_parameters(model, p_name_map):
     """TODO: Docstring"""
     param_list = []
@@ -59,60 +82,6 @@ def convert_parameters(model, p_name_map):
             original_name = re.sub(p.name, p_name_map[p.name], p.name)
             param_list.append((original_name, p.value))
     return param_list
-
-def chen2007FEBS_convert_odes(model, model_type):
-    """Substitute species/parameter names with ones from Chen et al., FEBS.
-
-    Parameters
-    ----------
-    model : pysb.core.Model
-        One of the two models from Chen et al., 2008: "direct" or
-        "direct".
-    model_type : string
-        String specifying which type of model it is: 'direct' or 'indirect'.
-
-    Returns
-    -------
-    A list of strings, with one entry for each ODE in the model. Each ODE
-    is represented as a string, e.g. "d[Act]/dt = ..."
-    """
-
-    p_name_map = {
-        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_InBax',
-        'reverse_BaxA_to_BaxC_k': 'k_Bax',
-        'bind_BidT_Bcl2_kf': 'k_BH3_Bcl2',
-        'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
-        'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
-        'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
-        'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
-        'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
-        'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
-        'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
-        'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
-        'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
-
-    if model_type == 'direct':
-        s_name_map = {
-            's0': 'Act',
-            's1': 'Ena',
-            's2': 'InBax',
-            's3': 'Bcl2',
-            's4': 'Bax',
-            's5': 'ActBcl2',
-            's6': 'EnaBcl2',
-            's7': 'MAC'}
-    elif model_type == 'indirect':
-        s_name_map = {
-            's0': 'BH3',
-            's1': 'Bax',
-            's2': 'Bcl2',
-            's3': 'BH3Bcl2',
-            's4': 'BaxBcl2',
-            's5': 'MAC'}
-    else:
-        raise ValueError("model_type must be either 'direct' or 'indirect'.")
-
-    return convert_odes(model, p_name_map, s_name_map)
 
 def cui_convert_odes(model):
     """Substitutes species and parameter names with ones from Cui et al., 2008.
@@ -192,14 +161,6 @@ class TestChen2007BiophysJ(unittest.TestCase):
         'spontaneous_pore_BaxA_to_Bax4_kf': 'k9',
         'spontaneous_pore_BaxA_to_Bax4_kr': 'k10' }
     s_name_map = {
-        's0': 'Act',
-        's1': 'InBax',
-        's2': 'Bcl2',
-        's3': 'AcBax',
-        's4': 'ActBcl2',
-        's5': 'AcBaxBcl2',
-        's6': 'Bax4'}
-    s_name_map_by_pattern = {
         'Bid(bf=None, state=T)': 'Act',
         'Bax(bf=None, s1=None, s2=None, state=C)': 'InBax',
         'Bcl2(bf=None)': 'Bcl2',
@@ -209,27 +170,6 @@ class TestChen2007BiophysJ(unittest.TestCase):
         'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'Bax4'
     }
 
-    def convert_odes_chen(self):
-        name_map = {}
-        name_map.update(self.p_name_map)
-
-        s_list = self.model.species
-        s_name_map_by_num = {}
-        for i, s in enumerate(self.model.species):
-            for key in self.s_name_map_by_pattern:
-                if key == str(s):
-                    s_name_map_by_num['s%d' % i] = self.s_name_map_by_pattern[key]
-        print "s_name_map_by_num:"
-        print s_name_map_by_num
-        name_map.update(s_name_map_by_num)
-        generate_equations(self.model)
-        ode_list = []
-        for i, ode in enumerate(self.model.odes):
-            new_ode = ode.subs(name_map)
-            new_ode = 'd[%s]/dt = %s' % (s_name_map_by_num['s%d' % i], str(new_ode))
-            ode_list.append(new_ode)
-
-        return ode_list
 
     def setUp(self):
         self.model = chen2007BiophysJ.model
@@ -276,8 +216,8 @@ class TestChen2007BiophysJ(unittest.TestCase):
            to 0 in the original model, this reaction and its associated rate
            parameter k8 have been eliminated from the model.
         """
-        ode_list = convert_odes(self.model, self.p_name_map, self.s_name_map)
-        #ode_list = chen2007BiophysJ_convert_odes(self.model)
+        #ode_list = convert_odes(self.model, self.p_name_map, self.s_name_map)
+        ode_list = convert_odes2(self.model, self.p_name_map, self.s_name_map)
         self.assertEqual(ode_list,
             ['d[Act]/dt = AcBax*ActBcl2*k7 - Act*Bcl2*k5 + ActBcl2*k6',
              'd[InBax]/dt = AcBax*k2 - Act*InBax*k1',
@@ -287,58 +227,6 @@ class TestChen2007BiophysJ(unittest.TestCase):
              'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k7 + AcBax*Bcl2*k3 - AcBaxBcl2*k4',
              'd[Bax4]/dt = 0.25*AcBax**4*k9 - Bax4*k10'])
 
-    def test_odes2(self):
-        """The ODEs generated by the PySB model match those of the paper with
-        the following two caveats:
-
-        1. In the equation for d[Bcl2]/dt, in the paper the authors group the
-           terms
-
-            + AcBaxBcl2*k4 + ActBcl2*k6'
-
-           into the single term
-
-            + k_Bcl2 * Bcl2_nonfree
-
-           with the comment that "Bcl2_nonfree indicates the total concentration
-           of Bcl2 associated with both activated Bax and Activator
-           ([Bcl2_nonfree] = [AcBaxBcl2] + [ActBcl2]). We use k_bcl2 to
-           represent the rate of non-free Bcl2 shifting to free Bcl2, assuming
-           that free Bcl2 originates from both Bcl2 non-free forms at the same
-           rate."
-
-           In addition, in the legend for Table 1 (which lists parameters) they
-           state that: "We set k_bcl2 (the rate of non-free Bcl2 shifting to
-           free Bcl2)... equal to k6 assuming that free Bcl2 originate [sic]
-           from AcBaxBcl2 at the same rate with ActBcl2."
-
-           So, obviously this substitution of Bcl2_nonfree for AcBaxBcl2 and
-           ActBcl2 works if k4 and k6 are equal, which they claim as an
-           assumption; however, in their table of parameter values, they list k4
-           as having a value of 0.001 s^-1, and k6 as having a value of
-           0.04 s^-1.
-
-        2. It should also be noted that the parameter for spontaneous pore
-           formation, k9, has already been multiplied by 4 from its nominal
-           value listed in the paper. This accounts for BNG's (appropriate)
-           addition of the coefficients of 0.25 to the Bax polymerization
-           forward reaction, due to the reaction being a homomeric binding
-           reaction.
-
-        3. Because the rate of displacement of Bax from Bcl2 by tBid is set
-           to 0 in the original model, this reaction and its associated rate
-           parameter k8 have been eliminated from the model.
-        """
-        ode_list = self.convert_odes_chen()
-        #ode_list = chen2007BiophysJ_convert_odes(self.model)
-        self.assertEqual(ode_list,
-            ['d[Act]/dt = AcBax*ActBcl2*k7 - Act*Bcl2*k5 + ActBcl2*k6',
-             'd[InBax]/dt = AcBax*k2 - Act*InBax*k1',
-             'd[Bcl2]/dt = -AcBax*Bcl2*k3 + AcBaxBcl2*k4 - Act*Bcl2*k5 + ActBcl2*k6',
-             'd[AcBax]/dt = -1.0*AcBax**4*k9 - AcBax*ActBcl2*k7 - AcBax*Bcl2*k3 - AcBax*k2 + AcBaxBcl2*k4 + Act*InBax*k1 + 4*Bax4*k10',
-             'd[ActBcl2]/dt = -AcBax*ActBcl2*k7 + Act*Bcl2*k5 - ActBcl2*k6',
-             'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k7 + AcBax*Bcl2*k3 - AcBaxBcl2*k4',
-             'd[Bax4]/dt = 0.25*AcBax**4*k9 - Bax4*k10'])
 
     def test_parameters(self):
         """The parameter values in the test below have been verified to match
@@ -356,11 +244,33 @@ class TestChen2007BiophysJ(unittest.TestCase):
             ('k10', 0)])
 
 class TestChen2007FEBS_Indirect(unittest.TestCase):
+    p_name_map = {
+        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_InBax',
+        'reverse_BaxA_to_BaxC_k': 'k_Bax',
+        'bind_BidT_Bcl2_kf': 'k_BH3_Bcl2',
+        'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
+        'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
+        'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
+        'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
+        'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
+        'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
+        'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
+        'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
+        'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
+
+    s_name_map = {
+        'Bid(bf=None, state=T)': 'BH3',
+        'Bax(bf=None, s1=None, s2=None, state=C)': 'Bax',
+        'Bcl2(bf=None)': 'Bcl2',
+        'Bcl2(bf=1) % Bid(bf=1, state=T)': 'BH3Bcl2',
+        'Bax(bf=1, s1=None, s2=None, state=C) % Bcl2(bf=1)': 'BaxBcl2',
+        'Bax(bf=None, s1=1, s2=2, state=C) % Bax(bf=None, s1=3, s2=1, state=C) % Bax(bf=None, s1=4, s2=3, state=C) % Bax(bf=None, s1=2, s2=4, state=C)': 'MAC'}
+
     def setUp(self):
         self.model = chen2007FEBS_indirect.model
 
     def test_odes(self):
-        ode_list = chen2007FEBS_convert_odes(self.model, 'indirect')
+        ode_list = convert_odes2(self.model, self.p_name_map, self.s_name_map)
         self.assertEqual(ode_list,
             ['d[BH3]/dt = -BH3*Bcl2*k_BH3_Bcl2 + BH3Bcl2*kr_BH3Bcl2',
              'd[Bax]/dt = -1.0*Bax**4*k_o - Bax*Bcl2*k_Bax_Bcl2 + BaxBcl2*kr_BaxBcl2 + 4*MAC*kr_o',
@@ -370,11 +280,35 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
              'd[MAC]/dt = 0.25*Bax**4*k_o - MAC*kr_o'])
 
 class TestChen2007FEBS_Direct(unittest.TestCase):
+    p_name_map = {
+        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_InBax',
+        'reverse_BaxA_to_BaxC_k': 'k_Bax',
+        'bind_BidT_Bcl2_kf': 'k_BH3_Bcl2',
+        'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
+        'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
+        'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
+        'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
+        'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
+        'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
+        'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
+        'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
+        'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
+    s_name_map = {
+        'Bid(bf=None, state=T)': 'Act',
+        'Bad(bf=None, state=M, serine=U)': 'Ena',
+        'Bax(bf=None, s1=None, s2=None, state=C)': 'InBax',
+        'Bcl2(bf=None)': 'Bcl2',
+        'Bax(bf=None, s1=None, s2=None, state=A)': 'Bax',
+        'Bcl2(bf=1) % Bid(bf=1, state=T)': 'ActBcl2',
+        'Bad(bf=1, state=M, serine=U) % Bcl2(bf=1)': 'EnaBcl2',
+        'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'MAC'}
+
     def setUp(self):
         self.model = chen2007FEBS_direct.model
 
     def test_odes(self):
-        ode_list = chen2007FEBS_convert_odes(self.model, 'direct')
+        ode_list = convert_odes2(self.model, self.p_name_map, self.s_name_map)
+        #ode_list = chen2007FEBS_convert_odes(self.model, 'direct')
         self.assertEqual(ode_list,
             ['d[Act]/dt = -Act*Bcl2*k_BH3_Bcl2 + ActBcl2*kr_BH3Bcl2',
              'd[Ena]/dt = -Bcl2*Ena*k_BH3_Bcl2 + EnaBcl2*kr_BH3Bcl2',
