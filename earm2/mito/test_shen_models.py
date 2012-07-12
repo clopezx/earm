@@ -53,13 +53,30 @@ def convert_odes(model, p_name_map, s_name_map_by_pattern):
     name_map.update(s_name_map_by_num)
 
     # Substitute new names into the ODEs
-    ode_list = []
+    ode_list = {} 
     for i, ode in enumerate(model.odes):
         new_ode = ode.subs(name_map)
-        new_ode = 'd[%s]/dt = %s' % (s_name_map_by_num['s%d' % i], str(new_ode))
-        ode_list.append(new_ode)
+        ode_species = s_name_map_by_pattern[str(model.species[i])]
+        ode_list[ode_species] = str(new_ode)
+        #new_ode = 'd[%s]/dt = %s' % (s_name_map_by_num['s%d' % i], str(new_ode))
+        #ode_list.append(new_ode)
 
     return ode_list
+
+def odes_match(generated_odes, validated_odes):
+    """Return True if the ODEs match.
+
+    Both args are dicts, where the key is the original species name,
+    and the value is the string representation of the ODE.
+    """
+
+    # Will throw a KeyError if either list contains species that are not
+    # in the other
+    result_list1 = [generated_odes[species] == validated_odes[species]
+                   for species in generated_odes]
+    result_list2 = [generated_odes[species] == validated_odes[species]
+                   for species in validated_odes]
+    return np.all(result_list1) and np.all(result_list2)
 
 def convert_parameters(model, p_name_map):
     """TODO: Docstring"""
@@ -205,15 +222,22 @@ class TestChen2007BiophysJ(unittest.TestCase):
         """
         #ode_list = convert_odes(self.model, self.p_name_map, self.s_name_map)
         ode_list = convert_odes(self.model, self.p_name_map, self.s_name_map)
-        self.assertEqual(ode_list,
-            ['d[Act]/dt = AcBax*ActBcl2*k7 - Act*Bcl2*k5 + ActBcl2*k6',
-             'd[InBax]/dt = AcBax*k2 - Act*InBax*k1',
-             'd[Bcl2]/dt = -AcBax*Bcl2*k3 + AcBaxBcl2*k4 - Act*Bcl2*k5 + ActBcl2*k6',
-             'd[AcBax]/dt = -1.0*AcBax**4*k9 - AcBax*ActBcl2*k7 - AcBax*Bcl2*k3 - AcBax*k2 + AcBaxBcl2*k4 + Act*InBax*k1 + 4*Bax4*k10',
-             'd[ActBcl2]/dt = -AcBax*ActBcl2*k7 + Act*Bcl2*k5 - ActBcl2*k6',
-             'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k7 + AcBax*Bcl2*k3 - AcBaxBcl2*k4',
-             'd[Bax4]/dt = 0.25*AcBax**4*k9 - Bax4*k10'])
-
+        #self.assertEqual(ode_list,
+        #    ['d[Act]/dt = AcBax*ActBcl2*k7 - Act*Bcl2*k5 + ActBcl2*k6',
+        #     'd[InBax]/dt = AcBax*k2 - Act*InBax*k1',
+        #     'd[Bcl2]/dt = -AcBax*Bcl2*k3 + AcBaxBcl2*k4 - Act*Bcl2*k5 + ActBcl2*k6',
+        #     'd[AcBax]/dt = -1.0*AcBax**4*k9 - AcBax*ActBcl2*k7 - AcBax*Bcl2*k3 - AcBax*k2 + AcBaxBcl2*k4 + Act*InBax*k1 + 4*Bax4*k10',
+        #     'd[ActBcl2]/dt = -AcBax*ActBcl2*k7 + Act*Bcl2*k5 - ActBcl2*k6',
+        #     'd[AcBaxBcl2]/dt = AcBax*ActBcl2*k7 + AcBax*Bcl2*k3 - AcBaxBcl2*k4',
+        #     'd[Bax4]/dt = 0.25*AcBax**4*k9 - Bax4*k10'])
+        self.assertTrue(odes_match(ode_list,
+           {'Act': 'AcBax*ActBcl2*k7 - Act*Bcl2*k5 + ActBcl2*k6',
+            'InBax': 'AcBax*k2 - Act*InBax*k1',
+            'Bcl2': '-AcBax*Bcl2*k3 + AcBaxBcl2*k4 - Act*Bcl2*k5 + ActBcl2*k6',
+            'AcBax': '-1.0*AcBax**4*k9 - AcBax*ActBcl2*k7 - AcBax*Bcl2*k3 - AcBax*k2 + AcBaxBcl2*k4 + Act*InBax*k1 + 4*Bax4*k10',
+            'ActBcl2': '-AcBax*ActBcl2*k7 + Act*Bcl2*k5 - ActBcl2*k6',
+            'AcBaxBcl2': 'AcBax*ActBcl2*k7 + AcBax*Bcl2*k3 - AcBaxBcl2*k4',
+            'Bax4': '0.25*AcBax**4*k9 - Bax4*k10'}))
 
     def test_parameters(self):
         """The parameter values in the test below have been verified to match
