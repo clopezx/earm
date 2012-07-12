@@ -237,7 +237,7 @@ class TestChen2007BiophysJ(unittest.TestCase):
         2. It should also be noted that the parameter for spontaneous pore
            formation, k9, has already been multiplied by 4 from its nominal
            value listed in the paper. This accounts for BNG's (appropriate)
-           addition of the coefficients of 0.25 to the Bak polymerization
+           addition of the coefficients of 0.25 to the Bax polymerization
            forward reaction, due to the reaction being a homomeric binding
            reaction.
 
