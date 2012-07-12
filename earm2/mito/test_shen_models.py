@@ -83,72 +83,73 @@ def convert_parameters(model, p_name_map):
             param_list.append((original_name, p.value))
     return param_list
 
-def cui_convert_odes(model):
-    """Substitutes species and parameter names with ones from Cui et al., 2008.
+# Parameter mapping used by both Chen 2007 FEBS models
+chenFEBS_p_name_map = {
+    'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_InBax',
+    'reverse_BaxA_to_BaxC_k': 'k_Bax',
+    'bind_BidT_Bcl2_kf': 'k_BH3_Bcl2',
+    'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
+    'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
+    'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
+    'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
+    'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
+    'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
+    'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
+    'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
+    'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
 
-    Parameters
-    ----------
-    model : pysb.core.Model
-        One of the three models from Cui et al., 2008: "direct", "direct 1",
-        or "direct 2".
+# Parameter mapping used by all three Cui models
+cui_p_name_map = {
+    'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
+    'reverse_BaxA_to_BaxC_k': 'k8',
+    'bind_BidT_Bcl2_kf': 'k4',
+    'bind_BidT_Bcl2_kr': 'k5',
+    'bind_BadM_Bcl2_kf': 'k9',
+    'bind_BadM_Bcl2_kr': 'k10',
+    'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kf': 'k6',
+    'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kr': 'k7',
+    'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_kf': 'k11',
+    'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_kr': 'k12',
+    'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_kf': 'k13',
+    'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_kr': 'k14',
+    'dimerize_Bax_kf': 'k16',
+    'dimerize_Bax_kr': 'k17',
+    'synthesize_BaxC_k': 'p1',
+    'degrade_BaxC_k': 'u1',
+    'degrade_BaxA_k': 'u2',
+    'synthesize_BidT_k': 'p2',
+    'degrade_BidT_k': 'u3',
+    'synthesize_Bcl2_k': 'p3',
+    'degrade_Bcl2_k': 'u4',
+    'degrade_BidTBcl2_k': 'u5',
+    'degrade_BaxBcl2_k': 'u6',
+    'synthesize_BadMU_k': 'p4',
+    'degrade_BadMU_k': 'u7',
+    'degrade_BadBcl2_k': 'u8',
+    'degrade_BaxBax_k': 'u9',
+    'bind_BaxA_Bcl2_kf': 'k2',
+    'bind_BaxA_Bcl2_kr': 'k3',
+    'Bax_autoactivation_dimerization_k': 'k15' }
 
-    Returns
-    -------
-    A list of strings, with one entry for each ODE in the model. Each ODE
-    is represented as a string, e.g. "d[Act]/dt = ..."
-    """
-
-    # Mapping of parameter names
-    p_name_map = {
-        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
-        'reverse_BaxA_to_BaxC_k': 'k8',
-        'bind_BidT_Bcl2_kf': 'k4',
-        'bind_BidT_Bcl2_kr': 'k5',
-        'bind_BadM_Bcl2_kf': 'k9',
-        'bind_BadM_Bcl2_kr': 'k10',
-        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kf': 'k6',
-        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kr': 'k7',
-        'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_kf': 'k11',
-        'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_kr': 'k12',
-        'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_kf': 'k13',
-        'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_kr': 'k14',
-        'dimerize_Bax_kf': 'k16',
-        'dimerize_Bax_kr': 'k17',
-        'synthesize_BaxC_k': 'p1',
-        'degrade_BaxC_k': 'u1',
-        'degrade_BaxA_k': 'u2',
-        'synthesize_BidT_k': 'p2',
-        'degrade_BidT_k': 'u3',
-        'synthesize_Bcl2_k': 'p3',
-        'degrade_Bcl2_k': 'u4',
-        'degrade_BidTBcl2_k': 'u5',
-        'degrade_BaxBcl2_k': 'u6',
-        'synthesize_BadMU_k': 'p4',
-        'degrade_BadMU_k': 'u7',
-        'degrade_BadBcl2_k': 'u8',
-        'degrade_BaxBax_k': 'u9',
-        'bind_BaxA_Bcl2_kf': 'k2',
-        'bind_BaxA_Bcl2_kr': 'k3',
-        'Bax_autoactivation_dimerization_k': 'k15' }
-    # Mapping of species names
-    s_name_map = {
-        's0': 'Act',
-        's1': 'Ena',
-        's2': 'InBax',
-        's3': 'Bcl2',
-        's4': '__source',
-        's5': 'AcBax',
-        's6': 'ActBcl2',
-        's7': 'EnaBcl2',
-        's8': '__sink',
-        's9': 'MAC',
-        's10': 'AcBaxBcl2'}
-    return convert_odes(model, p_name_map, s_name_map)
-
+# Species mapping used by all three Cui models
+cui_s_name_map = {
+    'Bid(bf=None, state=T)': 'Act',
+    'Bad(bf=None, state=M, serine=U)': 'Ena',
+    'Bax(bf=None, s1=None, s2=None, state=C)': 'InBax',
+    'Bcl2(bf=None)': 'Bcl2',
+    '__source()': '__source',
+    'Bax(bf=None, s1=None, s2=None, state=A)': 'AcBax',
+    'Bcl2(bf=1) % Bid(bf=1, state=T)': 'ActBcl2',
+    'Bad(bf=1, state=M, serine=U) % Bcl2(bf=1)': 'EnaBcl2',
+    '__sink()': '__sink',
+    'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=2, s2=1, state=A)': 'MAC',
+    'Bax(bf=1, s1=None, s2=None, state=A) % Bcl2(bf=1)': 'AcBaxBcl2'}
 
 ## TESTS ===============================================================
 
 class TestChen2007BiophysJ(unittest.TestCase):
+    """TODO: Docstring"""
+
     p_name_map = {
         'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
         'reverse_BaxA_to_BaxC_k': 'k2',
@@ -169,7 +170,6 @@ class TestChen2007BiophysJ(unittest.TestCase):
         'Bax(bf=1, s1=None, s2=None, state=A) % Bcl2(bf=1)': 'AcBaxBcl2',
         'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'Bax4'
     }
-
 
     def setUp(self):
         self.model = chen2007BiophysJ.model
@@ -244,20 +244,8 @@ class TestChen2007BiophysJ(unittest.TestCase):
             ('k10', 0)])
 
 class TestChen2007FEBS_Indirect(unittest.TestCase):
-    p_name_map = {
-        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_InBax',
-        'reverse_BaxA_to_BaxC_k': 'k_Bax',
-        'bind_BidT_Bcl2_kf': 'k_BH3_Bcl2',
-        'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
-        'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
-        'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
-        'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
-        'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
-        'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
-        'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
-        'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
-        'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
-
+    """TODO: Docstring"""
+ 
     s_name_map = {
         'Bid(bf=None, state=T)': 'BH3',
         'Bax(bf=None, s1=None, s2=None, state=C)': 'Bax',
@@ -270,7 +258,7 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
         self.model = chen2007FEBS_indirect.model
 
     def test_odes(self):
-        ode_list = convert_odes2(self.model, self.p_name_map, self.s_name_map)
+        ode_list = convert_odes2(self.model, chenFEBS_p_name_map, self.s_name_map)
         self.assertEqual(ode_list,
             ['d[BH3]/dt = -BH3*Bcl2*k_BH3_Bcl2 + BH3Bcl2*kr_BH3Bcl2',
              'd[Bax]/dt = -1.0*Bax**4*k_o - Bax*Bcl2*k_Bax_Bcl2 + BaxBcl2*kr_BaxBcl2 + 4*MAC*kr_o',
@@ -280,19 +268,7 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
              'd[MAC]/dt = 0.25*Bax**4*k_o - MAC*kr_o'])
 
 class TestChen2007FEBS_Direct(unittest.TestCase):
-    p_name_map = {
-        'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_InBax',
-        'reverse_BaxA_to_BaxC_k': 'k_Bax',
-        'bind_BidT_Bcl2_kf': 'k_BH3_Bcl2',
-        'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
-        'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
-        'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
-        'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
-        'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
-        'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
-        'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
-        'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
-        'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
+    """TODO: Docstring"""
     s_name_map = {
         'Bid(bf=None, state=T)': 'Act',
         'Bad(bf=None, state=M, serine=U)': 'Ena',
@@ -307,8 +283,7 @@ class TestChen2007FEBS_Direct(unittest.TestCase):
         self.model = chen2007FEBS_direct.model
 
     def test_odes(self):
-        ode_list = convert_odes2(self.model, self.p_name_map, self.s_name_map)
-        #ode_list = chen2007FEBS_convert_odes(self.model, 'direct')
+        ode_list = convert_odes2(self.model, chenFEBS_p_name_map, self.s_name_map)
         self.assertEqual(ode_list,
             ['d[Act]/dt = -Act*Bcl2*k_BH3_Bcl2 + ActBcl2*kr_BH3Bcl2',
              'd[Ena]/dt = -Bcl2*Ena*k_BH3_Bcl2 + EnaBcl2*kr_BH3Bcl2',
@@ -324,7 +299,7 @@ class TestCui2008_Direct(unittest.TestCase):
         self.model = cui2008_direct.model
 
     def test_odes(self):
-        ode_list = cui_convert_odes(self.model)
+        ode_list = convert_odes2(self.model, cui_p_name_map, cui_s_name_map)
         self.assertEqual(ode_list,
             ['d[Act]/dt = -Act*Bcl2*k4 - Act*EnaBcl2*k12 - Act*u3 + ActBcl2*Ena*k11 + ActBcl2*k5 + __source*p2',
              'd[Ena]/dt = Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - Bcl2*Ena*k9 - Ena*u7 + EnaBcl2*k10 + __source*p4',
@@ -338,11 +313,12 @@ class TestCui2008_Direct(unittest.TestCase):
              'd[MAC]/dt = 0.5*AcBax**2*k16 - MAC*k17 - MAC*u9'])
 
 class TestCui2008_Direct1(unittest.TestCase):
+    """TODO: Docstring"""
     def setUp(self):
         self.model = cui2008_direct1.model
 
     def test_odes(self):
-        ode_list = cui_convert_odes(self.model)
+        ode_list = convert_odes2(self.model, cui_p_name_map, cui_s_name_map)
         self.assertEqual(ode_list,
             ['d[Act]/dt = AcBax*ActBcl2*k6 - AcBaxBcl2*Act*k7 - Act*Bcl2*k4 - Act*EnaBcl2*k12 - Act*u3 + ActBcl2*Ena*k11 + ActBcl2*k5 + __source*p2',
              'd[Ena]/dt = AcBax*EnaBcl2*k14 - AcBaxBcl2*Ena*k13 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - Bcl2*Ena*k9 - Ena*u7 + EnaBcl2*k10 + __source*p4',
@@ -361,7 +337,7 @@ class TestCui2008_Direct2(unittest.TestCase):
         self.model = cui2008_direct2.model
 
     def test_odes(self):
-        ode_list = cui_convert_odes(self.model)
+        ode_list = convert_odes2(self.model, cui_p_name_map, cui_s_name_map)
         self.assertEqual(ode_list,
             ['d[Act]/dt = AcBax*ActBcl2*k6 - AcBaxBcl2*Act*k7 - Act*Bcl2*k4 - Act*EnaBcl2*k12 - Act*u3 + ActBcl2*Ena*k11 + ActBcl2*k5 + __source*p2',
              'd[Ena]/dt = AcBax*EnaBcl2*k14 - AcBaxBcl2*Ena*k13 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - Bcl2*Ena*k9 - Ena*u7 + EnaBcl2*k10 + __source*p4',
