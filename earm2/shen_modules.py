@@ -33,15 +33,15 @@ def chen2007BiophysJ(pore_assembly=True):
     # TODO: change all initial conditions and param values to Molar
     Parameter('Bid_0'   , 0) # Bid
     Parameter('Bcl2_0'  , 1e-1) # Mitochondrial Bcl2
-    Parameter('Bax_0'   , 2e-1) # Bax
+    Parameter('aBax_0'   , 0) # Bax
+    Parameter('cBax_0'   , 2e-1) # Bax
 
     alias_model_components()
 
     Initial(Bid(bf=None, state='T'), Bid_0)
-    Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+    Initial(Bax(bf=None, s1=None, s2=None, state='C'), cBax_0)
+    Initial(Bax(bf=None, s1=None, s2=None, state='A'), aBax_0)
     Initial(Bcl2(bf=None), Bcl2_0)
-
-    # Aliases for Bax state
 
     # One-step "kiss-and-run" activation of Bax by tBid
     catalyze_one_step_reversible(
@@ -50,8 +50,10 @@ def chen2007BiophysJ(pore_assembly=True):
 
     # Bcl2 binds tBid and Bax
     bind_table([[                           Bcl2],
-                [Bid(state='T'),       (3, 4e-2)],
+                #[Bid(state='T'),       (3, 4e-2)],
+                [Bid(state='T'),       (3, 4e-4)],
                 [Bax(active_monomer),  (2, 1e-3)]])
+                #[Bax(active_monomer),  (2, 4e-2)]])
 
     # Bax can displace Bid from Bcl2
     displace(Bax(active_monomer), Bid(state='T'), Bcl2, 2)
@@ -60,6 +62,7 @@ def chen2007BiophysJ(pore_assembly=True):
     if pore_assembly:
         # Four Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='A', bf=None), [2*4, 0])
+        #assemble_pore_spontaneous(Bax(state='A', bf=None), [2, 0])
 
 def chen2007FEBS_indirect(pore_assembly=True):
     # TODO: change all initial conditions and param values to Molar

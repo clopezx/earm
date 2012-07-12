@@ -245,6 +245,7 @@ class TestChen2007BiophysJ(unittest.TestCase):
            to 0 in the original model, this reaction and its associated rate
            parameter k8 have been eliminated from the model.
         """
+
         ode_list = convert_odes(self.model, self.p_name_map, self.s_name_map)
         #ode_list = chen2007BiophysJ_convert_odes(self.model)
         self.assertEqual(ode_list,
