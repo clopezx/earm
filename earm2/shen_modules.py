@@ -50,8 +50,8 @@ def chen2007BiophysJ(pore_assembly=True):
 
     # Bcl2 binds tBid and Bax
     bind_table([[                           Bcl2],
-                #[Bid(state='T'),       (3, 4e-2)],
-                [Bid(state='T'),       (3, 4e-4)],
+                [Bid(state='T'),       (3, 4e-2)],
+                #[Bid(state='T'),       (3, 4e-4)],
                 [Bax(active_monomer),  (2, 1e-3)]])
                 #[Bax(active_monomer),  (2, 4e-2)]])
 

@@ -16,7 +16,7 @@ shen_modules.momp_monomers()
 #shen_modules.momp_initial_conditions(bid_state='T')
 
 # The specific MOMP model to use
-shen_modules.chen2007BiophysJ(pore_assembly=False)
+shen_modules.chen2007BiophysJ(pore_assembly=True)
 
 Observable('aBax_', Bax(state='A', bf=None))
 #Observable('aBax_', Bax(state='A', bf=None, s1=None, s2=None))
