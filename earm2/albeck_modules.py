@@ -284,7 +284,7 @@ def albeck_11d(do_pore_transport=False):
         Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
         pore_transport(Bax(state='M'), Smac(state='M'), Smac(state='C'),
             [[rate_scaling_factor*2*KF, KR, 10]])
-        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+        pore_transport(Bax(state='M'), CytoC(state='M'), CytoC(state='C'),
             [[KF, KR, 10]])
 
 def albeck_11e(do_pore_transport=False):
@@ -328,8 +328,8 @@ def albeck_11e(do_pore_transport=False):
         Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
         catalyze(Mito(state='A'), Smac(state='M'), Smac(state='C'),
             [rate_scaling_factor*2*KF, KR, 10])
-        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
-            [[KF, KR, 10]])
+        catalyze(Mito(state='A'), CytoC(state='M'), CytoC(state='C'),
+            [rate_scaling_factor*2*KF, KR, 10])
 
 def albeck_11f(do_pore_transport=False):
     """Model as in 11e, but with cooperative assembly of Bax pores.
