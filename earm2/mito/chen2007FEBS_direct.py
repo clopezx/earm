@@ -10,7 +10,7 @@ Model()
 shen_modules.momp_monomers()
 
 # The specific MOMP model to use
-shen_modules.chen2007FEBS_direct(pore_assembly=True)
+shen_modules.chen2007FEBS_direct()
 
 # Observables
 Observable('AcBax_', Bax(bf=None, state='A'))

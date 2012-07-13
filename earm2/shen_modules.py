@@ -1,3 +1,4 @@
+"""TODO: Docstring"""
 from pysb import *
 from macros import *
 from pysb.macros import catalyze_one_step_reversible, catalyze_one_step, \
@@ -29,7 +30,10 @@ def momp_monomers():
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
 
-def chen2007BiophysJ(pore_assembly=True):
+
+## MOMP Module Implementations ---------------------------------------------
+
+def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
     # TODO: change all initial conditions and param values to Molar
     Parameter('Bid_0'   , 0) # Bid
     Parameter('Bcl2_0'  , 1e-1) # Mitochondrial Bcl2
@@ -51,20 +55,29 @@ def chen2007BiophysJ(pore_assembly=True):
     # Bcl2 binds tBid and Bax
     bind_table([[                           Bcl2],
                 [Bid(state='T'),       (3, 4e-2)],
-                #[Bid(state='T'),       (3, 4e-4)],
                 [Bax(active_monomer),  (2, 1e-3)]])
-                #[Bax(active_monomer),  (2, 4e-2)]])
 
     # Bax can displace Bid from Bcl2
     displace(Bax(active_monomer), Bid(state='T'), Bcl2, 2)
 
-    ## Shouldn't the forward rate be multiplied by 4??
-    if pore_assembly:
+    if do_pore_assembly:
         # Four Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='A', bf=None), [2*4, 0])
-        #assemble_pore_spontaneous(Bax(state='A', bf=None), [2, 0])
 
-def chen2007FEBS_indirect(pore_assembly=True):
+    ### Units!!! Converted 1e6 to 1 (uM)
+    ## TODO: Convert KF units
+    # Albeck model of pore transport
+    # KF 1e-6 in copies
+    if do_pore_transport:
+        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1))
+        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1))
+        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
+            [[rate_scaling_factor*2*KF, 1e-3, 10]])
+        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+            [[KF, 1e-3, 10]])
+
+
+def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
     # TODO: change all initial conditions and param values to Molar
     Parameter('Bid_0'   , 0) # Bid
     Parameter('Bcl2_0'  , 30) # Mitochondrial Bcl2
@@ -84,11 +97,24 @@ def chen2007FEBS_indirect(pore_assembly=True):
                 [Bid(state='T'),         (1e-4, 1e-3)],
                 [Bax(inactive_monomer),  (1e-4, 1e-3)]])
 
-    if pore_assembly:
+    if do_pore_assembly:
         # Four "inactive" Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='C', bf=None), [4*1e-3, 1e-3])
 
-def chen2007FEBS_direct(pore_assembly=True):
+    ### Units!!! Converted 1e6 to 1 (uM)
+    ## TODO: Convert KF units
+    # Albeck model of pore transport
+    # KF 1e-6 in copies
+    if do_pore_transport:
+        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1))
+        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1))
+        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
+            [[rate_scaling_factor*2*KF, 1e-3, 10]])
+        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+            [[KF, 1e-3, 10]])
+
+
+def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
     # TODO: change all initial conditions and param values to Molar
     # Initial conditions
     Parameter('Bid_0'   , 0) # Act
@@ -111,13 +137,27 @@ def chen2007FEBS_direct(pore_assembly=True):
                 [Bid(state='T'),  (1e-4, 1e-3)],
                 [Bad(state='M'),  (1e-4, 1e-3)]])
 
-    if pore_assembly:
+    if do_pore_assembly:
         # Four Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='A', bf=None), [4*1e-3, 1e-3])
 
-def cui2008_direct():
+    ### Units!!! Converted 1e6 to 1 (uM)
+    ## TODO: Convert KF units
+    # Albeck model of pore transport
+    # KF 1e-6 in copies
+    if do_pore_transport:
+        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1))
+        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1))
+        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
+            [[rate_scaling_factor*2*KF, 1e-3, 10]])
+        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+            [[KF, 1e-3, 10]])
+
+
+def cui2008_direct(do_pore_transport=False):
     # Build on the direct model from Chen et al. (2007) FEBS Lett. by:
-    chen2007FEBS_direct(pore_assembly=False)
+    chen2007FEBS_direct(do_pore_assembly=False,
+                        do_pore_transport=do_pore_transport)
     alias_model_components()
 
     # 1. Overriding some parameter values,
@@ -128,7 +168,7 @@ def cui2008_direct():
     displace_reversibly(Bad(state='M'), Bid(state='T'), Bcl2,
                         [0.0001, 0.001])
 
-    # 3. Adding Bax dimerization,
+    # 3. Adding simplified MAC formation (Bax dimerization)
     active_unbound = {'state': 'A', 'bf': None}
     Rule('dimerize_Bax',
          Bax(s1=None, s2=None, **active_unbound) +
@@ -149,11 +189,12 @@ def cui2008_direct():
         [Bad(bf=1) % Bcl2(bf=1),                None,  0.005],
         [Bax2,                                  None, 0.0005]])
 
-def cui2008_direct1():
+
+def cui2008_direct1(do_pore_transport=False):
     alias_model_components()
 
     # Build on the base "direct" model...
-    cui2008_direct()
+    cui2008_direct(do_pore_transport=do_pore_transport)
 
     # ...by adding inhibition of Bax by Bcl2,
     bind(Bax(state='A', s1=None, s2=None), Bcl2, [0.005, 0.001])
@@ -167,11 +208,12 @@ def cui2008_direct1():
     # ...and degradation of the active Bax:Bcl2 complex
     degrade(Bax(bf=1) % Bcl2(bf=1), 0.005)
 
-def cui2008_direct2():
+
+def cui2008_direct2(do_pore_transport=False):
     alias_model_components()
 
     # Build on the "direct 1" model...
-    cui2008_direct1()
+    cui2008_direct1(do_pore_transport=do_pore_transport)
 
     # By adding simultaneous auto-activation and dimerization of Bax
     Rule('Bax_autoactivation_dimerization',
@@ -181,9 +223,10 @@ def cui2008_direct2():
         Bax(state='A', bf=None, s1=2, s2=1),
         Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
-def howells2011():
+
+def howells2011(do_pore_transport=False):
     # Build on the model from Chen et al. (2007) Biophys J:
-    chen2007BiophysJ()
+    chen2007BiophysJ(do_pore_transport=do_pore_transport)
     alias_model_components()
 
     # Override a few parameter values from the pre-existing model
