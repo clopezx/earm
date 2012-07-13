@@ -14,10 +14,74 @@ from pysb.util import alias_model_components
 from earm2.macros import *
 from pysb.macros import equilibrate
 
+# Default site name for binding
+site_name = 'bf'
+
 # Default forward, reverse, and catalytic rates
 KF = 1e-6
 KR = 1e-3
 KC = 1
+
+# MONOMER DECLARATION MACROS ================================================
+def ligand_to_c8_monomers():
+    """ Declares ligand, receptor, DISC, Flip, Bar and Caspase 8.
+
+    The package variable site_name specifies the name of the site to be used
+    for all binding reactions.
+
+    The 'state' site denotes various localization and/or activity states of a
+    Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
+    localization.
+    """
+
+    Monomer('L', [site_name]) # Ligand
+    Monomer('R', [site_name]) # Receptor
+    Monomer('DISC', [site_name]) # Death-Inducing Signaling Complex
+    Monomer('flip', [site_name])
+    # Caspase 8, states: pro, Active
+    Monomer('C8', [site_name, 'state'], {'state':['pro', 'A']})
+    Monomer('BAR', [site_name])
+
+def momp_monomers():
+    """Declare the monomers used in the Albeck MOMP modules."""
+    # == Activators
+    # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
+    Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
+    # == Effectors
+    # Bax, states: Cytoplasmic, Mitochondrial, Active
+    # sites 's1' and 's2' are used for pore formation
+    Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
+    # == Anti-Apoptotics
+    Monomer('Bcl2', [site_name])
+
+    # == Cytochrome C and Smac
+    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+
+def apaf1_to_parp_monomers():
+    """ Declares CytochromeC, Smac, Apaf-1, the Apoptosome, Caspases 3, 6, 9,
+    XIAP and PARP.
+
+    The package variable site_name specifies the name of the site to be used
+    for all binding reactions.
+
+    The 'state' site denotes various localization and/or activity states of a
+    Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
+    localization.
+    """
+
+    # Cytochrome C
+    Monomer('Apaf', [site_name, 'state'], {'state':['I', 'A']}) # Apaf-1
+    Monomer('Apop', [site_name]) # Apoptosome (activated Apaf-1 + caspase 9)
+    # Csp 3, states: pro, active, ubiquitinated
+    Monomer('C3', [site_name, 'state'], {'state':['pro', 'A', 'ub']})
+    # Caspase 6, states: pro-, Active
+    Monomer('C6', [site_name, 'state'], {'state':['pro', 'A']})
+    Monomer('C9', [site_name]) # Caspase 9
+    # PARP, states: Uncleaved, Cleaved
+    Monomer('PARP', [site_name, 'state'], {'state':['U', 'C']})
+    Monomer('XIAP', [site_name]) # X-linked Inhibitor of Apoptosis Protein
+
 
 # RECEPTOR TO BID SEGMENT ===================================================
 def rec_to_bid():
@@ -42,7 +106,7 @@ def rec_to_bid():
     #        pC8 + DISC <--> DISC:pC8 --> C8 + DISC
     #        Bid + C8 <--> Bid:C8 --> tBid + C8
     # ---------------------
-    two_step_conv(L(), R(), DISC(bf=None ), [4e-7, KR, 1e-5])
+    catalyze_convert(L(), R(), DISC(bf=None ), [4e-7, KR, 1e-5])
     catalyze(DISC(), C8(state='pro'), C8(state='A'), [KF, KR, KC])
     catalyze(C8(state='A'), Bid(state='U'), Bid(state='T'), [KF, KR, KC])
     # ---------------------
@@ -103,24 +167,9 @@ def pore_to_parp():
     catalyze(C6(state='A'), C8(state='pro'), C8(state='A'), [3e-8, KR, KC])
 
 
-# MOMP SEGMENT =============================================================
+# MOMP SEGMENT ==============================================================
 
-## Macros ------------------------------------------------------------------
-def momp_monomers():
-    """Declare the monomers used in the Albeck MOMP modules."""
-    # == Activators
-    # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
-    Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
-    # == Effectors
-    # Bax, states: Cytoplasmic, Mitochondrial, Active
-    # sites 's1' and 's2' are used for pore formation
-    Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
-    # == Anti-Apoptotics
-    Monomer('Bcl2', [site_name])
-
-    # == Cytochrome C and Smac
-    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
-    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+## Macros -------------------------------------------------------------------
 
 def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
     """TODO: Finish docstring
@@ -172,7 +221,8 @@ def Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A', rate_scaling_factor=1):
     pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 4, Bcl2, 'bf',
          [KF*rate_scaling_factor, KR])
 
-## MOMP Module Implementations ---------------------------------------------
+## MOMP Module Implementations ----------------------------------------------
+
 def albeck_11b(do_pore_transport=False):
     """Minimal MOMP model shown in Figure 11b.
 
