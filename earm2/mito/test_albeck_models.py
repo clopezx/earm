@@ -84,9 +84,9 @@ def add_caspase8(model):
              kc, _export=False)
         model.add_component(rb)
         model.add_component(rc)
-    # TODO
+
     # Set CytoC to 0 so transport is only of Smac
-    # model.parameters['CytoC_0'].value = 0
+    model.parameters['CytoC_0'].value = 0
 
 def run_figure_sim(model):
     """Run the C8 dose-response series shown in Fig. 11 of Albeck et. al (2008).
