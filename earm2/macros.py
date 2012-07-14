@@ -8,88 +8,14 @@ import functools
 # The default site name to be used for binding reactions
 site_name = 'bf'
 
-
-## Initial condition declarations =============
-def all_initial_conditions():
-    """Declare initial conditions for the full extrinsic apoptosis model.
-    """
-
-    ligand_to_c8_initial_conditions()
-    momp_initial_conditions(bid_state='U')
-    apaf1_to_parp_initial_conditions()
-
-def ligand_to_c8_initial_conditions():
-    """Declare initial conditions for ligand, receptor, Flip, C8, and Bar.
-    """
-
-    Parameter('L_0',       3000) # 3000 Ligand corresponds to 50 ng/ml SK-TRAIL
-    Parameter('R_0'     ,   200) # 200 TRAIL receptor
-    Parameter('flip_0'  , 1.0e2) # Flip
-    Parameter('C8_0'    , 2.0e4) # procaspase-8
-    Parameter('BAR_0'   , 1.0e3) # Bifunctional apoptosis regulator
-
-    alias_model_components()
-
-    Initial(L(bf=None), L_0)
-    Initial(R(bf=None), R_0)
-    Initial(flip(bf=None), flip_0)
-    Initial(C8(bf=None, state='pro'), C8_0)
-    Initial(BAR(bf=None), BAR_0)
-
-def momp_initial_conditions(bid_state='U'):
-    """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
-
-    Parameters
-    ==========
-
-    """
-    Parameter('Bid_0'   , 4.0e4) # Bid
-    Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
-    Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1
-    Parameter('Bcl2_0'  , 2.0e4) # Mitochondrial Bcl2
-    Parameter('Bad_0'   , 1.0e3) # Bad
-    Parameter('NOXA_0'  , 1.0e3) # NOXA
-    Parameter('CytoC_0' , 5.0e5) # cytochrome c
-    Parameter('Smac_0'  , 1.0e5) # Smac
-    Parameter('Bax_0'   , 0.8e5) # Bax
-    Parameter('Bak_0'   , 0.2e5) # Bak
-
-    alias_model_components()
-
-    Initial(Bid(bf=None, state=bid_state), Bid_0)
-    Initial(Bad(bf=None, state='C'), Bad_0)
-    Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
-    Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
-    Initial(Bcl2(bf=None), Bcl2_0)
-    Initial(BclxL (bf=None, state='C'), BclxL_0)
-    Initial(Mcl1(bf=None, state='M'), Mcl1_0)
-    Initial(NOXA(bf=None, state='C'), NOXA_0)
-    Initial(CytoC(bf=None, state='M'), CytoC_0)
-    Initial(Smac(bf=None, state='M'), Smac_0)
-
-def apaf1_to_parp_initial_conditions():
-    """Declare initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases
-       3, 6, and 9, XIAP, and PARP.
-    """
-
-    Parameter('Apaf_0'  , 1.0e5) # Apaf-1
-    Parameter('C3_0'    , 1.0e4) # procaspase-3 (pro-C3)
-    Parameter('C6_0'    , 1.0e4) # procaspase-6 (pro-C6)
-    Parameter('C9_0'    , 1.0e5) # procaspase-9 (pro-C9)
-    Parameter('XIAP_0'  , 1.0e5) # X-linked inhibitor of apoptosis protein
-    Parameter('PARP_0'  , 1.0e6) # C3* substrate
-
-    alias_model_components()
-
-    Initial(Apaf(bf=None, state='I'), Apaf_0)
-    Initial(C3(bf=None, state='pro'), C3_0)
-    Initial(C6(bf=None, state='pro'), C6_0)
-    Initial(C9(bf=None), C9_0)
-    Initial(PARP(bf=None, state='U'), PARP_0)
-    Initial(XIAP(bf=None), XIAP_0)
-
 ## Observables declarations ===================
 def all_observables():
+    """Declare observables commonly used for the TRAIL pathway.
+
+    Declares truncated (and mitochondrial) Bid, cytosolic (i.e., released)
+    Smac, and cleaved PARP.
+    """
+
     alias_model_components()
     # Observables
     # ===========
@@ -97,7 +23,6 @@ def all_observables():
     # Observe('Bid',   Bid(bf=None, state='U'))
     # Observe('PARP',  PARP(bf=None, state='U'))
     # Observe('Smac',  Smac(bf=None, state='mito'))
-    # # This is what *should* be observed???
     Observable('mBid',  Bid(state='M'))
     Observable('cSmac', Smac(state='A'))
     Observable('cPARP', PARP(state='C'))
@@ -105,23 +30,38 @@ def all_observables():
 ## Aliases to pysb.macros =====================
 # TODO use site_name for all of these
 def catalyze(enz, sub, product, klist):
+    """Alias for pysb.macros.catalyze with default binding site name."""
     return macros.catalyze(enz, site_name, sub, site_name, product, klist)
 
 def bind(a, b, klist):
+    """Alias for pysb.macros.bind with default binding site name."""
     return macros.bind(a, site_name, b, site_name, klist)
 
 def bind_table(table):
+    """Alias for pysb.macros.bind_table with default binding site name."""
     return macros.bind_table(table, site_name, site_name)
 
 def assemble_pore_sequential(subunit, size, klist):
+    """Alias for pysb.macros.assemble_pore_sequential with default sites.
+
+    Uses 's1' and 's2' as the sites for subunit-subunit binding in the pore."""
+
     return macros.assemble_pore_sequential(subunit, 's1', 's2', size, klist)
 
 def pore_transport(subunit, csource, cdest, ktable):
+    """Alias for pysb.macros.pore_transport with default arguments.
+
+    o Uses 's1' and 's2' as the sites for subunit-subunit binding in the pore
+    o Uses 'bf' for the binding site on the pore subunits used to bind cargo
+    o Uses a default value of 4 for the size of transport-competent pores
+    o Uses 'bf' for the binding site on the cargo used to bind the pore """
+
     return macros.pore_transport(subunit, 's1', 's2', 'bf', 4, 4,
                                 csource, 'bf', cdest, ktable)
 
 ## Macros for the Shen models
 def assemble_pore_spontaneous(subunit, klist):
+    """Generate the order-4 assembly reaction 4*Subunit <> Pore."""
 
     def pore_rule_name(rule_expression):
         react_p = rule_expression.reactant_pattern
@@ -163,7 +103,6 @@ def displace_reversibly(lig1, lig2, target, klist):
          lig1({site_name:1}) % target({site_name:1}) + lig2({site_name:None}),
          klist, ['kf', 'kr'])
 
-
 ## Macros for the Albeck models
 def catalyze_convert(sub1, sub2, product, klist, site=site_name):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction.
@@ -196,14 +135,13 @@ def one_step_conv(sub1, sub2, product, klist, site=site_name):
                        klist, ['kf', 'kr'])
 
 
-def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, csource, c_site,
+def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, cargo, c_site,
               klist):
-    """Generate rules to transport cargo through a circular homomeric pore.
+    """Generate rules to bind a monomer to a circular homomeric pore.
 
     The pore structure is defined by the `pore_species` macro -- `subunit`
     monomers bind to each other from `sp_site1` to `sp_site2` to form a closed
-    ring. The transport reaction is modeled as a catalytic process of the form
-    pore + csource <> pore:csource >> pore + cdest
+    ring. The binding reaction takes the form pore + cargo <> pore:cargo.
 
     Parameters
     ----------
@@ -212,30 +150,21 @@ def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, csource, c_site,
     sp_site1, sp_site2 : string
         Names of the sites where one copy of `subunit` binds to the next.
     sc_site : string
-        Name of the site on `subunit` where it binds to the cargo `csource`.
-    min_size, max_size : integer
-        Minimum and maximum number of subunits in the pore at which transport
-        will occur.
-    csource : Monomer or MonomerPattern
-        Cargo "source", i.e. the entity to be transported.
+        Name of the site on `subunit` where it binds to the cargo `cargo`.
+    size : integer
+        Number of subunits in the pore at which binding will occur.
+    cargo : Monomer or MonomerPattern
+        Cargo that binds to the pore complex.
     c_site : string
-        Name of the site on `csource` where it binds to `subunit`.
-    cdest : Monomer or MonomerPattern
-        Cargo "destination", i.e. the resulting state after the transport event.
-    ktable : list of lists of Parameters or numbers
-        Table of forward, reverse and catalytic rate constants for the transport
-        reactions. The outer list must be of length `max_size` - `min_size` + 1,
-        and the inner lists must all be of length 3. In the outer list, the
-        first element corresponds to the transport through the pore of size
-        `min_size` and the last element to that of size `max_size`. Each inner
-        list contains the forward, reverse and catalytic rate constants (in that
-        order) for the corresponding transport reaction, and each of these pairs
-        must comprise solely Parameter objects or solely numbers (never some of
-        each). If Parameters are passed, they will be used directly in the
-        generated Rules. If numbers are passed, Parameters will be created with
-        automatically generated names based on <TODO> and these parameters will
-        be included at the end of the returned component list.
-
+        Name of the site on `cargo` where it binds to `subunit`.
+    klist : list of Parameters or numbers
+        List containing forward and reverse rate constants for the binding
+        reaction (in that order). Rate constants should either be both Parameter
+        objects or both numbers. If Parameters are passed, they will be used
+        directly in the generated Rules. If numbers are passed, Parameters
+        will be created with automatically generated names based on <TODO>
+        and these parameters will be included at the end of the returned
+        component list.
     """
 
     macros._verify_sites(subunit, sc_site)
