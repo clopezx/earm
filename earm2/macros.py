@@ -30,38 +30,47 @@ def all_observables():
 ## Aliases to pysb.macros =====================
 # TODO use site_name for all of these
 def catalyze(enz, sub, product, klist):
-    """Alias for pysb.macros.catalyze with default binding site name."""
+    """Alias for pysb.macros.catalyze with default binding site 'bf'.
+    """
+
     return macros.catalyze(enz, site_name, sub, site_name, product, klist)
 
 def bind(a, b, klist):
-    """Alias for pysb.macros.bind with default binding site name."""
+    """Alias for pysb.macros.bind with default binding site 'bf'.
+    """
+
     return macros.bind(a, site_name, b, site_name, klist)
 
 def bind_table(table):
-    """Alias for pysb.macros.bind_table with default binding site name."""
+    """Alias for pysb.macros.bind_table with default binding sites 'bf'.
+    """
+
     return macros.bind_table(table, site_name, site_name)
 
 def assemble_pore_sequential(subunit, size, klist):
     """Alias for pysb.macros.assemble_pore_sequential with default sites.
 
-    Uses 's1' and 's2' as the sites for subunit-subunit binding in the pore."""
+    Uses 's1' and 's2' as the sites for subunit-subunit binding in the pore.
+    """
 
     return macros.assemble_pore_sequential(subunit, 's1', 's2', size, klist)
 
 def pore_transport(subunit, csource, cdest, ktable):
     """Alias for pysb.macros.pore_transport with default arguments.
 
-    o Uses 's1' and 's2' as the sites for subunit-subunit binding in the pore
-    o Uses 'bf' for the binding site on the pore subunits used to bind cargo
-    o Uses a default value of 4 for the size of transport-competent pores
-    o Uses 'bf' for the binding site on the cargo used to bind the pore """
+    - Uses 's1' and 's2' as the sites for subunit-subunit binding in the pore
+    - Uses 'bf' for the binding site on the pore subunits used to bind cargo
+    - Uses a default value of 4 for the size of transport-competent pores
+    - Uses 'bf' for the binding site on the cargo used to bind the pore
+    """
 
     return macros.pore_transport(subunit, 's1', 's2', 'bf', 4, 4,
                                 csource, 'bf', cdest, ktable)
 
 ## Macros for the Shen models
 def assemble_pore_spontaneous(subunit, klist):
-    """Generate the order-4 assembly reaction 4*Subunit <> Pore."""
+    """Generate the order-4 assembly reaction 4*Subunit <> Pore.
+    """
 
     def pore_rule_name(rule_expression):
         react_p = rule_expression.reactant_pattern
