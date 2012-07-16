@@ -1,4 +1,39 @@
-"""TODO: Docstring"""
+"""This function declares a number of macros that are used by many of the
+EARM 2 models. They can be divided into the following four categories:
+
+Macros that are specific to the models in EARM 2, but are used by all of
+them. The only macro of this type is
+
+- :py:func:`all_observables`
+
+Aliases to generalized macros in pysb.macros that provide default values
+for site names or other arguments. Macros of this type include:
+
+- :py:func:`catalyze`
+- :py:func:`bind`
+- :py:func:`bind_table`
+- :py:func:`assemble_pore_sequential`
+- :py:func:`pore_transport`
+
+Macros for mechanisms that appear within the models previously published
+by the research group of Pingping Shen (or the model from Howells et al.
+(2011), which is derived from one of Shen's models):
+
+- :py:func:`assemble_pore_spontaneous`
+- :py:func:`displace`
+- :py:func:`displace_reversibly`
+
+Macros for mechanisms that appear within the models described in our
+group's earlier work, specifically the models described in Albeck
+et al. (2008) PLoS Biology:
+
+- :py:func:`catalyze_convert`
+- :py:func:`one_step_conv`
+- :py:func:`pore_bind`
+
+----------
+"""
+
 import pysb.macros as macros
 from pysb import *
 from pysb import MonomerPattern, ComplexPattern, ComponentSet
@@ -28,7 +63,6 @@ def all_observables():
     Observable('cPARP', PARP(state='C'))
 
 ## Aliases to pysb.macros =====================
-# TODO use site_name for all of these
 def catalyze(enz, sub, product, klist):
     """Alias for pysb.macros.catalyze with default binding site 'bf'.
     """
@@ -177,7 +211,7 @@ def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, cargo, c_site,
     """
 
     macros._verify_sites(subunit, sc_site)
-    macros._verify_sites(csource, c_site)
+    macros._verify_sites(cargo, c_site)
 
     def pore_bind_rule_name(rule_expression, size):
         # Get ReactionPatterns
@@ -198,16 +232,16 @@ def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, cargo, c_site,
     components = ComponentSet()
     # Set up some aliases that are invariant with pore size
     subunit_free = subunit({sc_site: None})
-    csource_free = csource({c_site: None})
+    cargo_free = cargo({c_site: None})
 
     #for size, klist in zip(range(min_size, max_size + 1), ktable):
 
     # More aliases which do depend on pore size
     pore_free = macros.pore_species(subunit_free, sp_site1, sp_site2, size)
 
-    # This one is a bit tricky. The pore:csource complex must only introduce
+    # This one is a bit tricky. The pore:cargo complex must only introduce
     # one additional bond even though there are multiple subunits in the
-    # pore. We create partial patterns for bound pore and csource, using a
+    # pore. We create partial patterns for bound pore and cargo, using a
     # bond number that is high enough not to conflict with the bonds within
     # the pore ring itself.
     # Start by copying pore_free, which has all cargo binding sites empty
@@ -217,20 +251,16 @@ def pore_bind(subunit, sp_site1, sp_site2, sc_site, size, cargo, c_site,
     # Assign that bond to the first subunit in the pore
     pore_bound.monomer_patterns[0].site_conditions[sc_site] = cargo_bond_num
     # Create a cargo source pattern with that same bond
-    csource_bound = csource({c_site: cargo_bond_num})
+    cargo_bound = cargo({c_site: cargo_bond_num})
     # Finally we can define the complex trivially; the bond numbers are
     # already present in the patterns
-    pc_complex = pore_bound % csource_bound
+    pc_complex = pore_bound % cargo_bound
 
-    # Create the rules (just like catalyze)
+    # Create the rules
     name_func = functools.partial(pore_bind_rule_name, size=size)
     components |= macros._macro_rule('pore_bind',
-                              pore_free + csource_free <> pc_complex,
+                              pore_free + cargo_free <> pc_complex,
                               klist[0:2], ['kf', 'kr'],
                               name_func=name_func)
-    #components |= _macro_rule('pore_transport_dissociate',
-    #                          pc_complex >> pore_free + cdest,
-    #                          [klist[2]], ['kc'],
-    #                          name_func=name_func)
 
     return components
