@@ -44,7 +44,7 @@ import functools
 site_name = 'bf'
 
 ## Observables declarations ===================
-def all_observables():
+def shared_observables():
     """Declare observables commonly used for the TRAIL pathway.
 
     Declares truncated (and mitochondrial) Bid, cytosolic (i.e., released)
@@ -58,9 +58,9 @@ def all_observables():
     # Observe('Bid',   Bid(bf=None, state='U'))
     # Observe('PARP',  PARP(bf=None, state='U'))
     # Observe('Smac',  Smac(bf=None, state='mito'))
-    Observable('mBid',  Bid(state='M'))
-    Observable('cSmac', Smac(state='A'))
-    Observable('cPARP', PARP(state='C'))
+    Observable('tBid_',  Bid(state='T'))
+    Observable('aSmac_', Smac(state='A'))
+    Observable('cPARP_', PARP(state='C'))
 
 ## Aliases to pysb.macros =====================
 def catalyze(enz, sub, product, klist):
