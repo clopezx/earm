@@ -8,7 +8,7 @@ Model()
 albeck_modules.momp_monomers()
 
 # The specific MOMP model to use
-albeck_modules.albeck_11f(do_pore_transport=True)
+albeck_modules.albeck_11f()
 
 # Observables
 Observable('AcBax_', Bax(bf=None, state='A'))
