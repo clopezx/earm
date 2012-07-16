@@ -4,7 +4,7 @@ EARM 2 models. They can be divided into the following four categories:
 Macros that are specific to the models in EARM 2, but are used by all of
 them. The only macro of this type is
 
-- :py:func:`all_observables`
+- :py:func:`shared_observables`
 
 Aliases to generalized macros in pysb.macros that provide default values
 for site names or other arguments. Macros of this type include:
