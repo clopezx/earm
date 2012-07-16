@@ -58,8 +58,10 @@ def shared_observables():
     # Observe('Bid',   Bid(bf=None, state='U'))
     # Observe('PARP',  PARP(bf=None, state='U'))
     # Observe('Smac',  Smac(bf=None, state='mito'))
+    Observable('Bid_',  Bid(state='U'))
     Observable('tBid_',  Bid(state='T'))
     Observable('aSmac_', Smac(state='A'))
+    Observable('mSmac_', Smac(state='M'))
     Observable('cPARP_', PARP(state='C'))
 
 ## Aliases to pysb.macros =====================
