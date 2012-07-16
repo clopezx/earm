@@ -9,12 +9,13 @@ from earm2 import albeck_modules
 
 Model()
 
-macros.momp_monomers()
+earm2_modules.momp_monomers()
 Observable('aBax', Bax(state='A'))
 Observable('cSmac', Smac(state='A'))
 
 # The specific MOMP model to use
 earm2_modules.direct()
-macros.momp_initial_conditions(bid_state='T')
 
-
+# Set Bid initial condition to be tBid
+model.update_initial_condition_pattern(Bid(state='U', bf=None),
+                                       Bid(state='T', bf=None))
