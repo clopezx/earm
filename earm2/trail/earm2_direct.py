@@ -12,13 +12,13 @@ albeck_modules.ligand_to_c8_monomers()
 earm2_modules.momp_monomers()
 albeck_modules.apaf1_to_parp_monomers()
 
-# Declare observables
-macros.all_observables()
-
-# Generate the upstream and downstream sections from the EARM 1.0 model
+# Generate the upstream and downstream sections
 albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
 # The specific MOMP model to use
 earm2_modules.direct()
+
+# Declare shared observables
+macros.shared_observables()
 

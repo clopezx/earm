@@ -20,26 +20,6 @@ bid_effector_rates = [        1e-7, 1e-3, 1] # Generalize to catalysis rates?
 active_monomer = {'s1': None, 's2': None, 'state': 'A'}
 
 # MONOMER DECLARATION MACROS ================================================
-def all_monomers():
-    """Declare the monomers used for the full model, including Bcl-2 proteins.
-
-    Internally calls the macros ligand_to_c8_monomers(),
-    bcl2_monomers(), and apaf1_to_parp_monomers() to
-    instantiate the monomers for each portion of the pathway.
-
-    The package variable site_name specifies the name of the site to be used
-    for all binding reactions (with the exception of Bax and Bak, which have
-    additional sites used for oligomerization).
-
-    The 'state' site denotes various localization and/or activity states of a
-    Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
-    localization.
-    """
-
-    albeck_modules.ligand_to_c8_monomers()
-    momp_monomers()
-    albeck_modules.apaf1_to_parp_monomers()
-
 def momp_monomers():
     """Declare the monomers for the Bcl-2 family proteins, Cyto c, and Smac.
 

@@ -84,7 +84,13 @@ def apaf1_to_parp_monomers():
     Monomer('XIAP', [site_name]) # X-linked Inhibitor of Apoptosis Protein
 
 def all_monomers():
-    """Shorthand for calling ligand_to_c8, momp, and apaf1_to_parp macros."""
+    """Shorthand for calling ligand_to_c8, momp, and apaf1_to_parp macros.
+
+    Internally calls the macros ligand_to_c8_monomers(), momp_monomers(), and
+    apaf1_to_parp_monomers() to instantiate the monomers for each portion of the
+    pathway.
+    """
+
     ligand_to_c8_monomers()
     momp_monomers()
     apaf1_to_parp_monomers()
