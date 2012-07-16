@@ -21,6 +21,7 @@ site_name = 'bf'
 KF = 1e-6
 KR = 1e-3
 KC = 1
+transloc_rates = [1e-2, 1e-2]
 
 # MONOMER DECLARATION MACROS ================================================
 def ligand_to_c8_monomers():
