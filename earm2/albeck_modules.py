@@ -82,6 +82,11 @@ def apaf1_to_parp_monomers():
     Monomer('PARP', [site_name, 'state'], {'state':['U', 'C']})
     Monomer('XIAP', [site_name]) # X-linked Inhibitor of Apoptosis Protein
 
+def all_monomers():
+    """Shorthand for calling ligand_to_c8, momp, and apaf1_to_parp macros."""
+    ligand_to_c8_monomers()
+    momp_monomers()
+    apaf1_to_parp_monomers()
 
 # RECEPTOR TO BID SEGMENT ===================================================
 def rec_to_bid():
@@ -96,8 +101,21 @@ def rec_to_bid():
     inhibition by flip and BAR as specified in EARM1.0.
     """
 
+    # Declare initial conditions for ligand, receptor, Flip, C8, and Bar.
+    Parameter('L_0',       3000) # 3000 Ligand corresponds to 50 ng/ml SK-TRAIL
+    Parameter('R_0'     ,   200) # 200 TRAIL receptor
+    Parameter('flip_0'  , 1.0e2) # Flip
+    Parameter('C8_0'    , 2.0e4) # procaspase-8
+    Parameter('BAR_0'   , 1.0e3) # Bifunctional apoptosis regulator
+
     # Needed to recognize the monomer and parameter names in the present scope
     alias_model_components()
+
+    Initial(L(bf=None), L_0)
+    Initial(R(bf=None), R_0)
+    Initial(flip(bf=None), flip_0)
+    Initial(C8(bf=None, state='pro'), C8_0)
+    Initial(BAR(bf=None), BAR_0)
 
     # =====================
     # tBID Activation Rules
@@ -131,9 +149,28 @@ def pore_to_parp():
     that describe CytC and Smac export from the mitochondria by the
     active pore activation of Caspase3, loopback through Caspase 6,
     and some inhibitions as specified in EARM1.0.
+
+    Declares initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases
+       3, 6, and 9, XIAP, and PARP.
     """
 
+    # Declare initial conditions
+    Parameter('Apaf_0'  , 1.0e5) # Apaf-1
+    Parameter('C3_0'    , 1.0e4) # procaspase-3 (pro-C3)
+    Parameter('C6_0'    , 1.0e4) # procaspase-6 (pro-C6)
+    Parameter('C9_0'    , 1.0e5) # procaspase-9 (pro-C9)
+    Parameter('XIAP_0'  , 1.0e5) # X-linked inhibitor of apoptosis protein
+    Parameter('PARP_0'  , 1.0e6) # C3* substrate
+
     alias_model_components()
+
+    Initial(Apaf(bf=None, state='I'), Apaf_0)
+    Initial(C3(bf=None, state='pro'), C3_0)
+    Initial(C6(bf=None, state='pro'), C6_0)
+    Initial(C9(bf=None), C9_0)
+    Initial(PARP(bf=None, state='U'), PARP_0)
+    Initial(XIAP(bf=None), XIAP_0)
+
     # ========================
     # Apoptosome formation
     # ---------------------------
@@ -227,7 +264,6 @@ def albeck_11b(do_pore_transport=False):
     """Minimal MOMP model shown in Figure 11b.
 
     Features:
-        - Caspase 8 cleaves Bid to tBid
         - Bid activates Bax
         - Active Bax is inhibited by Bcl2
         - Free active Bax binds to and transports Smac to the cytosol
@@ -259,7 +295,6 @@ def albeck_11c(do_pore_transport=False):
     """Model incorporating Bax oligomerization.
 
     Features:
-        - Caspase 8 cleaves Bid to tBid
         - Bid activates Bax
         - Active Bax dimerizes; Bax dimers dimerize to form tetramers
         - Bcl2 binds/inhibits Bax monomers, dimers, and tetramers
@@ -294,7 +329,6 @@ def albeck_11d(do_pore_transport=False):
     """Model incorporating mitochondrial transport.
 
     Features:
-        - Caspase 8 cleaves Bid to tBid
         - Bid activates Bax
         - Active Bax translocates to the mitochondria
         - All reactions on the mito membrane have increased association rates
@@ -341,7 +375,6 @@ def albeck_11e(do_pore_transport=False):
     """Model incorporating mitochondrial transport and pore "insertion."
 
     Features:
-        - Caspase 8 cleaves Bid to tBid
         - Bid activates Bax
         - Active Bax translocates to the mitochondria
         - All reactions on the mitochondria have increased association rates
@@ -384,7 +417,7 @@ def albeck_11e(do_pore_transport=False):
 def albeck_11f(do_pore_transport=False):
     """Model as in 11e, but with cooperative assembly of Bax pores.
 
-    Associaton rate constants for Bax dimerization, tetramerization, and
+    Association rate constants for Bax dimerization, tetramerization, and
     insertion are set so that they increase at each step (from 1e-8 to 1e-7 and
     then 1e-6), thereby creating cooperative assembly.
 
