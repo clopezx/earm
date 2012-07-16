@@ -83,6 +83,54 @@ def momp_monomers():
 # MOMP SEGMENT ==============================================================
 
 ## Macros -------------------------------------------------------------------
+def declare_initial_conditions():
+    """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
+    """
+    Parameter('Bid_0'   , 4.0e4) # Bid
+    Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
+    Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1
+    Parameter('Bcl2_0'  , 2.0e4) # Mitochondrial Bcl2
+    Parameter('Bad_0'   , 1.0e3) # Bad
+    Parameter('NOXA_0'  , 1.0e3) # NOXA
+    Parameter('CytoC_0' , 5.0e5) # cytochrome c
+    Parameter('Smac_0'  , 1.0e5) # Smac
+    Parameter('Bax_0'   , 0.8e5) # Bax
+    Parameter('Bak_0'   , 0.2e5) # Bak
+
+    alias_model_components()
+
+    Initial(Bid(bf=None, state='U'), Bid_0)
+    Initial(Bad(bf=None, state='C'), Bad_0)
+    Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+    Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
+    Initial(Bcl2(bf=None), Bcl2_0)
+    Initial(BclxL (bf=None, state='C'), BclxL_0)
+    Initial(Mcl1(bf=None, state='M'), Mcl1_0)
+    Initial(NOXA(bf=None, state='C'), NOXA_0)
+    Initial(CytoC(bf=None, state='M'), CytoC_0)
+    Initial(Smac(bf=None, state='M'), Smac_0)
+
+def translocate_tBid_Bax_BclxL():
+    equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
+    # equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), transloc_rates)
+    # Previous indirect model had more membrane-favorable rates for tBid
+
+    free_Bax = Bax(bf=None, s1=None, s2=None) # Alias for readability
+    equilibrate(free_Bax(state='C'), free_Bax(state='M'),
+                transloc_rates)
+
+    equilibrate(BclxL(bf=None, state='C'), BclxL(bf=None, state='M'),
+                transloc_rates)
+
+def tBid_activates_Bax_and_Bak():
+    catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
+    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
+
+def sensitizers_bind_anti_apoptotics():
+    bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
+                [NOXA(state='M'),       None,              None,       bcl2_rates]])
+
 def earm2_pore_formation():
     """ Pore formation and transport process used by all modules.
     """
@@ -121,27 +169,6 @@ def earm2_pore_formation():
     equilibrate(CytoC(bf=None, state='C'), CytoC(bf=None, state='A'),
                           transloc_rates)
 
-def translocate_tBid_Bax_BclxL():
-    equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
-    # equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), transloc_rates)
-    # Previous indirect model had more membrane-favorable rates for tBid
-
-    free_Bax = Bax(bf=None, s1=None, s2=None) # Alias for readability
-    equilibrate(free_Bax(state='C'), free_Bax(state='M'),
-                transloc_rates)
-
-    equilibrate(BclxL(bf=None, state='C'), BclxL(bf=None, state='M'),
-                transloc_rates)
-
-def tBid_activates_Bax_and_Bak():
-    catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
-    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
-
-def sensitizers_bind_anti_apoptotics():
-    bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
-                [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
-                [NOXA(state='M'),       None,              None,       bcl2_rates]])
-
 ## MOMP Module Implementations ----------------------------------------------
 
 # Embedded Model
@@ -150,11 +177,13 @@ def embedded():
     """
     alias_model_components()
 
+    declare_initial_conditions()
+
     translocate_tBid_Bax_BclxL()
 
     tBid_activates_Bax_and_Bak()
 
-    # Autoactivation, Bax and Bak activate their own kind, but only when
+    # Autoactivation: Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
     effector_auto_rates = [1e-7, 1e-3, 1]
     catalyze(Bax(active_monomer), Bax(state='C'), Bax(state='A'),
@@ -169,13 +198,13 @@ def embedded():
     catalyze(Bax(active_monomer), BclxL(state='C'), BclxL(state='M'),
              bclxl_recruitment_rates)
 
-    # Role of activator tBid is to bind all anti-apoptotics
-    # NOTE: Doug Green's MODE 1 inhibition
+    # Activator tBid binds all anti-apoptotics
+    # Doug Green's MODE 1 inhibition
     bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
                 [Bid(state='M'),       bcl2_rates,        bcl2_rates,       bcl2_rates]])
 
     # Anti-apoptotics bind activated effectors
-    # NOTE: Doug Green's MODE 2 inhibition
+    # Doug Green's MODE 2 inhibition
     bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
                 [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
                 [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
@@ -193,15 +222,15 @@ def indirect():
 
     alias_model_components()
 
+    declare_initial_conditions()
+
     translocate_tBid_Bax_BclxL()
 
     # Bax and Bak spontaneously become activated
     free_Bax = Bax(bf=None, s1=None, s2=None) # Alias
     free_Bak = Bak(bf=None, s1=None, s2=None) # Alias
-    equilibrate(free_Bax(state='M'), free_Bax(state='A'),
-                transloc_rates)
-    equilibrate(free_Bak(state='M'), free_Bak(state='A'),
-                transloc_rates)
+    equilibrate(free_Bax(state='M'), free_Bax(state='A'), transloc_rates)
+    equilibrate(free_Bak(state='M'), free_Bak(state='A'), transloc_rates)
 
     # Role of activator tBid is to bind all anti-apoptotics
     bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
@@ -227,6 +256,8 @@ def direct():
     """
 
     alias_model_components()
+
+    declare_initial_conditions()
 
     translocate_tBid_Bax_BclxL()
 
