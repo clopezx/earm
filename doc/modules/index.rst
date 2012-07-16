@@ -1,6 +1,8 @@
 EARM v2 Reference
 =================
 
+This section contains documentation of the implementations of each model
+
 .. toctree::
     :maxdepth: 2
 
