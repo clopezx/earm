@@ -171,6 +171,15 @@ def pore_to_parp():
     Initial(PARP(bf=None, state='U'), PARP_0)
     Initial(XIAP(bf=None), XIAP_0)
 
+   # --------------------------------------
+    # CytC and Smac activation after release
+    # --------------------------------------
+    equilibrate(Smac(bf=None, state='C'), Smac(bf=None, state='A'),
+                          transloc_rates)
+
+    equilibrate(CytoC(bf=None, state='C'), CytoC(bf=None, state='A'),
+                          transloc_rates)
+
     # ========================
     # Apoptosome formation
     # ---------------------------

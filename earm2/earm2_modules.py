@@ -160,15 +160,6 @@ def earm2_pore_formation():
     pore_transport(Bak, Smac(state='M'), Smac(state='C'),
                    pore_transport_rates)
 
-    # --------------------------------------
-    # CytC and Smac activation after release
-    # --------------------------------------
-    equilibrate(Smac(bf=None, state='C'), Smac(bf=None, state='A'),
-                          transloc_rates)
-
-    equilibrate(CytoC(bf=None, state='C'), CytoC(bf=None, state='A'),
-                          transloc_rates)
-
 ## MOMP Module Implementations ----------------------------------------------
 
 # Embedded Model
