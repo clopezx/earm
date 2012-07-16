@@ -11,6 +11,12 @@ transloc_rates = [1e-2, 1e-2]
 inactive_monomer = {'state':'C', 's1': None, 's2': None}
 active_monomer = {'state':'A', 's1': None, 's2': None}
 
+# For pore_transport sections, drawn from Albeck
+v = 0.07
+rate_scaling_factor = 1./v
+KF = 1e-6
+transloc_rates = [1e-2, 1e-2]
+
 def momp_monomers():
     # == Activators ===================
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
