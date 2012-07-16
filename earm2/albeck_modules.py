@@ -260,7 +260,7 @@ def Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A', rate_scaling_factor=1):
 
 ## MOMP Module Implementations ----------------------------------------------
 
-def albeck_11b(do_pore_transport=False):
+def albeck_11b(do_pore_transport=True):
     """Minimal MOMP model shown in Figure 11b.
 
     Features:
@@ -291,7 +291,7 @@ def albeck_11b(do_pore_transport=False):
         catalyze(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
             [KF, KR, 10])
 
-def albeck_11c(do_pore_transport=False):
+def albeck_11c(do_pore_transport=True):
     """Model incorporating Bax oligomerization.
 
     Features:
@@ -325,7 +325,7 @@ def albeck_11c(do_pore_transport=False):
         pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
             [[KF, KR, 10]])
 
-def albeck_11d(do_pore_transport=False):
+def albeck_11d(do_pore_transport=True):
     """Model incorporating mitochondrial transport.
 
     Features:
@@ -371,7 +371,7 @@ def albeck_11d(do_pore_transport=False):
         pore_transport(Bax(state='M'), CytoC(state='M'), CytoC(state='C'),
             [[KF, KR, 10]])
 
-def albeck_11e(do_pore_transport=False):
+def albeck_11e(do_pore_transport=True):
     """Model incorporating mitochondrial transport and pore "insertion."
 
     Features:
@@ -414,7 +414,7 @@ def albeck_11e(do_pore_transport=False):
         catalyze(Mito(state='A'), CytoC(state='M'), CytoC(state='C'),
             [rate_scaling_factor*2*KF, KR, 10])
 
-def albeck_11f(do_pore_transport=False):
+def albeck_11f(do_pore_transport=True):
     """Model as in 11e, but with cooperative assembly of Bax pores.
 
     Association rate constants for Bax dimerization, tetramerization, and
