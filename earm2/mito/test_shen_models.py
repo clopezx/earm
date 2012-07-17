@@ -425,6 +425,12 @@ class TestHowells2011(unittest.TestCase):
             self.model.add_component(Bid_0)
             Bid = self.model.monomers['Bid']
             self.model.initial(Bid(state='T', bf=None), Bid_0)
+        if self.model.parameters.get('Bad_0') is None:
+            # Add initial condition for Bad
+            Bad_0 = Parameter('Bad_0', 1, _export=False)
+            self.model.add_component(Bad_0)
+            Bad = self.model.monomers['Bad']
+            self.model.initial(Bad(state='M', bf=None, serine='U'), Bad_0)
 
     def test_odes(self):
         """These ODEs match the ODEs listed in the paper, with the note that

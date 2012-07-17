@@ -236,7 +236,7 @@ def cui2008_direct2(do_pore_transport=False):
 
 def howells2011(do_pore_transport=False):
     # Build on the model from Chen et al. (2007) Biophys J:
-    chen2007BiophysJ(do_pore_transport=do_pore_transport)
+    chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=do_pore_transport)
     alias_model_components()
 
     # Override a few parameter values from the pre-existing model
@@ -244,10 +244,6 @@ def howells2011(do_pore_transport=False):
     bind_BaxA_Bcl2_kr.value = 2e-3 # was 1e-3 in Chen 2007 Biophys J
     spontaneous_pore_BaxA_to_Bax4_kf.value = 2000*4 # was 2 in Chen 2007 B.J.
     spontaneous_pore_BaxA_to_Bax4_kr.value = 5e-5   # was 0 in Chen 2007 B.J.
-
-    # Add initial condition for Bad
-    Bad_0 = Parameter('Bad_0', 0.025)
-    Initial(Bad(bf=None, state='M', serine='U'), Bad_0)
 
     # Translocation equilibrium between unphosphorylated cytosolic and
     # mitochondrial Bad
