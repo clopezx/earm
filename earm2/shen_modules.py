@@ -27,7 +27,6 @@ active_monomer = {'state':'A', 's1': None, 's2': None}
 # For pore_transport sections, drawn from Albeck
 v = 0.07
 rate_scaling_factor = 1./v
-KF = 1 # 1e-6 s^-1 converted to uM^-1 s^-1
 
 transloc_rates = [1e-2, 1e-2]
 
@@ -54,18 +53,19 @@ def shen_pore_transport(pore_size=4, micromolar=True):
     """TODO: Document this (hacky) function"""
     if micromolar:
         unit_scaling = 1
-    else:
+    else: # i.e., nanomolar concentrations/rates
         unit_scaling = 1000
 
     Initial(Smac(state='M', bf=None), Parameter('Smac_0', 0.1*unit_scaling))
     Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 0.5*unit_scaling))
 
+    # Fwd rate of 2e-6 s^-1 converted to 2 uM^-1 s^-1 (assumes vol of 1.6pL)
     pore_transport(Bax(state='A'), pore_size, Smac(state='M'),
                    Smac(state='C'),
-                   [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
+                   [[rate_scaling_factor*2*(1./unit_scaling), 1e-3, 10]])
     pore_transport(Bax(state='A'), pore_size, CytoC(state='M'),
                    CytoC(state='C'),
-                   [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
+                   [[rate_scaling_factor*2*(1./unit_scaling), 1e-3, 10]])
 
 ## MOMP Module Implementations ---------------------------------------------
 
@@ -157,7 +157,7 @@ def cui2008_direct(do_pore_transport=False):
     # All parameters in nanomolar
     # Build on the direct model from Chen et al. (2007) FEBS Lett. by:
     chen2007FEBS_direct(do_pore_assembly=False,
-                        do_pore_transport=do_pore_transport)
+                        do_pore_transport=False)
     alias_model_components()
 
     # 1. Overriding some parameter values,
