@@ -41,16 +41,12 @@ def momp_monomers():
 
 def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
     # TODO: change all initial conditions and param values to Molar
-    Parameter('Bid_0'   , 0) # Bid
     Parameter('Bcl2_0'  , 1e-1) # Mitochondrial Bcl2
-    Parameter('aBax_0'   , 0) # Bax
-    Parameter('cBax_0'   , 2e-1) # Bax
+    Parameter('Bax_0'   , 2e-1) # Bax
 
     alias_model_components()
 
-    Initial(Bid(bf=None, state='T'), Bid_0)
-    Initial(Bax(bf=None, s1=None, s2=None, state='C'), cBax_0)
-    Initial(Bax(bf=None, s1=None, s2=None, state='A'), aBax_0)
+    Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(Bcl2(bf=None), Bcl2_0)
 
     # One-step "kiss-and-run" activation of Bax by tBid
@@ -85,13 +81,11 @@ def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
 
 def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
     # TODO: change all initial conditions and param values to Molar
-    Parameter('Bid_0'   , 0) # Bid
     Parameter('Bcl2_0'  , 30) # Mitochondrial Bcl2
     Parameter('Bax_0'   , 60) # Bax
 
     alias_model_components()
 
-    Initial(Bid(bf=None, state='T'), Bid_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(Bcl2(bf=None), Bcl2_0)
 
@@ -123,13 +117,9 @@ def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
 def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
     # TODO: change all initial conditions and param values to Molar
     # Initial conditions
-    Parameter('Bid_0'   , 0) # Act
-    Parameter('Bad_0'   , 0) # Ena
     Parameter('Bcl2_0'  , 30) # Bcl2
     Parameter('Bax_0'   , 60) # InBax
     alias_model_components()
-    Initial(Bid(bf=None, state='T'), Bid_0)
-    Initial(Bad(bf=None, state='M', serine='U'), Bad_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(Bcl2(bf=None), Bcl2_0)
 
