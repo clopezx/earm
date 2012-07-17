@@ -1,10 +1,10 @@
 #from earm2.trail.albeck_11e import model
-from earm2.trail.chen2007FEBS_indirect import model
+from earm2.trail.howells2011 import model
 import numpy as np
 import matplotlib.pyplot as plt
 from pysb.integrate import odesolve
 
-t = np.linspace(0, 5000, 10000)
+t = np.linspace(0, 20000, 10000)
 x = odesolve(model, t)
 Smac_0 = model.parameters['Smac_0'].value
 Bid_0 = model.parameters['Bid_0'].value

@@ -234,9 +234,10 @@ def cui2008_direct2(do_pore_transport=False):
         Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
 
-def howells2011(do_pore_transport=False):
+def howells2011(do_pore_assembly=True, do_pore_transport=False):
     # Build on the model from Chen et al. (2007) Biophys J:
-    chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=do_pore_transport)
+    chen2007BiophysJ(do_pore_assembly=do_pore_assembly,
+                     do_pore_transport=do_pore_transport)
     alias_model_components()
 
     # Override a few parameter values from the pre-existing model
