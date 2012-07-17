@@ -10,3 +10,4 @@
 *.dot
 *.pdf
 doc/_build
+earm2/kr_coeff_test
