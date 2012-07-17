@@ -1,4 +1,17 @@
-"""TODO: Docstring"""
+"""Models are drawn from four papers:
+
+Models, with references, and crossrefs to implementations
+
+Macros:
+
+- momp_monomers
+- shen_pore_transport
+
+The code has been organized in such a way as to make clear the derivation of
+one model from another.
+
+"""
+
 from pysb import *
 from macros import *
 from pysb.macros import catalyze_one_step_reversible, catalyze_one_step, \
@@ -37,7 +50,7 @@ def momp_monomers():
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
 
-def shen_pore_transport(micromolar=True):
+def shen_pore_transport(pore_size=4, micromolar=True):
     """TODO: Document this (hacky) function"""
     if micromolar:
         unit_scaling = 1
@@ -47,10 +60,12 @@ def shen_pore_transport(micromolar=True):
     Initial(Smac(state='M', bf=None), Parameter('Smac_0', 0.1*unit_scaling))
     Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 0.5*unit_scaling))
 
-    pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
-        [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
-    pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
-        [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
+    pore_transport(Bax(state='A'), pore_size, Smac(state='M'),
+                   Smac(state='C'),
+                   [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
+    pore_transport(Bax(state='A'), pore_size, CytoC(state='M'),
+                   CytoC(state='C'),
+                   [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
 
 ## MOMP Module Implementations ---------------------------------------------
 
@@ -82,7 +97,7 @@ def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
         assemble_pore_spontaneous(Bax(state='A', bf=None), [2*4, 0])
 
     if do_pore_transport:
-        shen_pore_transport(micromolar=True)
+        shen_pore_transport(micromolar=True, pore_size=4)
 
 
 def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
@@ -108,7 +123,7 @@ def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
         assemble_pore_spontaneous(Bax(state='A', bf=None), [4*1e-3, 1e-3])
 
     if do_pore_transport:
-        shen_pore_transport(micromolar=False)
+        shen_pore_transport(micromolar=False, pore_size=4)
 
 
 def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
@@ -135,7 +150,7 @@ def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
         assemble_pore_spontaneous(Bax(state='A', bf=None), [4*1e-3, 1e-3])
 
     if do_pore_transport:
-        shen_pore_transport(micromolar=False)
+        shen_pore_transport(micromolar=False, pore_size=4)
 
 
 def cui2008_direct(do_pore_transport=False):
@@ -154,16 +169,24 @@ def cui2008_direct(do_pore_transport=False):
                         [0.0001, 0.001])
 
     # 3. Adding simplified MAC formation (Bax dimerization)
+    # NOTE: Even though this binding reaction is homomeric (which would
+    # imply that the forward rate should be divided by two) the fact that the
+    # binding reaction can occur in two different ways (s1 on one Bax binding
+    # to the s2 on another, vs. s2 on the first Bax binding to s1 on the second)
+    # requires that the rate be scaled back by a factor of two. These two
+    # scaling factors cancel out, so the forward rate constant is not scaled,
+    # and is used in the ODE with its nominal value.
     active_unbound = {'state': 'A', 'bf': None}
     Rule('dimerize_Bax',
          Bax(s1=None, s2=None, **active_unbound) +
          Bax(s1=None, s2=None, **active_unbound) <>
-         Bax(s1=1, s2=2, **active_unbound) % Bax(s1=2, s2=1, **active_unbound),
-         Parameter('dimerize_Bax_kf', 2*0.0002),
+         Bax(s1=1, s2=None, **active_unbound) %
+         Bax(s1=None, s2=1, **active_unbound),
+         Parameter('dimerize_Bax_kf', 0.0002), # No scaling
          Parameter('dimerize_Bax_kr', 0.02))
 
     # 4. Adding synthesis and degradation reactions
-    Bax2 = Bax(s1=1, s2=2) % Bax(s1=2, s2=1)
+    Bax2 = Bax(s1=1, s2=None) % Bax(s1=None, s2=1)
     synthesize_degrade_table(
        [[Bax(bf=None, **inactive_monomer),      0.06,  0.001],
         [Bax(bf=None, **active_monomer),        None,  0.001],
@@ -174,6 +197,8 @@ def cui2008_direct(do_pore_transport=False):
         [Bad(bf=1) % Bcl2(bf=1),                None,  0.005],
         [Bax2,                                  None, 0.0005]])
 
+    if do_pore_transport:
+        shen_pore_transport(pore_size=2, micromolar=False)
 
 def cui2008_direct1(do_pore_transport=False):
     alias_model_components()
@@ -204,8 +229,8 @@ def cui2008_direct2(do_pore_transport=False):
     Rule('Bax_autoactivation_dimerization',
         Bax(state='A', bf=None, s1=None, s2=None) +
         Bax(state='C', bf=None, s1=None, s2=None) >>
-        Bax(state='A', bf=None, s1=1, s2=2) %
-        Bax(state='A', bf=None, s1=2, s2=1),
+        Bax(state='A', bf=None, s1=1, s2=None) %
+        Bax(state='A', bf=None, s1=None, s2=1),
         Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
 

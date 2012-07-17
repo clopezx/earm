@@ -336,9 +336,9 @@ def albeck_11c(do_pore_transport=True):
         Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
         Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
         # NOTE change in KF here from previous model!!!!
-        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
+        pore_transport(Bax(state='A'), 4, Smac(state='M'), Smac(state='C'),
             [[2*KF, KR, 10]])
-        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+        pore_transport(Bax(state='A'), 4, CytoC(state='M'), CytoC(state='C'),
             [[KF, KR, 10]])
 
 def albeck_11d(do_pore_transport=True):
@@ -382,9 +382,9 @@ def albeck_11d(do_pore_transport=True):
     if do_pore_transport:
         Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1e6))
         Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1e6))
-        pore_transport(Bax(state='M'), Smac(state='M'), Smac(state='C'),
+        pore_transport(Bax(state='M'), 4, Smac(state='M'), Smac(state='C'),
             [[rate_scaling_factor*2*KF, KR, 10]])
-        pore_transport(Bax(state='M'), CytoC(state='M'), CytoC(state='C'),
+        pore_transport(Bax(state='M'), 4, CytoC(state='M'), CytoC(state='C'),
             [[KF, KR, 10]])
 
 def albeck_11e(do_pore_transport=True):

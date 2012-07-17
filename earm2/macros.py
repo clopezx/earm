@@ -91,16 +91,17 @@ def assemble_pore_sequential(subunit, size, klist):
 
     return macros.assemble_pore_sequential(subunit, 's1', 's2', size, klist)
 
-def pore_transport(subunit, csource, cdest, ktable):
+def pore_transport(subunit, size, csource, cdest, ktable):
     """Alias for pysb.macros.pore_transport with default arguments.
 
     - Uses 's1' and 's2' as the sites for subunit-subunit binding in the pore
     - Uses 'bf' for the binding site on the pore subunits used to bind cargo
-    - Uses a default value of 4 for the size of transport-competent pores
+    - Uses only a single size (not a min and max size) for the size of
+      transport-competent pores
     - Uses 'bf' for the binding site on the cargo used to bind the pore
     """
 
-    return macros.pore_transport(subunit, 's1', 's2', 'bf', 4, 4,
+    return macros.pore_transport(subunit, 's1', 's2', 'bf', size, size,
                                 csource, 'bf', cdest, ktable)
 
 ## Macros for the Shen models

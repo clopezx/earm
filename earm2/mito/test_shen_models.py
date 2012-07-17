@@ -146,7 +146,7 @@ cui_s_name_map = {
     'Bcl2(bf=1) % Bid(bf=1, state=T)': 'ActBcl2',
     'Bad(bf=1, state=M, serine=U) % Bcl2(bf=1)': 'EnaBcl2',
     '__sink()': '__sink',
-    'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=2, s2=1, state=A)': 'MAC',
+    'Bax(bf=None, s1=1, s2=None, state=A) % Bax(bf=None, s1=None, s2=1, state=A)': 'MAC',
     'Bax(bf=1, s1=None, s2=None, state=A) % Bcl2(bf=1)': 'AcBaxBcl2'}
 
 ## TESTS ===============================================================
@@ -332,11 +332,11 @@ class TestCui2008_Direct(unittest.TestCase):
              'InBax': 'AcBax*k8 - Act*InBax*k1 - InBax*u1 + __source*p1',
              'Bcl2': '-Act*Bcl2*k4 + ActBcl2*k5 - Bcl2*Ena*k9 - Bcl2*u4 + EnaBcl2*k10 + __source*p3',
              '__source': '0',
-             'AcBax': '-1.0*AcBax**2*k16 - AcBax*k8 - AcBax*u2 + Act*InBax*k1 + 2*MAC*k17',
+             'AcBax': '-2*AcBax**2*k16 - AcBax*k8 - AcBax*u2 + Act*InBax*k1 + 2*MAC*k17',
              'ActBcl2': 'Act*Bcl2*k4 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - ActBcl2*k5 - ActBcl2*u5',
              'EnaBcl2': '-Act*EnaBcl2*k12 + ActBcl2*Ena*k11 + Bcl2*Ena*k9 - EnaBcl2*k10 - EnaBcl2*u8',
              '__sink': 'AcBax*u2 + Act*u3 + ActBcl2*u5 + Bcl2*u4 + Ena*u7 + EnaBcl2*u8 + InBax*u1 + MAC*u9',
-             'MAC': '0.5*AcBax**2*k16 - MAC*k17 - MAC*u9'}))
+             'MAC': 'AcBax**2*k16 - MAC*k17 - MAC*u9'}))
 
 class TestCui2008_Direct1(unittest.TestCase):
     """TODO: Docstring"""
@@ -351,11 +351,11 @@ class TestCui2008_Direct1(unittest.TestCase):
              'InBax': 'AcBax*k8 - Act*InBax*k1 - InBax*u1 + __source*p1',
              'Bcl2': '-AcBax*Bcl2*k2 + AcBaxBcl2*k3 - Act*Bcl2*k4 + ActBcl2*k5 - Bcl2*Ena*k9 - Bcl2*u4 + EnaBcl2*k10 + __source*p3',
              '__source': '0',
-             'AcBax': '-1.0*AcBax**2*k16 - AcBax*ActBcl2*k6 - AcBax*Bcl2*k2 - AcBax*EnaBcl2*k14 - AcBax*k8 - AcBax*u2 + AcBaxBcl2*Act*k7 + AcBaxBcl2*Ena*k13 + AcBaxBcl2*k3 + Act*InBax*k1 + 2*MAC*k17',
+             'AcBax': '-2*AcBax**2*k16 - AcBax*ActBcl2*k6 - AcBax*Bcl2*k2 - AcBax*EnaBcl2*k14 - AcBax*k8 - AcBax*u2 + AcBaxBcl2*Act*k7 + AcBaxBcl2*Ena*k13 + AcBaxBcl2*k3 + Act*InBax*k1 + 2*MAC*k17',
              'ActBcl2': '-AcBax*ActBcl2*k6 + AcBaxBcl2*Act*k7 + Act*Bcl2*k4 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - ActBcl2*k5 - ActBcl2*u5',
              'EnaBcl2': '-AcBax*EnaBcl2*k14 + AcBaxBcl2*Ena*k13 - Act*EnaBcl2*k12 + ActBcl2*Ena*k11 + Bcl2*Ena*k9 - EnaBcl2*k10 - EnaBcl2*u8',
              '__sink': 'AcBax*u2 + AcBaxBcl2*u6 + Act*u3 + ActBcl2*u5 + Bcl2*u4 + Ena*u7 + EnaBcl2*u8 + InBax*u1 + MAC*u9',
-             'MAC': '0.5*AcBax**2*k16 - MAC*k17 - MAC*u9',
+             'MAC': 'AcBax**2*k16 - MAC*k17 - MAC*u9',
              'AcBaxBcl2': 'AcBax*ActBcl2*k6 + AcBax*Bcl2*k2 + AcBax*EnaBcl2*k14 - AcBaxBcl2*Act*k7 - AcBaxBcl2*Ena*k13 - AcBaxBcl2*k3 - AcBaxBcl2*u6'}))
 
 class TestCui2008_Direct2(unittest.TestCase):
@@ -372,11 +372,11 @@ class TestCui2008_Direct2(unittest.TestCase):
              'InBax': '-AcBax*InBax*k15 + AcBax*k8 - Act*InBax*k1 - InBax*u1 + __source*p1',
              'Bcl2': '-AcBax*Bcl2*k2 + AcBaxBcl2*k3 - Act*Bcl2*k4 + ActBcl2*k5 - Bcl2*Ena*k9 - Bcl2*u4 + EnaBcl2*k10 + __source*p3',
              '__source': '0',
-             'AcBax': '-1.0*AcBax**2*k16 - AcBax*ActBcl2*k6 - AcBax*Bcl2*k2 - AcBax*EnaBcl2*k14 - AcBax*InBax*k15 - AcBax*k8 - AcBax*u2 + AcBaxBcl2*Act*k7 + AcBaxBcl2*Ena*k13 + AcBaxBcl2*k3 + Act*InBax*k1 + 2*MAC*k17',
+             'AcBax': '-2*AcBax**2*k16 - AcBax*ActBcl2*k6 - AcBax*Bcl2*k2 - AcBax*EnaBcl2*k14 - AcBax*InBax*k15 - AcBax*k8 - AcBax*u2 + AcBaxBcl2*Act*k7 + AcBaxBcl2*Ena*k13 + AcBaxBcl2*k3 + Act*InBax*k1 + 2*MAC*k17',
              'ActBcl2': '-AcBax*ActBcl2*k6 + AcBaxBcl2*Act*k7 + Act*Bcl2*k4 + Act*EnaBcl2*k12 - ActBcl2*Ena*k11 - ActBcl2*k5 - ActBcl2*u5',
              'EnaBcl2': '-AcBax*EnaBcl2*k14 + AcBaxBcl2*Ena*k13 - Act*EnaBcl2*k12 + ActBcl2*Ena*k11 + Bcl2*Ena*k9 - EnaBcl2*k10 - EnaBcl2*u8',
              '__sink': 'AcBax*u2 + AcBaxBcl2*u6 + Act*u3 + ActBcl2*u5 + Bcl2*u4 + Ena*u7 + EnaBcl2*u8 + InBax*u1 + MAC*u9',
-             'MAC': '0.5*AcBax**2*k16 + AcBax*InBax*k15 - MAC*k17 - MAC*u9',
+             'MAC': 'AcBax**2*k16 + AcBax*InBax*k15 - MAC*k17 - MAC*u9',
              'AcBaxBcl2': 'AcBax*ActBcl2*k6 + AcBax*Bcl2*k2 + AcBax*EnaBcl2*k14 - AcBaxBcl2*Act*k7 - AcBaxBcl2*Ena*k13 - AcBaxBcl2*k3 - AcBaxBcl2*u6'}))
 
 class TestHowells2011(unittest.TestCase):

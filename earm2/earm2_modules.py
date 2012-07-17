@@ -136,14 +136,14 @@ def earm2_pore_formation():
     # CytC, Smac release
     # ----------------------
     # ringp_transport(Subunit, Source, Dest, min_size, max_size, rates):
-    pore_transport(Bax, CytoC(state='M'), CytoC(state='C'),
-                   pore_transport_rates)
-    pore_transport(Bax, Smac(state='M'), Smac(state='C'),
-                   pore_transport_rates)
-    pore_transport(Bak, CytoC(state='M'), CytoC(state='C'),
-                   pore_transport_rates)
-    pore_transport(Bak, Smac(state='M'), Smac(state='C'),
-                   pore_transport_rates)
+    pore_transport(Bax(bf=None, state='A'), 4, CytoC(state='M'),
+                   CytoC(state='C'), pore_transport_rates)
+    pore_transport(Bax(bf=None, state='A'), 4, Smac(state='M'),
+                   Smac(state='C'), pore_transport_rates)
+    pore_transport(Bak(bf=None, state='A'), 4, CytoC(state='M'),
+                   CytoC(state='C'), pore_transport_rates)
+    pore_transport(Bak(bf=None, state='A'), 4, Smac(state='M'),
+                   Smac(state='C'), pore_transport_rates)
 
 ## MOMP Module Implementations ----------------------------------------------
 
