@@ -14,7 +14,8 @@ active_monomer = {'state':'A', 's1': None, 's2': None}
 # For pore_transport sections, drawn from Albeck
 v = 0.07
 rate_scaling_factor = 1./v
-KF = 1e-6
+KF = 1 # 1e-6 s^-1 converted to uM^-1 s^-1
+
 transloc_rates = [1e-2, 1e-2]
 
 def momp_monomers():
@@ -36,6 +37,20 @@ def momp_monomers():
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
 
+def shen_pore_transport(micromolar=True):
+    """TODO: Document this (hacky) function"""
+    if micromolar:
+        unit_scaling = 1
+    else:
+        unit_scaling = 1000
+
+    Initial(Smac(state='M', bf=None), Parameter('Smac_0', 0.1*unit_scaling))
+    Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 0.5*unit_scaling))
+
+    pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
+        [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
+    pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
+        [[rate_scaling_factor*2*KF*(1./unit_scaling), 1e-3, 10]])
 
 ## MOMP Module Implementations ---------------------------------------------
 
@@ -66,17 +81,8 @@ def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
         # Four Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='A', bf=None), [2*4, 0])
 
-    ### Units!!! Converted 1e6 to 1 (uM)
-    ## TODO: Convert KF units
-    # Albeck model of pore transport
-    # KF 1e-6 in copies
     if do_pore_transport:
-        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1))
-        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1))
-        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
-            [[rate_scaling_factor*2*KF, 1e-3, 10]])
-        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
-            [[KF, 1e-3, 10]])
+        shen_pore_transport(micromolar=True)
 
 
 def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
@@ -86,39 +92,30 @@ def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
 
     alias_model_components()
 
-    Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
+    Initial(Bax(bf=None, s1=None, s2=None, state='A'), Bax_0)
     Initial(Bcl2(bf=None), Bcl2_0)
 
-    # (Note: No activation of Bax by tBid, so binding and oligomerization
-    # reactions apply to the unactivated, or state='C' form of Bax)
+    # (Note: No activation of Bax by tBid, so Bax is in the active state
+    # by default)
 
     # Bcl2 binds tBid and Bax
-    bind_table([[                                Bcl2],
-                [Bid(state='T'),         (1e-4, 1e-3)],
-                [Bax(inactive_monomer),  (1e-4, 1e-3)]])
+    bind_table([[                              Bcl2],
+                [Bid(state='T'),       (1e-4, 1e-3)],
+                [Bax(active_monomer),  (1e-4, 1e-3)]])
 
     if do_pore_assembly:
         # Four "inactive" Bax monomers cooperatively bind to form a tetramer
-        assemble_pore_spontaneous(Bax(state='C', bf=None), [4*1e-3, 1e-3])
+        assemble_pore_spontaneous(Bax(state='A', bf=None), [4*1e-3, 1e-3])
 
-    ### Units!!! Converted 1e6 to 1 (uM)
-    ## TODO: Convert KF units
-    # Albeck model of pore transport
-    # KF 1e-6 in copies
     if do_pore_transport:
-        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1))
-        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1))
-        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
-            [[rate_scaling_factor*2*KF, 1e-3, 10]])
-        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
-            [[KF, 1e-3, 10]])
+        shen_pore_transport(micromolar=False)
 
 
 def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
-    # TODO: change all initial conditions and param values to Molar
+    # All parameters in nanomolar
     # Initial conditions
-    Parameter('Bcl2_0'  , 30) # Bcl2
-    Parameter('Bax_0'   , 60) # InBax
+    Parameter('Bcl2_0' , 30) # Bcl2
+    Parameter('Bax_0'  , 60) # InBax
     alias_model_components()
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(Bcl2(bf=None), Bcl2_0)
@@ -137,20 +134,12 @@ def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
         # Four Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='A', bf=None), [4*1e-3, 1e-3])
 
-    ### Units!!! Converted 1e6 to 1 (uM)
-    ## TODO: Convert KF units
-    # Albeck model of pore transport
-    # KF 1e-6 in copies
     if do_pore_transport:
-        Initial(Smac(state='M', bf=None), Parameter('Smac_0', 1))
-        Initial(CytoC(state='M', bf=None), Parameter('CytoC_0', 1))
-        pore_transport(Bax(state='A'), Smac(state='M'), Smac(state='C'),
-            [[rate_scaling_factor*2*KF, 1e-3, 10]])
-        pore_transport(Bax(state='A'), CytoC(state='M'), CytoC(state='C'),
-            [[KF, 1e-3, 10]])
+        shen_pore_transport(micromolar=False)
 
 
 def cui2008_direct(do_pore_transport=False):
+    # All parameters in nanomolar
     # Build on the direct model from Chen et al. (2007) FEBS Lett. by:
     chen2007FEBS_direct(do_pore_assembly=False,
                         do_pore_transport=do_pore_transport)

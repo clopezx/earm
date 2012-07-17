@@ -95,10 +95,10 @@ chenFEBS_p_name_map = {
     'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
     'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
     'bind_BadM_Bcl2_kr': 'kr_BH3Bcl2',
-    'bind_BaxC_Bcl2_kf': 'k_Bax_Bcl2',
-    'bind_BaxC_Bcl2_kr': 'kr_BaxBcl2',
-    'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
-    'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
+    'bind_BaxA_Bcl2_kf': 'k_Bax_Bcl2',
+    'bind_BaxA_Bcl2_kr': 'kr_BaxBcl2',
+    #'spontaneous_pore_BaxC_to_Bax4_kf': 'k_o',
+    #'spontaneous_pore_BaxC_to_Bax4_kr': 'kr_o',
     'spontaneous_pore_BaxA_to_Bax4_kf': 'k_o',
     'spontaneous_pore_BaxA_to_Bax4_kr': 'kr_o' }
 
@@ -256,11 +256,11 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
  
     s_name_map = {
         'Bid(bf=None, state=T)': 'BH3',
-        'Bax(bf=None, s1=None, s2=None, state=C)': 'Bax',
+        'Bax(bf=None, s1=None, s2=None, state=A)': 'Bax',
         'Bcl2(bf=None)': 'Bcl2',
         'Bcl2(bf=1) % Bid(bf=1, state=T)': 'BH3Bcl2',
-        'Bax(bf=1, s1=None, s2=None, state=C) % Bcl2(bf=1)': 'BaxBcl2',
-        'Bax(bf=None, s1=1, s2=2, state=C) % Bax(bf=None, s1=3, s2=1, state=C) % Bax(bf=None, s1=4, s2=3, state=C) % Bax(bf=None, s1=2, s2=4, state=C)': 'MAC'}
+        'Bax(bf=1, s1=None, s2=None, state=A) % Bcl2(bf=1)': 'BaxBcl2',
+        'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'MAC'}
 
     def setUp(self):
         self.model = chen2007FEBS_indirect.model
