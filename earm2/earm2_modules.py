@@ -70,8 +70,8 @@ def declare_initial_conditions():
     Parameter('BclxL_0' , 2.0e4) # cytosolic BclxL
     Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1
     Parameter('Bcl2_0'  , 2.0e4) # Mitochondrial Bcl2
-    #Parameter('Bad_0'   , 1.0e3) # Bad
-    #Parameter('NOXA_0'  , 1.0e3) # NOXA
+    Parameter('Bad_0'   , 1.0e3) # Bad
+    Parameter('NOXA_0'  , 1.0e3) # NOXA
     Parameter('CytoC_0' , 5.0e5) # cytochrome c
     Parameter('Smac_0'  , 1.0e5) # Smac
     Parameter('Bax_0'   , 0.8e5) # Bax
@@ -80,13 +80,13 @@ def declare_initial_conditions():
     alias_model_components()
 
     Initial(Bid(bf=None, state='U'), Bid_0)
-    #Initial(Bad(bf=None, state='C'), Bad_0)
+    Initial(Bad(bf=None, state='C'), Bad_0)
     Initial(Bax(bf=None, s1=None, s2=None, state='C'), Bax_0)
     Initial(Bak(bf=None, s1=None, s2=None, state='M'), Bak_0)
     Initial(Bcl2(bf=None), Bcl2_0)
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
-    #Initial(NOXA(bf=None, state='C'), NOXA_0)
+    Initial(NOXA(bf=None, state='C'), NOXA_0)
     Initial(CytoC(bf=None, state='M'), CytoC_0)
     Initial(Smac(bf=None, state='M'), Smac_0)
 
@@ -182,7 +182,7 @@ def embedded():
                 [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
                 [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
 
-    #sensitizers_bind_anti_apoptotics()
+    sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition
     earm2_pore_formation()
