@@ -1,14 +1,42 @@
-"""Models are drawn from four papers:
+"""PySB implementations of Bcl2-models from the group of Pingping Shen.
 
-Models, with references, and crossrefs to implementations
+In a series of papers from 2007-2010, the research group of Pingping Shen
+implemented and investigated models of Bcl-2 family interactions. In this file
+we have re-implemented these models using PySB
 
-Macros:
+Model Implementations
+---------------------
 
-- momp_monomers
-- shen_pore_transport
+The implementations of the various models are contained within the
+following functions:
 
-The code has been organized in such a way as to make clear the derivation of
-one model from another.
+- :py:func:`chen2007BiophysJ`
+- :py:func:`chen2007FEBS_indirect`
+- :py:func:`chen2007FEBS_direct`
+- :py:func:`cui2008_direct`
+- :py:func:`cui2008_direct1`
+- :py:func:`cui2008_direct2`
+- :py:func:`howells2011`
+
+Model descriptions (with references) are available in the documentation for
+each model.
+
+The models are closely related, and many of the later models are derived from
+earlier ones. The models have been implemented in such a way as to make this
+hierarchy transparent.
+
+Other Functions in this Python Module
+-------------------------------------
+
+In addition to the implementations of the models themselves, this file also
+contains two macros that are re-used by the various models:
+
+- :py:func:`momp_monomers`, which declares the Bcl-2 molecule types used in the
+  models, and
+- :py:func:`shen_pore_transport`, which declares the set of transport reactions
+  required for the release of Cytochrome c and Smac.
+
+----------------
 
 """
 
@@ -70,7 +98,7 @@ def shen_pore_transport(pore_size=4, micromolar=True):
 ## MOMP Module Implementations ---------------------------------------------
 
 def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
-    # TODO: change all initial conditions and param values to Molar
+    """Model drawn from Chen et al. (2007) Biophysical Journal."""
     Parameter('Bcl2_0'  , 1e-1) # Mitochondrial Bcl2
     Parameter('Bax_0'   , 2e-1) # Bax
 
@@ -101,7 +129,7 @@ def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
 
 
 def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
-    # TODO: change all initial conditions and param values to Molar
+    """The "indirect" model drawn from Chen et al. (2007) FEBS Letters."""
     Parameter('Bcl2_0'  , 30) # Mitochondrial Bcl2
     Parameter('Bax_0'   , 60) # Bax
 
@@ -127,6 +155,7 @@ def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
 
 
 def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
+    """The "direct" model drawn from Chen et al. (2007) FEBS Letters."""
     # All parameters in nanomolar
     # Initial conditions
     Parameter('Bcl2_0' , 30) # Bcl2
@@ -154,6 +183,7 @@ def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
 
 
 def cui2008_direct(do_pore_transport=False):
+    """The "direct" model drawn from Cui et al. (2008) PLoS One."""
     # All parameters in nanomolar
     # Build on the direct model from Chen et al. (2007) FEBS Lett. by:
     chen2007FEBS_direct(do_pore_assembly=False,
@@ -201,6 +231,7 @@ def cui2008_direct(do_pore_transport=False):
         shen_pore_transport(pore_size=2, micromolar=False)
 
 def cui2008_direct1(do_pore_transport=False):
+    """The "direct 1" model drawn from Cui et al. (2008) PLoS One."""
     alias_model_components()
 
     # Build on the base "direct" model...
@@ -220,6 +251,7 @@ def cui2008_direct1(do_pore_transport=False):
 
 
 def cui2008_direct2(do_pore_transport=False):
+    """The "direct 2" model drawn from Cui et al. (2008) PLoS One."""
     alias_model_components()
 
     # Build on the "direct 1" model...
@@ -235,6 +267,7 @@ def cui2008_direct2(do_pore_transport=False):
 
 
 def howells2011(do_pore_assembly=True, do_pore_transport=False):
+    """The model drawn from Howells et al. (2011) J. Theor. Biol."""
     # Build on the model from Chen et al. (2007) Biophys J:
     chen2007BiophysJ(do_pore_assembly=do_pore_assembly,
                      do_pore_transport=do_pore_transport)

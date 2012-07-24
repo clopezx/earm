@@ -10,20 +10,49 @@ For the full TRAIL models, the upstream and downstream pathway components
 and reaction topologies are re-used from the previously published EARM
 1.3. (Albeck et al. 2008 PLoS).
 
-The Models
-----------
+MOMP Module "Boundaries"
+------------------------
 
-Here is a list of the models incorporated into EARM, with a very brief
-description. More detailed descriptions of each model, along with the source
-code, are found in the <TODO> Reference section of the documentation (see
-Read the Code, below <TODO>).
+In the interest of consistency, all of the models have been defined with the
+same boundaries in terms of their position in the overall extrinsic apoptotis
+pathway: they are all triggered by the addition of an active BH3-only species
+(e.g., tBid) as their most "upstream" event, and they all result in the release
+in one or more mitochondrial substances (e.g. Cytochrome C and/or Smac) as
+their most downstream event. This represents a compromise between the approach
+of the MOMP models described in Albeck et al (in which caspase 8, rather than
+tBid, served as the input) and the models of the Shen group, in which active
+Bax or Bax pores, rather than Cytochrome C or Smac, served as the output.
+
+While these interface boundaries represent the default condition, they can be
+modified by passing parameters in to the module macro. For example, by setting
+`do_pore_transport=False` in the call to one of the Shen models, the Cytochrome
+C and Smac release reactions are not added, and the models can be directly
+compared to their originally published versions. Similarly, the upstream
+caspase-8/Bid reactions can be added to the Albeck MOMP models to make them
+consistent with their published versions.
+
+Since our purpose in using these models is primarily to embed them in a common
+pathway context, rather than to reproduce previous results for posterity, our
+conclusion in working with them was that it is better to have a consistent
+interface by default and reproduce published results by modifying the model
+rather than implement the model as published by default and then have to
+specifically modify each one separately to fit the pathway context
+appropriately.
+
+The Models in EARM 2
+--------------------
+
+Here is a list of the models incorporated into EARM. More detailed descriptions
+of each model, along with the source code, are found in the <TODO> Reference
+section of the documentation (see Read the Code, below <TODO>).
 
 - EARM 2.0, Embedded.
 - EARM 2.0, Indirect
 - EARM 2.0, Direct
 - "Minimal Model" (Figure 11b) from Albeck et al. (2008) [1]_
 - "Model B + Bax multimerization" (Figure 11c) from Albeck et al. (2008) [1]_
-- "Model C + mitochondrial transport" (Figure 11d) from Albeck et al. (2008) [1]_
+- "Model C + mitochondrial transport" (Figure 11d) from Albeck et al.
+  (2008) [1]_
 - "Current model" (Figure 11e) from Albeck et al. (2008) [1]_
 - "Current model + cooperativity" (Figure 11f) from Albeck et al. (2008) [1]_
 - Deterministic model from Chen et al. (2007), Biophysical Journal [2]_
