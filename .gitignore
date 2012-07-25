@@ -3,4 +3,5 @@
 *#
 .DS_Store
 *.dat
+*.npz
 *.dot
