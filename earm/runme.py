@@ -1,5 +1,5 @@
-#from earm.trail.albeck_11e import model
-from earm.trail.howells2011 import model
+#from earm.albeck_11e import model
+from earm.howells import model
 import numpy as np
 import matplotlib.pyplot as plt
 from pysb.integrate import odesolve
