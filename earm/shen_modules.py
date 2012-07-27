@@ -46,6 +46,9 @@ from pysb.macros import catalyze_one_step_reversible, catalyze_one_step, \
                         synthesize_degrade_table, degrade, equilibrate
 from pysb.util import alias_model_components
 
+# Default site name for binding
+site_name = 'bf'
+
 transloc_rates = [1e-2, 1e-2]
 
 # Useful aliases for Bax state
