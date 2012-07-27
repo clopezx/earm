@@ -3,12 +3,12 @@
 from distutils.core import setup
 
 def main():
-    setup(name='earm2',
+    setup(name='earm',
           version=1.0,
-          description='Extrinsic Apoptosis Reaction Model 2.0',
+          description='Extrinsic Apoptosis Reaction Model',
           author='?',
           author_email='?',
-          packages=['earm2'],
+          packages=['earm'],
           requires=['pysb'],
           keywords=['systems', 'biology', 'model', 'rules'],
           classifiers=[
