@@ -1,5 +1,5 @@
-Previously Published MOMP Models
-================================
+Shen models
+===========
 
-.. automodule:: earm2.shen_modules
+.. automodule:: earm.shen_modules
     :members:

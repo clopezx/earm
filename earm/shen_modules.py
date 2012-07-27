@@ -1,10 +1,13 @@
-"""PySB implementations of Bcl2-models from the group of Pingping Shen.
+"""PySB implementations of Bcl2-models from the group of Pingping
+Shen, along with other derived, closely related models.
 
 In a series of papers from 2007-2010, the research group of Pingping Shen
 implemented and investigated models of Bcl-2 family interactions. In this file
-we have re-implemented these models using PySB
+we have re-implemented these models using PySB. We have also included a model
+from Howells (2011) which is a fairly straightforward extension of a Shen group
+model.
 
-Model Implementations
+Model implementations
 ---------------------
 
 The implementations of the various models are contained within the
@@ -25,8 +28,8 @@ The models are closely related, and many of the later models are derived from
 earlier ones. The models have been implemented in such a way as to make this
 hierarchy transparent.
 
-Other Functions in this Python Module
--------------------------------------
+Other functions
+---------------
 
 In addition to the implementations of the models themselves, this file also
 contains two macros that are re-used by the various models:
@@ -35,8 +38,6 @@ contains two macros that are re-used by the various models:
   models, and
 - :py:func:`shen_pore_transport`, which declares the set of transport reactions
   required for the release of Cytochrome c and Smac.
-
-----------------
 
 """
 

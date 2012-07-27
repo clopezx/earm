@@ -1,5 +1,5 @@
-Albeck Modules
-===============
+Albeck modules
+==============
 
-.. automodule:: earm2.albeck_modules
+.. automodule:: earm.albeck_modules
     :members:

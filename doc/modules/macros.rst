@@ -1,5 +1,5 @@
-Shared Macros
+Shared macros
 =============
 
-.. automodule:: earm2.macros
+.. automodule:: earm.macros
     :members:
