@@ -1,0 +1,201 @@
+from pysb import *
+from pysbhelperfuncs import *
+
+# Instantiate model, default name is "model"
+Model()
+
+# Import model parameters
+from disc2_parms_vc import parameter_dict as kd 
+
+Compartment('ec', dimension = 3, size = ec_size, parent = None)    # extra cellular compartment
+Compartment('cyM', dimension = 2, size = cytoM_size, parent = ec) # cytoplasmic membrane
+Compartment('cy', dimension = 3, size = cyto_size, parent = cyM)  # cytoplasm
+Compartment('mitM', dimension = 2, size = mitoM_size, parent = cy) # mitochondrial membrane
+Compartment('mit', dimension = 3, size = mito_size, parent = mitM) # mitochondrion
+
+Monomer('Trail', ['b', 's1', 's2'])  # TRAIL monomer, start with pre-trimerized ligand
+Monomer('DR', ['bl', 'bf', 's1', 's2', 'T'], {'T':['4','5']})    # Death receptor 4 or 5. bl: ligand binding site, bf: fadd binding site
+Monomer('Fadd', ['bx', 'bc'])   # FADD bx: binding to complex, bc: binding to caspase 8
+Monomer('flip', ['bf']) # flip
+Monomer('C8', ['bc', 'bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
+Monomer('BAR', ['bf']) # BAR
+Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']}) # Bid, states: Untruncated, Truncated, truncated+Membrane
+Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']}) # Bax, states: Cytoplasm, Mitochondria, Active
+Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']}) # Bax, states: inactive+Membrane, Active
+Monomer('Bcl2', ['bf']) # Bcl2, states: Cytoplasm, Mitochondria
+Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']}) # BclxL states: cytoplasm, mitochondris
+Monomer('Mcl1', ['bf']) 
+Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']}) 
+Monomer('NOXA', ['bf']) 
+Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
+Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
+Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']})
+Monomer('Apop', ['bf'])
+Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']}) # Csp 3, states: pro, active, ubiquitinated
+Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']}) # Csp 6, states: pro, active
+Monomer('C9', ['bf'])
+Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']}) # PARP, states: uncleaved, cleaved
+Monomer('XIAP', ['bf'])
+
+# EARM2 Modules 
+# =============
+import earm_2_emb_modules # Must be called after the Monomers and Parameters are defined
+
+# Trail binding to DR
+# Another way to do this:
+# bla= TTrail_unbound.copy()
+# bla.monomer_patterns[0].site_conditions['bf']=1
+
+# aliases for easier rule ennumeration
+# -------------------------------------
+# Trimerized Trail unbound/bound aliases
+TTrail_U  = MatchOnce(Trail(b=None, s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
+TTrail_B1 = MatchOnce(Trail(b=4,    s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1))
+TTrail_B2 = MatchOnce(Trail(b=5,    s1=1, s2=2) % Trail(b=6,    s1=2, s2=3) % Trail(b=None, s1=3, s2=1)) 
+TTrail_B3 = MatchOnce(Trail(b=4,    s1=1, s2=2) % Trail(b=5,    s1=2, s2=3) % Trail(b=6,    s1=3, s2=1))
+TTrail_B3N = Trail(b=4,    s1=1, s2=2) % Trail(b=5,    s1=2, s2=3) % Trail(b=6,    s1=3, s2=1)
+
+# DR monomer, dimer, trimer aliases:
+# ----------------------------------
+DR4_mono_U = DR(bl=None, bf=None, s1=None, s2=None,           T='4')
+DR4_dim_U  = DR(bl=None, bf=None, s1=1,    s2=None,           T='4') % DR(bl=None, bf=None, s1=None, s2=1, T='4')
+DR4_trim_U = MatchOnce(DR(bl=None, bf=None, s1=1,    s2=2,    T='4') % DR(bl=None, bf=None, s1=2,    s2=3, T='4') % DR(bl=None, bf=None, s1=3, s2=1, T='4'))
+DR5_mono_U = DR(bl=None, bf=None, s1=None, s2=None,           T='5')
+DR5_dim_U  = DR(bl=None, bf=None, s1=1,    s2=None,           T='5') % DR(bl=None, bf=None, s1=None, s2=1, T='5')
+DR5_trim_U = MatchOnce(DR(bl=None, bf=None, s1=1,    s2=2,    T='5') % DR(bl=None, bf=None, s1=2,    s2=3, T='5') % DR(bl=None, bf=None, s1=3, s2=1, T='5'))
+
+DR4_mono_B = DR(bl=4,    bf=None, s1=None, s2=None,           T='4')
+DR4_dim_B  = MatchOnce(DR(bl=5,    bf=None, s1=4,    s2=None, T='4') % DR(bl=6, bf=None, s1=None, s2=4, T='4'))
+DR4_trim_B = MatchOnce(DR(bl=4,    bf=None, s1=7,    s2=8   , T='4') % DR(bl=5, bf=None, s1=8,    s2=9, T='4') % DR(bl=6,    bf=None, s1=9, s2=7, T='4'))
+DR5_mono_B = DR(bl=4,    bf=None, s1=None, s2=None,           T='5')
+DR5_dim_B  = MatchOnce(DR(bl=5,    bf=None, s1=4,    s2=None, T='5') % DR(bl=6, bf=None, s1=None, s2=4, T='5'))
+DR5_trim_B = MatchOnce(DR(bl=4,    bf=None, s1=7,    s2=8,    T='5') % DR(bl=5, bf=None, s1=8,    s2=9, T='5') % DR(bl=6,    bf=None, s1=9, s2=7, T='5'))
+
+DR4_trim_BN =  DR(bl=4, bf=None, s1=7, s2=8, T='4') % DR(bl=5, bf=None, s1=8, s2=9, T='4') % DR(bl=6, bf=None, s1=9, s2=7, T='4')
+DR4_trim_BB1 = DR(bl=4,   bf=10, s1=7, s2=8, T='4') % DR(bl=5, bf=None, s1=8, s2=9, T='4') % DR(bl=6, bf=None, s1=9, s2=7, T='4')
+DR4_trim_BB2 = DR(bl=4,   bf=10, s1=7, s2=8, T='4') % DR(bl=5, bf=11,   s1=8, s2=9, T='4') % DR(bl=6, bf=None, s1=9, s2=7, T='4')
+DR4_trim_BB3 = DR(bl=4,   bf=10, s1=7, s2=8, T='4') % DR(bl=5, bf=11,   s1=8, s2=9, T='4') % DR(bl=6, bf=12,   s1=9, s2=7, T='4')
+DR5_trim_BN =  DR(bl=4, bf=None, s1=7, s2=8, T='5') % DR(bl=5, bf=None, s1=8, s2=9, T='5') % DR(bl=6, bf=None, s1=9, s2=7, T='5')
+DR5_trim_BB1 = DR(bl=4,   bf=10, s1=7, s2=8, T='5') % DR(bl=5, bf=None, s1=8, s2=9, T='5') % DR(bl=6, bf=None, s1=9, s2=7, T='5')
+DR5_trim_BB2 = DR(bl=4,   bf=10, s1=7, s2=8, T='5') % DR(bl=5, bf=11,   s1=8, s2=9, T='5') % DR(bl=6, bf=None, s1=9, s2=7, T='5')
+DR5_trim_BB3 = DR(bl=4,   bf=10, s1=7, s2=8, T='5') % DR(bl=5, bf=11,   s1=8, s2=9, T='5') % DR(bl=6, bf=12,   s1=9, s2=7, T='5')
+
+# DR multimers
+# ------------
+ringp_assembly(DR(bl = None, bf=None, T='4'), 3, kd['DR4_RINGP'])
+ringp_assembly(DR(bl = None, bf=None, T='5'), 3, kd['DR5_RINGP'])
+
+# Trail binding to DR rules:
+# --------------------------
+# Paper Carlos R. Reis, Robbert H. Cool rates 2011
+Rule('TRAIL_DR4mono', TTrail_U + DR4_mono_U <> TTrail_B1 % DR4_mono_B, *kd['TT_DR4mono'])
+Rule('TRAIL_DR4dim',  TTrail_U + DR4_dim_U  <> TTrail_B2 % DR4_dim_B,  *kd['TT_DR4dim'])
+Rule('TRAIL_DR4trim', TTrail_U + DR4_trim_U <> TTrail_B3 % DR4_trim_B, *kd['TT_DR4trim'])
+Rule('TRAIL_DR5mono', TTrail_U + DR5_mono_U <> TTrail_B1 % DR5_mono_B, *kd['TT_DR5mono'])
+Rule('TRAIL_DR5dim',  TTrail_U + DR5_dim_U  <> TTrail_B2 % DR5_dim_B,  *kd['TT_DR5dim'])
+Rule('TRAIL_DR5trim', TTrail_U + DR5_trim_U <> TTrail_B3 % DR5_trim_B, *kd['TT_DR5trim'])
+    
+# Ligand Death-receptor complex: 
+# ------------------------------
+LDR4C =    TTrail_B3N % DR4_trim_BN
+LDR4C_B1 = TTrail_B3N % DR4_trim_BB1
+LDR4C_B2 = TTrail_B3N % DR4_trim_BB2
+LDR4C_B3 = TTrail_B3N % DR4_trim_BB3
+LDR5C =    TTrail_B3N % DR5_trim_BN
+LDR5C_B1 = TTrail_B3N % DR5_trim_BB1
+LDR5C_B2 = TTrail_B3N % DR5_trim_BB2
+LDR5C_B3 = TTrail_B3N % DR5_trim_BB3
+
+# FIXME: Can these all be replaced with simple-bind calls?
+# Fadd binding LDRC rule
+# -------------------------------------------------------
+Rule("Fadd_LDR4C_cplx1", LDR4C + Fadd(bx = None, bc=None) <> LDR4C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR4C_C1'])
+Rule("Fadd_LDR4C_cplx2", LDR4C_B1 % Fadd(bx=10, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR4C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR4C_C2'])
+Rule("Fadd_LDR4C_cplx3", LDR4C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR4C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR4C_C3'])
+Rule("Fadd_LDR5C_cplx1", LDR5C + Fadd(bx = None, bc=None) <> LDR5C_B1 % Fadd(bx=10, bc=None), *kd['Fadd_LDR5C_C1'])
+Rule("Fadd_LDR5C_cplx2", LDR5C_B1 % Fadd(bx=10, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR5C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None), *kd['Fadd_LDR5C_C2'])
+Rule("Fadd_LDR5C_cplx3", LDR5C_B2 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) + Fadd(bx = None, bc=None) <>
+                         LDR5C_B3 % Fadd(bx=10, bc=None) % Fadd(bx=11, bc=None) % Fadd(bx=12, bc=None), *kd['Fadd_LDR5C_C3'])
+
+# Caspase 8 binding to Fadd, creates DISC
+# ---------------------------------------
+Rule("pC8_fadd_b", Fadd(bc=None, bx=ANY) + C8(bf=None, state='pro') <> Fadd(bc=1, bx=ANY) % C8(bf=1, state='pro'), *kd['pC8_fadd_b'])
+
+# Caspase 8 activation within the same DISC
+# -----------------------------------------------------------------
+Rule("pC8_dim_act_s", C8(bc=None, state='pro') % C8(bc=None, state='pro') >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), *kd['pC8_dim_act_s'])
+
+# Caspase 8 activation across separate DISC
+# -----------------------------------------
+# FIXME: Keep in mind but do not include until JR gives a solid reference
+# Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), *kd['pC8_dim_act_o'])
+
+# Truncation of Bid
+# FIXME: use catalysis function here
+# ----------------------------------
+Rule("C8_bid_cplx", C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = None, state='U') <>
+     C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % Bid(bf = 2, state='U'), kd['C8_BID'][0], kd['C8_BID'][1])
+Rule("C8_cplx_act", C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % Bid(bf = 2, state='U') >>
+     C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = None, state='T'), kd['C8_BID'][2])
+
+# flip takes a C8 spot in DISC
+# ----------------------------
+# FIXME: THIS SHOULD NOT GENERATE Fadd:flip where fadd is not bound to a complex...?
+Rule("flip_fadd_cplx", Fadd(bx=1, bc=None) + flip(bf=None) <>  Fadd(bx=1, bc=2) % flip(bf=2), *kd['DISC_FLIP'])
+
+# BAR inhibits C8
+# ---------------
+#Rule("BAR_C8_cplx", C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + BAR(bf = None) <>
+#     C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % BAR(bf = 2), kd['BAR_C8'][0], kd['BAR_C8'][1])
+
+#
+# Import necessary modules
+# ========================
+# Generate the Receptor to Bid section from the EARM 1.0 module
+earm_2_emb_modules.bid_to_momp(model, kd)
+# Generate the Pore to MOMP section from the EARM 1.0 module
+earm_2_emb_modules.pore_to_parp(model, kd)
+
+# Add synthesis and degradation:
+
+# ===================================
+# 'ec'   # extra cellular compartment
+# 'cyM'  # cytoplasmic membrane
+# 'cy'   # cytoplasm
+# 'mitM' # mitochondrial membrane
+# 'mit'  # mitochondrion
+# 
+# Initial non-zero species
+# ===================================
+Initial((Trail(b=None, s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1)) ** ec, Trail_0)
+Initial(DR(bl=None, bf=None, s1=None, s2=None, T='4') ** cyM, DR4_0)
+Initial(DR(bl=None, bf=None, s1=None, s2=None, T='5') ** cyM, DR5_0)
+Initial(Fadd(bx=None, bc=None) ** cyM, Fadd_0)
+Initial(flip(bf=None) ** cyM, flip_0)
+Initial(C8(bc=None, bf=None, state='pro') ** cy, C8_0)
+Initial(BAR(bf=None) ** cy, BAR_0)
+Initial(Bid(bf=None, state='U') ** cy, Bid_0)
+Initial(Bax(bf=None, s1=None, s2=None, state='C') ** cy, Bax_0)
+Initial(Bak(bf=None, s1=None, s2=None, state='M') ** mitM, Bak_0)
+Initial(Bcl2(bf=None) ** mitM, Bcl2_0)
+Initial(BclxL (bf=None, state='C') ** cy, BclxL_0)
+Initial(Mcl1(bf=None) ** mitM, Mcl1_0)
+Initial(Bad(bf=None, state='C') ** cy, Bad_0) 
+Initial(NOXA(bf=None) ** mitM, NOXA_0)
+Initial(CytoC(bf=None, state='M') ** mit, CytoC_0)
+Initial(Smac(bf=None, state='M') ** mit, Smac_0)
+Initial(Apaf(bf=None, state='I') ** cy, Apaf_0)
+Initial(C3(bf=None, state='pro') ** cy, C3_0)
+Initial(C6(bf=None, state='pro') ** cy, C6_0)
+Initial(C9(bf=None) ** cy, C9_0)
+Initial(PARP(bf=None, state='U') ** cy, PARP_0)
+Initial(XIAP(bf=None) ** cy, XIAP_0)
+
+# Observables
+# ===========
+Observable('mBid',  Bid(state='M') ** mitM)
+Observable('cSmac', Smac(state='A') ** cy)
+Observable('cPARP', PARP(state='C') ** cy)
