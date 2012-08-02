@@ -91,6 +91,7 @@ def declare_initial_conditions():
     Initial(Smac(bf=None, state='M'), Smac_0)
 
 def translocate_tBid_Bax_BclxL():
+    """tBid, Bax and BclXL translocate to the mitochondrial membrane."""
     equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
     # equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), transloc_rates)
     # Previous indirect model had more membrane-favorable rates for tBid
@@ -103,15 +104,18 @@ def translocate_tBid_Bax_BclxL():
                 transloc_rates)
 
 def tBid_activates_Bax_and_Bak():
+    """tBid activates Bax and Bak."""
     catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
     catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
 
 def tBid_binds_all_anti_apoptotics():
+    """tBid binds and inhibits Bcl2, Mcl1, and Bcl-XL."""
     # Doug Green's MODE 1 inhibition
     bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
                 [Bid(state='M'),       bcl2_rates,        bcl2_rates,       bcl2_rates]])
 
 def sensitizers_bind_anti_apoptotics():
+    """Binding of Bad and Noxa to Bcl2, Mcl1, and Bcl-XL."""
     bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
                 [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
                 [NOXA(state='M'),       None,              None,       bcl2_rates]])
