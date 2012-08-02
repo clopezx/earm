@@ -59,7 +59,7 @@ def shared_observables():
     # Observe('PARP',  PARP(bf=None, state='U'))
     # Observe('Smac',  Smac(bf=None, state='mito'))
     Observable('tBid_',  Bid(state='T'))
-    Observable('aBid_',  Bid(state='M'))
+    Observable('mBid_',  Bid(state='M'))
     Observable('aSmac_', Smac(state='A'))
     Observable('cPARP_', PARP(state='C'))
 
