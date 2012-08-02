@@ -10,7 +10,7 @@ Model()
 
 lopez_modules.momp_monomers()
 Observable('aBax', Bax(state='A'))
-Observable('cSmac', Smac(state='A'))
+Observable('cSmac', Smac(state='C'))
 
 # The specific MOMP model to use
 lopez_modules.indirect()
