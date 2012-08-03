@@ -55,7 +55,7 @@ def shared_observables():
     # Observables
     # ===========
     # Fig 4B from Albeck observes these, normalizes and inverts them
-    Observable('tBid_',  Bid(state='T'))
+    Observable('mBid',  Bid(state='M'))
     Observable('aSmac', Smac(state='A'))
     Observable('cPARP', PARP(state='C'))
 

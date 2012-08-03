@@ -52,28 +52,28 @@ def lig_to_bid_rates():
      Parameter('kdr5trimf', 2.040816e-04)
      Parameter('kdr5trimr', 1.0e-3      )
      # Fadd LDR4C complex
-     Parameter('faddldr4c1f', 4.0e-07)
+     Parameter('faddldr4c1f', 1.0e-6)
      Parameter('faddldr4c1r', 1.0e-03)
-     Parameter('faddldr4c2f', 4.0e-07)
+     Parameter('faddldr4c2f', 1.0e-6)
      Parameter('faddldr4c2r', 1.0e-03)
-     Parameter('faddldr4c3f', 4.0e-07)
+     Parameter('faddldr4c3f', 1.0e-6)
      Parameter('faddldr4c3r', 1.0e-03)
      # Fadd LDR5C complex
-     Parameter('faddldr5c1f', 4.0e-07)
+     Parameter('faddldr5c1f', 1.0e-6)
      Parameter('faddldr5c1r', 1.0e-03)
-     Parameter('faddldr5c2f', 4.0e-07)
+     Parameter('faddldr5c2f', 1.0e-6)
      Parameter('faddldr5c2r', 1.0e-03)
-     Parameter('faddldr5c3f', 4.0e-07)
+     Parameter('faddldr5c3f', 1.0e-6)
      Parameter('faddldr5c3r', 1.0e-03)
      # pC8 FADD binding pC8_fadd_b
-     Parameter('pc8faddf', 4.0e-07)
+     Parameter('pc8faddf', 1.0e-6)
      Parameter('pc8faddr', 1.0e-03)
      # pC8 activation to C8 within the same FADD trimer
      Parameter('pc8dimacts', 1.0e-3)
      # pC8 activation to C8 across separate FADD trimers
      Parameter('pc8dimacto', 1.0e-3)
      # Bid cleavage by C8
-     Parameter('kc8bidf', 1.0e-07)
+     Parameter('kc8bidf', 1.0e-06)
      Parameter('kc8bidr', 1.0e-03)
      Parameter('kc8bidc', 1.0    )
      # DISC inhibition by FLIP
