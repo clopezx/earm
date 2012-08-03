@@ -22,24 +22,30 @@ def lig_to_bid_monomers():
      Monomer('BAR', ['bf']) # BAR
      
 def lig_to_bid_rates():
-     # TRAIL trimer binding to DR monomer- 4, values from Reis + Cool 2011
-     Parameter('ttdr4mf', 1.04e-06)  # k / ec_size
+     """ The trail trimer-sdDR monomer binding rates were pulled from
+     Reis + Cool 2011.  The trimer monomer rate was converted to the
+     cellular volume. The Ttrimer-DRtrimer interaction was set to one
+     order of magnitude lower than the Ttrimer-DRmonomer interaction
+     and the Ttrimer-DRdimer interaction as set to a value halfway
+     between the two. All other values were adapted from Albeck Plos
+     2008.
+     """
+     Parameter('ttdr4mf', 3.8e-05)  # 6.3e5 M^-1 s^-1 in pL molecules^-1 s^-1
      Parameter('ttdr4mr', 1.10e-04)
      # TT binding to DR dimers- 4
-     Parameter('ttdr4df', 5.00e-07)  # k / ec_size
+     Parameter('ttdr4df', 2.09e-05)  
      Parameter('ttdr4dr', 1.10e-04)
      # TT binding to DR trimers- 4
-     Parameter('ttdr4tf', 1.04e-07)
+     Parameter('ttdr4tf', 3.8e-06)
      Parameter('ttdr4tr', 1.10e-04)
-     # TRAIL trimer binding to DR monomer- 5
      # TT binding to DR monomer- 5
-     Parameter('ttdr5mf', 1.97e-06)     # k / ec_size
+     Parameter('ttdr5mf', 11.9e-05)  # 11.9e5 M^-1 s^-1 in pL molecules^-1 s^-1
      Parameter('ttdr5mr', 0.36e-04)
      # TT binding to DR dimers- 5
-     Parameter('ttdr5df', 2.07e-06)     # k / ec_size
+     Parameter('ttdr5df', 6.54e-05)  
      Parameter('ttdr5dr', 1.10e-04)
      # TT binding to DR trimers- 5
-     Parameter('ttdr5tf', 1.97e-07)     
+     Parameter('ttdr5tf', 11.9e-06)     
      Parameter('ttdr5tr', 0.36e-04)
      # DR4 trimerization
      Parameter('kdr4dimf',  2.040816e-04) # k / v**2
@@ -84,13 +90,14 @@ def lig_to_bid_rates():
      Parameter('kbarc8r', 1.0e-03)
 
 def declare_initial_conditions():
-     Parameter('Trail_0'  ,  3000), # 3000 Ligand correspond to 50 ng/ml SuperKiller TRAIL
-     Parameter('DR4_0'    ,   200), # 200 death receptor 4
-     Parameter('DR5_0'    ,   200), # 200 death receptor 5
-     Parameter('Fadd_0'   , 1.0e3), # Fadd
-     Parameter('flip_0'   , 1.0e2), # Flip
-     Parameter('C8_0'     , 2.0e4), # procaspase-8 
-     Parameter('BAR_0'    , 1.0e3), # Bifunctional apoptosis regulator
+     Parameter('Trail_0'  ,   3e3), #* Ligand correspond to 50 ng/ml SuperKiller TRAIL
+     Parameter('DR4_0'    ,   3e3), #* death receptor 4, JRoux
+     Parameter('DR5_0'    ,  26e3), #* death receptor 5, JRoux
+     Parameter('Fadd_0'   , 180e3), #* Fadd
+     Parameter('flip_0'   ,  14e3), #* Flip
+     Parameter('C8_0'     , 151e3), #* procaspase-8 
+     Parameter('BAR_0'    , 1.0e3), #  Bifunctional apoptosis regulator
+     Parameter('Bid_00'   ,2.24e6), #* Bid
 
      alias_model_components()
 
@@ -101,6 +108,9 @@ def declare_initial_conditions():
      Initial(flip(bf=None), flip_0)
      Initial(C8(bc=None, bf=None, state='pro'), C8_0)
      Initial(BAR(bf=None), BAR_0)
+     # update Bid from lopez_modules
+     Initial(Bid(bf=None, state='U'), Bid_00)
+     
 
 def lig_to_bid():
      """Defines the interactions from the initial ligand cue (e.g. TRAIL) to Bid
@@ -112,7 +122,6 @@ def lig_to_bid():
     inhibition by flip and BAR.
     Due to the complexity of the species this function makes extensive use of aliasing.
     """
-     declare_initial_conditions()
      alias_model_components()
 
      # Trail binding to DR
