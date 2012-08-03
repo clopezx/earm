@@ -211,13 +211,7 @@ def cui2008_direct(do_pore_transport=False):
     # scaling factors cancel out, so the forward rate constant is not scaled,
     # and is used in the ODE with its nominal value.
     active_unbound = {'state': 'A', 'bf': None}
-    Rule('dimerize_Bax',
-         Bax(s1=None, s2=None, **active_unbound) +
-         Bax(s1=None, s2=None, **active_unbound) <>
-         Bax(s1=1, s2=None, **active_unbound) %
-         Bax(s1=None, s2=1, **active_unbound),
-         Parameter('dimerize_Bax_kf', 0.0002), # No scaling
-         Parameter('dimerize_Bax_kr', 0.02))
+    assemble_pore_sequential(Bax(**active_unbound), 2, [[0.0002, 0.02]])
 
     # 4. Adding synthesis and degradation reactions
     Bax2 = Bax(s1=1, s2=None) % Bax(s1=None, s2=1)
