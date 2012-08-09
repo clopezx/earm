@@ -115,7 +115,7 @@ def sensitizers_bind_anti_apoptotics():
                 [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
                 [NOXA(state='M'),       None,              None,       bcl2_rates]])
 
-def lopez_pore_formation():
+def lopez_pore_formation(do_pore_transport=True):
     """ Pore formation and transport process used by all modules.
     """
     alias_model_components()
@@ -131,19 +131,20 @@ def lopez_pore_formation():
     assemble_pore_sequential(Bak(bf=None, state='A'), pore_max_size, pore_rates)
 
     # CytoC, Smac release
-    pore_transport(Bax(bf=None, state='A'), 4, CytoC(state='M'),
-                   CytoC(state='C'), pore_transport_rates)
-    pore_transport(Bax(bf=None, state='A'), 4, Smac(state='M'),
-                   Smac(state='C'), pore_transport_rates)
-    pore_transport(Bak(bf=None, state='A'), 4, CytoC(state='M'),
-                   CytoC(state='C'), pore_transport_rates)
-    pore_transport(Bak(bf=None, state='A'), 4, Smac(state='M'),
-                   Smac(state='C'), pore_transport_rates)
+    if do_pore_transport:
+        pore_transport(Bax(bf=None, state='A'), 4, CytoC(state='M'),
+                       CytoC(state='C'), pore_transport_rates)
+        pore_transport(Bax(bf=None, state='A'), 4, Smac(state='M'),
+                       Smac(state='C'), pore_transport_rates)
+        pore_transport(Bak(bf=None, state='A'), 4, CytoC(state='M'),
+                       CytoC(state='C'), pore_transport_rates)
+        pore_transport(Bak(bf=None, state='A'), 4, Smac(state='M'),
+                       Smac(state='C'), pore_transport_rates)
 
 ## MOMP Module Implementations ----------------------------------------------
 
 # Embedded Model
-def embedded():
+def embedded(do_pore_transport=True):
     """ Direct and indirect modes of action, occurring at the membrane.
     """
     alias_model_components()
@@ -180,10 +181,10 @@ def embedded():
     sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition and transport CytoC/Smac
-    lopez_pore_formation()
+    lopez_pore_formation(do_pore_transport=do_pore_transport)
 
 # Indirect Model
-def indirect():
+def indirect(do_pore_transport=True):
     """Bax and Bak spontaneously form pores without activation.
        The "activator" tBid binds all of the anti-apoptotics.
     """
@@ -209,10 +210,10 @@ def indirect():
     sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition
-    lopez_pore_formation()
+    lopez_pore_formation(do_pore_transport=do_pore_transport)
 
 # Direct Model
-def direct():
+def direct(do_pore_transport=True):
     """Anti-apoptotics prevent BH3-onlies from activating Bax and Bak.
 
     Bax and Bak require activation to be able to form pores.
@@ -232,4 +233,4 @@ def direct():
     sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition
-    lopez_pore_formation()
+    lopez_pore_formation(do_pore_transport=do_pore_transport)
