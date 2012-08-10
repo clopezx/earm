@@ -20,7 +20,11 @@ def lig_to_bid_monomers():
      Monomer('flip', ['bf']) # flip
      Monomer('C8', ['bc', 'bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
      Monomer('BAR', ['bf']) # BAR
+     Monomer('IETD', ['bl', 'bi', 'bf'])
+     Monomer('CFP', ['bf'])
+     Monomer('YFP', ['bf'])
      
+   
 def lig_to_bid_rates():
      """ The trail trimer-sdDR monomer binding rates were pulled from
      Reis + Cool 2011.  The trimer monomer rate was converted to the
@@ -82,6 +86,18 @@ def lig_to_bid_rates():
      Parameter('kc8bidf', 1.0e-06)
      Parameter('kc8bidr', 1.0e-03)
      Parameter('kc8bidc', 1.0    )
+     # ICRP cleavage by C8
+     Parameter('kc8ICRPf', 1.0e-06)
+     Parameter('kc8ICRPr', 1.0e-03)
+     Parameter('kc8ICRPc', 1.0    )
+     # YFP-IETD cleavage by C8
+     Parameter('kc8YFPf', 1.0e-06)
+     Parameter('kc8YFPr', 1.0e-03)
+     Parameter('kc8YFPc', 1.0    )
+     # CFP-IETD cleavage by C8
+     Parameter('kc8CFPf', 1.0e-06)
+     Parameter('kc8CFPr', 1.0e-03)
+     Parameter('kc8CFPc', 1.0    )
      # DISC inhibition by FLIP
      Parameter('kflipdiscf', 1.0e-06)
      Parameter('kflipdiscr', 1.0e-03)
@@ -90,16 +106,17 @@ def lig_to_bid_rates():
      Parameter('kbarc8r', 1.0e-03)
 
 def declare_initial_conditions():
-     Parameter('Trail_0'  ,   3e3), #* Ligand correspond to 50 ng/ml SuperKiller TRAIL
-     Parameter('DR4_0'    ,   3e3), #* death receptor 4, JRoux
-     Parameter('DR5_0'    ,  26e3), #* death receptor 5, JRoux
-     Parameter('Fadd_0'   , 180e3), #* Fadd
-     Parameter('flip_0'   ,  14e3), #* Flip
-     Parameter('C8_0'     , 151e3), #* procaspase-8 
-     Parameter('BAR_0'    , 1.0e3), #  Bifunctional apoptosis regulator
-     Parameter('Bid_00'   ,2.24e6), #* Bid
+     Parameter('Trail_0'  ,   3e3) #* Ligand correspond to 50 ng/ml SuperKiller TRAIL
+     Parameter('DR4_0'    ,   3e3) #* death receptor 4, JRoux
+     Parameter('DR5_0'    ,  26e3) #* death receptor 5, JRoux
+     Parameter('Fadd_0'   , 180e3) #* Fadd
+     Parameter('flip_0'   ,  14e3) #* Flip
+     Parameter('C8_0'     , 151e3) #* procaspase-8 
+     Parameter('BAR_0'    , 1.0e3) #  Bifunctional apoptosis regulator
+     Parameter('ICRP_0'     ,4.72e6) # IC-RP initial
 
      alias_model_components()
+     Bid_0.value = 2.24e6 #* NEW Bid values from JR
 
      Initial((Trail(b=None, s1=1, s2=2) % Trail(b=None, s1=2, s2=3) % Trail(b=None, s1=3, s2=1)), Trail_0)
      Initial(DR4(bl=None, bf=None, s1=None, s2=None), DR4_0)
@@ -108,8 +125,7 @@ def declare_initial_conditions():
      Initial(flip(bf=None), flip_0)
      Initial(C8(bc=None, bf=None, state='pro'), C8_0)
      Initial(BAR(bf=None), BAR_0)
-     # update Bid from lopez_modules
-     Initial(Bid(bf=None, state='U'), Bid_00)
+     Initial(CFP(bf=1)%IETD(bl=1, bi=2, bf=None)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3), ICRP_0)
      
 
 def lig_to_bid():
@@ -212,7 +228,7 @@ def lig_to_bid():
 
      # Caspase 8 activation within the same DISC
      # -----------------------------------------------------------------
-     Rule("pC8_dim_act_s", C8(bc=None, state='pro') % C8(bc=None, state='pro') >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), pc8dimacts)
+     Rule("pC8_dim_act_s", C8(bc=None, bf=None, state='pro') % C8(bc=None, bf=None, state='pro') >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), pc8dimacts)
 
      # Caspase 8 activation across separate DISC
      # -----------------------------------------
@@ -226,6 +242,32 @@ def lig_to_bid():
           C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % Bid(bf = 2, state='U'), kc8bidf, kc8bidr)
      Rule("C8_cplx_act", C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % Bid(bf = 2, state='U') >>
           C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = None, state='T'), kc8bidc)
+     
+     # truncation of IC-RP by Bid
+     # ICRP is composed of CYP-IETD-IETD-YFP but truncation at any IETD should yield signal
+     # allow C8 to bind to IC-RP and truncate...
+     # CFP-IETD cleavage by C8
+     Rule('ICRP_C8_cplx', CFP(bf=1)%IETD(bl=1, bi=2, bf=None)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3) +
+          C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') <>
+          CFP(bf=1)%IETD(bl=1, bi=2, bf=4)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3) %
+          C8(bc=5, bf=4, state='A') % C8(bc=5, bf=None, state='A'), kc8ICRPf, kc8ICRPr)
+
+     Rule('ICRP_C8_diss', CFP(bf=1)%IETD(bl=1, bi=2, bf=4)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3) %
+          C8(bc=5, bf=4, state='A') % C8(bc=5, bf=None, state='A')  >>
+          CFP(bf=1)%IETD(bl=1, bi=None, bf=None) + IETD(bl=3, bi=None, bf=None)%YFP(bf=3) +
+          C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), kc8ICRPc)
+
+     Rule('CFP_C8_cplx', CFP(bf=1)%IETD(bl=1, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') <>
+          CFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A'), kc8CFPf, kc8CFPr)
+
+     Rule('CFP_C8_diss', CFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A') >>
+          CFP(bf=None) + IETD(bl=None, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), kc8CFPc)
+
+     Rule('YFP_C8_cplx', YFP(bf=1)%IETD(bl=1, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') <>
+          YFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A'), kc8YFPf, kc8YFPr)
+
+     Rule('YFP_C8_diss', YFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A') >>
+          YFP(bf=None) + IETD(bl=None, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), kc8YFPc)
 
      # flip takes a C8 spot in DISC
      # ----------------------------
