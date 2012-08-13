@@ -18,12 +18,12 @@ def lig_to_bid_monomers():
      Monomer('DR5', ['bl', 'bf', 's1', 's2']) # Death receptor 5 bl: ligand binding site, bf: fadd binding site
      Monomer('Fadd', ['bx', 'bc'])   # FADD bx: binding to complex, bc: binding to caspase 8
      Monomer('flip', ['bf']) # flip
-     Monomer('C8', ['bc', 'bf', 'state'], {'state':['pro', 'A']}) # Csp 8, states: pro, active
+     Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']}) # pro-Caspase-8 monomer
+     Monomer('C8dim', ['bf']) # active Caspase-8 dimer
      Monomer('BAR', ['bf']) # BAR
-     Monomer('IETD', ['bl', 'bi', 'bf'])
-     Monomer('CFP', ['bf'])
-     Monomer('YFP', ['bf'])
-     
+     Monomer('IETD', ['bi', 'bf', 'state'], {'state':['C', 'Y']}) # IETD subunit with YFP or CFP
+     Monomer('CFP', ['bf', 'state'], {'state':['I', 'F']}) # truncated CFP, states: IETD, FREE
+     Monomer('YFP', ['bf', 'state'], {'state':['I', 'F']}) # truncated CFP, states: IETD, FREE
    
 def lig_to_bid_rates():
      """ The trail trimer-sdDR monomer binding rates were pulled from
@@ -86,18 +86,22 @@ def lig_to_bid_rates():
      Parameter('kc8bidf', 1.0e-06)
      Parameter('kc8bidr', 1.0e-03)
      Parameter('kc8bidc', 1.0    )
-     # ICRP cleavage by C8
-     Parameter('kc8ICRPf', 1.0e-06)
-     Parameter('kc8ICRPr', 1.0e-03)
-     Parameter('kc8ICRPc', 1.0    )
-     # YFP-IETD cleavage by C8
-     Parameter('kc8YFPf', 1.0e-06)
-     Parameter('kc8YFPr', 1.0e-03)
-     Parameter('kc8YFPc', 1.0    )
+     # IETDC cleavage by C8
+     Parameter('kc8IETDYf', 1.0e-06)
+     Parameter('kc8IETDYr', 1.0e-03)
+     Parameter('kc8IETDYc', 1.0    )
+     # IETDY cleavage by C8
+     Parameter('kc8IETDCf', 1.0e-06)
+     Parameter('kc8IETDCr', 1.0e-03)
+     Parameter('kc8IETDCc', 1.0    )
      # CFP-IETD cleavage by C8
      Parameter('kc8CFPf', 1.0e-06)
      Parameter('kc8CFPr', 1.0e-03)
      Parameter('kc8CFPc', 1.0    )
+     # YFP-IETD cleavage by C8
+     Parameter('kc8YFPf', 1.0e-06)
+     Parameter('kc8YFPr', 1.0e-03)
+     Parameter('kc8YFPc', 1.0    )
      # DISC inhibition by FLIP
      Parameter('kflipdiscf', 1.0e-06)
      Parameter('kflipdiscr', 1.0e-03)
@@ -113,7 +117,7 @@ def declare_initial_conditions():
      Parameter('flip_0'   ,  14e3) #* Flip
      Parameter('C8_0'     , 151e3) #* procaspase-8 
      Parameter('BAR_0'    , 1.0e3) #  Bifunctional apoptosis regulator
-     Parameter('ICRP_0'     ,4.72e6) # IC-RP initial
+     Parameter('IETD_0'     ,4.72e6) # IC-RP initial
 
      alias_model_components()
      Bid_0.value = 2.24e6 #* NEW Bid values from JR
@@ -123,9 +127,9 @@ def declare_initial_conditions():
      Initial(DR5(bl=None, bf=None, s1=None, s2=None), DR5_0)
      Initial(Fadd(bx=None, bc=None), Fadd_0)
      Initial(flip(bf=None), flip_0)
-     Initial(C8(bc=None, bf=None, state='pro'), C8_0)
+     Initial(C8(bf=None, state='pro'), C8_0)
      Initial(BAR(bf=None), BAR_0)
-     Initial(CFP(bf=1)%IETD(bl=1, bi=2, bf=None)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3), ICRP_0)
+     Initial(IETD(bi=1, bf=None, state='C')%IETD(bi=1, bf=None, state='Y'), IETD_0)
      
 
 def lig_to_bid():
@@ -224,50 +228,43 @@ def lig_to_bid():
 
      # Caspase 8 binding to Fadd, creates DISC
      # ---------------------------------------
-     Rule("pC8_fadd_b", Fadd(bc=None, bx=ANY) + C8(bf=None, state='pro') <> Fadd(bc=1, bx=ANY) % C8(bf=1, state='pro'), pc8faddf, pc8faddr)
+     Rule("C8_fadd_b", Fadd(bc=None, bx=ANY) + C8(bf=None, state='pro') <> Fadd(bc=1, bx=ANY) % C8(bf=1, state='pro'), pc8faddf, pc8faddr)
 
      # Caspase 8 activation within the same DISC
      # -----------------------------------------------------------------
-     Rule("pC8_dim_act_s", C8(bc=None, bf=None, state='pro') % C8(bc=None, bf=None, state='pro') >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), pc8dimacts)
-
-     # Caspase 8 activation across separate DISC
-     # -----------------------------------------
-     # FIXME: Keep in mind but do not include until JR gives a solid reference
-     # Rule("pC8_dim_act_o", C8(bf=ANY) + C8(bf=ANY) >> C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), *kd['pC8_dim_act_o'])
+     Rule("C8_dim_act_s", C8(bf=ANY, state='pro') % C8(bf=ANY, state='pro') >> C8dim(bf=None), pc8dimacts)
 
      # Truncation of Bid
      # FIXME: use catalysis function here
      # ----------------------------------
-     Rule("C8_bid_cplx", C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = None, state='U') <>
-          C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % Bid(bf = 2, state='U'), kc8bidf, kc8bidr)
-     Rule("C8_cplx_act", C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % Bid(bf = 2, state='U') >>
-          C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + Bid(bf = None, state='T'), kc8bidc)
+     Rule("C8_bid_cplx", C8dim(bf=None) + Bid(bf = None, state='U') <>
+          C8dim(bf=1) % Bid(bf = 1, state='U'), kc8bidf, kc8bidr)
+     Rule("C8_cplx_act", C8dim(bf=1) % Bid(bf = 1, state='U') >>
+          C8dim(bf=None) + Bid(bf = None, state='T'), kc8bidc)
      
      # truncation of IC-RP by Bid
      # ICRP is composed of CYP-IETD-IETD-YFP but truncation at any IETD should yield signal
-     # allow C8 to bind to IC-RP and truncate...
-     # CFP-IETD cleavage by C8
-     Rule('ICRP_C8_cplx', CFP(bf=1)%IETD(bl=1, bi=2, bf=None)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3) +
-          C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') <>
-          CFP(bf=1)%IETD(bl=1, bi=2, bf=4)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3) %
-          C8(bc=5, bf=4, state='A') % C8(bc=5, bf=None, state='A'), kc8ICRPf, kc8ICRPr)
+     # allow C8 to bind to IC-RP at any of two sites and truncate
+     Rule("IETDC_C8_cplx", IETD(bi=1, bf=None, state='C')%IETD(bi=1, bf=None, state='Y') + C8dim(bf=None) <>
+          IETD(bi=1, bf=None, state='C')%IETD(bi=1, bf=2, state='Y') % C8dim(bf=2), kc8IETDCf, kc8IETDCr)
+     Rule("IETDC_C8_diss",IETD(bi=1, bf=None, state='C')%IETD(bi=1, bf=2, state='Y') % C8dim(bf=2) >>
+          CFP(bf=None, state='I') + YFP(bf=None, state='F') + C8dim(bf=None), kc8IETDCc)
 
-     Rule('ICRP_C8_diss', CFP(bf=1)%IETD(bl=1, bi=2, bf=4)%IETD(bl=3, bi=2, bf=None)%YFP(bf=3) %
-          C8(bc=5, bf=4, state='A') % C8(bc=5, bf=None, state='A')  >>
-          CFP(bf=1)%IETD(bl=1, bi=None, bf=None) + IETD(bl=3, bi=None, bf=None)%YFP(bf=3) +
-          C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), kc8ICRPc)
+     Rule("IETDY_C8_cplx", IETD(bi=1, bf=None, state='C')%IETD(bi=1, bf=None, state='Y') + C8dim(bf=None) <>
+          IETD(bi=1, bf=2, state='C')%IETD(bi=1, bf=None, state='Y') % C8dim(bf=2), kc8IETDYf, kc8IETDYr)
+     Rule("IETDY_C8_diss",IETD(bi=1, bf=2)%IETD(bi=1, bf=None) % C8dim(bf=2) >>
+          CFP(bf=None, state='F') + YFP(bf=None, state='I') + C8dim(bf=None), kc8IETDYc)
 
-     Rule('CFP_C8_cplx', CFP(bf=1)%IETD(bl=1, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') <>
-          CFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A'), kc8CFPf, kc8CFPr)
-
-     Rule('CFP_C8_diss', CFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A') >>
-          CFP(bf=None) + IETD(bl=None, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), kc8CFPc)
-
-     Rule('YFP_C8_cplx', YFP(bf=1)%IETD(bl=1, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') <>
-          YFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A'), kc8YFPf, kc8YFPr)
-
-     Rule('YFP_C8_diss', YFP(bf=1)%IETD(bl=1, bi=None, bf=2) % C8(bc=3, bf=2, state='A') % C8(bc=3, bf=None, state='A') >>
-          YFP(bf=None) + IETD(bl=None, bi=None, bf=None) + C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A'), kc8YFPc)
+     # Now process the remaining CFP:IETD complexes, expressed here as a state change
+     Rule("CFPI_C8_cplx", CFP(bf=None, state='I') + C8dim(bf=None) <>
+          CFP(bf=1, state='I') % C8dim(bf=1), kc8CFPf, kc8CFPr)
+     Rule("CFPI_C8_diss", CFP(bf=1, state='I') % C8dim(bf=1) >>
+          CFP(bf=None, state='F') + C8dim(bf=None), kc8CFPc)
+     
+     Rule("YFPI_C8_cplx", YFP(bf=None, state='I') + C8dim(bf=None) <>
+          YFP(bf=1, state='I') % C8dim(bf=1), kc8YFPf, kc8YFPr)
+     Rule("YFPI_C8_diss", YFP(bf=1, state='I') % C8dim(bf=1) >>
+          YFP(bf=None, state='F') + C8dim(bf=None), kc8YFPc)
 
      # flip takes a C8 spot in DISC
      # ----------------------------
@@ -276,5 +273,5 @@ def lig_to_bid():
 
      # BAR inhibits C8
      # ---------------
-     Rule("BAR_C8_cplx", C8(bc=1, bf=None, state='A') % C8(bc=1, bf=None, state='A') + BAR(bf = None) <>
-          C8(bc=1, bf=2, state='A') % C8(bc=1, bf=None, state='A') % BAR(bf = 2), kbarc8f, kbarc8r)
+     Rule("BAR_C8_cplx", C8dim(bf=None) + BAR(bf = None) <>
+          C8dim(bf=1) % BAR(bf=1), kbarc8f, kbarc8r)

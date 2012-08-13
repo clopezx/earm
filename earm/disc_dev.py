@@ -15,7 +15,7 @@ albeck_modules.apaf1_to_parp_monomers()
 
 # instantiate the momp and parp modules to use
 lopez_modules.embedded()
-albeck_modules.pore_to_parp()
+albeck_modules.pore_to_parp_DR()
 
 # load the initial concentrations for the DISC module
 disc_modules_dev.declare_initial_conditions()
