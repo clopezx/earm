@@ -6,7 +6,6 @@ def embedded():
     declare_initial_conditions()
 
     effector_auto_rates = [1e-7, 1e-3, 1]
-    bclxl_recruitment_rates = [2.040816e-04, 1e-3, 1]
     # bid_effector_rates
     # transloc_rates
     # bcl2_rates
@@ -28,10 +27,6 @@ def embedded():
                 [Bak(active_monomer),       None,        bcl2_rates,       bcl2_rates]])
     catalyze(Bax(active_monomer), Bax(state='M'), Bax(state='A'), effector_auto_rates)
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'), effector_auto_rates)
-    catalyze(Bid(state='M'), BclxL(state='C'), BclxL(state='M'),
-             bclxl_recruitment_rates)
-    catalyze(Bax(active_monomer), BclxL(state='C'), BclxL(state='M'),
-             bclxl_recruitment_rates)
     assemble_pore_sequential(Bax(bf=None, state='A'), 4, pore_rates)
     assemble_pore_sequential(Bak(bf=None, state='A'), 4, pore_rates)
 

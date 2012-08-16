@@ -165,13 +165,6 @@ def embedded(do_pore_transport=True):
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'),
              effector_auto_rates)
 
-    # tBid and free Bax recruit Bcl-xL(C)
-    bclxl_recruitment_rates = [2.040816e-04, 1e-3, 1]
-    catalyze(Bid(state='M'), BclxL(state='C'), BclxL(state='M'),
-             bclxl_recruitment_rates)
-    catalyze(Bax(active_monomer), BclxL(state='C'), BclxL(state='M'),
-             bclxl_recruitment_rates)
-
     # Anti-apoptotics bind activated effectors
     # Doug Green's "MODE 2" inhibition
     bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
