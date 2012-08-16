@@ -4,8 +4,8 @@ Shen, along with other derived, closely related models.
 In a series of papers from 2007-2010, the research group of Pingping Shen
 implemented and investigated models of Bcl-2 family interactions. In this file
 we have re-implemented these models using PySB. We have also included a model
-from Howells (2011) which is a fairly straightforward extension of a Shen group
-model.
+from Howells et al. (2011)[4]_ which is a fairly straightforward extension of a Shen group
+model (Chen et al. (2007) Biophys J.[1]_)
 
 Model implementations
 ---------------------
@@ -38,6 +38,28 @@ contains two macros that are re-used by the various models:
   models, and
 - :py:func:`shen_pore_transport`, which declares the set of transport reactions
   required for the release of Cytochrome c and Smac.
+
+References
+==========
+
+.. [1] Chen, C., Cui, J., Lu, H., Wang, R., Zhang, S., & Shen,
+   P. (2007). Modeling of the role of a Bax-activation switch in the
+   mitochondrial apoptosis decision. Biophysical Journal, 92(12),
+   4304-4315. :doi:`10.1529/biophysj.106.099606` :pmid:`17400705`.
+
+.. [2] Chen, C., Cui, J., Zhang, W., & Shen, P. (2007). Robustness analysis
+   identifies the plausible model of the Bcl-2 apoptotic switch. FEBS letters,
+   581(26), 5143-5150. :doi:`10.1016/j.febslet.2007.09.063` :pmid:`17936275`.
+
+.. [3] Cui, J., Chen, C., Lu, H., Sun, T., & Shen, P. (2008). Two independent
+   positive feedbacks and bistability in the Bcl-2 apoptotic switch. PLoS ONE,
+   3(1), e1469. :doi:`10.1371/journal.pone.0001469` :pmid:`18213378`.
+
+.. [4] Howells, C. C., Baumann, W. T., Samuels, D. C., & Finkielstein,
+   C. V. (2010). The Bcl-2-associated death promoter (BAD) lowers the threshold
+   at which the Bcl-2-interacting domain death agonist (BID) triggers
+   mitochondria disintegration. Journal of Theoretical
+   Biology. :doi:`10.1016/j.jtbi.2010.11.040` :pmid:`21130780`.
 
 """
 
@@ -102,7 +124,7 @@ def shen_pore_transport(pore_size=4, micromolar=True):
 ## MOMP Module Implementations ---------------------------------------------
 
 def chen_biophys_j(do_pore_assembly=True, do_pore_transport=False):
-    """Model drawn from Chen et al. (2007) Biophysical Journal."""
+    """Model drawn from Chen et al. (2007) Biophysical Journal.[1]_"""
     Parameter('Bcl2_0'  , 1e-1) # Mitochondrial Bcl2
     Parameter('Bax_0'   , 2e-1) # Bax
 
@@ -132,7 +154,7 @@ def chen_biophys_j(do_pore_assembly=True, do_pore_transport=False):
         shen_pore_transport(micromolar=True, pore_size=4)
 
 def chen_febs_indirect(do_pore_assembly=True, do_pore_transport=False):
-    """The "indirect" model drawn from Chen et al. (2007) FEBS Letters."""
+    """The "indirect" model drawn from Chen et al. (2007) FEBS Letters.[2]_"""
     Parameter('Bcl2_0'  , 30) # Mitochondrial Bcl2
     Parameter('Bax_0'   , 60) # Bax
 
@@ -157,7 +179,7 @@ def chen_febs_indirect(do_pore_assembly=True, do_pore_transport=False):
         shen_pore_transport(micromolar=False, pore_size=4)
 
 def chen_febs_direct(do_pore_assembly=True, do_pore_transport=False):
-    """The "direct" model drawn from Chen et al. (2007) FEBS Letters."""
+    """The "direct" model drawn from Chen et al. (2007) FEBS Letters.[2]_"""
     # All parameters in nanomolar
     # Initial conditions
     Parameter('Bcl2_0' , 30) # Bcl2
@@ -184,7 +206,7 @@ def chen_febs_direct(do_pore_assembly=True, do_pore_transport=False):
         shen_pore_transport(micromolar=False, pore_size=4)
 
 def cui_direct(do_pore_transport=False):
-    """The "direct" model drawn from Cui et al. (2008) PLoS One."""
+    """The "direct" model drawn from Cui et al. (2008) PLoS One.[3]_"""
     # All parameters in nanomolar
     # Build on the direct model from Chen et al. (2007) FEBS Lett. by:
     chen_febs_direct(do_pore_assembly=False,
@@ -226,7 +248,7 @@ def cui_direct(do_pore_transport=False):
         shen_pore_transport(pore_size=2, micromolar=False)
 
 def cui_direct1(do_pore_transport=False):
-    """The "direct 1" model drawn from Cui et al. (2008) PLoS One."""
+    """The "direct 1" model drawn from Cui et al. (2008) PLoS One.[3]_"""
     alias_model_components()
 
     # Build on the base "direct" model...
@@ -245,7 +267,7 @@ def cui_direct1(do_pore_transport=False):
     degrade(Bax(bf=1) % Bcl2(bf=1), 0.005)
 
 def cui_direct2(do_pore_transport=False):
-    """The "direct 2" model drawn from Cui et al. (2008) PLoS One."""
+    """The "direct 2" model drawn from Cui et al. (2008) PLoS One.[3]_"""
     alias_model_components()
 
     # Build on the "direct 1" model...
@@ -260,7 +282,7 @@ def cui_direct2(do_pore_transport=False):
         Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
 def howells(do_pore_assembly=True, do_pore_transport=False):
-    """The model drawn from Howells et al. (2011) J. Theor. Biol."""
+    """The model drawn from Howells et al. (2011) J. Theor. Biol.[4]_"""
     # Build on the model from Chen et al. (2007) Biophys J:
     chen_biophys_j(do_pore_assembly=do_pore_assembly,
                      do_pore_transport=do_pore_transport)
