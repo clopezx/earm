@@ -13,13 +13,13 @@ Model implementations
 The implementations of the various models are contained within the
 following functions:
 
-- :py:func:`chen2007BiophysJ`
-- :py:func:`chen2007FEBS_indirect`
-- :py:func:`chen2007FEBS_direct`
-- :py:func:`cui2008_direct`
-- :py:func:`cui2008_direct1`
-- :py:func:`cui2008_direct2`
-- :py:func:`howells2011`
+- :py:func:`chen_biophys_j`
+- :py:func:`chen_febs_indirect`
+- :py:func:`chen_febs_direct`
+- :py:func:`cui_direct`
+- :py:func:`cui_direct1`
+- :py:func:`cui_direct2`
+- :py:func:`howells`
 
 Model descriptions (with references) are available in the documentation for
 each model.
@@ -101,7 +101,7 @@ def shen_pore_transport(pore_size=4, micromolar=True):
 
 ## MOMP Module Implementations ---------------------------------------------
 
-def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
+def chen_biophys_j(do_pore_assembly=True, do_pore_transport=False):
     """Model drawn from Chen et al. (2007) Biophysical Journal."""
     Parameter('Bcl2_0'  , 1e-1) # Mitochondrial Bcl2
     Parameter('Bax_0'   , 2e-1) # Bax
@@ -131,8 +131,7 @@ def chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=False):
     if do_pore_transport:
         shen_pore_transport(micromolar=True, pore_size=4)
 
-
-def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
+def chen_febs_indirect(do_pore_assembly=True, do_pore_transport=False):
     """The "indirect" model drawn from Chen et al. (2007) FEBS Letters."""
     Parameter('Bcl2_0'  , 30) # Mitochondrial Bcl2
     Parameter('Bax_0'   , 60) # Bax
@@ -157,8 +156,7 @@ def chen2007FEBS_indirect(do_pore_assembly=True, do_pore_transport=False):
     if do_pore_transport:
         shen_pore_transport(micromolar=False, pore_size=4)
 
-
-def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
+def chen_febs_direct(do_pore_assembly=True, do_pore_transport=False):
     """The "direct" model drawn from Chen et al. (2007) FEBS Letters."""
     # All parameters in nanomolar
     # Initial conditions
@@ -185,12 +183,11 @@ def chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=False):
     if do_pore_transport:
         shen_pore_transport(micromolar=False, pore_size=4)
 
-
-def cui2008_direct(do_pore_transport=False):
+def cui_direct(do_pore_transport=False):
     """The "direct" model drawn from Cui et al. (2008) PLoS One."""
     # All parameters in nanomolar
     # Build on the direct model from Chen et al. (2007) FEBS Lett. by:
-    chen2007FEBS_direct(do_pore_assembly=False,
+    chen_febs_direct(do_pore_assembly=False,
                         do_pore_transport=False)
     alias_model_components()
 
@@ -228,12 +225,12 @@ def cui2008_direct(do_pore_transport=False):
     if do_pore_transport:
         shen_pore_transport(pore_size=2, micromolar=False)
 
-def cui2008_direct1(do_pore_transport=False):
+def cui_direct1(do_pore_transport=False):
     """The "direct 1" model drawn from Cui et al. (2008) PLoS One."""
     alias_model_components()
 
     # Build on the base "direct" model...
-    cui2008_direct(do_pore_transport=do_pore_transport)
+    cui_direct(do_pore_transport=do_pore_transport)
 
     # ...by adding inhibition of Bax by Bcl2,
     bind(Bax(state='A', s1=None, s2=None), Bcl2, [0.005, 0.001])
@@ -247,13 +244,12 @@ def cui2008_direct1(do_pore_transport=False):
     # ...and degradation of the active Bax:Bcl2 complex
     degrade(Bax(bf=1) % Bcl2(bf=1), 0.005)
 
-
-def cui2008_direct2(do_pore_transport=False):
+def cui_direct2(do_pore_transport=False):
     """The "direct 2" model drawn from Cui et al. (2008) PLoS One."""
     alias_model_components()
 
     # Build on the "direct 1" model...
-    cui2008_direct1(do_pore_transport=do_pore_transport)
+    cui_direct1(do_pore_transport=do_pore_transport)
 
     # By adding simultaneous auto-activation and dimerization of Bax
     Rule('Bax_autoactivation_dimerization',
@@ -263,11 +259,10 @@ def cui2008_direct2(do_pore_transport=False):
         Bax(state='A', bf=None, s1=None, s2=1),
         Parameter('Bax_autoactivation_dimerization_k', 0.0002))
 
-
-def howells2011(do_pore_assembly=True, do_pore_transport=False):
+def howells(do_pore_assembly=True, do_pore_transport=False):
     """The model drawn from Howells et al. (2011) J. Theor. Biol."""
     # Build on the model from Chen et al. (2007) Biophys J:
-    chen2007BiophysJ(do_pore_assembly=do_pore_assembly,
+    chen_biophys_j(do_pore_assembly=do_pore_assembly,
                      do_pore_transport=do_pore_transport)
     alias_model_components()
 

@@ -2,8 +2,8 @@
 match published ODEs, etc."""
 
 import unittest
-from earm.mito import chen_2007_biophys_j, chen_2007_febs_direct, \
-    chen_2007_febs_indirect, cui_direct, cui_direct1, cui_direct2, howells
+from earm.mito import chen_biophys_j, chen_febs_direct, \
+    chen_febs_indirect, cui_direct, cui_direct1, cui_direct2, howells
 from pysb.bng import generate_equations
 from pysb.integrate import odesolve
 from pysb import *
@@ -146,7 +146,7 @@ cui_s_name_map = {
 
 ## TESTS ===============================================================
 
-class TestChen2007BiophysJ(unittest.TestCase):
+class TestChenBiophysJ(unittest.TestCase):
     """TODO: Docstring"""
 
     p_name_map = {
@@ -171,7 +171,7 @@ class TestChen2007BiophysJ(unittest.TestCase):
     }
 
     def setUp(self):
-        self.model = chen_2007_biophys_j.model
+        self.model = chen_biophys_j.model
         if self.model.parameters.get('Bid_0') is None:
             # Add initial condition for Bid
             Bid_0 = Parameter('Bid_0', 1, _export=False)
@@ -246,7 +246,7 @@ class TestChen2007BiophysJ(unittest.TestCase):
             ('k9', 8),
             ('k10', 0)])
 
-class TestChen2007FEBS_Indirect(unittest.TestCase):
+class TestChenFEBS_Indirect(unittest.TestCase):
     """TODO: Docstring"""
  
     s_name_map = {
@@ -258,7 +258,7 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
         'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'MAC'}
 
     def setUp(self):
-        self.model = chen_2007_febs_indirect.model
+        self.model = chen_febs_indirect.model
         if self.model.parameters.get('Bid_0') is None:
             # Add initial condition for Bid
             Bid_0 = Parameter('Bid_0', 1, _export=False)
@@ -276,7 +276,7 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
             'BaxBcl2': 'Bax*Bcl2*k_Bax_Bcl2 - BaxBcl2*kr_BaxBcl2',
             'MAC': '0.25*Bax**4*k_o - MAC*kr_o'}))
 
-class TestChen2007FEBS_Direct(unittest.TestCase):
+class TestChenFEBS_Direct(unittest.TestCase):
     """TODO: Docstring"""
     s_name_map = {
         'Bid(bf=None, state=T)': 'Act',
@@ -289,7 +289,7 @@ class TestChen2007FEBS_Direct(unittest.TestCase):
         'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'MAC'}
 
     def setUp(self):
-        self.model = chen_2007_febs_direct.model
+        self.model = chen_febs_direct.model
         if self.model.parameters.get('Bid_0') is None:
             # Add initial condition for Bid
             Bid_0 = Parameter('Bid_0', 1, _export=False)

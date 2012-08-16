@@ -10,7 +10,7 @@ Model()
 shen_modules.momp_monomers()
 
 # The specific MOMP model to use
-shen_modules.chen2007FEBS_indirect()
+shen_modules.chen_febs_indirect()
 
 # Observables
 Observable('Bax4_', MatchOnce(Bax(bf=None, s1=1, s2=4) %

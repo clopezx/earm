@@ -10,7 +10,7 @@ Model()
 shen_modules.momp_monomers()
 
 # The specific MOMP model to use
-shen_modules.howells2011()
+shen_modules.howells()
 
 # Observables
 Observable('AcBax_', Bax(bf=None, state='A'))

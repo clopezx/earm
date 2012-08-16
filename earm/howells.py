@@ -15,7 +15,7 @@ shen_modules.momp_monomers()
 albeck_modules.apaf1_to_parp_monomers()
 
 # The specific MOMP model to use
-shen_modules.howells2011(do_pore_assembly=True, do_pore_transport=True)
+shen_modules.howells(do_pore_assembly=True, do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 0.1uM, per the paper
 Initial(Bid(state='U', bf=None), Parameter('Bid_0', 0.1))
