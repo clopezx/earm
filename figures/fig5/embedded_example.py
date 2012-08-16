@@ -26,7 +26,7 @@ def embedded():
                 [Noxa(state='M'),           None,              None,       bcl2_rates],
                 [Bax(active_monomer), bcl2_rates,        bcl2_rates,             None],
                 [Bak(active_monomer),       None,        bcl2_rates,       bcl2_rates]])
-    catalyze(Bax(active_monomer), Bax(state='C'), Bax(state='A'), effector_auto_rates)
+    catalyze(Bax(active_monomer), Bax(state='M'), Bax(state='A'), effector_auto_rates)
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'), effector_auto_rates)
     catalyze(Bid(state='M'), BclxL(state='C'), BclxL(state='M'),
              bclxl_recruitment_rates)
