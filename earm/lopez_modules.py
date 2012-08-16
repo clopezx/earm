@@ -51,7 +51,7 @@ def momp_monomers():
     Monomer('Mcl1', [site_name, 'state'], {'state':['M', 'C']})
     # == Sensitizers ==================
     Monomer('Bad', [site_name, 'state'], {'state':['C', 'M']})
-    Monomer('NOXA', [site_name, 'state'], {'state': ['C', 'M']})
+    Monomer('Noxa', [site_name, 'state'], {'state': ['C', 'M']})
 
     # == Cytochrome C and Smac ========
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
@@ -68,7 +68,7 @@ def declare_initial_conditions():
     Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1
     Parameter('Bcl2_0'  , 2.0e4) # Mitochondrial Bcl2
     Parameter('Bad_0'   , 1.0e3) # Bad
-    Parameter('NOXA_0'  , 1.0e3) # NOXA
+    Parameter('Noxa_0'  , 1.0e3) # Noxa
     Parameter('CytoC_0' , 5.0e5) # cytochrome c
     Parameter('Smac_0'  , 1.0e5) # Smac
     Parameter('Bax_0'   , 0.8e5) # Bax
@@ -83,7 +83,7 @@ def declare_initial_conditions():
     Initial(Bcl2(bf=None), Bcl2_0)
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
-    Initial(NOXA(bf=None, state='C'), NOXA_0)
+    Initial(Noxa(bf=None, state='C'), Noxa_0)
     Initial(CytoC(bf=None, state='M'), CytoC_0)
     Initial(Smac(bf=None, state='M'), Smac_0)
 
@@ -113,7 +113,7 @@ def sensitizers_bind_anti_apoptotics():
     """Binding of Bad and Noxa to Bcl2, Mcl1, and Bcl-XL."""
     bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
                 [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
-                [NOXA(state='M'),       None,              None,       bcl2_rates]])
+                [Noxa(state='M'),       None,              None,       bcl2_rates]])
 
 def lopez_pore_formation(do_pore_transport=True):
     """ Pore formation and transport process used by all modules.
