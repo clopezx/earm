@@ -364,7 +364,6 @@ def albeck_11b(do_pore_transport=True):
     # MOMP Mechanism
     catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
              Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
-    bind(Bid(state='T'), Bcl2, [0, KR])
     bind(Bax(state='A', s1=None, s2=None), Bcl2, [KF, KR])
 
     # Transport of Smac and Cytochrome C

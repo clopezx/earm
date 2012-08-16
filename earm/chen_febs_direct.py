@@ -15,7 +15,7 @@ shen_modules.momp_monomers()
 albeck_modules.apaf1_to_parp_monomers()
 
 # The specific MOMP model to use
-shen_modules.chen2007FEBS_direct(do_pore_assembly=True, do_pore_transport=True)
+shen_modules.chen_febs_direct(do_pore_assembly=True, do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 20nM, per the paper
 Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20))

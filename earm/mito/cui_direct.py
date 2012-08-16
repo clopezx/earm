@@ -10,7 +10,7 @@ Model()
 shen_modules.momp_monomers()
 
 # The specific MOMP model to use
-shen_modules.cui2008_direct()
+shen_modules.cui_direct()
 
 # Observables
 Observable('AcBax_', Bax(bf=None, state='A'))

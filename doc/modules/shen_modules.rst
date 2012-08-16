@@ -1,5 +1,5 @@
-Shen models
-===========
+Shen modules
+============
 
 .. automodule:: earm.shen_modules
     :members:

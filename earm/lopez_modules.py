@@ -13,8 +13,9 @@ import albeck_modules
 site_name = 'bf'
 
 transloc_rates =     [        1e-2, 1e-2]
-bcl2_rates =         [1.428571e-05, 1e-3]    # #1.0e-6/v
-bid_effector_rates = [        1e-7, 1e-3, 1] # Generalize to catalysis rates?
+bcl2_rates =         [1.428571e-05, 1e-3]    # 1.0e-6/v
+bid_effector_rates = [        1e-7, 1e-3, 1] 
+
 # Site-value arguments to describe Bax or Bak in the active state but not
 # yet oligomerized
 active_monomer = {'s1': None, 's2': None, 'state': 'A'}
@@ -37,8 +38,6 @@ def momp_monomers():
     # == Activators ===================
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
     Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
-    # TODO: Bim
-    # TODO: Puma
     # == Effectors ====================
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
@@ -50,11 +49,9 @@ def momp_monomers():
     Monomer('Bcl2', [site_name])
     Monomer('BclxL', [site_name, 'state'], {'state':['C', 'M']})
     Monomer('Mcl1', [site_name, 'state'], {'state':['M', 'C']})
-    # TODO: Add BclW and Bfl1?
     # == Sensitizers ==================
     Monomer('Bad', [site_name, 'state'], {'state':['C', 'M']})
-    Monomer('NOXA', [site_name, 'state'], {'state': ['C', 'M']})
-    # TODO: Others???
+    Monomer('Noxa', [site_name, 'state'], {'state': ['C', 'M']})
 
     # == Cytochrome C and Smac ========
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
@@ -71,7 +68,7 @@ def declare_initial_conditions():
     Parameter('Mcl1_0'  , 2.0e4) # Mitochondrial Mcl1
     Parameter('Bcl2_0'  , 2.0e4) # Mitochondrial Bcl2
     Parameter('Bad_0'   , 1.0e3) # Bad
-    Parameter('NOXA_0'  , 1.0e3) # NOXA
+    Parameter('Noxa_0'  , 1.0e3) # Noxa
     Parameter('CytoC_0' , 5.0e5) # cytochrome c
     Parameter('Smac_0'  , 1.0e5) # Smac
     Parameter('Bax_0'   , 0.8e5) # Bax
@@ -86,14 +83,13 @@ def declare_initial_conditions():
     Initial(Bcl2(bf=None), Bcl2_0)
     Initial(BclxL (bf=None, state='C'), BclxL_0)
     Initial(Mcl1(bf=None, state='M'), Mcl1_0)
-    Initial(NOXA(bf=None, state='C'), NOXA_0)
+    Initial(Noxa(bf=None, state='C'), Noxa_0)
     Initial(CytoC(bf=None, state='M'), CytoC_0)
     Initial(Smac(bf=None, state='M'), Smac_0)
 
 def translocate_tBid_Bax_BclxL():
+    """tBid, Bax and BclXL translocate to the mitochondrial membrane."""
     equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
-    # equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), transloc_rates)
-    # Previous indirect model had more membrane-favorable rates for tBid
 
     free_Bax = Bax(bf=None, s1=None, s2=None) # Alias for readability
     equilibrate(free_Bax(state='C'), free_Bax(state='M'),
@@ -103,23 +99,25 @@ def translocate_tBid_Bax_BclxL():
                 transloc_rates)
 
 def tBid_activates_Bax_and_Bak():
+    """tBid activates Bax and Bak."""
     catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
     catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
 
 def tBid_binds_all_anti_apoptotics():
-    # Doug Green's MODE 1 inhibition
+    """tBid binds and inhibits Bcl2, Mcl1, and Bcl-XL."""
+    # Doug Green's "MODE 1" inhibition
     bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
                 [Bid(state='M'),       bcl2_rates,        bcl2_rates,       bcl2_rates]])
 
 def sensitizers_bind_anti_apoptotics():
+    """Binding of Bad and Noxa to Bcl2, Mcl1, and Bcl-XL."""
     bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
                 [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
-                [NOXA(state='M'),       None,              None,       bcl2_rates]])
+                [Noxa(state='M'),       None,              None,       bcl2_rates]])
 
-def lopez_pore_formation():
+def lopez_pore_formation(do_pore_transport=True):
     """ Pore formation and transport process used by all modules.
     """
-
     alias_model_components()
 
     # Rates
@@ -129,26 +127,24 @@ def lopez_pore_formation():
     pore_transport_rates = [[2.857143e-5, 1e-3, 10]] # 2e-6 / v?
 
     # Pore formation by effectors
-    # ------------------------------------
     assemble_pore_sequential(Bax(bf=None, state='A'), pore_max_size, pore_rates)
     assemble_pore_sequential(Bak(bf=None, state='A'), pore_max_size, pore_rates)
 
-    # CytC, Smac release
-    # ----------------------
-    # ringp_transport(Subunit, Source, Dest, min_size, max_size, rates):
-    pore_transport(Bax(bf=None, state='A'), 4, CytoC(state='M'),
-                   CytoC(state='C'), pore_transport_rates)
-    pore_transport(Bax(bf=None, state='A'), 4, Smac(state='M'),
-                   Smac(state='C'), pore_transport_rates)
-    pore_transport(Bak(bf=None, state='A'), 4, CytoC(state='M'),
-                   CytoC(state='C'), pore_transport_rates)
-    pore_transport(Bak(bf=None, state='A'), 4, Smac(state='M'),
-                   Smac(state='C'), pore_transport_rates)
+    # CytoC, Smac release
+    if do_pore_transport:
+        pore_transport(Bax(bf=None, state='A'), 4, CytoC(state='M'),
+                       CytoC(state='C'), pore_transport_rates)
+        pore_transport(Bax(bf=None, state='A'), 4, Smac(state='M'),
+                       Smac(state='C'), pore_transport_rates)
+        pore_transport(Bak(bf=None, state='A'), 4, CytoC(state='M'),
+                       CytoC(state='C'), pore_transport_rates)
+        pore_transport(Bak(bf=None, state='A'), 4, Smac(state='M'),
+                       Smac(state='C'), pore_transport_rates)
 
 ## MOMP Module Implementations ----------------------------------------------
 
 # Embedded Model
-def embedded():
+def embedded(do_pore_transport=True):
     """ Direct and indirect modes of action, occurring at the membrane.
     """
     alias_model_components()
@@ -164,36 +160,29 @@ def embedded():
     # Autoactivation: Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
     effector_auto_rates = [1e-7, 1e-3, 1]
-    catalyze(Bax(active_monomer), Bax(state='C'), Bax(state='A'),
+    catalyze(Bax(active_monomer), Bax(state='M'), Bax(state='A'),
              effector_auto_rates)
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'),
              effector_auto_rates)
 
-    # tBid and free Bax recruit Bcl-xL(C)
-    bclxl_recruitment_rates = [2.040816e-04, 1e-3, 1]
-    catalyze(Bid(state='M'), BclxL(state='C'), BclxL(state='M'),
-             bclxl_recruitment_rates)
-    catalyze(Bax(active_monomer), BclxL(state='C'), BclxL(state='M'),
-             bclxl_recruitment_rates)
-
     # Anti-apoptotics bind activated effectors
-    # Doug Green's MODE 2 inhibition
+    # Doug Green's "MODE 2" inhibition
     bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
                 [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
                 [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
 
     sensitizers_bind_anti_apoptotics()
 
-    # Bax and Bak form pores by sequential addition
-    lopez_pore_formation()
+    # Bax and Bak form pores by sequential addition and transport CytoC/Smac
+    lopez_pore_formation(do_pore_transport=do_pore_transport)
 
 # Indirect Model
-def indirect():
+def indirect(do_pore_transport=True):
     """Bax and Bak spontaneously form pores without activation.
        The "activator" tBid binds all of the anti-apoptotics.
     """
-
     alias_model_components()
+
     declare_initial_conditions()
 
     translocate_tBid_Bax_BclxL()
@@ -214,10 +203,10 @@ def indirect():
     sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition
-    lopez_pore_formation()
+    lopez_pore_formation(do_pore_transport=do_pore_transport)
 
 # Direct Model
-def direct():
+def direct(do_pore_transport=True):
     """Anti-apoptotics prevent BH3-onlies from activating Bax and Bak.
 
     Bax and Bak require activation to be able to form pores.
@@ -237,4 +226,4 @@ def direct():
     sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition
-    lopez_pore_formation()
+    lopez_pore_formation(do_pore_transport=do_pore_transport)
