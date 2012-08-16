@@ -160,7 +160,7 @@ def embedded(do_pore_transport=True):
     # Autoactivation: Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
     effector_auto_rates = [1e-7, 1e-3, 1]
-    catalyze(Bax(active_monomer), Bax(state='C'), Bax(state='A'),
+    catalyze(Bax(active_monomer), Bax(state='M'), Bax(state='A'),
              effector_auto_rates)
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'),
              effector_auto_rates)
