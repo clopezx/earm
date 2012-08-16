@@ -64,17 +64,17 @@ of each model, along with the source code, are found in :doc:`modules/index`.
 
 .. [1] Albeck, J. G., Burke, J. M., Spencer, S. L., Lauffenburger, D. A., and
    Sorger, P. K. (2008). Modeling a snap-action, variable-delay switch
-   controlling extrinsic cell death. PLoS Biology, 6(12), 2831–2852.
+   controlling extrinsic cell death. PLoS Biology, 6(12), 2831-2852.
    :doi:`10.1371/journal.pbio.0060299` :pmid:`19053173`.
 
 .. [2] Chen, C., Cui, J., Lu, H., Wang, R., Zhang, S., & Shen,
    P. (2007). Modeling of the role of a Bax-activation switch in the
    mitochondrial apoptosis decision. Biophysical Journal, 92(12),
-   4304–4315. :doi:`10.1529/biophysj.106.099606` :pmid:`17400705`.
+   4304-4315. :doi:`10.1529/biophysj.106.099606` :pmid:`17400705`.
 
 .. [3] Chen, C., Cui, J., Zhang, W., & Shen, P. (2007). Robustness analysis
    identifies the plausible model of the Bcl-2 apoptotic switch. FEBS letters,
-   581(26), 5143–5150. :doi:`10.1016/j.febslet.2007.09.063` :pmid:`17936275`.
+   581(26), 5143-5150. :doi:`10.1016/j.febslet.2007.09.063` :pmid:`17936275`.
 
 .. [4] Cui, J., Chen, C., Lu, H., Sun, T., & Shen, P. (2008). Two independent
    positive feedbacks and bistability in the Bcl-2 apoptotic switch. PLoS ONE,
