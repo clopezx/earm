@@ -115,6 +115,12 @@ def sensitizers_bind_anti_apoptotics():
                 [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
                 [Noxa(state='M'),       None,              None,       bcl2_rates]])
 
+def effectors_bind_anti_apoptotics():
+    """Binding of Bax and Bak to Bcl2, BclxL, and Mcl1."""
+    bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
+                [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
+                [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
+
 def lopez_pore_formation(do_pore_transport=True):
     """ Pore formation and transport process used by all modules.
     """
@@ -155,7 +161,6 @@ def embedded(do_pore_transport=True):
 
     tBid_activates_Bax_and_Bak()
 
-    tBid_binds_all_anti_apoptotics()
 
     # Autoactivation: Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
@@ -165,11 +170,13 @@ def embedded(do_pore_transport=True):
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'),
              effector_auto_rates)
 
+    # Anti-apoptotics bind activator tBid
+    # Doug Green's "MODE 1" inhibition
+    tBid_binds_all_anti_apoptotics()
+
     # Anti-apoptotics bind activated effectors
     # Doug Green's "MODE 2" inhibition
-    bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
-                [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
-                [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
+    effectors_bind_anti_apoptotics()
 
     sensitizers_bind_anti_apoptotics()
 
@@ -187,18 +194,19 @@ def indirect(do_pore_transport=True):
 
     translocate_tBid_Bax_BclxL()
 
-    tBid_binds_all_anti_apoptotics()
-
     # Bax and Bak spontaneously become activated
     free_Bax = Bax(bf=None, s1=None, s2=None) # Alias
     free_Bak = Bak(bf=None, s1=None, s2=None) # Alias
     equilibrate(free_Bax(state='M'), free_Bax(state='A'), transloc_rates)
     equilibrate(free_Bak(state='M'), free_Bak(state='A'), transloc_rates)
 
-    # Anti-apoptotics bind "active" Bax and Bak to prevent pore formation
-    bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
-                [Bax(active_monomer),  bcl2_rates,        bcl2_rates,             None],
-                [Bak(active_monomer),        None,        bcl2_rates,       bcl2_rates]])
+    # Anti-apoptotics bind activator tBid
+    # Doug Green's "MODE 1" inhibition
+    tBid_binds_all_anti_apoptotics()
+
+    # Anti-apoptotics bind activated effectors
+    # Doug Green's "MODE 2" inhibition
+    effectors_bind_anti_apoptotics()
 
     sensitizers_bind_anti_apoptotics()
 
@@ -219,8 +227,11 @@ def direct(do_pore_transport=True):
 
     translocate_tBid_Bax_BclxL()
 
+
     tBid_activates_Bax_and_Bak()
 
+    # Anti-apoptotics bind activator tBid
+    # Doug Green's "MODE 1" inhibition
     tBid_binds_all_anti_apoptotics()
 
     sensitizers_bind_anti_apoptotics()
