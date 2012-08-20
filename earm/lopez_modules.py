@@ -1,26 +1,93 @@
-"""TODO: Write docstring for lopez_modules
+"""
+Overview
+========
 
-More stuff here.
+Three models of MOMP (:py:func:`direct`, :py:func:`indirect`, and
+:py:func:`embedded`), each incorporating a larger repertoire of Bcl-2 family
+members than previously published models, including:
+
+* One **activator,** Bid.
+* Two **sensitizers,** Bad and Noxa.
+* Two **effectors,** Bax and Bak.
+* Three **anti-apoptotics**, Bcl-2, Bcl-xL, and Mcl-1.
+
+The Models
+----------
+
+Note that in each of the three models, interactions between Bcl-2 proteins only
+occur at the mitochondrial membrane. The following are brief descriptions of
+each model.
+
+* :py:func:`direct`. In this model, tBid directly activates both Bax and Bak;
+  the anti-apoptotics bind tBid and the sensitizers (Bad and Noxa) but not
+  Bax and Bak.
+* :py:func:`indirect`. Bax and Bak are not explicitly activated by tBid, but
+  rather are in an equilibrium between inactive and active states. The
+  anti-apoptotics bind tBid, sensitizers, and Bax and Bak.
+* :py:func:`embedded`. Combines elements of both direct and indirect: tBid
+  activates Bax and Bak; the anti-apoptotics bind tBid, sensitizers and Bax and
+  Bak. In addition, Bax and Bak are able to auto-activate.
+
+Organization of models into Motifs
+----------------------------------
+
+Because the three models share many aspects, the mechanisms that they share have
+been written as small "motifs" implemented as subroutines. These are:
+
+* :py:func:`translocate_tBid_Bax_BclxL`
+* :py:func:`tBid_activates_Bax_and_Bak`
+* :py:func:`tBid_binds_all_anti_apoptotics`
+* :py:func:`sensitizers_bind_anti_apoptotics`
+* :py:func:`effectors_bind_anti_apoptotics`
+* :py:func:`lopez_pore_formation`
+
+The implementation details of these motifs can be seen by examining the
+source code.
+
+Monomer and initial declaration functions
+-----------------------------------------
+
+The models share the same set of Monomer and initial condition declarations,
+which are contained with the following two functions:
+
+* :py:func:`momp_monomers`
+* :py:func:`declare_initial_conditions`
 """
 
+# Preliminaries
+# =============
+#
+# We'll need everything from the pysb core, and some macros:
+
 from pysb import *
-from pysb.util import alias_model_components
 from earm.macros import *
 from pysb.macros import equilibrate
-import albeck_modules
+from pysb.util import alias_model_components
+
+# Globals
+# -------
+
+# TODO: Most of these should be refactored into common code.
 
 # Default site name for binding
 site_name = 'bf'
 
+# A variety of default rate constant values
 transloc_rates =     [        1e-2, 1e-2]
 bcl2_rates =         [1.428571e-05, 1e-3]    # 1.0e-6/v
 bid_effector_rates = [        1e-7, 1e-3, 1] 
 
 # Site-value arguments to describe Bax or Bak in the active state but not
 # yet oligomerized
+
 active_monomer = {'s1': None, 's2': None, 'state': 'A'}
 
-# MONOMER DECLARATION MACROS ================================================
+# Shared functions
+# ================
+
+# Monomer and initial condition declarations
+# ------------------------------------------
+
 def momp_monomers():
     """Declare the monomers for the Bcl-2 family proteins, Cyto c, and Smac.
 
@@ -35,31 +102,28 @@ def momp_monomers():
     which are apparently constitutively mitochondrial.
     """
 
-    # == Activators ===================
+    # **Activators**.
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
     Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
-    # == Effectors ====================
+    # **Effectors**
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
     # Bak, states: inactive and Mitochondrial, Active (and mitochondrial)
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bak', [site_name, 's1', 's2', 'state'], {'state':['M', 'A']})
-    # == Anti-Apoptotics ==============
+    # **Anti-Apoptotics**
     Monomer('Bcl2', [site_name])
     Monomer('BclxL', [site_name, 'state'], {'state':['C', 'M']})
     Monomer('Mcl1', [site_name, 'state'], {'state':['M', 'C']})
-    # == Sensitizers ==================
+    # **Sensitizers**
     Monomer('Bad', [site_name, 'state'], {'state':['C', 'M']})
     Monomer('Noxa', [site_name, 'state'], {'state': ['C', 'M']})
 
-    # == Cytochrome C and Smac ========
+    # **Cytochrome C and Smac**
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
 
-# MOMP SEGMENT ==============================================================
-
-## Macros -------------------------------------------------------------------
 def declare_initial_conditions():
     """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
     """
@@ -86,6 +150,9 @@ def declare_initial_conditions():
     Initial(Noxa(bf=None, state='C'), Noxa_0)
     Initial(CytoC(bf=None, state='M'), CytoC_0)
     Initial(Smac(bf=None, state='M'), Smac_0)
+
+# Motifs
+# ------
 
 def translocate_tBid_Bax_BclxL():
     """tBid, Bax and BclXL translocate to the mitochondrial membrane."""
@@ -147,9 +214,9 @@ def lopez_pore_formation(do_pore_transport=True):
         pore_transport(Bak(bf=None, state='A'), 4, Smac(state='M'),
                        Smac(state='C'), pore_transport_rates)
 
-## MOMP Module Implementations ----------------------------------------------
+# MOMP model implementations
+# ==========================
 
-# Embedded Model
 def embedded(do_pore_transport=True):
     """ Direct and indirect modes of action, occurring at the membrane.
     """
@@ -183,7 +250,6 @@ def embedded(do_pore_transport=True):
     # Bax and Bak form pores by sequential addition and transport CytoC/Smac
     lopez_pore_formation(do_pore_transport=do_pore_transport)
 
-# Indirect Model
 def indirect(do_pore_transport=True):
     """Bax and Bak spontaneously form pores without activation.
        The "activator" tBid binds all of the anti-apoptotics.
@@ -213,7 +279,6 @@ def indirect(do_pore_transport=True):
     # Bax and Bak form pores by sequential addition
     lopez_pore_formation(do_pore_transport=do_pore_transport)
 
-# Direct Model
 def direct(do_pore_transport=True):
     """Anti-apoptotics prevent BH3-onlies from activating Bax and Bak.
 
