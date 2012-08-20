@@ -1,29 +1,25 @@
+# TODO: Docstring
 """
-TODO: Docstring
-#
-# These segments are adapted from:
-# Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
-# Modeling a Snap-Action, Variable-Delay Switch Controlling Extrinsic
-# Cell Death. PLoS Biol 6(12): e299. doi:10.1371/journal.pbio.0060299
-#
-# http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
+Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
+Modeling a Snap-Action, Variable-Delay Switch Controlling Extrinsic
+Cell Death. PLoS Biol 6(12): e299. doi:10.1371/journal.pbio.0060299
+
+http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
 """
 
 from pysb import *
 from pysb.util import alias_model_components
-from earm.macros import *
+from earm.shared import *
 from pysb.macros import equilibrate
-
-# Default site name for binding
-site_name = 'bf'
 
 # Default forward, reverse, and catalytic rates
 KF = 1e-6
 KR = 1e-3
 KC = 1
-transloc_rates = [1e-2, 1e-2]
 
-# MONOMER DECLARATION MACROS ================================================
+# Monomer declarations
+# ====================
+
 def ligand_to_c8_monomers():
     """ Declares ligand, receptor, DISC, Flip, Bar and Caspase 8.
 
@@ -95,17 +91,21 @@ def all_monomers():
     momp_monomers()
     apaf1_to_parp_monomers()
 
-# RECEPTOR TO BID SEGMENT ===================================================
+# Extrinsic apoptosis module implementations
+# ==========================================
+#
+# These functions implement the upstream (:py:func:`rec_to_bid`) and downstream
+# (:py:func:`pore_to_parp`) elements of the extrinsic apoptosis pathway.
+
 def rec_to_bid():
     """Defines the interactions from the ligand insult (e.g. TRAIL) to Bid
     activation as per EARM 1.0.
 
-    This function depends specifically
-    on the parameters and monomers of earm_1_0 to work. This function
-    uses L, R, DISC, flip, C8, BAR, and Bid monomers and their
-    associated parameters to generate the rules that describe Ligand
-    to Receptor binding, DISC formation, Caspase8 activation and
-    inhibition by flip and BAR as specified in EARM1.0.
+    Uses L, R, DISC, flip, C8, BAR, and Bid monomers and their
+    associated parameters to generate the rules that describe Ligand/Receptor
+    binding, DISC formation, Caspase-8 activation and
+    inhibition by flip and BAR as originally specified in EARM 1.0
+    (Albeck et al. (2008) PLoS Biology).
     """
 
     # Declare initial conditions for ligand, receptor, Flip, C8, and Bar.
@@ -143,22 +143,17 @@ def rec_to_bid():
     bind(DISC(), flip(), [KF, KR])
     bind(BAR(), C8(state='A'), [KF, KR])
 
-
-# PORE TO PARP SEGMENT ======================================================
 def pore_to_parp():
-    """ This module defines what happens after the pore is activated and CytC
+    """This module defines what happens after the pore is activated and CytC
     and Smac are released.
 
-    This is a very specific function which depends on specifically
-    on the parameters and monomers of earm_1_0 to work. This function
-    uses, CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP
-    monomers and their associated parameters to generate the rules
-    that describe CytC and Smac export from the mitochondria by the
-    active pore activation of Caspase3, loopback through Caspase 6,
-    and some inhibitions as specified in EARM1.0.
+    Uses CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP monomers and their
+    associated parameters to generate the rules that describe CytC and Smac
+    export from the mitochondria by the active pore activation of Caspase3,
+    loopback through Caspase 6, and some inhibitions as specified in EARM 1.0.
 
     Declares initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases
-       3, 6, and 9, XIAP, and PARP.
+    3, 6, and 9, XIAP, and PARP.
     """
 
     # Declare initial conditions
@@ -219,10 +214,14 @@ def pore_to_parp():
     catalyze(C3(state='A'), C6(state='pro'), C6(state='A'), [KF, KR, KC])
     catalyze(C6(state='A'), C8(state='pro'), C8(state='A'), [3e-8, KR, KC])
 
+# MOMP module implementations
+# ===========================
 
-# MOMP SEGMENT ==============================================================
-
-## Macros -------------------------------------------------------------------
+# Motifs
+# ------
+# Because several of the models in Albeck et al. (2008) PLoS Biology
+# overlap, some mechanistic aspects have been refactored into the following
+# "motifs", implemented as functions:
 
 def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
     """TODO: Finish docstring
@@ -274,7 +273,8 @@ def Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A', rate_scaling_factor=1):
     pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 4, Bcl2, 'bf',
          [KF*rate_scaling_factor, KR])
 
-## MOMP Module Implementations ----------------------------------------------
+# Modules
+# -------
 
 def albeck_11b(do_pore_transport=True):
     """Minimal MOMP model shown in Figure 11b.

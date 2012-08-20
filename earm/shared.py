@@ -1,4 +1,7 @@
-"""This function declares a number of functions and variables that are
+"""
+Overview
+========
+This function declares a number of functions and variables that are
 used by many of the EARM 2 models. They can be divided into the following
 four categories:
 
@@ -39,8 +42,16 @@ from pysb import MonomerPattern, ComplexPattern, ComponentSet
 from pysb.util import alias_model_components
 import functools
 
-# The default site name to be used for binding reactions
+# Global variables
+# ================
+
+# The default site name to be used for binding reactions:
+
 site_name = 'bf'
+
+# Default forward and reverse rates for translocation reactions:
+
+transloc_rates = [1e-2, 1e-2]
 
 ## Observables declarations ===================
 def observables():
