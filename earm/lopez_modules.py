@@ -60,27 +60,16 @@ which are contained with the following two functions:
 # We'll need everything from the pysb core, and some macros:
 
 from pysb import *
-from earm.macros import *
+from shared import *
 from pysb.macros import equilibrate
 from pysb.util import alias_model_components
 
 # Globals
 # -------
 
-# TODO: Most of these should be refactored into common code.
-
-# Default site name for binding
-site_name = 'bf'
-
 # A variety of default rate constant values
-transloc_rates =     [        1e-2, 1e-2]
 bcl2_rates =         [1.428571e-05, 1e-3]    # 1.0e-6/v
 bid_effector_rates = [        1e-7, 1e-3, 1] 
-
-# Site-value arguments to describe Bax or Bak in the active state but not
-# yet oligomerized
-
-active_monomer = {'s1': None, 's2': None, 'state': 'A'}
 
 # Shared functions
 # ================

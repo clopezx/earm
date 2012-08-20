@@ -77,36 +77,10 @@ References
 # We'll need everything from the pysb core and some macros:
 
 from pysb import *
-from macros import *
+from shared import *
 from pysb.macros import catalyze_one_step_reversible, catalyze_one_step, \
                         synthesize_degrade_table, degrade, equilibrate
 from pysb.util import alias_model_components
-
-# Globals
-# -------
-
-# The default site name for binding, used in monomer declarations and
-# macro calls:
-
-site_name = 'bf'
-
-# Some useful aliases for typical Bax states:
-
-inactive_monomer = {'state':'C', 's1': None, 's2': None}
-active_monomer = {'state':'A', 's1': None, 's2': None}
-
-# Default forward and reverse translocation rates:
-
-transloc_rates = [1e-2, 1e-2]
-
-# Rate scaling for reactions occurring on the mitochondrial membrane. `v`
-# represents the fractional volume of the mitochondrial membrane compartment,
-# so the forward rate constants for reactions on the membrane is `1/v`. The
-# approach and the value used is adopted from Albeck et al., (2008)
-# PLoS Biology.
-
-v = 0.07
-rate_scaling_factor = 1./v
 
 # Shared Functions
 # =================

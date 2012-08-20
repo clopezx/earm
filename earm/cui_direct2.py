@@ -1,7 +1,8 @@
+# TODO: Fix units
 """Model from Chen 2007, FEBS Letters."""
 
 from pysb import *
-from earm import macros
+from earm import shared
 from earm import albeck_modules
 from earm import shen_modules
 import re
@@ -33,7 +34,7 @@ albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
 # Declare common observables
-macros.shared_observables()
+shared.observables()
 
 # Additional observables
 Observable('aBax_', Bax(state='A', bf=None))

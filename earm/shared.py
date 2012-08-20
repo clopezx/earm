@@ -53,6 +53,20 @@ site_name = 'bf'
 
 transloc_rates = [1e-2, 1e-2]
 
+# Some useful aliases for typical Bax states:
+
+inactive_monomer = {'state':'C', 's1': None, 's2': None}
+active_monomer = {'state':'A', 's1': None, 's2': None}
+
+# Rate scaling for reactions occurring on the mitochondrial membrane. `v`
+# represents the fractional volume of the mitochondrial membrane compartment,
+# so the forward rate constants for reactions on the membrane is `1/v`. The
+# approach and the value used is adopted from Albeck et al., (2008)
+# PLoS Biology.
+
+v = 0.07
+rate_scaling_factor = 1./v
+
 ## Observables declarations ===================
 def observables():
     """Declare observables commonly used for the TRAIL pathway.
