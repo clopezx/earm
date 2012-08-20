@@ -1,7 +1,6 @@
 """TODO: Docstring"""
 from pysb import *
 from earm import albeck_modules
-from sympy.parsing.sympy_parser import parse_expr
 
 Model()
 

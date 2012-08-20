@@ -1,10 +1,11 @@
-"""This function declares a number of macros that are used by many of the
-EARM 2 models. They can be divided into the following four categories:
+"""This function declares a number of functions and variables that are
+used by many of the EARM 2 models. They can be divided into the following
+four categories:
 
-Macros that are specific to the models in EARM 2, but are used by all of
+Functions that are specific to the models in EARM 2, but are used by all of
 them. The only macro of this type is
 
-- :py:func:`shared_observables`
+- :py:func:`observables`
 
 Aliases to generalized macros in pysb.macros that provide default values
 for site names or other arguments. Macros of this type include:
@@ -30,8 +31,6 @@ et al. (2008) PLoS Biology:
 - :py:func:`catalyze_convert`
 - :py:func:`one_step_conv`
 - :py:func:`pore_bind`
-
-----------
 """
 
 import pysb.macros as macros
@@ -44,7 +43,7 @@ import functools
 site_name = 'bf'
 
 ## Observables declarations ===================
-def shared_observables():
+def observables():
     """Declare observables commonly used for the TRAIL pathway.
 
     Declares truncated (and mitochondrial) Bid, cytosolic (i.e., released)

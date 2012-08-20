@@ -1,8 +1,7 @@
 """TODO: Docstring"""
 from pysb import *
 from earm import albeck_modules
-from sympy.parsing.sympy_parser import parse_expr
-from earm import macros
+from earm import shared
 
 Model()
 
@@ -17,7 +16,7 @@ albeck_modules.pore_to_parp()
 albeck_modules.albeck_11f()
 
 # Declare shared observables
-macros.shared_observables()
+shared.observables()
 
 # Additional observables
 Observable('aBax_', Bax(bf=None, state='A'))
