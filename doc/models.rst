@@ -102,10 +102,10 @@ How the model code is organized
 The code implementing the various module is contained within the following
 files:
 
-* :py:module:`earm.lopez_modules`
-* :py:module:`earm.albeck_modules`
-* :py:module:`earm.shen_modules`
-* :py:module:`earm.shared`
+* :doc:`lopez_modules`
+* :doc:`albeck_modules`
+* :doc:`shen_modules`
+* :doc:`shared`
 
 How to use the models
 ---------------------
