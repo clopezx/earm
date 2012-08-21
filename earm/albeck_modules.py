@@ -1,10 +1,33 @@
-# TODO: Docstring
 """
-Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
-Modeling a Snap-Action, Variable-Delay Switch Controlling Extrinsic
-Cell Death. PLoS Biol 6(12): e299. doi:10.1371/journal.pbio.0060299
+Overview
+========
 
-http://www.plosbiology.org/article/info:doi/10.1371/journal.pbio.0060299
+PySB implementations of the extrinsic apoptosis reaction model version 1.0
+(EARM 1.0) originally published in Albeck et al. (2008) PLoS Biology [1]_.
+
+This file contains functions that implement the extrinsic pathway in three
+modules:
+
+- Receptor ligation to Bid cleavage (:py:func:`rec_to_bid`)
+- Mitochondrial Outer Membrane Permeabilization (MOMP, see below)
+- Pore transport to effector caspase activation and PARP cleavage
+  (:py:func:`pore_to_parp`).
+
+For the (MOMP) segment there are five variants, which correspond to the five
+models described in Figure 11 of Albeck et al.[1]_:
+
+- "Minimal Model" (Figure 11b, :py:func:`albeck_11b`)
+- "Model B + Bax multimerization" (Figure 11c, :py:func:`albeck_11c`)
+- "Model C + mitochondrial transport" (Figure 11d, :py:func:`albeck_11d`)
+- "Current model" (Figure 11e, :py:func:`albeck_11e`)
+- "Current model + cooperativity" (Figure 11f, :py:func:`albeck_11f`)
+
+Reference
+---------
+
+.. [1] Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
+   Modeling a Snap-Action, Variable-Delay Switch Controlling Extrinsic
+   Cell Death. PLoS Biol 6(12): e299. doi:10.1371/journal.pbio.0060299
 """
 
 from pysb import *
@@ -12,7 +35,8 @@ from pysb.util import alias_model_components
 from earm.shared import *
 from pysb.macros import equilibrate
 
-# Default forward, reverse, and catalytic rates
+# Default forward, reverse, and catalytic rates:
+
 KF = 1e-6
 KR = 1e-3
 KC = 1
@@ -41,6 +65,7 @@ def ligand_to_c8_monomers():
 
 def momp_monomers():
     """Declare the monomers used in the Albeck MOMP modules."""
+
     # == Activators
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
     Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
@@ -98,14 +123,15 @@ def all_monomers():
 # (:py:func:`pore_to_parp`) elements of the extrinsic apoptosis pathway.
 
 def rec_to_bid():
-    """Defines the interactions from the ligand insult (e.g. TRAIL) to Bid
+    """Defines the interactions from ligand (e.g. TRAIL) binding to Bid
     activation as per EARM 1.0.
 
     Uses L, R, DISC, flip, C8, BAR, and Bid monomers and their
     associated parameters to generate the rules that describe Ligand/Receptor
     binding, DISC formation, Caspase-8 activation and
-    inhibition by flip and BAR as originally specified in EARM 1.0
-    (Albeck et al. (2008) PLoS Biology).
+    inhibition by flip and BAR as originally specified in EARM 1.0.
+
+    Declares initial conditions for ligand, receptor, Flip, C8, and Bar.
     """
 
     # Declare initial conditions for ligand, receptor, Flip, C8, and Bar.
@@ -144,19 +170,21 @@ def rec_to_bid():
     bind(BAR(), C8(state='A'), [KF, KR])
 
 def pore_to_parp():
-    """This module defines what happens after the pore is activated and CytC
-    and Smac are released.
+    """Defines what happens after the pore is activated and Cytochrome C and
+    Smac are released.
 
     Uses CytoC, Smac, Apaf, Apop, C3, C6, C8, C9, PARP, XIAP monomers and their
-    associated parameters to generate the rules that describe CytC and Smac
-    export from the mitochondria by the active pore activation of Caspase3,
-    loopback through Caspase 6, and some inhibitions as specified in EARM 1.0.
+    associated parameters to generate the rules that describe apoptosome
+    formation, XIAP inhibition, activation of caspases (including
+    caspase-6-mediated feedback), and cleavage of effector caspase substrates
+    as specified in EARM 1.0.
 
     Declares initial conditions for CytoC, Smac, Apaf-1, Apoptosome, caspases
     3, 6, and 9, XIAP, and PARP.
     """
 
-    # Declare initial conditions
+    # Declare initial conditions:
+
     Parameter('Apaf_0'  , 1.0e5) # Apaf-1
     Parameter('C3_0'    , 1.0e4) # procaspase-3 (pro-C3)
     Parameter('C6_0'    , 1.0e4) # procaspase-6 (pro-C6)
@@ -173,66 +201,67 @@ def pore_to_parp():
     Initial(PARP(bf=None, state='U'), PARP_0)
     Initial(XIAP(bf=None), XIAP_0)
 
-   # --------------------------------------
-    # CytC and Smac activation after release
+    # CytoC and Smac activation after release
     # --------------------------------------
+
     equilibrate(Smac(bf=None, state='C'), Smac(bf=None, state='A'),
                           transloc_rates)
 
     equilibrate(CytoC(bf=None, state='C'), CytoC(bf=None, state='A'),
                           transloc_rates)
 
-    # ========================
     # Apoptosome formation
-    # ---------------------------
-    #        Apaf + cCytoC <-->  Apaf:cCytoC --> aApaf + cCytoC
-    #        aApaf + pC9 <-->  Apop
-    #        Apop + pC3 <-->  Apop:pC3 --> Apop + C3
-    # ---------------------------
+    # --------------------
+    #   Apaf + cCytoC <-->  Apaf:cCytoC --> aApaf + cCytoC
+    #   aApaf + pC9 <-->  Apop
+    #   Apop + pC3 <-->  Apop:pC3 --> Apop + C3
+
     catalyze(CytoC(state='A'), Apaf(state='I'), Apaf(state='A'), [5e-7, KR, KC])
     one_step_conv(Apaf(state='A'), C9(), Apop(bf=None), [5e-8, KR])
     catalyze(Apop(), C3(state='pro'), C3(bf=None, state='A'), [5e-9, KR, KC]) 
+
+    # Apoptosome-related inhibitors
     # -----------------------------
-    # Apoptosome related inhibitors
-    # -----------------------------
-    #        Apop + XIAP <-->  Apop:XIAP  
-    #        cSmac + XIAP <-->  cSmac:XIAP  
+    #   Apop + XIAP <-->  Apop:XIAP  
+    #   cSmac + XIAP <-->  cSmac:XIAP  
+
     bind(Apop(), XIAP(), [2e-6, KR]) 
     bind(Smac(state='A'), XIAP(), [7e-6, KR]) 
-    # ---------------------------
-    # Caspase reactions (effectors, inhibitors, and loopback initiators)
-    # ---------------------------
-    #        pC3 + C8 <--> pC3:C8 --> C3 + C8 CSPS
-    #        pC6 + C3 <--> pC6:C3 --> C6 + C3 CSPS
-    #        XIAP + C3 <--> XIAP:C3 --> XIAP + C3_U CSPS
-    #        PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
-    #        pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
-    # ---------------------------
+
+    # Caspase reactions
+    # -----------------
+    # Includes effectors, inhibitors, and feedback initiators:
+    #
+    #   pC3 + C8 <--> pC3:C8 --> C3 + C8 CSPS
+    #   pC6 + C3 <--> pC6:C3 --> C6 + C3 CSPS
+    #   XIAP + C3 <--> XIAP:C3 --> XIAP + C3_U CSPS
+    #   PARP + C3 <--> PARP:C3 --> CPARP + C3 CSPS
+    #   pC8 + C6 <--> pC8:C6 --> C8 + C6 CSPS
     catalyze(C8(state='A'), C3(state='pro'), C3(state='A'), [1e-7, KR, KC])
     catalyze(XIAP(), C3(state='A'), C3(state = 'ub'), [2e-6, KR, 1e-1])
     catalyze(C3(state='A'), PARP(state='U'), PARP(state='C'), [KF, 1e-2, KC])
     catalyze(C3(state='A'), C6(state='pro'), C6(state='A'), [KF, KR, KC])
     catalyze(C6(state='A'), C8(state='pro'), C8(state='A'), [3e-8, KR, KC])
 
+
 # MOMP module implementations
 # ===========================
 
 # Motifs
 # ------
+
 # Because several of the models in Albeck et al. (2008) PLoS Biology
 # overlap, some mechanistic aspects have been refactored into the following
 # "motifs", implemented as functions:
 
 def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
-    """TODO: Finish docstring
-    Create the rules for the rxns Bax + Bax <> Bax2, and Bax2 + Bax2 <> Bax4.
+    """Creates rules for the rxns Bax + Bax <> Bax2, and Bax2 + Bax2 <> Bax4.
 
     Parameters
     ----------
     bax_active_state : string: 'A' or 'M'
         The state value that should be assigned to the site "state" for
-        dimerization and tetramerization to occur. In the MOMP models shown
-        in Figure 11b and 11c, 
+        dimerization and tetramerization to occur.
     rate_scaling_factor : number
         A scaling factor applied to the forward rate constants for dimerization
         and tetramerization. 
@@ -265,13 +294,25 @@ def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
          Parameter('Bax_tetramerization_kr', 0.5*KR))
 
 def Bcl2_binds_Bax1_Bax2_and_Bax4(bax_active_state='A', rate_scaling_factor=1):
-    """TODO: Finish docstring."""
+    """Creates rules for binding of Bcl2 to Bax monomers and oligomers.
+
+    Parameters
+    ----------
+    bax_active_state : string: 'A' or 'M'
+        The state value that should be assigned to the site "state" for
+        the Bax subunits in the pore.
+    rate_scaling_factor : number
+        A scaling factor applied to the forward rate constants for binding
+        between Bax (monomers, oligomers) and Bcl2.
+    """
+
     bind(Bax(state=bax_active_state, s1=None, s2=None), Bcl2,
          [KF*rate_scaling_factor, KR])
     pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 2, Bcl2, 'bf',
          [KF*rate_scaling_factor, KR])
     pore_bind(Bax(state=bax_active_state), 's1', 's2', 'bf', 4, Bcl2, 'bf',
          [KF*rate_scaling_factor, KR])
+
 
 # Modules
 # -------
@@ -289,13 +330,13 @@ def albeck_11b(do_pore_transport=True):
 
     # Set initial conditions
     Initial(Bid(state='U', bf=None), Parameter('Bid_0', 1e5))
-    Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
+    Initial(Bax(bf=None, **inactive_monomer), Parameter('Bax_0', 1e5))
     Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
 
     # MOMP Mechanism
-    catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
-             Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
-    bind(Bax(state='A', s1=None, s2=None), Bcl2, [KF, KR])
+    catalyze(Bid(state='T'), Bax(inactive_monomer), Bax(active_monomer),
+             [1e-7, KR, KC])
+    bind(Bax(active_monomer), Bcl2, [KF, KR])
 
     # Transport of Smac and Cytochrome C
     if do_pore_transport:
@@ -318,12 +359,12 @@ def albeck_11c(do_pore_transport=True):
 
     alias_model_components()
     Initial(Bid(state='U', bf=None), Parameter('Bid_0', 4e4))
-    Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
+    Initial(Bax(bf=None, **inactive_monomer), Parameter('Bax_0', 1e5))
     Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
 
     # tBid activates Bax
-    catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
-             Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
+    catalyze(Bid(state='T'), Bax(inactive_monomer), Bax(active_monomer),
+             [1e-7, KR, KC])
 
     # Bax dimerizes/tetramerizes
     Bax_tetramerizes(bax_active_state='A')
@@ -354,7 +395,7 @@ def albeck_11d(do_pore_transport=True):
 
     alias_model_components()
     Initial(Bid(state='U', bf=None), Parameter('Bid_0', 4e4))
-    Initial(Bax(state='C', s1=None, s2=None, bf=None), Parameter('Bax_0', 1e5))
+    Initial(Bax(bf=None, **inactive_monomer), Parameter('Bax_0', 1e5))
     Initial(Bcl2(bf=None), Parameter('Bcl2_0', 2e4))
 
     # Fractional volume of the mitochondrial membrane compartment
@@ -362,12 +403,12 @@ def albeck_11d(do_pore_transport=True):
     rate_scaling_factor = 1./v
 
     # tBid activates Bax in the cytosol
-    catalyze(Bid(state='T'), Bax(state='C', s1=None, s2=None),
-             Bax(state='A', s1=None, s2=None), [1e-7, KR, KC])
+    catalyze(Bid(state='T'), Bax(inactive_monomer), Bax(active_monomer),
+             [1e-7, KR, KC])
 
     # Active Bax translocates to the mitochondria
-    equilibrate(Bax(state='A', bf=None, s1=None, s2=None),
-                Bax(state='M', bf=None, s1=None, s2=None),
+    equilibrate(Bax(bf=None, **active_monomer),
+                Bax(bf=None, state='M', s1=None, s2=None),
                 [1e-2, 1e-2])
 
     # Bax dimerizes/tetramerizes

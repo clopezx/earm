@@ -55,7 +55,7 @@ The models in EARM
 Here is a list of the models incorporated into EARM. More detailed descriptions
 of each model, along with the source code, are found in :doc:`modules/index`.
 
-- EARM 2.0, Embedded
+- EARM 2.0, Embedded (see :py:func:`earm.lopez_modules.embedded`)
 - EARM 2.0, Indirect
 - EARM 2.0, Direct
 - "Minimal Model" (Figure 11b) from Albeck et al. (2008) [1]_
@@ -102,10 +102,10 @@ How the model code is organized
 The code implementing the various module is contained within the following
 files:
 
-* :py:module:`lopez_modules`
-* :py:module:`albeck_modules`
-* :py:module:`shen_modules`
-* :py:module:`shared`
+* :py:module:`earm.lopez_modules`
+* :py:module:`earm.albeck_modules`
+* :py:module:`earm.shen_modules`
+* :py:module:`earm.shared`
 
 How to use the models
 ---------------------
@@ -161,8 +161,9 @@ the :doc:`modules/index` section of the documentation is drawn directly from
 this source.
 
 Moreover, the models have been written using a high-level vocabulary of
-frequently re-used macros, with the aim of revealing broad similarities
-and differences between models. The models thus consist of statements such as::
+frequently re-used macros and motifs, with the aim of revealing broad
+similarities and differences between models. The models thus consist of
+statements such as::
 
     translocate_tBid_Bax_BclXL()
     catalyze(Bid(state='T'), Bax(state='M'), Bax(state='A'), klist)

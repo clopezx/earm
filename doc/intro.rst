@@ -21,6 +21,12 @@ models includes:
 - 1 MOMP model focusing on Bad phosphorylation drawn from Howells et al.
   (2011), J. Theor. Biol.
 
+Moreover, for each of these there is a MOMP-only ("mito") version of the model
+and a full-apoptosis version of the model, in which the MOMP model is linked
+to the upstream and downstream pathways of extrinsic apoptosis from the
+previously published EARM 1.0 (Albeck et al. (2008), PLoS Biology). This gives
+a total of 30 different models.
+
 Goals
 -----
 
@@ -50,7 +56,7 @@ How to use the documentation
 ----------------------------
 
 In addition to this introduction, the documentation contains descriptions of
-each model...
+each model at the page models_.
 
 <TODO> finish this section?
 
