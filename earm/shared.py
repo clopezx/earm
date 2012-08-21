@@ -88,7 +88,7 @@ rate_scaling_factor = 1./v
 # Some useful aliases for typical Bax/Bak states:
 
 active_monomer = {'state':'A', pore_site_1: None, pore_site_2: None}
-inactive_monomer = {'state':'C', pore_site_1: None, pore_site2: None}
+inactive_monomer = {'state':'C', pore_site_1: None, pore_site_2: None}
 
 # Observables declarations
 # ========================
@@ -111,12 +111,12 @@ def observables():
 # ======================
 
 def catalyze(enz, sub, product, klist):
-    """Alias for pysb.macros.catalyze with default binding site."""
+    """Alias for pysb.macros.catalyze with default binding sites."""
 
     return macros.catalyze(enz, site_name, sub, site_name, product, klist)
 
 def bind(a, b, klist):
-    """Alias for pysb.macros.bind with default binding site."""
+    """Alias for pysb.macros.bind with default binding sites."""
 
     return macros.bind(a, site_name, b, site_name, klist)
 
