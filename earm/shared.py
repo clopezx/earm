@@ -48,44 +48,47 @@ import pysb.macros as macros
 from pysb.util import alias_model_components
 import functools
 
+# Also pull in Avogadro's number from Scipy:
+
+from scipy.constants import N_A
+
 # Global variables
 # ================
 
 # Default site names
 # ------------------
 
-# The default site name to be used for binding reactions. Changing this here
+# **Default site name** to be used for binding reactions. Changing this here
 # will change the site name everywhere it is used in EARM.
 
 site_name = 'bf'
 
-# To form pores, Bax and Bak need two additional binding sites (one to bind
-# each neighbor in the closed pore. The default names for these binding
-# sites is specified here:
+# **Default pore formation site names.** To form pores, Bax and Bak need two
+# additional binding sites (one to bind each neighbor in the closed pore):
 
 pore_site_1 = 's1'
 pore_site_2 = 's2'
 
-# Default rate constants
-# ----------------------
+# Default constants
+# -----------------
 
-# Default forward and reverse rates for translocation reactions:
-
-transloc_rates = [1e-2, 1e-2]
-
-# Default cell volume to be used when converting between stochastic and
-# deterministic rates (see `BioNumbers ID 103725
+# **Default cell volume** to be used when converting between stochastic and
+# deterministic rates. The value used is
+#
+# (1/N_A) * 1e12 L = 1.661e-12 L (1.661 picoliters or 1661 um^3)
+#
+# is at the lower end of the range for whole cell volume,
+# (see `BioNumbers ID 103725
 # <http://bionumbers.hms.harvard.edu/bionumber.aspx?&id=103725&ver=14&trm=hela%20cell%20volume>`_).
-# The value used, 1.661 picoliters (1.661e-12 L, or 1661 um^3) is at the lower
-# end of the range given for whole cell volume,
 # but it is slightly above the range given for the volume of HeLa cytoplasm
-# from a separate measurement (see `BioNumbers ID 106664
+# (see `BioNumbers ID 106664
 # <http://bionumbers.hms.harvard.edu/bionumber.aspx?&id=106664&ver=3&trm=hela%20cell%20volume>`_).
 #
-# One nice thing about using this value, is that since 1.661 e-12 L * N_A = 1e12 L,
-# it leads to the rule of thumb that 1e-9 Molar = 1000 molecules:
+# One nice thing about using this value is that since
+# 1.661e-12 L * N_A = 1e12 L, it leads to the rule of thumb that
+# 1e-9 Molar = 1000 molecules:
 #
-# [1e-9 Moles/L] = [No. of molecules] / (N_A * L)
+# [1e-9 Moles/L] = [No. of molecules] / (N_A * vol)
 #
 # [1e-9 Moles/L] = [No. of molecules] / 1e12 L
 #
@@ -93,9 +96,13 @@ transloc_rates = [1e-2, 1e-2]
 #
 # [No. of molecules] = 1e3
 
-cell_vol = 1.661e-12
+cell_vol = (1/N_A) * 1e12
 
-# Rate scaling for reactions occurring on the mitochondrial membrane. `v`
+# **Default forward and reverse rates** for translocation reactions:
+
+transloc_rates = [1e-2, 1e-2]
+
+# **Rate scaling** for reactions occurring on the mitochondrial membrane. `v`
 # represents the fractional volume of the mitochondrial membrane compartment,
 # so the forward rate constants for reactions on the membrane is `1/v`. The
 # approach and the value used is adopted from Albeck et al., (2008)
@@ -103,7 +110,6 @@ cell_vol = 1.661e-12
 
 v = 0.07
 rate_scaling_factor = 1./v
-
 
 # Aliases
 # -------
