@@ -1,4 +1,7 @@
-"""'direct' w earm1.0"""
+"""
+Embedded Together topology.
+"""
+
 
 from pysb import *
 from earm import shared

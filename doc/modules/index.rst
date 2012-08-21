@@ -10,3 +10,5 @@ This section contains documentation of the implementations of each model.
     albeck_modules.rst
     shen_modules.rst
     shared.rst
+
+    model_list.rst

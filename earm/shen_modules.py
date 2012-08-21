@@ -48,7 +48,7 @@ contains two macros that are re-used by the various models:
   required for the release of Cytochrome c and Smac.
 
 References
-==========
+----------
 
 .. [1] Chen, C., Cui, J., Lu, H., Wang, R., Zhang, S., & Shen,
    P. (2007). Modeling of the role of a Bax-activation switch in the
