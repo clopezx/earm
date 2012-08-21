@@ -63,12 +63,6 @@ from scipy.constants import N_A
 
 site_name = 'bf'
 
-# **Default pore formation site names.** To form pores, Bax and Bak need two
-# additional binding sites (one to bind each neighbor in the closed pore):
-
-pore_site_1 = 's1'
-pore_site_2 = 's2'
-
 # Default constants
 # -----------------
 
@@ -116,8 +110,8 @@ rate_scaling_factor = 1./v
 
 # Some useful aliases for typical Bax/Bak states:
 
-active_monomer = {'state':'A', pore_site_1: None, pore_site_2: None}
-inactive_monomer = {'state':'C', pore_site_1: None, pore_site_2: None}
+active_monomer = {'state':'A', 's1': None, 's2': None}
+inactive_monomer = {'state':'C', 's1': None, 's2': None}
 
 # Observables declarations
 # ========================
@@ -161,8 +155,7 @@ def assemble_pore_sequential(subunit, size, klist):
     the pore.
     """
 
-    return macros.assemble_pore_sequential(subunit, pore_site_1, pore_site_2,
-                                           size, klist)
+    return macros.assemble_pore_sequential(subunit, 's1', 's2', size, klist)
 
 def pore_transport(subunit, size, csource, cdest, ktable):
     """Alias for pysb.macros.pore_transport with default arguments.
@@ -174,7 +167,7 @@ def pore_transport(subunit, size, csource, cdest, ktable):
       transport-competent pores
     """
 
-    return macros.pore_transport(subunit, pore_site_1, pore_site_2, site_name,
+    return macros.pore_transport(subunit, 's1', 's2', site_name,
                                  size, size, csource, site_name, cdest, ktable)
 
 # Macros used by the Shen models
@@ -194,15 +187,13 @@ def assemble_pore_spontaneous(subunit, klist):
         return '%s_to_%s%d' % (subunit_name, mp.monomer.name, 4)
 
     # Alias for a subunit that is capable of forming a pore
-    free_subunit = subunit(pore_site_1=None, pore_site_2=None)
+    free_subunit = subunit(s1=None, s2=None)
 
     # Create the pore formation rule
     macros._macro_rule('spontaneous_pore',
         free_subunit + free_subunit + free_subunit + free_subunit <>
-        subunit(pore_site_1=1, pore_site_2=4) % \
-        subunit(pore_site_1=2, pore_site_2=1) % \
-        subunit(pore_site_1=3, pore_site_2=2) % \
-        subunit(pore_site_1=4, pore_site_2=3),
+        subunit(s1=1, s2=4) % subunit(s1=2, s2=1) % \
+        subunit(s1=3, s2=2) % subunit(s1=4, s2=3),
         klist, ['kf', 'kr'], name_func=pore_rule_name)
 
 def displace(lig1, lig2, target, k):
