@@ -1,12 +1,12 @@
-# TODO: Fix units!
 """Model from Chen 2007, FEBS Letters."""
 
 from pysb import *
 from earm import shared
+from earm.shared import cell_vol
+from scipy.constants import N_A
 from earm import albeck_modules
 from earm import shen_modules
 import re
-from earm.util import convert_nm_to_num, convert_nm_kf_to_stoch
 
 Model()
 
@@ -19,17 +19,8 @@ albeck_modules.apaf1_to_parp_monomers()
 shen_modules.cui_direct(do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 20nM, per the paper
-Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20))
+Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20e-9 * N_A * cell_vol))
 
-# A hack--convert all parameters from um to # of molecules
-for p in model.parameters_initial_conditions():
-    p.value = convert_nm_to_num(p.value)
-for p in model.parameters:
-    if (re.match('.*_kf$', p.name)):
-        p.value = convert_nm_kf_to_stoch(p.value)
-
-# Now that we've converted the original parameters to numbers, we can load
-# the rest of the model
 albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
