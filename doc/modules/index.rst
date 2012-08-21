@@ -9,4 +9,4 @@ This section contains documentation of the implementations of each model.
     lopez_modules.rst
     albeck_modules.rst
     shen_modules.rst
-    macros.rst
+    shared.rst

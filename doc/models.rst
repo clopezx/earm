@@ -19,7 +19,7 @@ pathway: they are all triggered by the addition of an active BH3-only species
 (e.g., tBid) as their most "upstream" event, and they all result in the release
 in one or more mitochondrial substances (e.g. Cytochrome C and/or Smac) as
 their most downstream event. This represents a compromise between the approach
-of the MOMP models described in Albeck et al (in which caspase 8, rather than
+of the MOMP models described in Albeck et al (in which caspase-8, rather than
 tBid, served as the input) and the models of the Shen group, in which active
 Bax or Bax pores, rather than Cytochrome C or Smac, served as the output.
 
@@ -30,6 +30,16 @@ C and Smac release reactions are not added, and the models can be directly
 compared to their originally published versions. Similarly, the upstream
 caspase-8/Bid reactions can be added to the Albeck MOMP models to make them
 consistent with their published versions.
+
+.. note::MOMP module initial conditions
+
+    The default initial conditions for the MOMP modules is for there to be
+    **none of the apoptosis-inducing BH3-only proteins** (i.e., tBid) present
+    by default. This means that to reproduce figures from the original
+    publications this initial condition will have to be set appropriately.
+
+    If a Bid initial condition is specified, it is for the full-length,
+    untruncated form (i.e., Bid(state='U')).
 
 Since our purpose in using these models is primarily to embed them in a common
 pathway context, rather than to reproduce previous results for posterity, our
@@ -85,6 +95,17 @@ of each model, along with the source code, are found in :doc:`modules/index`.
    at which the Bcl-2-interacting domain death agonist (BID) triggers
    mitochondria disintegration. Journal of Theoretical
    Biology. :doi:`10.1016/j.jtbi.2010.11.040` :pmid:`21130780`.
+
+How the model code is organized
+-------------------------------
+
+The code implementing the various module is contained within the following
+files:
+
+* :py:module:`lopez_modules`
+* :py:module:`albeck_modules`
+* :py:module:`shen_modules`
+* :py:module:`shared`
 
 How to use the models
 ---------------------
