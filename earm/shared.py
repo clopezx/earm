@@ -206,7 +206,7 @@ def displace(lig1, lig2, target, k):
     return macros._macro_rule('displace',
          lig1({site_name:None}) + lig2({site_name:1}) % target({site_name:1}) >>
          lig1({site_name:1}) % target({site_name:1}) + lig2({site_name:None}),
-         [k], ['k'])
+         [k], ['kf'])
 
 def displace_reversibly(lig1, lig2, target, klist):
     """Generate reversible displacement reaction L1 + L2:T <> L1:T + L2.
@@ -220,7 +220,7 @@ def displace_reversibly(lig1, lig2, target, klist):
     return macros._macro_rule('displace',
          lig1({site_name:None}) + lig2({site_name:1}) % target({site_name:1}) <>
          lig1({site_name:1}) % target({site_name:1}) + lig2({site_name:None}),
-         klist, ['kf', 'kr'])
+         klist, ['fwd_kf', 'rev_kf'])
 
 # Macros used by the Albeck models
 # ================================
