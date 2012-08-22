@@ -19,9 +19,6 @@ Monomer('BclW', ['bf'])
 Monomer('Mcl1', ['bf'])
 Monomer('Bfl1', ['bf'])
 
-Parameter('kf', 1)
-Parameter('kr', 1)
-
 Initial(Bid(bf=None), Parameter('Bid_0', 1))
 Initial(Bim(bf=None), Parameter('Bim_0', 1))
 Initial(Bad(bf=None), Parameter('Bad_0', 1))
@@ -46,7 +43,7 @@ bind_table([[       Bcl2,  BclXL,  BclW,  Mcl1,  Bfl1],
             [Hrk,   None,     92,  None,  None,  None],
             [Puma,    18,     10,    25,    10,    59],
             [Bmf,     24,     10,    11,    23,  None]],
-            'bf', 'bf', kf=1e6)
+            'bf', 'bf', kf=1e3)
 
 # Makes 28 rules, one reversible rule for each entry
 print (generate_network(model))
