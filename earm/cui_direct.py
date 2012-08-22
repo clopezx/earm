@@ -1,11 +1,19 @@
-"""Model from Chen 2007, FEBS Letters."""
+"""
+Model M12a: Extrinsic apoptosis model incorporating the "Direct" MOMP model
+from Cui et al. (2008) PLoS One.
+
+Cui, J., Chen, C., Lu, H., Sun, T., & Shen, P. (2008). Two independent positive
+feedbacks and bistability in the Bcl-2 apoptotic switch. PLoS ONE, 3(1), e1469.
+:doi:`10.1371/journal.pone.0001469` :pmid:`18213378`.
+"""
 
 from pysb import *
-from earm import macros
+from earm import shared
+from earm.shared import cell_vol
+from scipy.constants import N_A
 from earm import albeck_modules
 from earm import shen_modules
 import re
-from earm.util import convert_nm_to_num, convert_nm_kf_to_stoch
 
 Model()
 
@@ -18,22 +26,13 @@ albeck_modules.apaf1_to_parp_monomers()
 shen_modules.cui_direct(do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 20nM, per the paper
-Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20))
+Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20e-9 * N_A * cell_vol))
 
-# A hack--convert all parameters from um to # of molecules
-for p in model.parameters_initial_conditions():
-    p.value = convert_nm_to_num(p.value)
-for p in model.parameters:
-    if (re.match('.*_kf$', p.name)):
-        p.value = convert_nm_kf_to_stoch(p.value)
-
-# Now that we've converted the original parameters to numbers, we can load
-# the rest of the model
 albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
 # Declare common observables
-macros.shared_observables()
+shared.observables()
 
 # Additional observables
 Observable('aBax_', Bax(state='A', bf=None))

@@ -1,11 +1,20 @@
-"""Model from Chen 2007, Biophys J."""
+"""
+Model M9a: Extrinsic apoptosis model incorporating the MOMP model from
+Chen et al. (2007) Biophys J.
+
+Chen, C., Cui, J., Lu, H., Wang, R., Zhang, S., & Shen, P. (2007). Modeling of
+the role of a Bax-activation switch in the mitochondrial apoptosis decision.
+Biophysical Journal, 92(12), 4304-4315. :doi:`10.1529/biophysj.106.099606`
+:pmid:`17400705`.
+"""
 
 from pysb import *
-from earm import macros
+from earm import shared
+from earm.shared import cell_vol
+from scipy.constants import N_A
 from earm import albeck_modules
 from earm import shen_modules
 import re
-from earm.util import convert_um_to_num, convert_um_kf_to_stoch
 
 Model()
 
@@ -15,25 +24,16 @@ shen_modules.momp_monomers()
 albeck_modules.apaf1_to_parp_monomers()
 
 # The specific MOMP model to use
-shen_modules.chen2007BiophysJ(do_pore_assembly=True, do_pore_transport=True)
+shen_modules.chen_biophys_j(do_pore_assembly=True, do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 0.1uM, per the paper
-Initial(Bid(state='U', bf=None), Parameter('Bid_0', 0.1))
+Initial(Bid(state='U', bf=None), Parameter('Bid_0', 0.1e-6 * N_A * cell_vol))
 
-# A hack--convert all parameters from um to # of molecules
-for p in model.parameters_initial_conditions():
-    p.value = convert_um_to_num(p.value)
-for p in model.parameters:
-    if (re.match('.*_kf$', p.name)):
-        p.value = convert_um_kf_to_stoch(p.value)
-
-# Now that we've converted the original parameters to numbers, we can load
-# the rest of the model
 albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
 # Declare common observables
-macros.shared_observables()
+shared.observables()
 
 # Additional observables
 Observable('aBax_', Bax(state='A', bf=None))
