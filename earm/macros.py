@@ -76,11 +76,11 @@ def bind(a, b, klist):
 
     return macros.bind(a, site_name, b, site_name, klist)
 
-def bind_table(table):
+def bind_table(table, **kwargs):
     """Alias for pysb.macros.bind_table with default binding sites 'bf'.
     """
 
-    return macros.bind_table(table, site_name, site_name)
+    return macros.bind_table(table, site_name, site_name, **kwargs)
 
 def assemble_pore_sequential(subunit, size, klist):
     """Alias for pysb.macros.assemble_pore_sequential with default sites.

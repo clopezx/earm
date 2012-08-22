@@ -2,6 +2,7 @@ from pysb import *
 from pysb.macros import bind_table
 from pysb.bng import generate_network, generate_equations
 
+Model()
 
 Monomer('Bid', ['bf'])
 Monomer('Bim', ['bf'])
@@ -42,10 +43,10 @@ bind_table([[       Bcl2,  BclXL,  BclW,  Mcl1,  Bfl1],
             [Bad,     11,     10,    60,  None,  None],
             [Bik,    151,     10,    17,   109,  None],
             [Noxa,  None,   None,  None,    19,  None],
-            [Hrka,  None,     92,  None,  None,  None],
+            [Hrk,   None,     92,  None,  None,  None],
             [Puma,    18,     10,    25,    10,    59],
             [Bmf,     24,     10,    11,    23,  None]],
-            'bf', 'bf', kf=1e6]]
+            'bf', 'bf', kf=1e6)
 
 # Makes 28 rules, one reversible rule for each entry
 print (generate_network(model))
