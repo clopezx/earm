@@ -1,5 +1,11 @@
-"""Model from Howells 2011, JTB
-TODO: Docstring
+"""
+Model M15b: MOMP model from Howells et al. (2010) J. Theor. Biol.
+
+Howells, C. C., Baumann, W. T., Samuels, D. C., & Finkielstein, C. V. (2010).
+The Bcl-2-associated death promoter (BAD) lowers the threshold at which the
+Bcl-2-interacting domain death agonist (BID) triggers mitochondria
+disintegration. Journal of Theoretical Biology.
+:doi:`10.1016/j.jtbi.2010.11.040` :pmid:`21130780`.
 """
 
 from pysb import *

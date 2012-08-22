@@ -1,4 +1,6 @@
-"""'direct' w earm1.0"""
+"""
+Model M3a: Extrinsic apoptosis model with "indirect" model of MOMP.
+"""
 
 from pysb import *
 from earm import shared

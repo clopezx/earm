@@ -1,6 +1,5 @@
 """
-TODO: Docstring
-'embedded together' w earm1.0
+Model M1b: "Embedded together" model of MOMP.
 """
 
 from pysb import *

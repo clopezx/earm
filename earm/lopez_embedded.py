@@ -1,5 +1,5 @@
 """
-Embedded Together topology.
+Model M1a: Extrinsic apoptosis model with "embedded together" model of MOMP.
 """
 
 
