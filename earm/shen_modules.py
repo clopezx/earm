@@ -1,6 +1,3 @@
-# TODO:
-# * Change Bax signature to have only I and A--will this break anything?
-
 """
 Overview
 ========
@@ -59,7 +56,7 @@ according to:
 No. of molecules = Conc * N_A * vol
 
 where N_A is Avogadro's number and vol is the cell volume, which is given a
-default value in the global variable `cell_vol` defined in :doc:`shared`.
+default value in the global variable `V` defined in :doc:`shared`.
 Similarly, forward rate constants are converted into stochastic rate constants
 according to:
 
@@ -210,8 +207,8 @@ def chen_biophys_j(do_pore_assembly=True, do_pore_transport=False):
         extrinsic apoptosis pathway.
     """
 
-    Parameter('Bcl2_0', 0.1e-6 * N_A * cell_vol) # Mitochondrial Bcl2
-    Parameter('Bax_0',  0.2e-6 * N_A * cell_vol) # Bax
+    Parameter('Bcl2_0', 0.1e-6 * N_A * V) # Mitochondrial Bcl2
+    Parameter('Bax_0',  0.2e-6 * N_A * V) # Bax
 
     alias_model_components()
 
@@ -222,20 +219,20 @@ def chen_biophys_j(do_pore_assembly=True, do_pore_transport=False):
     # One-step "kiss-and-run" activation of Bax by tBid:
     catalyze_one_step_reversible(
         Bid(state='T', bf=None), Bax(bf=None, **inactive_monomer),
-        Bax(bf=None, **active_monomer), [0.5e6/(N_A*cell_vol), 1e-1])
+        Bax(bf=None, **active_monomer), [0.5e6/(N_A*V), 1e-1])
 
     # Bcl2 binds tBid and Bax:
     bind_table([[                                            Bcl2],
-                [Bid(state='T'),       (3e6/(N_A*cell_vol), 4e-2)],
-                [Bax(active_monomer),  (2e6/(N_A*cell_vol), 1e-3)]])
+                [Bid(state='T'),       (3e6/(N_A*V), 4e-2)],
+                [Bax(active_monomer),  (2e6/(N_A*V), 1e-3)]])
 
     # Bax can displace Bid from Bcl2:
-    displace(Bax(active_monomer), Bid(state='T'), Bcl2, 2e6/(N_A*cell_vol))
+    displace(Bax(active_monomer), Bid(state='T'), Bcl2, 2e6/(N_A*V))
 
     if do_pore_assembly:
         # Four Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='A', bf=None),
-                                  [2e6*4/(N_A*cell_vol), 0])
+                                  [2e6*4/(N_A*V), 0])
 
     if do_pore_transport:
         # Release Cytochrome C and Smac:
@@ -271,13 +268,13 @@ def chen_febs_indirect(do_pore_assembly=True, do_pore_transport=False):
 
     # Bcl2 binds tBid and Bax:
     bind_table([[                                            Bcl2],
-                [Bid(state='T'),       (1e5/(N_A*cell_vol), 1e-3)],
-                [Bax(active_monomer),  (1e5/(N_A*cell_vol), 1e-3)]])
+                [Bid(state='T'),       (1e5/(N_A*V), 1e-3)],
+                [Bax(active_monomer),  (1e5/(N_A*V), 1e-3)]])
 
     if do_pore_assembly:
         # Four "inactive" Bax monomers cooperatively bind to form a tetramer:
         assemble_pore_spontaneous(Bax(state='A', bf=None),
-                                  [4*1e6/(N_A*cell_vol), 1e-3])
+                                  [4*1e6/(N_A*V), 1e-3])
 
     if do_pore_transport:
         # Release Cytochrome C and Smac:
@@ -312,17 +309,17 @@ def chen_febs_direct(do_pore_assembly=True, do_pore_transport=False):
     # One-step "kiss-and-run" activation of Bax by tBid
     catalyze_one_step_reversible(
         Bid(state='T', bf=None), Bax(bf=None, **inactive_monomer),
-        Bax(bf=None, **active_monomer), [1e6/(N_A*cell_vol), 1e-3])
+        Bax(bf=None, **active_monomer), [1e6/(N_A*V), 1e-3])
 
     # Bcl2 binds tBid and Bad (a sensitizer) but not Bax
     bind_table([[                                       Bcl2],
-                [Bid(state='T'),  (1e5/(N_A*cell_vol), 1e-3)],
-                [Bad(state='M'),  (1e5/(N_A*cell_vol), 1e-3)]])
+                [Bid(state='T'),  (1e5/(N_A*V), 1e-3)],
+                [Bad(state='M'),  (1e5/(N_A*V), 1e-3)]])
 
     if do_pore_assembly:
         # Four Bax monomers cooperatively bind to form a tetramer
         assemble_pore_spontaneous(Bax(state='A', bf=None),
-                                  [4*1e6/(N_A*cell_vol), 1e-3])
+                                  [4*1e6/(N_A*V), 1e-3])
 
     if do_pore_transport:
         # Release Cytochrome C and Smac:
@@ -351,13 +348,13 @@ def cui_direct(do_pore_transport=False):
 
     # 1. Overriding some parameter values:
     # Cut the activation rate of Bax by tBid by half (was originally 1e6):
-    one_step_BidT_BaxC_to_BidT_BaxA_kf.value = 5e5/(N_A*cell_vol)
+    one_step_BidT_BaxC_to_BidT_BaxA_kf.value = 5e5/(N_A*V)
     # Make Bid/Bcl2 binding 10-fold tighter (was originally 1e5)
-    bind_BidT_Bcl2_kf.value = 1e6/(N_A*cell_vol)
+    bind_BidT_Bcl2_kf.value = 1e6/(N_A*V)
 
     # 2. Adding a Bad-for-Bid displacement reaction,
     displace_reversibly(Bad(state='M'), Bid(state='T'), Bcl2,
-                        [1e5/(N_A*cell_vol), 0.001])
+                        [1e5/(N_A*V), 0.001])
 
     # 3. Adding simplified MAC formation (Bax dimerization)
     # NOTE: Even though this binding reaction is homomeric (which would
@@ -369,7 +366,7 @@ def cui_direct(do_pore_transport=False):
     # and is used in the ODE with its nominal value.
     active_unbound = {'state': 'A', 'bf': None}
     assemble_pore_sequential(Bax(**active_unbound), 2,
-                                 [[2e5/(N_A*cell_vol), 0.02]])
+                                 [[2e5/(N_A*V), 0.02]])
 
     # 4. Adding synthesis and degradation reactions
     Bax2 = Bax(s1=1, s2=None) % Bax(s1=None, s2=1)
@@ -405,13 +402,13 @@ def cui_direct1(do_pore_transport=False):
     cui_direct(do_pore_transport=do_pore_transport)
 
     # ...by adding inhibition of Bax by Bcl2,
-    bind(Bax(state='A', s1=None, s2=None), Bcl2, [5e6/(N_A*cell_vol), 0.001])
+    bind(Bax(state='A', s1=None, s2=None), Bcl2, [5e6/(N_A*V), 0.001])
 
     # ...associated displacement reactions
     displace_reversibly(Bax(active_monomer), Bid(state='T'), Bcl2,
-                        [5e6/(N_A*cell_vol), 0.001])
+                        [5e6/(N_A*V), 0.001])
     displace_reversibly(Bad(state='M'), Bax(active_monomer), Bcl2,
-                        [1e5/(N_A*cell_vol), 0.005])
+                        [1e5/(N_A*V), 0.005])
 
     # ...and degradation of the active Bax:Bcl2 complex
     degrade(Bax(bf=1) % Bcl2(bf=1), 0.005)
@@ -438,7 +435,7 @@ def cui_direct2(do_pore_transport=False):
         Bax(state='C', bf=None, s1=None, s2=None) >>
         Bax(state='A', bf=None, s1=1, s2=None) %
         Bax(state='A', bf=None, s1=None, s2=1),
-        Parameter('Bax_autoactivation_dimerization_k', 2e5/(N_A*cell_vol)))
+        Parameter('Bax_autoactivation_dimerization_k', 2e5/(N_A*V)))
 
 def howells(do_pore_assembly=True, do_pore_transport=False):
     """The model drawn from Howells et al. (2011) J. Theor. Biol.
@@ -475,7 +472,7 @@ def howells(do_pore_assembly=True, do_pore_transport=False):
     # Override a few parameter values from the pre-existing model
     bind_BidT_Bcl2_kr.value = 2e-3 # was 4e-2 in Chen 2007 Biophys J
     bind_BaxA_Bcl2_kr.value = 2e-3 # was 1e-3 in Chen 2007 Biophys J
-    spontaneous_pore_BaxA_to_Bax4_kf.value = 2000e6*4/(N_A*cell_vol)
+    spontaneous_pore_BaxA_to_Bax4_kf.value = 2000e6*4/(N_A*V)
                                                     # was 2e6 in Chen 2007 B.J.
     spontaneous_pore_BaxA_to_Bax4_kr.value = 5e-5   # was 0 in Chen 2007 B.J.
 
@@ -485,10 +482,10 @@ def howells(do_pore_assembly=True, do_pore_transport=False):
                 Bad(state='M', serine='U', bf=None), [1e-2, 2e-3])
 
     # Bad binds Bcl2
-    bind(Bad(state='M'), Bcl2, [15e6/(N_A*cell_vol), 2e-3])
+    bind(Bad(state='M'), Bcl2, [15e6/(N_A*V), 2e-3])
 
     # Bad displaces tBid from Bcl2 (parameter `k_tBid_rel1` in paper)
-    displace(Bad(state='M'), Bid(state='T'), Bcl2, 5e6/(N_A*cell_vol))
+    displace(Bad(state='M'), Bid(state='T'), Bcl2, 5e6/(N_A*V))
 
     # Phosphorylation of Bad
     phosphorylate_Bad_k1 = Parameter('phosphorylate_Bad_k1', 1e-3)
