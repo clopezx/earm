@@ -54,14 +54,9 @@ def shared_observables():
     alias_model_components()
     # Observables
     # ===========
-    # Fig 4B from Albeck observes these, normalizes and inverts them
-    # Observe('Bid',   Bid(bf=None, state='U'))
-    # Observe('PARP',  PARP(bf=None, state='U'))
-    # Observe('Smac',  Smac(bf=None, state='mito'))
-    Observable('tBid_',  Bid(state='T'))
-    Observable('mBid_',  Bid(state='M'))
-    Observable('aSmac_', Smac(state='A'))
-    Observable('cPARP_', PARP(state='C'))
+    Observable('mBid',  Bid(state='M'))
+    Observable('aSmac', Smac(state='A'))
+    Observable('cPARP', PARP(state='C'))
 
 ## Aliases to pysb.macros =====================
 def catalyze(enz, sub, product, klist):
