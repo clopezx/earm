@@ -67,8 +67,8 @@ from pysb.util import alias_model_components
 # Globals
 # -------
 
-# A variety of default rate constant values
-bcl2_rates =       [1.428571e-05, 1e-3]    # 1.0e-6/v
+# Default rate constants for catalytic activation (fwd, rev, cat):
+
 activation_rates = [        1e-7, 1e-3, 1] 
 
 # Shared functions
@@ -160,22 +160,65 @@ def tBid_activates_Bax_and_Bak():
     catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), activation_rates)
 
 def tBid_binds_all_anti_apoptotics():
-    """tBid binds and inhibits Bcl2, Mcl1, and Bcl-XL."""
+    """tBid binds and inhibits Bcl2, Mcl1, and Bcl-XL.
+
+    The entries given in the `bind_table` are dissociation constants taken
+    from Certo et al. (see ref). Dissociation constants in Certo et al.
+    were published as nanomolar binding affinities; here they are converted
+    into units of numbers of molecules by multiplying by `N_A` (Avogadro's
+    number) and `V` (a default cell volume, specified in `shared.py`_.
+
+    The default forward rate represents diffusion limited association
+    (1e6 Molar^-1 s^-1) and is converted into units of molec^-1 s^-1 by dividing
+    by `N_A*V`.
+
+    Certo, M., Del Gaizo Moore, V., Nishino, M., Wei, G., Korsmeyer, S.,
+    Armstrong, S. A., & Letai, A. (2006). Mitochondria primed by death signals
+    determine cellular addiction to antiapoptotic BCL-2 family members. Cancer
+    Cell, 9(5), 351-365. `doi:10.1016/j.ccr.2006.03.027`
+    """
     # Doug Green's "MODE 1" inhibition
-    bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
-                [Bid(state='M'),       bcl2_rates,        bcl2_rates,       bcl2_rates]])
+    bind_table([[                        Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bid(state='M'),  66e-9*N_A*V,       12e-9*N_A*V,      10e-9*N_A*V]],
+               kf=1e6/(N_A*V))
 
 def sensitizers_bind_anti_apoptotics():
-    """Binding of Bad and Noxa to Bcl2, Mcl1, and Bcl-XL."""
-    bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
-                [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
-                [Noxa(state='M'),       None,              None,       bcl2_rates]])
+    """Binding of Bad and Noxa to Bcl2, Mcl1, and Bcl-XL.
+
+    See comments on units for :py:func:`tBid_binds_all_anti_apoptotics`.
+    """
+
+    bind_table([[                        Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bad(state='M'),  11e-9*N_A*V,       10e-9*N_A*V,             None],
+                [Noxa(state='M'),        None,              None,      19e-9*N_A*V]],
+               kf=1e-6)
 
 def effectors_bind_anti_apoptotics():
-    """Binding of Bax and Bak to Bcl2, BclxL, and Mcl1."""
-    bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
-                [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
-                [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
+    """Binding of Bax and Bak to Bcl2, BclxL, and Mcl1.
+
+    Affinities of Bak for Bcl-xL and Mcl-1 are taken from Willis et al.
+
+    Preferential affinity of Bax for Bcl-2 and Bcl-xL were taken from Zhai et
+    al.  Bax:Bcl2 and Bax:Bcl-xL affinities were given order of magnitude
+    estimates of 10nM.
+
+    See comments on units for :py:func:`tBid_binds_all_anti_apoptotics`.
+
+    Willis, S. N., Chen, L., Dewson, G., Wei, A., Naik, E., Fletcher, J. I.,
+    Adams, J. M., et al. (2005). Proapoptotic Bak is sequestered by Mcl-1 and
+    Bcl-xL, but not Bcl-2, until displaced by BH3-only proteins. Genes &
+    Development, 19(11), 1294-1305. `doi:10.1101/gad.1304105`
+
+    Zhai, D., Jin, C., Huang, Z., Satterthwait, A. C., & Reed, J. C. (2008).
+    Differential regulation of Bax and Bak by anti-apoptotic Bcl-2 family
+    proteins Bcl-B and Mcl-1. The Journal of biological chemistry, 283(15),
+    9580-9586.  `doi:10.1074/jbc.M708426200`
+    """
+
+    bind_table([[                            Bcl2,  BclxL(state='M'),         Mcl1],
+                [Bax(active_monomer), 10e-9*N_A*V,       10e-9*N_A*V,         None],
+                [Bak(active_monomer),        None,       50e-9*N_A*V,  10e-9*N_A*V]],
+               kf=1e6/(N_A*V))
 
 def lopez_pore_formation(do_pore_transport=True):
     """ Pore formation and transport process used by all modules.
