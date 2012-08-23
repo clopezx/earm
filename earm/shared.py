@@ -90,20 +90,20 @@ site_name = 'bf'
 #
 # [No. of molecules] = 1e3
 
-cell_vol = (1/N_A) * 1e12
+V = (1/N_A) * 1e12
 
 # **Default forward and reverse rates** for translocation reactions:
 
 transloc_rates = [1e-2, 1e-2]
 
-# **Rate scaling** for reactions occurring on the mitochondrial membrane. `v`
-# represents the fractional volume of the mitochondrial membrane compartment,
-# so the forward rate constants for reactions on the membrane is `1/v`. The
-# approach and the value used is adopted from Albeck et al., (2008)
-# PLoS Biology.
+# **Rate scaling** for reactions occurring on the mitochondrial membrane.
+# `mito_fractional_volume` represents the fractional volume of the
+# mitochondrial membrane compartment, so the forward rate constants for
+# reactions on the membrane is `1/v`. The approach and the value used is
+# adopted from Albeck et al., (2008) PLoS Biology.
 
-v = 0.07
-rate_scaling_factor = 1./v
+mito_fractional_volume = 0.07
+rate_scaling_factor = 1./mito_fractional_volume
 
 # Aliases
 # -------

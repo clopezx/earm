@@ -9,7 +9,7 @@ the plausible model of the Bcl-2 apoptotic switch. FEBS letters, 581(26),
 
 from pysb import *
 from earm import shared
-from earm.shared import cell_vol
+from earm.shared import V
 from scipy.constants import N_A
 from earm import albeck_modules
 from earm import shen_modules
@@ -26,7 +26,7 @@ albeck_modules.apaf1_to_parp_monomers()
 shen_modules.chen_febs_direct(do_pore_assembly=True, do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 20nM, per the paper
-Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20e-9 * N_A * cell_vol))
+Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20e-9 * N_A * V))
 
 # Now that we've converted the original parameters to numbers, we can load
 # the rest of the model

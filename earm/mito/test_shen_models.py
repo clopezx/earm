@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import re
 from scipy.constants import N_A
-from earm.shared import cell_vol
+from earm.shared import V
 
 def convert_odes(model, p_name_map, s_name_map_by_pattern):
     """Substitutes species and parameter names using the given name mappings.
@@ -101,7 +101,7 @@ def convert_parameters(model, p_name_map, original_units='micromolar'):
             # is a concentration or a bimolecular rate constant:
             if p.name.endswith('_0'): # i.e., an initial concentration
                 # First, convert from stochastic to deterministic (Molar):
-                original_value = p.value / (N_A * cell_vol)
+                original_value = p.value / (N_A * V)
                 # Then convert from molar to the particular original units
                 # (i.e., nanomolar or micromolar):
                 original_value *= scaling_factor
@@ -109,7 +109,7 @@ def convert_parameters(model, p_name_map, original_units='micromolar'):
                 original_value = round(original_value, 3)
             elif p.name.endswith('kf') and not p.name.startswith('equilibrate'):
                 # Convert as above, but for bimolecular rate constants
-                original_value = p.value * N_A * cell_vol
+                original_value = p.value * N_A * V
                 original_value /= scaling_factor
                 original_value = round(original_value, 3)
             else:

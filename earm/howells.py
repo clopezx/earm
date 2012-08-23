@@ -11,7 +11,7 @@ disintegration. Journal of Theoretical Biology.
 
 from pysb import *
 from earm import shared
-from earm.shared import cell_vol
+from earm.shared import V
 from scipy.constants import N_A
 from earm import albeck_modules
 from earm import shen_modules
@@ -28,7 +28,7 @@ albeck_modules.apaf1_to_parp_monomers()
 shen_modules.howells(do_pore_assembly=True, do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 0.1uM, per the paper
-Initial(Bid(state='U', bf=None), Parameter('Bid_0', 0.1e-6 * N_A * cell_vol))
+Initial(Bid(state='U', bf=None), Parameter('Bid_0', 0.1e-6 * N_A * V))
 
 # TODO: May want to set initial condition for Bad to be bound to 14-3-3
 

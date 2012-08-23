@@ -68,8 +68,8 @@ from pysb.util import alias_model_components
 # -------
 
 # A variety of default rate constant values
-bcl2_rates =         [1.428571e-05, 1e-3]    # 1.0e-6/v
-bid_effector_rates = [        1e-7, 1e-3, 1] 
+bcl2_rates =       [1.428571e-05, 1e-3]    # 1.0e-6/v
+activation_rates = [        1e-7, 1e-3, 1] 
 
 # Shared functions
 # ================
@@ -156,8 +156,8 @@ def translocate_tBid_Bax_BclxL():
 
 def tBid_activates_Bax_and_Bak():
     """tBid activates Bax and Bak."""
-    catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
-    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
+    catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), activation_rates)
+    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), activation_rates)
 
 def tBid_binds_all_anti_apoptotics():
     """tBid binds and inhibits Bcl2, Mcl1, and Bcl-XL."""
@@ -220,11 +220,10 @@ def embedded(do_pore_transport=True):
 
     # Autoactivation: Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
-    effector_auto_rates = [1e-7, 1e-3, 1]
     catalyze(Bax(active_monomer), Bax(state='M'), Bax(state='A'),
-             effector_auto_rates)
+             activation_rates)
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'),
-             effector_auto_rates)
+             activation_rates)
 
     # Anti-apoptotics bind activator tBid
     # Doug Green's "MODE 1" inhibition

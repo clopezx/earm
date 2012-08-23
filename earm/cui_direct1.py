@@ -9,7 +9,7 @@ feedbacks and bistability in the Bcl-2 apoptotic switch. PLoS ONE, 3(1), e1469.
 
 from pysb import *
 from earm import shared
-from earm.shared import cell_vol
+from earm.shared import V
 from scipy.constants import N_A
 from earm import albeck_modules
 from earm import shen_modules
@@ -26,7 +26,7 @@ albeck_modules.apaf1_to_parp_monomers()
 shen_modules.cui_direct1(do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 20nM, per the paper
-Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20e-9 * N_A * cell_vol))
+Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20e-9 * N_A * V))
 
 albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
