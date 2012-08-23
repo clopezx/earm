@@ -166,7 +166,7 @@ def tBid_binds_all_anti_apoptotics():
     from Certo et al. (see ref). Dissociation constants in Certo et al.
     were published as nanomolar binding affinities; here they are converted
     into units of numbers of molecules by multiplying by `N_A` (Avogadro's
-    number) and `V` (a default cell volume, specified in `shared.py`_.
+    number) and `V` (a default cell volume, specified in :doc:`shared`.
 
     The default forward rate represents diffusion limited association
     (1e6 Molar^-1 s^-1) and is converted into units of molec^-1 s^-1 by dividing

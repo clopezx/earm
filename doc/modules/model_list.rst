@@ -13,7 +13,7 @@ Lopez Models
     :members:
 
 Albeck Models
-------------
+-------------
 
 .. automodule:: earm.albeck_11b
     :members:

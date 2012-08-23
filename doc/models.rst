@@ -99,13 +99,13 @@ of each model, along with the source code, are found in :doc:`modules/index`.
 How the model code is organized
 -------------------------------
 
-The code implementing the various module is contained within the following
+The code implementing the various modules is contained within the following
 files:
 
-* :doc:`lopez_modules`
-* :doc:`albeck_modules`
-* :doc:`shen_modules`
-* :doc:`shared`
+* :doc:`modules/lopez_modules`
+* :doc:`modules/albeck_modules`
+* :doc:`modules/shen_modules`
+* :doc:`modules/shared`
 
 How to use the models
 ---------------------
