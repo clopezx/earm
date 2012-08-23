@@ -170,6 +170,18 @@ def pore_transport(subunit, size, csource, cdest, ktable):
     return macros.pore_transport(subunit, 's1', 's2', site_name,
                                  size, size, csource, site_name, cdest, ktable)
 
+def pore_bind(subunit, size, cargo, klist):
+    """Alias for pysb.macros.pore_bind with default arguments.
+
+    - Uses the default binding site names for the binding site on the pore
+      and on the cargo
+    - Uses the default pore site names for subunit-subunit binding
+    """
+
+    return macros.pore_bind(subunit, 's1', 's2', site_name,
+                                 size, cargo, site_name, klist)
+
+
 # Macros used by the Shen models
 # ==============================
 
