@@ -55,8 +55,8 @@ PySB is available at http://pysb.org and http://github.com/pysb/pysb.
 How to use the documentation
 ----------------------------
 
-In addition to this introduction, the documentation contains descriptions of
-each model at the page models_.
+In addition to this introduction, descriptions of each model can be found at
+:doc:`models`.
 
 <TODO> finish this section?
 
