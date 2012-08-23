@@ -1,11 +1,19 @@
-"""Model from Chen 2007, FEBS Letters."""
+"""
+Model M11a: Extrinsic apoptosis model incorporating the "Indirect" MOMP model
+from Chen et al. (2007) FEBS Letters.
+
+Chen, C., Cui, J., Zhang, W., & Shen, P. (2007). Robustness analysis identifies
+the plausible model of the Bcl-2 apoptotic switch. FEBS letters, 581(26),
+5143-5150. :doi:`10.1016/j.febslet.2007.09.063` :pmid:`17936275`.
+"""
 
 from pysb import *
-from earm import macros
+from earm import shared
+from earm.shared import V
+from scipy.constants import N_A
 from earm import albeck_modules
 from earm import shen_modules
 import re
-from earm.util import convert_nm_to_num, convert_nm_kf_to_stoch
 
 Model()
 
@@ -18,22 +26,13 @@ albeck_modules.apaf1_to_parp_monomers()
 shen_modules.chen_febs_indirect(do_pore_assembly=True, do_pore_transport=True)
 
 # Set initial condition for uncleaved Bid to 20nM, per the paper
-Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20))
+Initial(Bid(state='U', bf=None), Parameter('Bid_0', 20e-9 * N_A * V))
 
-# A hack--convert all parameters from um to # of molecules
-for p in model.parameters_initial_conditions():
-    p.value = convert_nm_to_num(p.value)
-for p in model.parameters:
-    if (re.match('.*_kf$', p.name)):
-        p.value = convert_nm_kf_to_stoch(p.value)
-
-# Now that we've converted the original parameters to numbers, we can load
-# the rest of the model
 albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
 # Declare common observables
-macros.shared_observables()
+shared.observables()
 
 # Additional observables
 Observable('aBax_', Bax(state='A', bf=None))

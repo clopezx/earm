@@ -21,14 +21,14 @@ def catalyze(enz, e_site, sub, s_site, prod, klist):
 Model()
 
 Monomer('C8', ['bf'])
-Monomer('Bid', ['bf', 'state'], {'state': ['C', 'T']})
+Monomer('Bid', ['bf', 'state'], {'state': ['U', 'T']})
 
 klist = [Parameter('kf', 1), Parameter('kr', 1), Parameter('kc', 1)]
 
-catalyze(C8(), 'bf', Bid(state='C'), 'bf', Bid(state='T'), klist)
+catalyze(C8(), 'bf', Bid(state='U'), 'bf', Bid(state='T'), klist)
 
 Initial(C8(bf=None), Parameter('C8_0', 100))
-Initial(Bid(bf=None, state='C'), Parameter('Bid_0', 100))
+Initial(Bid(bf=None, state='U'), Parameter('Bid_0', 100))
 
 print (generate_network(model))
 generate_equations(model)

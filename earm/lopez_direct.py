@@ -1,7 +1,9 @@
-"""'direct' w earm1.0"""
+"""
+Model M2a: Extrinsic apoptosis model with "direct" model of MOMP.
+"""
 
 from pysb import *
-from earm import macros
+from earm import shared
 from earm import lopez_modules
 from earm import albeck_modules
 
@@ -20,5 +22,5 @@ albeck_modules.pore_to_parp()
 lopez_modules.direct()
 
 # Declare shared observables
-macros.shared_observables()
+shared.observables()
 
