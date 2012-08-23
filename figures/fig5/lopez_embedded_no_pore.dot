@@ -1,0 +1,53 @@
+Graph G {
+subgraph clusterNoxa {
+Noxa_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Noxa_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
+style = filled ; label =  "Noxa";  shape = hexagon; color = lightgrey };
+subgraph clusterMcl1 {
+Mcl1_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Mcl1_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
+style = filled ; label =  "Mcl1";  shape = hexagon; color = lightgrey };
+subgraph clusterBid {
+Bid_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bid_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
+style = filled ; label =  "Bid";  shape = hexagon; color = lightgrey };
+subgraph clusterBclxL {
+BclxL_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+BclxL_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
+style = filled ; label =  "BclxL";  shape = hexagon; color = lightgrey };
+subgraph clusterBcl2 {
+Bcl2_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+style = filled ; label =  "Bcl2";  shape = ellipse; color = lightgrey };
+subgraph clusterBax {
+Bax_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bax_s1 [style = filled label = "s1"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bax_s2 [style = filled label = "s2"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bax_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
+style = filled ; label =  "Bax";  shape = octagon; color = lightgrey };
+subgraph clusterBak {
+Bak_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bak_s1 [style = filled label = "s1"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bak_s2 [style = filled label = "s2"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bak_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
+style = filled ; label =  "Bak";  shape = octagon; color = lightgrey };
+subgraph clusterBad {
+Bad_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
+Bad_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
+style = filled ; label =  "Bad";  shape = hexagon; color = lightgrey };
+Bad_bf -- Bcl2_bf;
+Bad_bf -- BclxL_bf;
+Bak_bf -- Bak_bf;
+Bak_bf -- BclxL_bf;
+Bak_bf -- Bid_bf;
+Bak_bf -- Mcl1_bf;
+Bak_s1 -- Bak_s2;
+Bax_bf -- Bax_bf;
+Bax_bf -- Bcl2_bf;
+Bax_bf -- BclxL_bf;
+Bax_bf -- Bid_bf;
+Bax_s1 -- Bax_s2;
+Bcl2_bf -- Bid_bf;
+BclxL_bf -- Bid_bf;
+Bid_bf -- Mcl1_bf;
+Mcl1_bf -- Noxa_bf;
+};

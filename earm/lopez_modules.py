@@ -1,26 +1,82 @@
-"""TODO: Write docstring for lopez_modules
+"""
+Overview
+========
 
-More stuff here.
+Three models of MOMP (:py:func:`direct`, :py:func:`indirect`, and
+:py:func:`embedded`), each incorporating a larger repertoire of Bcl-2 family
+members than previously published models, including:
+
+* One **activator,** Bid.
+* Two **sensitizers,** Bad and Noxa.
+* Two **effectors,** Bax and Bak.
+* Three **anti-apoptotics**, Bcl-2, Bcl-xL, and Mcl-1.
+
+The Models
+----------
+
+Note that in each of the three models, interactions between Bcl-2 proteins only
+occur at the mitochondrial membrane. The following are brief descriptions of
+each model.
+
+* :py:func:`direct`. In this model, tBid directly activates both Bax and Bak;
+  the anti-apoptotics bind tBid and the sensitizers (Bad and Noxa) but not
+  Bax and Bak.
+* :py:func:`indirect`. Bax and Bak are not explicitly activated by tBid, but
+  rather are in an equilibrium between inactive and active states. The
+  anti-apoptotics bind tBid, sensitizers, and Bax and Bak.
+* :py:func:`embedded`. Combines elements of both direct and indirect: tBid
+  activates Bax and Bak; the anti-apoptotics bind tBid, sensitizers and Bax and
+  Bak. In addition, Bax and Bak are able to auto-activate.
+
+Organization of models into Motifs
+----------------------------------
+
+Because the three models share many aspects, the mechanisms that they share have
+been written as small "motifs" implemented as subroutines. These are:
+
+* :py:func:`translocate_tBid_Bax_BclxL`
+* :py:func:`tBid_activates_Bax_and_Bak`
+* :py:func:`tBid_binds_all_anti_apoptotics`
+* :py:func:`sensitizers_bind_anti_apoptotics`
+* :py:func:`effectors_bind_anti_apoptotics`
+* :py:func:`lopez_pore_formation`
+
+The implementation details of these motifs can be seen by examining the
+source code.
+
+Monomer and initial declaration functions
+-----------------------------------------
+
+The models share the same set of Monomer and initial condition declarations,
+which are contained with the following two functions:
+
+* :py:func:`momp_monomers`
+* :py:func:`declare_initial_conditions`
 """
 
+# Preliminaries
+# =============
+#
+# We'll need everything from the pysb core, and some macros:
+
 from pysb import *
-from pysb.util import alias_model_components
-from earm.macros import *
+from shared import *
 from pysb.macros import equilibrate
-import albeck_modules
+from pysb.util import alias_model_components
 
-# Default site name for binding
-site_name = 'bf'
+# Globals
+# -------
 
-transloc_rates =     [        1e-2, 1e-2]
-bcl2_rates =         [1.428571e-05, 1e-3]    # 1.0e-6/v
-bid_effector_rates = [        1e-7, 1e-3, 1] 
+# Default rate constants for catalytic activation (fwd, rev, cat):
 
-# Site-value arguments to describe Bax or Bak in the active state but not
-# yet oligomerized
-active_monomer = {'s1': None, 's2': None, 'state': 'A'}
+activation_rates = [        1e-7, 1e-3, 1] 
 
-# MONOMER DECLARATION MACROS ================================================
+# Shared functions
+# ================
+
+# Monomer and initial condition declarations
+# ------------------------------------------
+
 def momp_monomers():
     """Declare the monomers for the Bcl-2 family proteins, Cyto c, and Smac.
 
@@ -35,31 +91,28 @@ def momp_monomers():
     which are apparently constitutively mitochondrial.
     """
 
-    # == Activators ===================
+    # **Activators**.
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
     Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
-    # == Effectors ====================
+    # **Effectors**
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
     # Bak, states: inactive and Mitochondrial, Active (and mitochondrial)
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bak', [site_name, 's1', 's2', 'state'], {'state':['M', 'A']})
-    # == Anti-Apoptotics ==============
+    # **Anti-Apoptotics**
     Monomer('Bcl2', [site_name])
     Monomer('BclxL', [site_name, 'state'], {'state':['C', 'M']})
     Monomer('Mcl1', [site_name, 'state'], {'state':['M', 'C']})
-    # == Sensitizers ==================
+    # **Sensitizers**
     Monomer('Bad', [site_name, 'state'], {'state':['C', 'M']})
     Monomer('Noxa', [site_name, 'state'], {'state': ['C', 'M']})
 
-    # == Cytochrome C and Smac ========
+    # **Cytochrome C and Smac**
     Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
     Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
 
-# MOMP SEGMENT ==============================================================
-
-## Macros -------------------------------------------------------------------
 def declare_initial_conditions():
     """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.
     """
@@ -87,6 +140,9 @@ def declare_initial_conditions():
     Initial(CytoC(bf=None, state='M'), CytoC_0)
     Initial(Smac(bf=None, state='M'), Smac_0)
 
+# Motifs
+# ------
+
 def translocate_tBid_Bax_BclxL():
     """tBid, Bax and BclXL translocate to the mitochondrial membrane."""
     equilibrate(Bid(bf=None, state='T'), Bid(bf=None, state='M'), [1e-1, 1e-3])
@@ -100,20 +156,69 @@ def translocate_tBid_Bax_BclxL():
 
 def tBid_activates_Bax_and_Bak():
     """tBid activates Bax and Bak."""
-    catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), bid_effector_rates)
-    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), bid_effector_rates)
+    catalyze(Bid(state='M'), Bax(state='M'), Bax(state='A'), activation_rates)
+    catalyze(Bid(state='M'), Bak(state='M'), Bak(state='A'), activation_rates)
 
 def tBid_binds_all_anti_apoptotics():
-    """tBid binds and inhibits Bcl2, Mcl1, and Bcl-XL."""
+    """tBid binds and inhibits Bcl2, Mcl1, and Bcl-XL.
+
+    The entries given in the `bind_table` are dissociation constants taken
+    from Certo et al. (see ref). Dissociation constants in Certo et al.
+    were published as nanomolar binding affinities; here they are converted
+    into units of numbers of molecules by multiplying by `N_A` (Avogadro's
+    number) and `V` (a default cell volume, specified in :doc:`shared`.
+
+    The default forward rate represents diffusion limited association
+    (1e6 Molar^-1 s^-1) and is converted into units of molec^-1 s^-1 by dividing
+    by `N_A*V`.
+
+    Certo, M., Del Gaizo Moore, V., Nishino, M., Wei, G., Korsmeyer, S.,
+    Armstrong, S. A., & Letai, A. (2006). Mitochondria primed by death signals
+    determine cellular addiction to antiapoptotic BCL-2 family members. Cancer
+    Cell, 9(5), 351-365. `doi:10.1016/j.ccr.2006.03.027`
+    """
     # Doug Green's "MODE 1" inhibition
-    bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
-                [Bid(state='M'),       bcl2_rates,        bcl2_rates,       bcl2_rates]])
+    bind_table([[                        Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bid(state='M'),  66e-9*N_A*V,       12e-9*N_A*V,      10e-9*N_A*V]],
+               kf=1e6/(N_A*V))
 
 def sensitizers_bind_anti_apoptotics():
-    """Binding of Bad and Noxa to Bcl2, Mcl1, and Bcl-XL."""
-    bind_table([[                       Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
-                [Bad(state='M'),  bcl2_rates,        bcl2_rates,             None],
-                [Noxa(state='M'),       None,              None,       bcl2_rates]])
+    """Binding of Bad and Noxa to Bcl2, Mcl1, and Bcl-XL.
+
+    See comments on units for :py:func:`tBid_binds_all_anti_apoptotics`.
+    """
+
+    bind_table([[                        Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
+                [Bad(state='M'),  11e-9*N_A*V,       10e-9*N_A*V,             None],
+                [Noxa(state='M'),        None,              None,      19e-9*N_A*V]],
+               kf=1e-6)
+
+def effectors_bind_anti_apoptotics():
+    """Binding of Bax and Bak to Bcl2, BclxL, and Mcl1.
+
+    Affinities of Bak for Bcl-xL and Mcl-1 are taken from Willis et al.
+
+    Preferential affinity of Bax for Bcl-2 and Bcl-xL were taken from Zhai et
+    al.  Bax:Bcl2 and Bax:Bcl-xL affinities were given order of magnitude
+    estimates of 10nM.
+
+    See comments on units for :py:func:`tBid_binds_all_anti_apoptotics`.
+
+    Willis, S. N., Chen, L., Dewson, G., Wei, A., Naik, E., Fletcher, J. I.,
+    Adams, J. M., et al. (2005). Proapoptotic Bak is sequestered by Mcl-1 and
+    Bcl-xL, but not Bcl-2, until displaced by BH3-only proteins. Genes &
+    Development, 19(11), 1294-1305. `doi:10.1101/gad.1304105`
+
+    Zhai, D., Jin, C., Huang, Z., Satterthwait, A. C., & Reed, J. C. (2008).
+    Differential regulation of Bax and Bak by anti-apoptotic Bcl-2 family
+    proteins Bcl-B and Mcl-1. The Journal of biological chemistry, 283(15),
+    9580-9586.  `doi:10.1074/jbc.M708426200`
+    """
+
+    bind_table([[                            Bcl2,  BclxL(state='M'),         Mcl1],
+                [Bax(active_monomer), 10e-9*N_A*V,       10e-9*N_A*V,         None],
+                [Bak(active_monomer),        None,       50e-9*N_A*V,  10e-9*N_A*V]],
+               kf=1e6/(N_A*V))
 
 def lopez_pore_formation(do_pore_transport=True):
     """ Pore formation and transport process used by all modules.
@@ -141,9 +246,9 @@ def lopez_pore_formation(do_pore_transport=True):
         pore_transport(Bak(bf=None, state='A'), 4, Smac(state='M'),
                        Smac(state='C'), pore_transport_rates)
 
-## MOMP Module Implementations ----------------------------------------------
+# MOMP model implementations
+# ==========================
 
-# Embedded Model
 def embedded(do_pore_transport=True):
     """ Direct and indirect modes of action, occurring at the membrane.
     """
@@ -155,28 +260,27 @@ def embedded(do_pore_transport=True):
 
     tBid_activates_Bax_and_Bak()
 
-    tBid_binds_all_anti_apoptotics()
 
     # Autoactivation: Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
-    effector_auto_rates = [1e-7, 1e-3, 1]
     catalyze(Bax(active_monomer), Bax(state='M'), Bax(state='A'),
-             effector_auto_rates)
+             activation_rates)
     catalyze(Bak(active_monomer), Bak(state='M'), Bak(state='A'),
-             effector_auto_rates)
+             activation_rates)
+
+    # Anti-apoptotics bind activator tBid
+    # Doug Green's "MODE 1" inhibition
+    tBid_binds_all_anti_apoptotics()
 
     # Anti-apoptotics bind activated effectors
     # Doug Green's "MODE 2" inhibition
-    bind_table([[                            Bcl2,  BclxL(state='M'),        Mcl1],
-                [Bax(active_monomer),  bcl2_rates,        bcl2_rates,        None],
-                [Bak(active_monomer),        None,        bcl2_rates,  bcl2_rates]])
+    effectors_bind_anti_apoptotics()
 
     sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition and transport CytoC/Smac
     lopez_pore_formation(do_pore_transport=do_pore_transport)
 
-# Indirect Model
 def indirect(do_pore_transport=True):
     """Bax and Bak spontaneously form pores without activation.
        The "activator" tBid binds all of the anti-apoptotics.
@@ -187,25 +291,25 @@ def indirect(do_pore_transport=True):
 
     translocate_tBid_Bax_BclxL()
 
-    tBid_binds_all_anti_apoptotics()
-
     # Bax and Bak spontaneously become activated
     free_Bax = Bax(bf=None, s1=None, s2=None) # Alias
     free_Bak = Bak(bf=None, s1=None, s2=None) # Alias
     equilibrate(free_Bax(state='M'), free_Bax(state='A'), transloc_rates)
     equilibrate(free_Bak(state='M'), free_Bak(state='A'), transloc_rates)
 
-    # Anti-apoptotics bind "active" Bax and Bak to prevent pore formation
-    bind_table([[                            Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
-                [Bax(active_monomer),  bcl2_rates,        bcl2_rates,             None],
-                [Bak(active_monomer),        None,        bcl2_rates,       bcl2_rates]])
+    # Anti-apoptotics bind activator tBid
+    # Doug Green's "MODE 1" inhibition
+    tBid_binds_all_anti_apoptotics()
+
+    # Anti-apoptotics bind activated effectors
+    # Doug Green's "MODE 2" inhibition
+    effectors_bind_anti_apoptotics()
 
     sensitizers_bind_anti_apoptotics()
 
     # Bax and Bak form pores by sequential addition
     lopez_pore_formation(do_pore_transport=do_pore_transport)
 
-# Direct Model
 def direct(do_pore_transport=True):
     """Anti-apoptotics prevent BH3-onlies from activating Bax and Bak.
 
@@ -219,8 +323,11 @@ def direct(do_pore_transport=True):
 
     translocate_tBid_Bax_BclxL()
 
+
     tBid_activates_Bax_and_Bak()
 
+    # Anti-apoptotics bind activator tBid
+    # Doug Green's "MODE 1" inhibition
     tBid_binds_all_anti_apoptotics()
 
     sensitizers_bind_anti_apoptotics()

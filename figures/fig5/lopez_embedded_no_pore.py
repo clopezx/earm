@@ -25,5 +25,5 @@ model.parameters['Smac_0'].value = 0
 model.parameters['CytoC_0'].value = 0
 
 # Put some Noxa at the membrane
-Initial(NOXA(state='M', bf=None), Parameter('mNOXA_0', 1))
+Initial(Noxa(state='M', bf=None), Parameter('mNoxa_0', 1))
 Initial(Bad(state='M', bf=None), Parameter('mBad_0', 1))
