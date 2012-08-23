@@ -1,4 +1,4 @@
-Graph G {
+graph G {
 subgraph clusterNoxa {
 Noxa_bf [style = filled label = "bf"] [shape = circle] [size = 5] [fixedsize = true ] [color = cyan]
 Noxa_state [style = filled label = "state"] [shape = circle] [size = 5] [fixedsize = true ] [color = green]
