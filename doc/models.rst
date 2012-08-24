@@ -19,7 +19,7 @@ pathway: they are all triggered by the addition of an active BH3-only species
 (e.g., tBid) as their most "upstream" event, and they all result in the release
 in one or more mitochondrial substances (e.g. Cytochrome C and/or Smac) as
 their most downstream event. This represents a compromise between the approach
-of the MOMP models described in Albeck et al (in which caspase 8, rather than
+of the MOMP models described in Albeck et al (in which caspase-8, rather than
 tBid, served as the input) and the models of the Shen group, in which active
 Bax or Bax pores, rather than Cytochrome C or Smac, served as the output.
 
@@ -30,6 +30,16 @@ C and Smac release reactions are not added, and the models can be directly
 compared to their originally published versions. Similarly, the upstream
 caspase-8/Bid reactions can be added to the Albeck MOMP models to make them
 consistent with their published versions.
+
+.. note::MOMP module initial conditions
+
+    The default initial conditions for the MOMP modules is for there to be
+    **none of the apoptosis-inducing BH3-only proteins** (i.e., tBid) present
+    by default. This means that to reproduce figures from the original
+    publications this initial condition will have to be set appropriately.
+
+    If a Bid initial condition is specified, it is for the full-length,
+    untruncated form (i.e., Bid(state='U')).
 
 Since our purpose in using these models is primarily to embed them in a common
 pathway context, rather than to reproduce previous results for posterity, our
@@ -45,7 +55,7 @@ The models in EARM
 Here is a list of the models incorporated into EARM. More detailed descriptions
 of each model, along with the source code, are found in :doc:`modules/index`.
 
-- EARM 2.0, Embedded
+- EARM 2.0, Embedded (see :py:func:`earm.lopez_modules.embedded`)
 - EARM 2.0, Indirect
 - EARM 2.0, Direct
 - "Minimal Model" (Figure 11b) from Albeck et al. (2008) [1]_
@@ -64,17 +74,17 @@ of each model, along with the source code, are found in :doc:`modules/index`.
 
 .. [1] Albeck, J. G., Burke, J. M., Spencer, S. L., Lauffenburger, D. A., and
    Sorger, P. K. (2008). Modeling a snap-action, variable-delay switch
-   controlling extrinsic cell death. PLoS Biology, 6(12), 2831–2852.
+   controlling extrinsic cell death. PLoS Biology, 6(12), 2831-2852.
    :doi:`10.1371/journal.pbio.0060299` :pmid:`19053173`.
 
 .. [2] Chen, C., Cui, J., Lu, H., Wang, R., Zhang, S., & Shen,
    P. (2007). Modeling of the role of a Bax-activation switch in the
    mitochondrial apoptosis decision. Biophysical Journal, 92(12),
-   4304–4315. :doi:`10.1529/biophysj.106.099606` :pmid:`17400705`.
+   4304-4315. :doi:`10.1529/biophysj.106.099606` :pmid:`17400705`.
 
 .. [3] Chen, C., Cui, J., Zhang, W., & Shen, P. (2007). Robustness analysis
    identifies the plausible model of the Bcl-2 apoptotic switch. FEBS letters,
-   581(26), 5143–5150. :doi:`10.1016/j.febslet.2007.09.063` :pmid:`17936275`.
+   581(26), 5143-5150. :doi:`10.1016/j.febslet.2007.09.063` :pmid:`17936275`.
 
 .. [4] Cui, J., Chen, C., Lu, H., Sun, T., & Shen, P. (2008). Two independent
    positive feedbacks and bistability in the Bcl-2 apoptotic switch. PLoS ONE,
@@ -85,6 +95,17 @@ of each model, along with the source code, are found in :doc:`modules/index`.
    at which the Bcl-2-interacting domain death agonist (BID) triggers
    mitochondria disintegration. Journal of Theoretical
    Biology. :doi:`10.1016/j.jtbi.2010.11.040` :pmid:`21130780`.
+
+How the model code is organized
+-------------------------------
+
+The code implementing the various modules is contained within the following
+files:
+
+* :doc:`modules/lopez_modules`
+* :doc:`modules/albeck_modules`
+* :doc:`modules/shen_modules`
+* :doc:`modules/shared`
 
 How to use the models
 ---------------------
@@ -140,8 +161,9 @@ the :doc:`modules/index` section of the documentation is drawn directly from
 this source.
 
 Moreover, the models have been written using a high-level vocabulary of
-frequently re-used macros, with the aim of revealing broad similarities
-and differences between models. The models thus consist of statements such as::
+frequently re-used macros and motifs, with the aim of revealing broad
+similarities and differences between models. The models thus consist of
+statements such as::
 
     translocate_tBid_Bax_BclXL()
     catalyze(Bid(state='T'), Bax(state='M'), Bax(state='A'), klist)

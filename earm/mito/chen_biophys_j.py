@@ -1,4 +1,11 @@
-"""Model from Chen 2007, Biophys J."""
+"""
+Model M9b: MOMP model from Chen et al. (2007) Biophys J.
+
+Chen, C., Cui, J., Lu, H., Wang, R., Zhang, S., & Shen, P. (2007). Modeling of
+the role of a Bax-activation switch in the mitochondrial apoptosis decision.
+Biophysical Journal, 92(12), 4304-4315. :doi:`10.1529/biophysj.106.099606`
+:pmid:`17400705`.
+"""
 
 from pysb import *
 from earm import shen_modules
@@ -13,7 +20,7 @@ shen_modules.momp_monomers()
 #shen_modules.momp_initial_conditions(bid_state='T')
 
 # The specific MOMP model to use
-shen_modules.chen2007BiophysJ(do_pore_assembly=True)
+shen_modules.chen_biophys_j(do_pore_assembly=True)
 
 Observable('aBax_', Bax(state='A', bf=None))
 #Observable('aBax_', Bax(state='A', bf=None, s1=None, s2=None))

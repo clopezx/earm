@@ -1,15 +1,20 @@
-"""TODO Docstring: Say that this file ensures that the models
-match published ODEs, etc."""
+# TODO: More documentation
+# TODO: Update this file once we implement units properly
+"""
+This file ensures that the models match the published ODEs.
+"""
 
 import unittest
-from earm.mito import chen_2007_biophys_j, chen_2007_febs_direct, \
-    chen_2007_febs_indirect, cui_direct, cui_direct1, cui_direct2, howells
+from earm.mito import chen_biophys_j, chen_febs_direct, \
+    chen_febs_indirect, cui_direct, cui_direct1, cui_direct2, howells
 from pysb.bng import generate_equations
 from pysb.integrate import odesolve
 from pysb import *
 import numpy as np
 import matplotlib.pyplot as plt
 import re
+from scipy.constants import N_A
+from earm.shared import V
 
 def convert_odes(model, p_name_map, s_name_map_by_pattern):
     """Substitutes species and parameter names using the given name mappings.
@@ -73,19 +78,51 @@ def odes_match(generated_odes, validated_odes):
                    for species in validated_odes]
     return np.all(result_list1) and np.all(result_list2)
 
-def convert_parameters(model, p_name_map):
+def convert_parameters(model, p_name_map, original_units='micromolar'):
     """TODO: Docstring"""
     param_list = []
     for p in model.parameters:
         if p.name in p_name_map:
             original_name = re.sub(p.name, p_name_map[p.name], p.name)
-            param_list.append((original_name, p.value))
+
+            # Convert the units in the model, which have been converted
+            # into numbers of molecules, back to the units of the original
+            # paper for comparison.
+            #
+            # Set the scaling factor based on the units of the original paper
+            if original_units == 'nanomolar':
+                scaling_factor = 1e9
+            elif original_units == 'micromolar':
+                scaling_factor = 1e6
+            else:
+                raise Exception('Invalid units given.')
+
+            # Make sure to scale appropriately depending on whether the parameter
+            # is a concentration or a bimolecular rate constant:
+            if p.name.endswith('_0'): # i.e., an initial concentration
+                # First, convert from stochastic to deterministic (Molar):
+                original_value = p.value / (N_A * V)
+                # Then convert from molar to the particular original units
+                # (i.e., nanomolar or micromolar):
+                original_value *= scaling_factor
+                # Finally, round to 3 significant digits
+                original_value = round(original_value, 3)
+            elif p.name.endswith('kf') and not p.name.startswith('equilibrate'):
+                # Convert as above, but for bimolecular rate constants
+                original_value = p.value * N_A * V
+                original_value /= scaling_factor
+                original_value = round(original_value, 3)
+            else:
+                original_value = p.value
+
+            param_list.append((original_name, original_value))
+
     return param_list
 
 # Parameter mapping used by both Chen 2007 FEBS models
 chenFEBS_p_name_map = {
     'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_InBax',
-    'reverse_BaxA_to_BaxC_k': 'k_Bax',
+    'reverse_BaxA_to_BaxC_kr': 'k_Bax',
     'bind_BidT_Bcl2_kf': 'k_BH3_Bcl2',
     'bind_BidT_Bcl2_kr': 'kr_BH3Bcl2',
     'bind_BadM_Bcl2_kf': 'k_BH3_Bcl2',
@@ -100,19 +137,19 @@ chenFEBS_p_name_map = {
 # Parameter mapping used by all three Cui models
 cui_p_name_map = {
     'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
-    'reverse_BaxA_to_BaxC_k': 'k8',
+    'reverse_BaxA_to_BaxC_kr': 'k8',
     'bind_BidT_Bcl2_kf': 'k4',
     'bind_BidT_Bcl2_kr': 'k5',
     'bind_BadM_Bcl2_kf': 'k9',
     'bind_BadM_Bcl2_kr': 'k10',
-    'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kf': 'k6',
-    'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kr': 'k7',
-    'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_kf': 'k11',
-    'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_kr': 'k12',
-    'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_kf': 'k13',
-    'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_kr': 'k14',
-    'dimerize_Bax_kf': 'k16',
-    'dimerize_Bax_kr': 'k17',
+    'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_fwd_kf': 'k6',
+    'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_rev_kf': 'k7',
+    'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_fwd_kf': 'k11',
+    'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_rev_kf': 'k12',
+    'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_fwd_kf': 'k13',
+    'displace_BadM_BaxABcl2_to_BadMBcl2_BaxA_rev_kf': 'k14',
+    'assemble_pore_sequential_Bax_2_kf': 'k16',
+    'assemble_pore_sequential_Bax_2_kr': 'k17',
     'synthesize_BaxC_k': 'p1',
     'degrade_BaxC_k': 'u1',
     'degrade_BaxA_k': 'u2',
@@ -146,17 +183,17 @@ cui_s_name_map = {
 
 ## TESTS ===============================================================
 
-class TestChen2007BiophysJ(unittest.TestCase):
+class TestChenBiophysJ(unittest.TestCase):
     """TODO: Docstring"""
 
     p_name_map = {
         'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k1',
-        'reverse_BaxA_to_BaxC_k': 'k2',
+        'reverse_BaxA_to_BaxC_kr': 'k2',
         'bind_BidT_Bcl2_kf': 'k5',
         'bind_BidT_Bcl2_kr': 'k6',
         'bind_BaxA_Bcl2_kf': 'k3',
         'bind_BaxA_Bcl2_kr': 'k4',
-        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_k': 'k7',
+        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kf': 'k7',
         #'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kr': 'k8',
         'spontaneous_pore_BaxA_to_Bax4_kf': 'k9',
         'spontaneous_pore_BaxA_to_Bax4_kr': 'k10' }
@@ -171,7 +208,7 @@ class TestChen2007BiophysJ(unittest.TestCase):
     }
 
     def setUp(self):
-        self.model = chen_2007_biophys_j.model
+        self.model = chen_biophys_j.model
         if self.model.parameters.get('Bid_0') is None:
             # Add initial condition for Bid
             Bid_0 = Parameter('Bid_0', 1, _export=False)
@@ -234,19 +271,20 @@ class TestChen2007BiophysJ(unittest.TestCase):
     def test_parameters(self):
         """The parameter values in the test below have been verified to match
         the values listed in Table 1 of Chen et al. (2007) Biophys J."""
-        param_list = convert_parameters(self.model, self.p_name_map)
+        param_list = convert_parameters(self.model, self.p_name_map,
+                                        original_units='micromolar')
         self.assertEqual(param_list, 
            [('k1', 0.5),
             ('k2', 0.1),
-            ('k5', 3),
+            ('k5', 3.),
             ('k6', 0.04),
-            ('k3', 2),
+            ('k3', 2.),
             ('k4', 0.001),
-            ('k7', 2),
-            ('k9', 8),
-            ('k10', 0)])
+            ('k7', 2.),
+            ('k9', 8.),
+            ('k10', 0.)])
 
-class TestChen2007FEBS_Indirect(unittest.TestCase):
+class TestChenFEBS_Indirect(unittest.TestCase):
     """TODO: Docstring"""
  
     s_name_map = {
@@ -258,7 +296,7 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
         'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'MAC'}
 
     def setUp(self):
-        self.model = chen_2007_febs_indirect.model
+        self.model = chen_febs_indirect.model
         if self.model.parameters.get('Bid_0') is None:
             # Add initial condition for Bid
             Bid_0 = Parameter('Bid_0', 1, _export=False)
@@ -276,7 +314,7 @@ class TestChen2007FEBS_Indirect(unittest.TestCase):
             'BaxBcl2': 'Bax*Bcl2*k_Bax_Bcl2 - BaxBcl2*kr_BaxBcl2',
             'MAC': '0.25*Bax**4*k_o - MAC*kr_o'}))
 
-class TestChen2007FEBS_Direct(unittest.TestCase):
+class TestChenFEBS_Direct(unittest.TestCase):
     """TODO: Docstring"""
     s_name_map = {
         'Bid(bf=None, state=T)': 'Act',
@@ -289,7 +327,7 @@ class TestChen2007FEBS_Direct(unittest.TestCase):
         'Bax(bf=None, s1=1, s2=2, state=A) % Bax(bf=None, s1=3, s2=1, state=A) % Bax(bf=None, s1=4, s2=3, state=A) % Bax(bf=None, s1=2, s2=4, state=A)': 'MAC'}
 
     def setUp(self):
-        self.model = chen_2007_febs_direct.model
+        self.model = chen_febs_direct.model
         if self.model.parameters.get('Bid_0') is None:
             # Add initial condition for Bid
             Bid_0 = Parameter('Bid_0', 1, _export=False)
@@ -380,19 +418,19 @@ class TestHowells(unittest.TestCase):
     # Mapping of parameter names
     p_name_map = {
         'one_step_BidT_BaxC_to_BidT_BaxA_kf': 'k_Bak_cat',
-        'reverse_BaxA_to_BaxC_k': 'k_Bak_inac',
+        'reverse_BaxA_to_BaxC_kr': 'k_Bak_inac',
         'bind_BidT_Bcl2_kf': 'ka_tBid_Bcl2',
         'bind_BidT_Bcl2_kr': 'kd_tBid_Bcl2',
         'bind_BaxA_Bcl2_kf': 'ka_Bak_Bcl2',
         'bind_BaxA_Bcl2_kr': 'kd_Bak_Bcl2',
-        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_k': 'k_tBid_rel2',
+        'displace_BaxA_BidTBcl2_to_BaxABcl2_BidT_kf': 'k_tBid_rel2',
         'spontaneous_pore_BaxA_to_Bax4_kf': 'ka_Bak_poly',
         'spontaneous_pore_BaxA_to_Bax4_kr': 'kd_Bak_poly',
         'equilibrate_BadCU_to_BadMU_kf': 't_Bad_in',
         'equilibrate_BadCU_to_BadMU_kr': 't_Bad_out',
         'bind_BadM_Bcl2_kf': 'ka_Bad_Bcl2',
         'bind_BadM_Bcl2_kr': 'kd_Bad_Bcl2',
-        'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_k': 'k_tBid_rel1',
+        'displace_BadM_BidTBcl2_to_BadMBcl2_BidT_kf': 'k_tBid_rel1',
         'phosphorylate_Bad_k1': 'k_Bad_phos1',
         'phosphorylate_Bad_k2': 'k_Bad_phos2',
         'sequester_BadCP_to_BadC1433_k': 'k_Bad_seq',
@@ -453,7 +491,8 @@ class TestHowells(unittest.TestCase):
     def test_parameters(self):
         """The parameter values shown in the test below have been validated
         against the list in Table 1 of Howells et al."""
-        param_list = convert_parameters(self.model, self.p_name_map)
+        param_list = convert_parameters(self.model, self.p_name_map,
+                                        original_units='micromolar')
         self.assertEqual(param_list,
            [('k_Bak_cat', 0.5),
             ('k_Bak_inac', 0.1),
