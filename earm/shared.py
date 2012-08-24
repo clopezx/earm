@@ -124,11 +124,11 @@ def observables():
     """
 
     alias_model_components()
-
-    Observable('tBid_',  Bid(state='T'))
-    Observable('mBid_',  Bid(state='M'))
-    Observable('aSmac_', Smac(state='A'))
-    Observable('cPARP_', PARP(state='C'))
+    # Observables
+    # ===========
+    Observable('mBid',  Bid(state='M'))
+    Observable('aSmac', Smac(state='A'))
+    Observable('cPARP', PARP(state='C'))
 
 # Aliases to pysb.macros
 # ======================

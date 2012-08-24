@@ -30,8 +30,6 @@ shen_modules.howells(do_pore_assembly=True, do_pore_transport=True)
 # Set initial condition for uncleaved Bid to 0.1uM, per the paper
 Initial(Bid(state='U', bf=None), Parameter('Bid_0', 0.1e-6 * N_A * V))
 
-# TODO: May want to set initial condition for Bad to be bound to 14-3-3
-
 albeck_modules.rec_to_bid()
 albeck_modules.pore_to_parp()
 
