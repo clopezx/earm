@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level2" level="2" version="1">
+    <model>
+        <listOfCompartments>
+            <compartment id="default" name="default" spatialDimensions="0"/>
+        </listOfCompartments>
+        <listOfSpecies>
+            <species id="s0" name="L(bf=None)" compartment="default" initialAmount="3.000000e+03"/>
+            <species id="s1" name="R(bf=None)" compartment="default" initialAmount="2.000000e+02"/>
+            <species id="s2" name="flip(bf=None)" compartment="default" initialAmount="1.000000e+02"/>
+            <species id="s3" name="C8(bf=None, state=pro)" compartment="default" initialAmount="2.000000e+04"/>
+            <species id="s4" name="BAR(bf=None)" compartment="default" initialAmount="1.000000e+03"/>
+            <species id="s5" name="Apaf(bf=None, state=I)" compartment="default" initialAmount="1.000000e+05"/>
+            <species id="s6" name="C3(bf=None, state=pro)" compartment="default" initialAmount="1.000000e+04"/>
+            <species id="s7" name="C6(bf=None, state=pro)" compartment="default" initialAmount="1.000000e+04"/>
+            <species id="s8" name="C9(bf=None)" compartment="default" initialAmount="1.000000e+05"/>
+            <species id="s9" name="PARP(bf=None, state=U)" compartment="default" initialAmount="1.000000e+06"/>
+            <species id="s10" name="XIAP(bf=None)" compartment="default" initialAmount="1.000000e+05"/>
+            <species id="s11" name="Bid(bf=None, state=U)" compartment="default" initialAmount="4.000000e+04"/>
+            <species id="s12" name="Bad(bf=None, state=C)" compartment="default" initialAmount="1.000000e+03"/>
+            <species id="s13" name="Bax(bf=None, s1=None, s2=None, state=C)" compartment="default" initialAmount="8.000000e+04"/>
+            <species id="s14" name="Bak(bf=None, s1=None, s2=None, state=M)" compartment="default" initialAmount="2.000000e+04"/>
+            <species id="s15" name="Bcl2(bf=None)" compartment="default" initialAmount="2.000000e+04"/>
+            <species id="s16" name="BclxL(bf=None, state=C)" compartment="default" initialAmount="2.000000e+04"/>
+            <species id="s17" name="Mcl1(bf=None, state=M)" compartment="default" initialAmount="2.000000e+04"/>
+            <species id="s18" name="Noxa(bf=None, state=C)" compartment="default" initialAmount="1.000000e+03"/>
+            <species id="s19" name="CytoC(bf=None, state=M)" compartment="default" initialAmount="5.000000e+05"/>
+            <species id="s20" name="Smac(bf=None, state=M)" compartment="default" initialAmount="1.000000e+05"/>
+            <species id="s21" name="L(bf=1) ._br_R(bf=1)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s22" name="Bax(bf=None, s1=None, s2=None, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s23" name="BclxL(bf=None, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s24" name="DISC(bf=None)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s25" name="C8(bf=1, state=pro) ._br_DISC(bf=1)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s26" name="DISC(bf=1) ._br_flip(bf=1)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s27" name="C8(bf=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s28" name="Bid(bf=1, state=U) ._br_C8(bf=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s29" name="BAR(bf=1) ._br_C8(bf=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s30" name="C3(bf=1, state=pro) ._br_C8(bf=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s31" name="Bid(bf=None, state=T)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s32" name="C3(bf=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s33" name="C3(bf=1, state=A) ._br_XIAP(bf=1)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s34" name="C3(bf=1, state=A) ._br_PARP(bf=1, state=U)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s35" name="C3(bf=1, state=A) ._br_C6(bf=1, state=pro)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s36" name="Bid(bf=None, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s37" name="C3(bf=None, state=ub)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s38" name="PARP(bf=None, state=C)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s39" name="C6(bf=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s40" name="Bax(bf=1, s1=None, s2=None, state=M) ._br_Bid(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s41" name="Bak(bf=1, s1=None, s2=None, state=M) ._br_Bid(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s42" name="Bcl2(bf=1) ._br_Bid(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s43" name="BclxL(bf=1, state=M) ._br_Bid(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s44" name="Bid(bf=1, state=M) ._br_Mcl1(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s45" name="C6(bf=1, state=A) ._br_C8(bf=1, state=pro)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s46" name="Bax(bf=None, s1=None, s2=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s47" name="Bak(bf=None, s1=None, s2=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s48" name="Bax(bf=1, s1=None, s2=None, state=A) ._br_Bax(bf=1, s1=None, s2=None, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s49" name="Bak(bf=1, s1=None, s2=None, state=A) ._br_Bak(bf=1, s1=None, s2=None, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s50" name="Bax(bf=1, s1=None, s2=None, state=A) ._br_Bcl2(bf=1)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s51" name="Bax(bf=1, s1=None, s2=None, state=A) ._br_BclxL(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s52" name="Bak(bf=1, s1=None, s2=None, state=A) ._br_BclxL(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s53" name="Bak(bf=1, s1=None, s2=None, state=A) ._br_Mcl1(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s54" name="Bax(bf=None, s1=1, s2=None, state=A) ._br_Bax(bf=None, s1=None, s2=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s55" name="Bak(bf=None, s1=1, s2=None, state=A) ._br_Bak(bf=None, s1=None, s2=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s56" name="Bax(bf=None, s1=1, s2=2, state=A) ._br_Bax(bf=None, s1=2, s2=3, state=A) ._br_Bax(bf=None, s1=3, s2=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s57" name="Bak(bf=None, s1=1, s2=2, state=A) ._br_Bak(bf=None, s1=2, s2=3, state=A) ._br_Bak(bf=None, s1=3, s2=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s58" name="Bax(bf=None, s1=1, s2=2, state=A) ._br_Bax(bf=None, s1=2, s2=3, state=A) ._br_Bax(bf=None, s1=3, s2=4, state=A) ._br_Bax(bf=None, s1=4, s2=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s59" name="Bak(bf=None, s1=1, s2=2, state=A) ._br_Bak(bf=None, s1=2, s2=3, state=A) ._br_Bak(bf=None, s1=3, s2=4, state=A) ._br_Bak(bf=None, s1=4, s2=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s60" name="Bax(bf=1, s1=2, s2=3, state=A) ._br_Bax(bf=None, s1=3, s2=4, state=A) ._br_Bax(bf=None, s1=4, s2=5, state=A) ._br_Bax(bf=None, s1=5, s2=2, state=A) ._br_CytoC(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s61" name="Bax(bf=1, s1=2, s2=3, state=A) ._br_Bax(bf=None, s1=3, s2=4, state=A) ._br_Bax(bf=None, s1=4, s2=5, state=A) ._br_Bax(bf=None, s1=5, s2=2, state=A) ._br_Smac(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s62" name="Bak(bf=1, s1=2, s2=3, state=A) ._br_Bak(bf=None, s1=3, s2=4, state=A) ._br_Bak(bf=None, s1=4, s2=5, state=A) ._br_Bak(bf=None, s1=5, s2=2, state=A) ._br_CytoC(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s63" name="Bak(bf=1, s1=2, s2=3, state=A) ._br_Bak(bf=None, s1=3, s2=4, state=A) ._br_Bak(bf=None, s1=4, s2=5, state=A) ._br_Bak(bf=None, s1=5, s2=2, state=A) ._br_Smac(bf=1, state=M)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s64" name="CytoC(bf=None, state=C)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s65" name="Smac(bf=None, state=C)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s66" name="Smac(bf=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s67" name="CytoC(bf=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s68" name="Apaf(bf=1, state=I) ._br_CytoC(bf=1, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s69" name="Smac(bf=1, state=A) ._br_XIAP(bf=1)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s70" name="Apaf(bf=None, state=A)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s71" name="Apop(bf=None)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s72" name="Apop(bf=1) ._br_C3(bf=1, state=pro)" compartment="default" initialAmount="0.000000e+00"/>
+            <species id="s73" name="Apop(bf=1) ._br_XIAP(bf=1)" compartment="default" initialAmount="0.000000e+00"/>
+        </listOfSpecies>
+        <listOfParameters>
+            <parameter id="bind_L_R_to_LR_kf" name="bind_L_R_to_LR_kf" value="4.000000e-07"/>
+            <parameter id="bind_L_R_to_LR_kr" name="bind_L_R_to_LR_kr" value="1.000000e-03"/>
+            <parameter id="convert_LR_to_DISC_kc" name="convert_LR_to_DISC_kc" value="1.000000e-05"/>
+            <parameter id="bind_DISC_C8pro_to_DISCC8pro_kf" name="bind_DISC_C8pro_to_DISCC8pro_kf" value="1.000000e-06"/>
+            <parameter id="bind_DISC_C8pro_to_DISCC8pro_kr" name="bind_DISC_C8pro_to_DISCC8pro_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_DISCC8pro_to_DISC_C8A_kc" name="catalyze_DISCC8pro_to_DISC_C8A_kc" value="1.000000e+00"/>
+            <parameter id="bind_C8A_BidU_to_C8ABidU_kf" name="bind_C8A_BidU_to_C8ABidU_kf" value="1.000000e-06"/>
+            <parameter id="bind_C8A_BidU_to_C8ABidU_kr" name="bind_C8A_BidU_to_C8ABidU_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_C8ABidU_to_C8A_BidT_kc" name="catalyze_C8ABidU_to_C8A_BidT_kc" value="1.000000e+00"/>
+            <parameter id="bind_DISC_flip_kf" name="bind_DISC_flip_kf" value="1.000000e-06"/>
+            <parameter id="bind_DISC_flip_kr" name="bind_DISC_flip_kr" value="1.000000e-03"/>
+            <parameter id="bind_BAR_C8A_kf" name="bind_BAR_C8A_kf" value="1.000000e-06"/>
+            <parameter id="bind_BAR_C8A_kr" name="bind_BAR_C8A_kr" value="1.000000e-03"/>
+            <parameter id="equilibrate_SmacC_to_SmacA_kf" name="equilibrate_SmacC_to_SmacA_kf" value="1.000000e-02"/>
+            <parameter id="equilibrate_SmacC_to_SmacA_kr" name="equilibrate_SmacC_to_SmacA_kr" value="1.000000e-02"/>
+            <parameter id="equilibrate_CytoCC_to_CytoCA_kf" name="equilibrate_CytoCC_to_CytoCA_kf" value="1.000000e-02"/>
+            <parameter id="equilibrate_CytoCC_to_CytoCA_kr" name="equilibrate_CytoCC_to_CytoCA_kr" value="1.000000e-02"/>
+            <parameter id="bind_CytoCA_ApafI_to_CytoCAApafI_kf" name="bind_CytoCA_ApafI_to_CytoCAApafI_kf" value="5.000000e-07"/>
+            <parameter id="bind_CytoCA_ApafI_to_CytoCAApafI_kr" name="bind_CytoCA_ApafI_to_CytoCAApafI_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_CytoCAApafI_to_CytoCA_ApafA_kc" name="catalyze_CytoCAApafI_to_CytoCA_ApafA_kc" value="1.000000e+00"/>
+            <parameter id="convert_ApafA_C9_to_Apop_kf" name="convert_ApafA_C9_to_Apop_kf" value="5.000000e-08"/>
+            <parameter id="convert_ApafA_C9_to_Apop_kr" name="convert_ApafA_C9_to_Apop_kr" value="1.000000e-03"/>
+            <parameter id="bind_Apop_C3pro_to_ApopC3pro_kf" name="bind_Apop_C3pro_to_ApopC3pro_kf" value="5.000000e-09"/>
+            <parameter id="bind_Apop_C3pro_to_ApopC3pro_kr" name="bind_Apop_C3pro_to_ApopC3pro_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_ApopC3pro_to_Apop_C3A_kc" name="catalyze_ApopC3pro_to_Apop_C3A_kc" value="1.000000e+00"/>
+            <parameter id="bind_Apop_XIAP_kf" name="bind_Apop_XIAP_kf" value="2.000000e-06"/>
+            <parameter id="bind_Apop_XIAP_kr" name="bind_Apop_XIAP_kr" value="1.000000e-03"/>
+            <parameter id="bind_SmacA_XIAP_kf" name="bind_SmacA_XIAP_kf" value="7.000000e-06"/>
+            <parameter id="bind_SmacA_XIAP_kr" name="bind_SmacA_XIAP_kr" value="1.000000e-03"/>
+            <parameter id="bind_C8A_C3pro_to_C8AC3pro_kf" name="bind_C8A_C3pro_to_C8AC3pro_kf" value="1.000000e-07"/>
+            <parameter id="bind_C8A_C3pro_to_C8AC3pro_kr" name="bind_C8A_C3pro_to_C8AC3pro_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_C8AC3pro_to_C8A_C3A_kc" name="catalyze_C8AC3pro_to_C8A_C3A_kc" value="1.000000e+00"/>
+            <parameter id="bind_XIAP_C3A_to_XIAPC3A_kf" name="bind_XIAP_C3A_to_XIAPC3A_kf" value="2.000000e-06"/>
+            <parameter id="bind_XIAP_C3A_to_XIAPC3A_kr" name="bind_XIAP_C3A_to_XIAPC3A_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_XIAPC3A_to_XIAP_C3ub_kc" name="catalyze_XIAPC3A_to_XIAP_C3ub_kc" value="1.000000e-01"/>
+            <parameter id="bind_C3A_PARPU_to_C3APARPU_kf" name="bind_C3A_PARPU_to_C3APARPU_kf" value="1.000000e-06"/>
+            <parameter id="bind_C3A_PARPU_to_C3APARPU_kr" name="bind_C3A_PARPU_to_C3APARPU_kr" value="1.000000e-02"/>
+            <parameter id="catalyze_C3APARPU_to_C3A_PARPC_kc" name="catalyze_C3APARPU_to_C3A_PARPC_kc" value="1.000000e+00"/>
+            <parameter id="bind_C3A_C6pro_to_C3AC6pro_kf" name="bind_C3A_C6pro_to_C3AC6pro_kf" value="1.000000e-06"/>
+            <parameter id="bind_C3A_C6pro_to_C3AC6pro_kr" name="bind_C3A_C6pro_to_C3AC6pro_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_C3AC6pro_to_C3A_C6A_kc" name="catalyze_C3AC6pro_to_C3A_C6A_kc" value="1.000000e+00"/>
+            <parameter id="bind_C6A_C8pro_to_C6AC8pro_kf" name="bind_C6A_C8pro_to_C6AC8pro_kf" value="3.000000e-08"/>
+            <parameter id="bind_C6A_C8pro_to_C6AC8pro_kr" name="bind_C6A_C8pro_to_C6AC8pro_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_C6AC8pro_to_C6A_C8A_kc" name="catalyze_C6AC8pro_to_C6A_C8A_kc" value="1.000000e+00"/>
+            <parameter id="equilibrate_BidT_to_BidM_kf" name="equilibrate_BidT_to_BidM_kf" value="1.000000e-01"/>
+            <parameter id="equilibrate_BidT_to_BidM_kr" name="equilibrate_BidT_to_BidM_kr" value="1.000000e-03"/>
+            <parameter id="equilibrate_BaxC_to_BaxM_kf" name="equilibrate_BaxC_to_BaxM_kf" value="1.000000e-02"/>
+            <parameter id="equilibrate_BaxC_to_BaxM_kr" name="equilibrate_BaxC_to_BaxM_kr" value="1.000000e-02"/>
+            <parameter id="equilibrate_BclxLC_to_BclxLM_kf" name="equilibrate_BclxLC_to_BclxLM_kf" value="1.000000e-02"/>
+            <parameter id="equilibrate_BclxLC_to_BclxLM_kr" name="equilibrate_BclxLC_to_BclxLM_kr" value="1.000000e-02"/>
+            <parameter id="bind_BidM_BaxM_to_BidMBaxM_kf" name="bind_BidM_BaxM_to_BidMBaxM_kf" value="1.000000e-07"/>
+            <parameter id="bind_BidM_BaxM_to_BidMBaxM_kr" name="bind_BidM_BaxM_to_BidMBaxM_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_BidMBaxM_to_BidM_BaxA_kc" name="catalyze_BidMBaxM_to_BidM_BaxA_kc" value="1.000000e+00"/>
+            <parameter id="bind_BidM_BakM_to_BidMBakM_kf" name="bind_BidM_BakM_to_BidMBakM_kf" value="1.000000e-07"/>
+            <parameter id="bind_BidM_BakM_to_BidMBakM_kr" name="bind_BidM_BakM_to_BidMBakM_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_BidMBakM_to_BidM_BakA_kc" name="catalyze_BidMBakM_to_BidM_BakA_kc" value="1.000000e+00"/>
+            <parameter id="bind_BaxA_BaxM_to_BaxABaxM_kf" name="bind_BaxA_BaxM_to_BaxABaxM_kf" value="1.000000e-07"/>
+            <parameter id="bind_BaxA_BaxM_to_BaxABaxM_kr" name="bind_BaxA_BaxM_to_BaxABaxM_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_BaxABaxM_to_BaxA_BaxA_kc" name="catalyze_BaxABaxM_to_BaxA_BaxA_kc" value="1.000000e+00"/>
+            <parameter id="bind_BakA_BakM_to_BakABakM_kf" name="bind_BakA_BakM_to_BakABakM_kf" value="1.000000e-07"/>
+            <parameter id="bind_BakA_BakM_to_BakABakM_kr" name="bind_BakA_BakM_to_BakABakM_kr" value="1.000000e-03"/>
+            <parameter id="catalyze_BakABakM_to_BakA_BakA_kc" name="catalyze_BakABakM_to_BakA_BakA_kc" value="1.000000e+00"/>
+            <parameter id="bind_BidM_Bcl2_kf" name="bind_BidM_Bcl2_kf" value="1.000000e-06"/>
+            <parameter id="bind_BidM_Bcl2_kr" name="bind_BidM_Bcl2_kr" value="6.600000e-02"/>
+            <parameter id="bind_BidM_BclxLM_kf" name="bind_BidM_BclxLM_kf" value="1.000000e-06"/>
+            <parameter id="bind_BidM_BclxLM_kr" name="bind_BidM_BclxLM_kr" value="1.200000e-02"/>
+            <parameter id="bind_BidM_Mcl1M_kf" name="bind_BidM_Mcl1M_kf" value="1.000000e-06"/>
+            <parameter id="bind_BidM_Mcl1M_kr" name="bind_BidM_Mcl1M_kr" value="1.000000e-02"/>
+            <parameter id="bind_BaxA_Bcl2_kf" name="bind_BaxA_Bcl2_kf" value="1.000000e-06"/>
+            <parameter id="bind_BaxA_Bcl2_kr" name="bind_BaxA_Bcl2_kr" value="1.000000e-02"/>
+            <parameter id="bind_BaxA_BclxLM_kf" name="bind_BaxA_BclxLM_kf" value="1.000000e-06"/>
+            <parameter id="bind_BaxA_BclxLM_kr" name="bind_BaxA_BclxLM_kr" value="1.000000e-02"/>
+            <parameter id="bind_BakA_BclxLM_kf" name="bind_BakA_BclxLM_kf" value="1.000000e-06"/>
+            <parameter id="bind_BakA_BclxLM_kr" name="bind_BakA_BclxLM_kr" value="5.000000e-02"/>
+            <parameter id="bind_BakA_Mcl1_kf" name="bind_BakA_Mcl1_kf" value="1.000000e-06"/>
+            <parameter id="bind_BakA_Mcl1_kr" name="bind_BakA_Mcl1_kr" value="1.000000e-02"/>
+            <parameter id="bind_BadM_Bcl2_kf" name="bind_BadM_Bcl2_kf" value="1.000000e-06"/>
+            <parameter id="bind_BadM_Bcl2_kr" name="bind_BadM_Bcl2_kr" value="1.100000e-02"/>
+            <parameter id="bind_BadM_BclxLM_kf" name="bind_BadM_BclxLM_kf" value="1.000000e-06"/>
+            <parameter id="bind_BadM_BclxLM_kr" name="bind_BadM_BclxLM_kr" value="1.000000e-02"/>
+            <parameter id="bind_NoxaM_Mcl1M_kf" name="bind_NoxaM_Mcl1M_kf" value="1.000000e-06"/>
+            <parameter id="bind_NoxaM_Mcl1M_kr" name="bind_NoxaM_Mcl1M_kr" value="1.900000e-02"/>
+            <parameter id="assemble_pore_sequential_Bax_2_kf" name="assemble_pore_sequential_Bax_2_kf" value="2.040816e-04"/>
+            <parameter id="assemble_pore_sequential_Bax_2_kr" name="assemble_pore_sequential_Bax_2_kr" value="1.000000e-03"/>
+            <parameter id="assemble_pore_sequential_Bax_3_kf" name="assemble_pore_sequential_Bax_3_kf" value="2.040816e-04"/>
+            <parameter id="assemble_pore_sequential_Bax_3_kr" name="assemble_pore_sequential_Bax_3_kr" value="1.000000e-03"/>
+            <parameter id="assemble_pore_sequential_Bax_4_kf" name="assemble_pore_sequential_Bax_4_kf" value="2.040816e-04"/>
+            <parameter id="assemble_pore_sequential_Bax_4_kr" name="assemble_pore_sequential_Bax_4_kr" value="1.000000e-03"/>
+            <parameter id="assemble_pore_sequential_Bak_2_kf" name="assemble_pore_sequential_Bak_2_kf" value="2.040816e-04"/>
+            <parameter id="assemble_pore_sequential_Bak_2_kr" name="assemble_pore_sequential_Bak_2_kr" value="1.000000e-03"/>
+            <parameter id="assemble_pore_sequential_Bak_3_kf" name="assemble_pore_sequential_Bak_3_kf" value="2.040816e-04"/>
+            <parameter id="assemble_pore_sequential_Bak_3_kr" name="assemble_pore_sequential_Bak_3_kr" value="1.000000e-03"/>
+            <parameter id="assemble_pore_sequential_Bak_4_kf" name="assemble_pore_sequential_Bak_4_kf" value="2.040816e-04"/>
+            <parameter id="assemble_pore_sequential_Bak_4_kr" name="assemble_pore_sequential_Bak_4_kr" value="1.000000e-03"/>
+            <parameter id="pore_transport_complex_BaxA_4_CytoCM_kf" name="pore_transport_complex_BaxA_4_CytoCM_kf" value="2.857143e-05"/>
+            <parameter id="pore_transport_complex_BaxA_4_CytoCM_kr" name="pore_transport_complex_BaxA_4_CytoCM_kr" value="1.000000e-03"/>
+            <parameter id="pore_transport_dissociate_BaxA_4_CytoCC_kc" name="pore_transport_dissociate_BaxA_4_CytoCC_kc" value="1.000000e+01"/>
+            <parameter id="pore_transport_complex_BaxA_4_SmacM_kf" name="pore_transport_complex_BaxA_4_SmacM_kf" value="2.857143e-05"/>
+            <parameter id="pore_transport_complex_BaxA_4_SmacM_kr" name="pore_transport_complex_BaxA_4_SmacM_kr" value="1.000000e-03"/>
+            <parameter id="pore_transport_dissociate_BaxA_4_SmacC_kc" name="pore_transport_dissociate_BaxA_4_SmacC_kc" value="1.000000e+01"/>
+            <parameter id="pore_transport_complex_BakA_4_CytoCM_kf" name="pore_transport_complex_BakA_4_CytoCM_kf" value="2.857143e-05"/>
+            <parameter id="pore_transport_complex_BakA_4_CytoCM_kr" name="pore_transport_complex_BakA_4_CytoCM_kr" value="1.000000e-03"/>
+            <parameter id="pore_transport_dissociate_BakA_4_CytoCC_kc" name="pore_transport_dissociate_BakA_4_CytoCC_kc" value="1.000000e+01"/>
+            <parameter id="pore_transport_complex_BakA_4_SmacM_kf" name="pore_transport_complex_BakA_4_SmacM_kf" value="2.857143e-05"/>
+            <parameter id="pore_transport_complex_BakA_4_SmacM_kr" name="pore_transport_complex_BakA_4_SmacM_kr" value="1.000000e-03"/>
+            <parameter id="pore_transport_dissociate_BakA_4_SmacC_kc" name="pore_transport_dissociate_BakA_4_SmacC_kc" value="1.000000e+01"/>
+        </listOfParameters>
+        <listOfReactions>
+            <reaction id="r0" name="r0" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s0"/>
+                    <speciesReference species="s1"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s21"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_L_R_to_LR_kf</ci><ci>s0</ci><ci>s1</ci></apply><apply><times/><ci>bind_L_R_to_LR_kr</ci><ci>s21</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r1" name="r1" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s13"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s22"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>equilibrate_BaxC_to_BaxM_kf</ci><ci>s13</ci></apply><apply><times/><ci>equilibrate_BaxC_to_BaxM_kr</ci><ci>s22</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r2" name="r2" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s16"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s23"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>equilibrate_BclxLC_to_BclxLM_kf</ci><ci>s16</ci></apply><apply><times/><ci>equilibrate_BclxLC_to_BclxLM_kr</ci><ci>s23</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r3" name="r3" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s21"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s24"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>convert_LR_to_DISC_kc</ci><ci>s21</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r4" name="r4" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s3"/>
+                    <speciesReference species="s24"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s25"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_DISC_C8pro_to_DISCC8pro_kf</ci><ci>s24</ci><ci>s3</ci></apply><apply><times/><ci>bind_DISC_C8pro_to_DISCC8pro_kr</ci><ci>s25</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r5" name="r5" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s2"/>
+                    <speciesReference species="s24"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s26"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_DISC_flip_kf</ci><ci>s2</ci><ci>s24</ci></apply><apply><times/><ci>bind_DISC_flip_kr</ci><ci>s26</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r6" name="r6" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s25"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s24"/>
+                    <speciesReference species="s27"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_DISCC8pro_to_DISC_C8A_kc</ci><ci>s25</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r7" name="r7" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s11"/>
+                    <speciesReference species="s27"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s28"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_C8A_BidU_to_C8ABidU_kf</ci><ci>s11</ci><ci>s27</ci></apply><apply><times/><ci>bind_C8A_BidU_to_C8ABidU_kr</ci><ci>s28</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r8" name="r8" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s4"/>
+                    <speciesReference species="s27"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s29"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BAR_C8A_kf</ci><ci>s27</ci><ci>s4</ci></apply><apply><times/><ci>bind_BAR_C8A_kr</ci><ci>s29</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r9" name="r9" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s6"/>
+                    <speciesReference species="s27"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s30"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_C8A_C3pro_to_C8AC3pro_kf</ci><ci>s27</ci><ci>s6</ci></apply><apply><times/><ci>bind_C8A_C3pro_to_C8AC3pro_kr</ci><ci>s30</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r10" name="r10" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s28"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s27"/>
+                    <speciesReference species="s31"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_C8ABidU_to_C8A_BidT_kc</ci><ci>s28</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r11" name="r11" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s30"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s27"/>
+                    <speciesReference species="s32"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_C8AC3pro_to_C8A_C3A_kc</ci><ci>s30</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r12" name="r12" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s10"/>
+                    <speciesReference species="s32"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s33"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_XIAP_C3A_to_XIAPC3A_kf</ci><ci>s10</ci><ci>s32</ci></apply><apply><times/><ci>bind_XIAP_C3A_to_XIAPC3A_kr</ci><ci>s33</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r13" name="r13" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s9"/>
+                    <speciesReference species="s32"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s34"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_C3A_PARPU_to_C3APARPU_kf</ci><ci>s32</ci><ci>s9</ci></apply><apply><times/><ci>bind_C3A_PARPU_to_C3APARPU_kr</ci><ci>s34</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r14" name="r14" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s7"/>
+                    <speciesReference species="s32"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s35"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_C3A_C6pro_to_C3AC6pro_kf</ci><ci>s32</ci><ci>s7</ci></apply><apply><times/><ci>bind_C3A_C6pro_to_C3AC6pro_kr</ci><ci>s35</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r15" name="r15" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s31"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s36"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>equilibrate_BidT_to_BidM_kf</ci><ci>s31</ci></apply><apply><times/><ci>equilibrate_BidT_to_BidM_kr</ci><ci>s36</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r16" name="r16" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s33"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s10"/>
+                    <speciesReference species="s37"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_XIAPC3A_to_XIAP_C3ub_kc</ci><ci>s33</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r17" name="r17" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s34"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s32"/>
+                    <speciesReference species="s38"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_C3APARPU_to_C3A_PARPC_kc</ci><ci>s34</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r18" name="r18" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s35"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s32"/>
+                    <speciesReference species="s39"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_C3AC6pro_to_C3A_C6A_kc</ci><ci>s35</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r19" name="r19" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s22"/>
+                    <speciesReference species="s36"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s40"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BidM_BaxM_to_BidMBaxM_kf</ci><ci>s22</ci><ci>s36</ci></apply><apply><times/><ci>bind_BidM_BaxM_to_BidMBaxM_kr</ci><ci>s40</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r20" name="r20" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s14"/>
+                    <speciesReference species="s36"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s41"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BidM_BakM_to_BidMBakM_kf</ci><ci>s14</ci><ci>s36</ci></apply><apply><times/><ci>bind_BidM_BakM_to_BidMBakM_kr</ci><ci>s41</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r21" name="r21" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s15"/>
+                    <speciesReference species="s36"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s42"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BidM_Bcl2_kf</ci><ci>s15</ci><ci>s36</ci></apply><apply><times/><ci>bind_BidM_Bcl2_kr</ci><ci>s42</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r22" name="r22" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s23"/>
+                    <speciesReference species="s36"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s43"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BidM_BclxLM_kf</ci><ci>s23</ci><ci>s36</ci></apply><apply><times/><ci>bind_BidM_BclxLM_kr</ci><ci>s43</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r23" name="r23" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s17"/>
+                    <speciesReference species="s36"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s44"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BidM_Mcl1M_kf</ci><ci>s17</ci><ci>s36</ci></apply><apply><times/><ci>bind_BidM_Mcl1M_kr</ci><ci>s44</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r24" name="r24" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s3"/>
+                    <speciesReference species="s39"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s45"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_C6A_C8pro_to_C6AC8pro_kf</ci><ci>s3</ci><ci>s39</ci></apply><apply><times/><ci>bind_C6A_C8pro_to_C6AC8pro_kr</ci><ci>s45</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r25" name="r25" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s40"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s36"/>
+                    <speciesReference species="s46"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_BidMBaxM_to_BidM_BaxA_kc</ci><ci>s40</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r26" name="r26" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s41"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s36"/>
+                    <speciesReference species="s47"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_BidMBakM_to_BidM_BakA_kc</ci><ci>s41</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r27" name="r27" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s45"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s27"/>
+                    <speciesReference species="s39"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_C6AC8pro_to_C6A_C8A_kc</ci><ci>s45</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r28" name="r28" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s22"/>
+                    <speciesReference species="s46"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s48"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BaxA_BaxM_to_BaxABaxM_kf</ci><ci>s22</ci><ci>s46</ci></apply><apply><times/><ci>bind_BaxA_BaxM_to_BaxABaxM_kr</ci><ci>s48</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r29" name="r29" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s14"/>
+                    <speciesReference species="s47"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s49"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BakA_BakM_to_BakABakM_kf</ci><ci>s14</ci><ci>s47</ci></apply><apply><times/><ci>bind_BakA_BakM_to_BakABakM_kr</ci><ci>s49</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r30" name="r30" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s15"/>
+                    <speciesReference species="s46"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s50"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BaxA_Bcl2_kf</ci><ci>s15</ci><ci>s46</ci></apply><apply><times/><ci>bind_BaxA_Bcl2_kr</ci><ci>s50</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r31" name="r31" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s23"/>
+                    <speciesReference species="s46"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s51"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BaxA_BclxLM_kf</ci><ci>s23</ci><ci>s46</ci></apply><apply><times/><ci>bind_BaxA_BclxLM_kr</ci><ci>s51</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r32" name="r32" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s23"/>
+                    <speciesReference species="s47"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s52"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BakA_BclxLM_kf</ci><ci>s23</ci><ci>s47</ci></apply><apply><times/><ci>bind_BakA_BclxLM_kr</ci><ci>s52</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r33" name="r33" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s17"/>
+                    <speciesReference species="s47"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s53"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_BakA_Mcl1_kf</ci><ci>s17</ci><ci>s47</ci></apply><apply><times/><ci>bind_BakA_Mcl1_kr</ci><ci>s53</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r34" name="r34" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s46"/>
+                    <speciesReference species="s46"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s54"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>assemble_pore_sequential_Bax_2_kf</ci><apply><power/><ci>s46</ci><cn>2</cn></apply></apply><apply><times/><ci>assemble_pore_sequential_Bax_2_kr</ci><ci>s54</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r35" name="r35" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s47"/>
+                    <speciesReference species="s47"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s55"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>assemble_pore_sequential_Bak_2_kf</ci><apply><power/><ci>s47</ci><cn>2</cn></apply></apply><apply><times/><ci>assemble_pore_sequential_Bak_2_kr</ci><ci>s55</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r36" name="r36" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s48"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s46"/>
+                    <speciesReference species="s46"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_BaxABaxM_to_BaxA_BaxA_kc</ci><ci>s48</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r37" name="r37" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s49"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s47"/>
+                    <speciesReference species="s47"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_BakABakM_to_BakA_BakA_kc</ci><ci>s49</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r38" name="r38" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s46"/>
+                    <speciesReference species="s54"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s56"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>assemble_pore_sequential_Bax_3_kf</ci><ci>s46</ci><ci>s54</ci></apply><apply><times/><ci>assemble_pore_sequential_Bax_3_kr</ci><ci>s56</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r39" name="r39" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s47"/>
+                    <speciesReference species="s55"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s57"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>assemble_pore_sequential_Bak_3_kf</ci><ci>s47</ci><ci>s55</ci></apply><apply><times/><ci>assemble_pore_sequential_Bak_3_kr</ci><ci>s57</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r40" name="r40" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s46"/>
+                    <speciesReference species="s56"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s58"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>assemble_pore_sequential_Bax_4_kf</ci><ci>s46</ci><ci>s56</ci></apply><apply><times/><ci>assemble_pore_sequential_Bax_4_kr</ci><ci>s58</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r41" name="r41" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s47"/>
+                    <speciesReference species="s57"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s59"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>assemble_pore_sequential_Bak_4_kf</ci><ci>s47</ci><ci>s57</ci></apply><apply><times/><ci>assemble_pore_sequential_Bak_4_kr</ci><ci>s59</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r42" name="r42" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s19"/>
+                    <speciesReference species="s58"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s60"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>pore_transport_complex_BaxA_4_CytoCM_kf</ci><ci>s19</ci><ci>s58</ci></apply><apply><times/><ci>pore_transport_complex_BaxA_4_CytoCM_kr</ci><ci>s60</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r43" name="r43" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s20"/>
+                    <speciesReference species="s58"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s61"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>pore_transport_complex_BaxA_4_SmacM_kf</ci><ci>s20</ci><ci>s58</ci></apply><apply><times/><ci>pore_transport_complex_BaxA_4_SmacM_kr</ci><ci>s61</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r44" name="r44" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s19"/>
+                    <speciesReference species="s59"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s62"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>pore_transport_complex_BakA_4_CytoCM_kf</ci><ci>s19</ci><ci>s59</ci></apply><apply><times/><ci>pore_transport_complex_BakA_4_CytoCM_kr</ci><ci>s62</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r45" name="r45" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s20"/>
+                    <speciesReference species="s59"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s63"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>pore_transport_complex_BakA_4_SmacM_kf</ci><ci>s20</ci><ci>s59</ci></apply><apply><times/><ci>pore_transport_complex_BakA_4_SmacM_kr</ci><ci>s63</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r46" name="r46" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s60"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s58"/>
+                    <speciesReference species="s64"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>pore_transport_dissociate_BaxA_4_CytoCC_kc</ci><ci>s60</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r47" name="r47" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s61"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s58"/>
+                    <speciesReference species="s65"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>pore_transport_dissociate_BaxA_4_SmacC_kc</ci><ci>s61</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r48" name="r48" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s62"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s59"/>
+                    <speciesReference species="s64"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>pore_transport_dissociate_BakA_4_CytoCC_kc</ci><ci>s62</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r49" name="r49" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s63"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s59"/>
+                    <speciesReference species="s65"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>pore_transport_dissociate_BakA_4_SmacC_kc</ci><ci>s63</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r50" name="r50" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s65"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s66"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>equilibrate_SmacC_to_SmacA_kf</ci><ci>s65</ci></apply><apply><times/><ci>equilibrate_SmacC_to_SmacA_kr</ci><ci>s66</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r51" name="r51" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s64"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s67"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>equilibrate_CytoCC_to_CytoCA_kf</ci><ci>s64</ci></apply><apply><times/><ci>equilibrate_CytoCC_to_CytoCA_kr</ci><ci>s67</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r52" name="r52" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s5"/>
+                    <speciesReference species="s67"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s68"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_CytoCA_ApafI_to_CytoCAApafI_kf</ci><ci>s5</ci><ci>s67</ci></apply><apply><times/><ci>bind_CytoCA_ApafI_to_CytoCAApafI_kr</ci><ci>s68</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r53" name="r53" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s10"/>
+                    <speciesReference species="s66"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s69"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_SmacA_XIAP_kf</ci><ci>s10</ci><ci>s66</ci></apply><apply><times/><ci>bind_SmacA_XIAP_kr</ci><ci>s69</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r54" name="r54" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s68"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s67"/>
+                    <speciesReference species="s70"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_CytoCAApafI_to_CytoCA_ApafA_kc</ci><ci>s68</ci></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r55" name="r55" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s8"/>
+                    <speciesReference species="s70"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s71"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>convert_ApafA_C9_to_Apop_kf</ci><ci>s70</ci><ci>s8</ci></apply><apply><times/><ci>convert_ApafA_C9_to_Apop_kr</ci><ci>s71</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r56" name="r56" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s6"/>
+                    <speciesReference species="s71"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s72"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_Apop_C3pro_to_ApopC3pro_kf</ci><ci>s6</ci><ci>s71</ci></apply><apply><times/><ci>bind_Apop_C3pro_to_ApopC3pro_kr</ci><ci>s72</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r57" name="r57" reversible="true">
+                <listOfReactants>
+                    <speciesReference species="s10"/>
+                    <speciesReference species="s71"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s73"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><minus/><apply><times/><ci>bind_Apop_XIAP_kf</ci><ci>s10</ci><ci>s71</ci></apply><apply><times/><ci>bind_Apop_XIAP_kr</ci><ci>s73</ci></apply></apply></math></kineticLaw>
+            </reaction>
+            <reaction id="r58" name="r58" reversible="false">
+                <listOfReactants>
+                    <speciesReference species="s72"/>
+                </listOfReactants>
+                <listOfProducts>
+                    <speciesReference species="s32"/>
+                    <speciesReference species="s71"/>
+                </listOfProducts>
+                <kineticLaw><math xmlns="http://www.w3.org/1998/Math/MathML"><apply><times/><ci>catalyze_ApopC3pro_to_Apop_C3A_kc</ci><ci>s72</ci></apply></math></kineticLaw>
+            </reaction>
+        </listOfReactions>
+    </model>
+</sbml>
+
