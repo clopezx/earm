@@ -1,0 +1,2 @@
+# requirements just for building the docs (mainly to help out readthedocs)
+pysb>=0.1.8
