@@ -251,3 +251,22 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
+
+
+# mock out external dependencies
+
+class Mock(str):
+    def __getattr__(cls, name):
+        if name in ('__file__', '__path__'):
+            return '/dev/null'
+        else:
+            return Mock()
+
+class MockConstant(object):
+    def __getattr__(cls, name):
+        return 1.0
+
+MOCK_MODULES = ['numpy', 'numpy.random', 'scipy']
+for mod_name in MOCK_MODULES:
+    sys.modules[mod_name] = Mock()
+sys.modules['scipy.constants'] = MockConstant()
