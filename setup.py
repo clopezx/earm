@@ -4,7 +4,7 @@ from distutils.core import setup
 
 def main():
     setup(name='earm',
-          version=1.0,
+          version='1.0',
           description='Extrinsic Apoptosis Reaction Model',
           author='?',
           author_email='?',
