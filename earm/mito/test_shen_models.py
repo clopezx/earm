@@ -270,7 +270,7 @@ class TestChenBiophysJ(unittest.TestCase):
 
     def test_parameters(self):
         """The parameter values in the test below have been verified to match
-        the values listed in Table 1 of Chen et al. (2007) Biophys J."""
+        the values listed in Table 1 of [Chen2007biophysbj]_."""
         param_list = convert_parameters(self.model, self.p_name_map,
                                         original_units='micromolar')
         self.assertEqual(param_list, 
@@ -515,7 +515,7 @@ class TestHowells(unittest.TestCase):
 
 
 def howells_figure2ab(model):
-    """Reproduce Figure 2a/b from Howells (2011)."""
+    """Reproduce Figure 2a/b from [Howells2011]_."""
     model.parameters['Bcl2_0'].value = 0.1  # Total Bcl2
     model.parameters['Bax_0'].value = 0.2   # Total Bax
     model.parameters['Bid_0'].value = 0.018 # Total tBid

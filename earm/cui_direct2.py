@@ -1,10 +1,6 @@
 """
 Model M14a: Extrinsic apoptosis model incorporating the "Direct 2" MOMP model
-from Cui et al. (2008) PLoS One.
-
-Cui, J., Chen, C., Lu, H., Sun, T., & Shen, P. (2008). Two independent positive
-feedbacks and bistability in the Bcl-2 apoptotic switch. PLoS ONE, 3(1), e1469.
-:doi:`10.1371/journal.pone.0001469` :pmid:`18213378`.
+from [Cui2008]_.
 """
 
 from pysb import *

@@ -20,17 +20,16 @@ following four categories:
    - :py:func:`assemble_pore_sequential`
    - :py:func:`pore_transport`
 
-3. Macros for mechanisms that appear within the models previously published
-   by the research group of Pingping Shen (or the model from Howells et al.
-   (2011), which is derived from one of Shen's models):
+3. Macros for mechanisms that appear within the models previously published by
+   the research group of Pingping Shen (or the model from [Howells2011]_, which
+   is derived from one of Shen's models):
 
    - :py:func:`assemble_pore_spontaneous`
    - :py:func:`displace`
    - :py:func:`displace_reversibly`
 
 4. Macros for mechanisms that appear within the models described in our
-   group's earlier work, specifically the models described in Albeck
-   et al. (2008) PLoS Biology:
+   group's earlier work, specifically the models described in [Albeck2008]_:
 
    - :py:func:`catalyze_convert`
    - :py:func:`one_step_conv`
@@ -100,7 +99,7 @@ transloc_rates = [1e-2, 1e-2]
 # `mito_fractional_volume` represents the fractional volume of the
 # mitochondrial membrane compartment, so the forward rate constants for
 # reactions on the membrane is `1/v`. The approach and the value used is
-# adopted from Albeck et al., (2008) PLoS Biology.
+# adopted from [Albeck2008]_.
 
 mito_fractional_volume = 0.07
 rate_scaling_factor = 1./mito_fractional_volume

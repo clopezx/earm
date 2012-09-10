@@ -3,7 +3,7 @@ Overview
 ========
 
 PySB implementations of the extrinsic apoptosis reaction model version 1.0
-(EARM 1.0) originally published in Albeck et al. (2008) PLoS Biology [1]_.
+(EARM 1.0) originally published in [Albeck2008]_.
 
 This file contains functions that implement the extrinsic pathway in three
 modules:
@@ -14,20 +14,13 @@ modules:
   (:py:func:`pore_to_parp`).
 
 For the (MOMP) segment there are five variants, which correspond to the five
-models described in Figure 11 of Albeck et al.[1]_:
+models described in Figure 11 of [Albeck2008]_:
 
 - "Minimal Model" (Figure 11b, :py:func:`albeck_11b`)
 - "Model B + Bax multimerization" (Figure 11c, :py:func:`albeck_11c`)
 - "Model C + mitochondrial transport" (Figure 11d, :py:func:`albeck_11d`)
 - "Current model" (Figure 11e, :py:func:`albeck_11e`)
 - "Current model + cooperativity" (Figure 11f, :py:func:`albeck_11f`)
-
-Reference
----------
-
-.. [1] Albeck JG, Burke JM, Spencer SL, Lauffenburger DA, Sorger PK, 2008
-   Modeling a Snap-Action, Variable-Delay Switch Controlling Extrinsic
-   Cell Death. PLoS Biol 6(12): e299. doi:10.1371/journal.pbio.0060299
 """
 
 from pysb import *
@@ -250,9 +243,9 @@ def pore_to_parp():
 # Motifs
 # ------
 
-# Because several of the models in Albeck et al. (2008) PLoS Biology
-# overlap, some mechanistic aspects have been refactored into the following
-# "motifs", implemented as functions:
+# Because several of the models in [Albeck2008]_ overlap, some mechanistic
+# aspects have been refactored into the following "motifs", implemented as
+# functions:
 
 def Bax_tetramerizes(bax_active_state='A', rate_scaling_factor=1):
     """Creates rules for the rxns Bax + Bax <> Bax2, and Bax2 + Bax2 <> Bax4.

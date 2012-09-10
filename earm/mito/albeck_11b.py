@@ -1,11 +1,5 @@
 """
-Model M4b: MOMP model "Minimal Model" (Figure 11b) from Albeck et al. (2008)
-PLoS Biology.
-
-Albeck, J. G., Burke, J. M., Spencer, S. L., Lauffenburger, D. A., and
-Sorger, P. K. (2008). Modeling a snap-action, variable-delay switch
-controlling extrinsic cell death. PLoS Biology, 6(12), 2831-2852.
-:doi:`10.1371/journal.pbio.0060299` :pmid:`19053173`.
+Model M4b: MOMP model "Minimal Model" (Figure 11b) from [Albeck2008]_.
 """
 
 from pysb import *

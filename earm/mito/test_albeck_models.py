@@ -1,8 +1,5 @@
 """This module contains a number of functions that can be used to verify that
-the behavior of the MOMP-only sub-models based on
-
-Albeck et al. (2008) PLoS Biology, 6(12), 2831-2852
-
+the behavior of the MOMP-only sub-models based on [Albeck2008]_
 and re-written in PySB match that of the original publication. To verify that
 the PySB version of the models match the original models (which were written
 in MATLAB), timecourse data was generated in MATLAB using the original MATLAB
@@ -44,7 +41,7 @@ def add_caspase8(model):
     All of the MOMP sub-models in this model repository have been written
     to have tBid as their upstream "interface," and Smac/Cytochrome C release
     as their downstream "interface." However, in the original publication
-    (Albeck et al. 2008), the authors incorporated the additional upstream
+    [Albeck2008]_, the authors incorporated the additional upstream
     step of Bid cleavage by caspase 8 into all of the sub-models that they
     explored.
 
@@ -89,7 +86,7 @@ def add_caspase8(model):
     model.parameters['CytoC_0'].value = 0
 
 def run_figure_sim(model):
-    """Run the C8 dose-response series shown in Fig. 11 of Albeck et. al (2008).
+    """Run the C8 dose-response series shown in Fig. 11 of [Albeck2008]_.
 
     Returns
     -------

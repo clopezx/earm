@@ -1,4 +1,4 @@
-"""Figure from Chen 2007, FEBS Letters."""
+"""Figure from [Chen2007febs]_."""
 
 from pysb import *
 from pysb.integrate import odesolve
@@ -10,7 +10,7 @@ from earm.mito.chen_2007_febs_indirect import model as indirect
 from earm.mito.chen_2007_febs_direct import model as direct
 
 def figure_2a():
-    """Reproduce the dose-response in Figure 2a of Chen et al.
+    """Reproduce the dose-response in Figure 2a of [Chen2007febs]_.
 
     Despite the fact that the PySB versions of the two models exactly reproduce
     the ODEs given in the supplement of the Chen et al. paper, this function

@@ -16,16 +16,17 @@ models includes:
 - 3 novel MOMP models of expanded scope that are unique to EARM and heretofore
   unpublished
 - 5 MOMP models with hypothetical reaction topologies previously described in
-  Albeck et al. (2008) PLoS Biology, Figure 11
+  Albeck et al. (2008) PLoS Biology, Figure 11 ([Albeck2008]_)
 - 6 MOMP models drawn from three papers from the research group of Pingping Shen
-- 1 MOMP model focusing on Bad phosphorylation drawn from Howells et al.
-  (2011), J. Theor. Biol.
+  ([Chen2007biophysj]_, [Chen2007febs]_, [Cui2008]_)
+- 1 MOMP model focusing on Bad phosphorylation drawn from Howells et
+  al. (2011), J. Theor. Biol. ([Howells2011]_)
 
 Moreover, for each of these there is a MOMP-only ("mito") version of the model
-and a full-apoptosis version of the model, in which the MOMP model is linked
-to the upstream and downstream pathways of extrinsic apoptosis from the
-previously published EARM 1.0 (Albeck et al. (2008), PLoS Biology). This gives
-a total of 30 different models.
+and a full-apoptosis version of the model, in which the MOMP model is linked to
+the upstream and downstream pathways of extrinsic apoptosis from the previously
+published EARM 1.0 from [Albeck2008]_. This gives a total of 30 different
+models.
 
 Goals
 -----
@@ -48,7 +49,8 @@ Installation
 EARM requires PySB, but itself is pure Python. You can get the latest version of
 EARM from GitHub at http://github.com/sorgerlab/earm. If you are not a git user
 you can download a ZIP file at
-https://github.com/jmuhlich/earmv20/zipball/master.
+https://github.com/sorgerlab/earm/zipball/master. EARM has its own website at
+http://sorgerlab.github.com/earm.
 
 PySB is available at http://pysb.org and http://github.com/pysb/pysb.
 

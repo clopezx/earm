@@ -1,10 +1,5 @@
-.. EARM documentation master file, created by
-   sphinx-quickstart on Fri Jul 13 14:19:17 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to EARM's documentation!
-================================
+Extrinsic Apoptotsis Reaction Model (EARM)
+==========================================
 
 Contents:
 
@@ -14,7 +9,7 @@ Contents:
    intro
    models
    modules/index
-
+   references
 
 Indices and tables
 ==================

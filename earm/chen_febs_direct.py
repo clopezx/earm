@@ -1,10 +1,6 @@
 """
-Model M10a: Extrinsic apoptosis model incorporating the "Direct" MOMP model
-from Chen et al. (2007) FEBS Letters.
-
-Chen, C., Cui, J., Zhang, W., & Shen, P. (2007). Robustness analysis identifies
-the plausible model of the Bcl-2 apoptotic switch. FEBS letters, 581(26),
-5143-5150. :doi:`10.1016/j.febslet.2007.09.063` :pmid:`17936275`.
+Model M10a: Extrinsic apoptosis model incorporating the "Direct" MOMP model from
+[Chen2007febs]_.
 """
 
 from pysb import *

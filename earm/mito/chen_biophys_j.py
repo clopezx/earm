@@ -1,10 +1,5 @@
 """
-Model M9b: MOMP model from Chen et al. (2007) Biophys J.
-
-Chen, C., Cui, J., Lu, H., Wang, R., Zhang, S., & Shen, P. (2007). Modeling of
-the role of a Bax-activation switch in the mitochondrial apoptosis decision.
-Biophysical Journal, 92(12), 4304-4315. :doi:`10.1529/biophysj.106.099606`
-:pmid:`17400705`.
+Model M9b: MOMP model from [Chen2007biophysj]_.
 """
 
 from pysb import *
