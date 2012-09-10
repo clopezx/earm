@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-    sphinx.ext.viewcode
-    ~~~~~~~~~~~~~~~~~~~
+    viewcode
+    ~~~~~~~~
 
     Add links to module code in Python object descriptions.
 
-    :copyright: Copyright 2007-2011 by the Sphinx team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+    Based on sphinx.ext.viewcode.
+
+    :copyright: Copyright 2007-2011 by the Sphinx team.
+    :license: BSD
 """
 
 from docutils import nodes
@@ -17,33 +19,38 @@ from sphinx.pycode import ModuleAnalyzer
 from sphinx.util.nodes import make_refnode
 
 
+def _update_tags(env, modname, fullname=None):
+    # Analyze modname code and return True if fullname is present. Also caches
+    # the analysis results in _viewcode_modules.
+    entry = env._viewcode_modules.get(modname, None)
+    if entry is None:
+        try:
+            analyzer = ModuleAnalyzer.for_module(modname)
+        except Exception:
+            env._viewcode_modules[modname] = False
+            return
+        analyzer.find_tags()
+        if not isinstance(analyzer.code, unicode):
+            code = analyzer.code.decode(analyzer.encoding)
+        else:
+            code = analyzer.code
+        entry = code, analyzer.tags, {}
+        env._viewcode_modules[modname] = entry
+    elif entry is False:
+        return
+    code, tags, used = entry
+    if fullname is not None and fullname in tags:
+        used[fullname] = env.docname
+        return True
+
 def doctree_read(app, doctree):
+    # Add viewcode nodes for code elements referenced in the document.
+
     env = app.builder.env
     if not hasattr(env, '_viewcode_modules'):
         env._viewcode_modules = {}
 
-    def has_tag(modname, fullname, docname):
-        entry = env._viewcode_modules.get(modname, None)
-        if entry is None:
-            try:
-                analyzer = ModuleAnalyzer.for_module(modname)
-            except Exception:
-                env._viewcode_modules[modname] = False
-                return
-            analyzer.find_tags()
-            if not isinstance(analyzer.code, unicode):
-                code = analyzer.code.decode(analyzer.encoding)
-            else:
-                code = analyzer.code
-            entry = code, analyzer.tags, {}
-            env._viewcode_modules[modname] = entry
-        elif entry is False:
-            return
-        code, tags, used = entry
-        if fullname in tags:
-            used[fullname] = docname
-            return True
-
+    # handle desc (description) nodes (module contents)
     for objnode in doctree.traverse(addnodes.desc):
         if objnode.get('domain') != 'py':
             continue
@@ -55,13 +62,14 @@ def doctree_read(app, doctree):
             if not modname:
                 continue
             fullname = signode.get('fullname')
-            if not has_tag(modname, fullname, env.docname):
+            if not _update_tags(env, modname, fullname):
                 continue
             if fullname in names:
                 # only one link per name, please
                 continue
             names.add(fullname)
             pagename = '_modules/' + modname.replace('.', '/')
+            # build up an xref and add it to the desc node
             onlynode = addnodes.only(expr='html')
             onlynode += addnodes.pending_xref(
                 '', reftype='viewcode', refdomain='std', refexplicit=False,
@@ -71,6 +79,23 @@ def doctree_read(app, doctree):
                                         classes=['viewcode-link'])
             signode += onlynode
 
+    # handle index nodes (modules themselves)
+    for objnode in doctree.traverse(addnodes.index):
+        # extract module name by de-munging the "target" field
+        index_target = objnode['entries'][0][2]
+        if not index_target.startswith('module-'):
+            continue
+        modname = index_target.replace('module-', '', 1)
+        _update_tags(env, modname)
+        pagename = '_modules/' + modname.replace('.', '/')
+        # build up an xref and add it in a new paragraph after the index node
+        xref = addnodes.pending_xref(
+            '', reftype='viewcode', refdomain='std', refexplicit=False,
+            reftarget=pagename, refid='', refdoc=env.docname)
+        xref += nodes.inline('', _('[source]'),
+                                    classes=['viewcode-link'])
+        idx = objnode.parent.index(objnode) + 1
+        objnode.parent.insert(idx, nodes.paragraph('', '', xref))
 
 def missing_reference(app, env, node, contnode):
     # resolve our "viewcode" reference nodes -- they need special treatment
