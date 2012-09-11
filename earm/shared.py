@@ -54,14 +54,6 @@ from scipy.constants import N_A
 # Global variables
 # ================
 
-# Default site names
-# ------------------
-
-# **Default site name** to be used for binding reactions. Changing this here
-# will change the site name everywhere it is used in EARM.
-
-site_name = 'bf'
-
 # Default constants
 # -----------------
 
@@ -135,17 +127,17 @@ def observables():
 def catalyze(enz, sub, product, klist):
     """Alias for pysb.macros.catalyze with default binding sites."""
 
-    return macros.catalyze(enz, site_name, sub, site_name, product, klist)
+    return macros.catalyze(enz, 'bf', sub, 'bf', product, klist)
 
 def bind(a, b, klist):
     """Alias for pysb.macros.bind with default binding sites."""
 
-    return macros.bind(a, site_name, b, site_name, klist)
+    return macros.bind(a, 'bf', b, 'bf', klist)
 
 def bind_table(table, **kwargs):
     """Alias for pysb.macros.bind_table with default binding sites."""
 
-    return macros.bind_table(table, site_name, site_name, **kwargs)
+    return macros.bind_table(table, 'bf', 'bf', **kwargs)
 
 def assemble_pore_sequential(subunit, size, klist):
     """Alias for pysb.macros.assemble_pore_sequential with default sites.
@@ -166,8 +158,8 @@ def pore_transport(subunit, size, csource, cdest, ktable):
       transport-competent pores
     """
 
-    return macros.pore_transport(subunit, 's1', 's2', site_name,
-                                 size, size, csource, site_name, cdest, ktable)
+    return macros.pore_transport(subunit, 's1', 's2', 'bf',
+                                 size, size, csource, 'bf', cdest, ktable)
 
 def pore_bind(subunit, size, cargo, klist):
     """Alias for pysb.macros.pore_bind with default arguments.
@@ -177,8 +169,8 @@ def pore_bind(subunit, size, cargo, klist):
     - Uses the default pore site names for subunit-subunit binding
     """
 
-    return macros.pore_bind(subunit, 's1', 's2', site_name,
-                                 size, cargo, site_name, klist)
+    return macros.pore_bind(subunit, 's1', 's2', 'bf',
+                                 size, cargo, 'bf', klist)
 
 
 # Macros used by the Shen models
@@ -215,8 +207,8 @@ def displace(lig1, lig2, target, k):
     """
 
     return macros._macro_rule('displace',
-         lig1({site_name:None}) + lig2({site_name:1}) % target({site_name:1}) >>
-         lig1({site_name:1}) % target({site_name:1}) + lig2({site_name:None}),
+         lig1({'bf':None}) + lig2({'bf':1}) % target({'bf':1}) >>
+         lig1({'bf':1}) % target({'bf':1}) + lig2({'bf':None}),
          [k], ['kf'])
 
 def displace_reversibly(lig1, lig2, target, klist):
@@ -229,14 +221,14 @@ def displace_reversibly(lig1, lig2, target, klist):
     """
 
     return macros._macro_rule('displace',
-         lig1({site_name:None}) + lig2({site_name:1}) % target({site_name:1}) <>
-         lig1({site_name:1}) % target({site_name:1}) + lig2({site_name:None}),
+         lig1({'bf':None}) + lig2({'bf':1}) % target({'bf':1}) <>
+         lig1({'bf':1}) % target({'bf':1}) + lig2({'bf':None}),
          klist, ['fwd_kf', 'rev_kf'])
 
 # Macros used by the Albeck models
 # ================================
 
-def catalyze_convert(sub1, sub2, product, klist, site=site_name):
+def catalyze_convert(sub1, sub2, product, klist, site='bf'):
     """Automation of the Sub1 + Sub2 <> Sub1:Sub2 >> Prod two-step reaction.
 
     Because product is created by the function, it must be fully specified.
@@ -255,7 +247,7 @@ def catalyze_convert(sub1, sub2, product, klist, site=site_name):
                               [klist[2]], ['kc'])
     return components
 
-def one_step_conv(sub1, sub2, product, klist, site=site_name):
+def one_step_conv(sub1, sub2, product, klist, site='bf'):
     """ Bind sub1 and sub2 to form one product: sub1 + sub2 <> product.
     """
 

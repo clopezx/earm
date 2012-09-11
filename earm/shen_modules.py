@@ -93,16 +93,16 @@ def momp_monomers():
     # **Activators.** We use Bid as a representative for the generic
     # "activator" "Act" or "BH3" used in the Shen models. Bid has three states:
     # Untruncated, Truncated, and truncated and Mitochondrial.
-    Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
+    Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']})
 
     # **Effector***. Bax, states: Cytoplasmic, Mitochondrial, Active.
     # Sites 's1' and 's2' are used for pore formation.
-    Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
+    Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
 
     # **Anti-apoptotic**. Bcl-2 is considered to be constitutively
     # mitochondrial so it doesn't have a 'state' site, only the single binding
     # site.
-    Monomer('Bcl2', [site_name])
+    Monomer('Bcl2', ['bf'])
 
     # **Sensitizer**. We use Bad as a representative for the generic "Ena"
     # ("Enabler," another term for sensitizer) used in the Shen models. Bad can
@@ -112,7 +112,7 @@ def momp_monomers():
     # domains).  These are only used in the Howells model--for all other
     # models, the serine is set as unphosphorylated (i.e., serine='U').
     Monomer('Bad',
-            [site_name, 'state', 'serine'],
+            ['bf', 'state', 'serine'],
             {'state':['C', 'M'], 'serine':['U', 'P', 'B']})
 
     # **Cytochrome  C and Smac**. We include these species here so that the
@@ -121,8 +121,8 @@ def momp_monomers():
     # into a larger model. Both Cytochrome C and Smac have three states:
     # Mitochondrial (the initial state), Cytosolic (for after release) and
     # Active.
-    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
-    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 
 def shen_pore_transport(pore_size=4):
     # TODO: Move this to albeck_modules?

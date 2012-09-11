@@ -80,9 +80,9 @@ activation_rates = [        1e-7, 1e-3, 1]
 def momp_monomers():
     """Declare the monomers for the Bcl-2 family proteins, Cyto c, and Smac.
 
-    The package variable site_name specifies the name of the site to be used
-    for all binding reactions (with the exception of Bax and Bak, which have
-    additional sites used for oligomerization).
+    'bf' is the site to be used for all binding reactions (with the
+    exception of Bax and Bak, which have additional sites used for
+    oligomerization).
 
     The 'state' site denotes various localization and/or activity states of a
     Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
@@ -93,25 +93,25 @@ def momp_monomers():
 
     # **Activators**.
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
-    Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
+    Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']})
     # **Effectors**
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
-    Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
+    Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
     # Bak, states: inactive and Mitochondrial, Active (and mitochondrial)
     # sites 's1' and 's2' are used for pore formation
-    Monomer('Bak', [site_name, 's1', 's2', 'state'], {'state':['M', 'A']})
+    Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']})
     # **Anti-Apoptotics**
-    Monomer('Bcl2', [site_name])
-    Monomer('BclxL', [site_name, 'state'], {'state':['C', 'M']})
-    Monomer('Mcl1', [site_name, 'state'], {'state':['M', 'C']})
+    Monomer('Bcl2', ['bf'])
+    Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']})
+    Monomer('Mcl1', ['bf', 'state'], {'state':['M', 'C']})
     # **Sensitizers**
-    Monomer('Bad', [site_name, 'state'], {'state':['C', 'M']})
-    Monomer('Noxa', [site_name, 'state'], {'state': ['C', 'M']})
+    Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']})
+    Monomer('Noxa', ['bf', 'state'], {'state': ['C', 'M']})
 
     # **Cytochrome C and Smac**
-    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
-    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 
 def declare_initial_conditions():
     """Declare initial conditions for Bcl-2 family proteins, Cyto c, and Smac.

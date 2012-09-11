@@ -40,44 +40,43 @@ KC = 1
 def ligand_to_c8_monomers():
     """ Declares ligand, receptor, DISC, Flip, Bar and Caspase 8.
 
-    The package variable site_name specifies the name of the site to be used
-    for all binding reactions.
+    'bf' is the site to be used for all binding reactions.
 
     The 'state' site denotes various localization and/or activity states of a
     Monomer, with 'C' denoting cytoplasmic localization and 'M' mitochondrial
     localization.
     """
 
-    Monomer('L', [site_name]) # Ligand
-    Monomer('R', [site_name]) # Receptor
-    Monomer('DISC', [site_name]) # Death-Inducing Signaling Complex
-    Monomer('flip', [site_name])
+    Monomer('L', ['bf']) # Ligand
+    Monomer('R', ['bf']) # Receptor
+    Monomer('DISC', ['bf']) # Death-Inducing Signaling Complex
+    Monomer('flip', ['bf'])
     # Caspase 8, states: pro, Active
-    Monomer('C8', [site_name, 'state'], {'state':['pro', 'A']})
-    Monomer('BAR', [site_name])
+    Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']})
+    Monomer('BAR', ['bf'])
 
 def momp_monomers():
     """Declare the monomers used in the Albeck MOMP modules."""
 
     # == Activators
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
-    Monomer('Bid', [site_name, 'state'], {'state':['U', 'T', 'M']})
+    Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']})
     # == Effectors
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
-    Monomer('Bax', [site_name, 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
+    Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
     # == Anti-Apoptotics
-    Monomer('Bcl2', [site_name])
+    Monomer('Bcl2', ['bf'])
 
     # == Cytochrome C and Smac
-    Monomer('CytoC', [site_name, 'state'], {'state':['M', 'C', 'A']})
-    Monomer('Smac', [site_name, 'state'], {'state':['M', 'C', 'A']})
+    Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
+    Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 
 def apaf1_to_parp_monomers():
     """ Declares CytochromeC, Smac, Apaf-1, the Apoptosome, Caspases 3, 6, 9,
     XIAP and PARP.
 
-    The package variable site_name specifies the name of the site to be used
+    The package variable 'bf' specifies the name of the site to be used
     for all binding reactions.
 
     The 'state' site denotes various localization and/or activity states of a
@@ -86,16 +85,16 @@ def apaf1_to_parp_monomers():
     """
 
     # Cytochrome C
-    Monomer('Apaf', [site_name, 'state'], {'state':['I', 'A']}) # Apaf-1
-    Monomer('Apop', [site_name]) # Apoptosome (activated Apaf-1 + caspase 9)
+    Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']}) # Apaf-1
+    Monomer('Apop', ['bf']) # Apoptosome (activated Apaf-1 + caspase 9)
     # Csp 3, states: pro, active, ubiquitinated
-    Monomer('C3', [site_name, 'state'], {'state':['pro', 'A', 'ub']})
+    Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']})
     # Caspase 6, states: pro-, Active
-    Monomer('C6', [site_name, 'state'], {'state':['pro', 'A']})
-    Monomer('C9', [site_name]) # Caspase 9
+    Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']})
+    Monomer('C9', ['bf']) # Caspase 9
     # PARP, states: Uncleaved, Cleaved
-    Monomer('PARP', [site_name, 'state'], {'state':['U', 'C']})
-    Monomer('XIAP', [site_name]) # X-linked Inhibitor of Apoptosis Protein
+    Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']})
+    Monomer('XIAP', ['bf']) # X-linked Inhibitor of Apoptosis Protein
 
 def all_monomers():
     """Shorthand for calling ligand_to_c8, momp, and apaf1_to_parp macros.
