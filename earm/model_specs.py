@@ -3,7 +3,7 @@ from pysb import *
 
 models = ['lopez_embedded', 'lopez_direct', 'lopez_indirect',
           'albeck_11b', 'albeck_11c', 'albeck_11d', 'albeck_11e', 'albeck_11f',
-          'chen_2007_biophys_j', 'chen_2007_febs_direct', 'chen_2007_febs_indirect',
+          'chen_biophys_j', 'chen_febs_direct', 'chen_febs_indirect',
           'cui_direct', 'cui_direct1', 'cui_direct2',
           'howells']
 
