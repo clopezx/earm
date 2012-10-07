@@ -30,11 +30,11 @@ def embedded():
     assemble_pore_sequential(Bax(bf=None, state='A'), 4, pore_rates)
     assemble_pore_sequential(Bak(bf=None, state='A'), 4, pore_rates)
 
-    # 1. tBid activates Bax and Bak
-    # 2. Binding of tBid, Bad, Noxa, Bax and Bak to Bcl2, Mcl1, and Bcl-XL
-    # 3. Autoactivation: Bax and Bak activate their own kind, but only when
-    # 4. free (i.e. not part of a pore complex)
-    # 5. tBid and free Bax recruit Bcl-xL
-    # 6. Bax and Bak form pores by sequential addition
+    # 1. Translocation
+    # 2. tBid activates Bax and Bak
+    # 3. Binding of tBid, Bad, Noxa, Bax and Bak to Bcl2, Mcl1, and Bcl-XL
+    # 4. Autoactivation: Bax and Bak activate their own kind, but only when
+    #    free (i.e. not part of a pore complex)
+    # 5. Bax and Bak form pores by sequential addition
 
 

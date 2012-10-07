@@ -1,5 +1,9 @@
-"""Model from Cui 2008, PLoS One.
-TODO: Docstring
+"""
+Model M13b: "Direct 1" MOMP model from Cui et al. (2008) PLoS One.
+
+Cui, J., Chen, C., Lu, H., Sun, T., & Shen, P. (2008). Two independent positive
+feedbacks and bistability in the Bcl-2 apoptotic switch. PLoS ONE, 3(1), e1469.
+:doi:`10.1371/journal.pone.0001469` :pmid:`18213378`.
 """
 
 from pysb import *
