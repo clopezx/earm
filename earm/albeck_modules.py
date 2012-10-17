@@ -156,7 +156,7 @@ def rec_to_bid():
     # Inhibition Rules
     # ---------------------
     #        flip + DISC <-->  flip:DISC  
-    #        C8 + BAR <--> BAR:C8 CSPS
+    #        C8 + BAR <--> BAR:C8
     # ---------------------
     bind(DISC(), flip(), [KF, KR])
     bind(BAR(), C8(state='A'), [KF, KR])
