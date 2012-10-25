@@ -10,7 +10,7 @@ from earm import albeck_modules
 Model()
 
 lopez_modules.momp_monomers()
-Observable('mBid', Bax(state='M'))
+Observable('mBid', Bid(state='M'))
 Observable('aBax', Bax(state='A'))
 Observable('cSmac', Smac(state='C'))
 
