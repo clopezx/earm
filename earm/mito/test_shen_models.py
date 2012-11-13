@@ -1,7 +1,31 @@
 # TODO: More documentation
 # TODO: Update this file once we implement units properly
 """
-This file ensures that the models match the published ODEs.
+This file contains a series of tests to ensure that the ODEs generated
+by the PySB version of each model exactly match those of the original
+publication. The procedure for validating the models (and creating the
+tests) was as follows:
+
+1. Generate the ODEs from the PySB model using pysb.bng.generate_equations
+
+2. Programmatically rename all parameters and species to use the names
+   from the original publication.
+
+3. Programmatically verify the values of all parameters against the values
+   used in the original publication.
+
+4. Manually verify the transformed PySB ODEs against the ODEs from the
+   original publication.
+
+5. Include the (verified) output in a test to ensure that the model
+   continues to produce the correct output in the face of any future
+   changes in macros, libraries, etc.
+
+Note that the models in the earm.mito module, by default, have a 
+zero initial condition for the activator species (Bid). To generate
+the ODEs used by the original publications, it is necessary to add
+an additional non-zero initial condition for Bid. This is accomplished in the
+setUp() method of each test.
 """
 
 import unittest
@@ -58,8 +82,6 @@ def convert_odes(model, p_name_map, s_name_map_by_pattern):
         new_ode = ode.subs(name_map)
         ode_species = s_name_map_by_pattern[str(model.species[i])]
         ode_list[ode_species] = str(new_ode)
-        #new_ode = 'd[%s]/dt = %s' % (s_name_map_by_num['s%d' % i], str(new_ode))
-        #ode_list.append(new_ode)
 
     return ode_list
 
@@ -512,44 +534,6 @@ class TestHowells(unittest.TestCase):
             ('k_Bad_phos2', 0.0001),
             ('k_Bad_seq', 0.001),
             ('k_Bad_rel', 0.00087)])
-
-
-def howells_figure2ab(model):
-    """Reproduce Figure 2a/b from [Howells2011]_."""
-    model.parameters['Bcl2_0'].value = 0.1  # Total Bcl2
-    model.parameters['Bax_0'].value = 0.2   # Total Bax
-    model.parameters['Bid_0'].value = 0.018 # Total tBid
-    model.parameters['Bad_0'].value = 0.025 # Total Bad
-    Bcl2_free_0 = Parameter('Bcl2_free_0',
-            model.parameters['Bcl2_0'].value -
-            model.parameters['Bid_0'].value, _export=False) # free Bcl2
-    model.add_component(Bcl2_free_0)
-
-    # Reset initial conditions
-    model.initial_conditions = []
-    c = model.all_components()
-    # pBad1433_0 = total Bad
-    model.initial(c['Bad'](bf=None, state='C', serine='B'), c['Bad_0'])
-    # Bax_inac_0 = total Bax
-    model.initial(c['Bax'](bf=None, s1=None, s2=None, state='C'),
-                       c['Bax_0'])
-    # tBid:Bcl2_0 = total tBid
-    model.initial(c['Bid'](state='T', bf=1) % c['Bcl2'](bf=1),
-                       c['Bid_0'])
-    # Bcl2_free = Bcl2_0 - tBid_0
-    model.initial(c['Bcl2'](bf=None), Bcl2_free_0)
-
-    t = np.linspace(0, 300*60, 101)
-    x = odesolve(model, t)
-    plt.figure()
-    plt.ion()
-    t = t / 60
-    plt.plot(t, x['Bax4_'], label='Bak_poly')
-    plt.plot(t, x['Bcl2_'], label='Bcl2')
-    plt.plot(t, x['pBad1433_'], label='pBad:14-3-3')
-    plt.plot(t, x['Bad_Bcl2_'], label='Bad:Bcl2')
-    plt.plot(t, x['Bax_Bcl2_'], label='Bax:Bcl2')
-    plt.legend(loc='upper right')
 
 
 if __name__ == '__main__':

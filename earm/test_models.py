@@ -1,3 +1,8 @@
+"""
+A suite of tests to insure that all of the models in the EARM
+repository can be successfully loaded and rendered as a set
+of ODEs: for every model, pysb.bng.generate_network(model) is called.
+"""
 # Import the full extrinsic apoptosis models:
 
 import earm.lopez_embedded as m1a
