@@ -156,27 +156,6 @@ def matches_figure(model, data_file):
 
     return bool(np.allclose(pysb_data, mat_data, atol=rtol*10))
 
-def compare_odes(model, p_name_map, s_index_map, m_ode_list):
-    """Compare the PySB model ODEs to the original MATLAB ODEs."""
-    s_name_map = [('s%d' % i, 'x(%d)' % j) for i, j in enumerate(s_index_map)]
-    name_map = {}
-    name_map.update(p_name_map)
-    name_map.update(s_name_map)
-    generate_equations(model)
-    ode_list = []
-    result_list = []
-    for i, ode in enumerate(model.odes):
-        new_ode = ode.subs(name_map)
-        old_ode = m_ode_list[s_index_map[i] - 1]
-        result = new_ode == old_ode
-        result_list.append(result)
-        if not result:
-            print "Mismatch for species " + str(i) + ": "
-            print "Pysb ODE   : %s" % str(new_ode)
-            print "Matlab ODE : %s" % str(old_ode)
-
-    return result_list
-
 ## TESTS ===============================================================
 class TestAlbeck11b(unittest.TestCase):
     """Test the PySB model based on the topology shown in Figure 11b."""
