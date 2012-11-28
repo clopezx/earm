@@ -2,7 +2,7 @@
 <sbml xmlns="http://www.sbml.org/sbml/level2" level="2" version="1">
     <model>
         <listOfCompartments>
-            <compartment id="default" name="default" spatialDimensions="0"/>
+            <compartment id="default" name="default" spatialDimensions="3" size="1"/>
         </listOfCompartments>
         <listOfSpecies>
             <species id="s0" name="L(bf=None)" compartment="default" initialAmount="3.000000e+03"/>
