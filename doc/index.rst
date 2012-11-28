@@ -1,4 +1,4 @@
-Extrinsic Apoptotsis Reaction Model (EARM)
+Extrinsic Apoptosis Reaction Model (EARM)
 ==========================================
 
 Contents:
