@@ -1,5 +1,5 @@
-EARM reference
-==============
+Implementation details (code and documentation)
+===============================================
 
 This section contains documentation of the implementations of each model.
 

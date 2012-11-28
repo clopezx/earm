@@ -9,6 +9,7 @@ Contents:
    intro
    models
    modules/index
+   tests/index
    references
 
 Indices and tables
