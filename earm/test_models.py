@@ -51,7 +51,10 @@ import traceback
 # =====
 
 def test_generate_network():
-    """Test each model for successful network generation."""
+    """Test all models for successful network generation by calling
+    :py:func:`check_generate_network` for each model.
+    """
+
     models = [m1a.model, m1b.model,
               m2a.model, m2b.model,
               m3a.model, m3b.model,
