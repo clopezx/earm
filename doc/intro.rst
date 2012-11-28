@@ -4,17 +4,16 @@ Introduction
 What is EARM?
 -------------
 
-The Extrinsic Apoptosis Reaction Model (EARM), is a family of novel and
-previously published models of the Bcl-2 protein network, all written using the
-Python software framework PySB.
+The Extrinsic Apoptosis Reaction Model (EARM), is **a family of novel and
+previously published models of extrinsic apoptosis, focusing on variant
+hypotheses for how the Bcl-2 protein family regulates mitochondrial outer
+membrane permeabilization (MOMP).** All models are written using the Python
+software framework PySB.
 
-The code in this Python package currently contains 15 distinct models, each with
-varying scope and reaction topologies for the Bcl-2 family protein network which
-regulates mitochondrial outer membrane permeabilization (MOMP). The set of
-models includes:
+The models in this Python package implement 15 different mechanistic hypotheses for MOMP regulation by the Bcl-2 protein family, including
 
-- 3 novel MOMP models of expanded scope that are unique to EARM and heretofore
-  unpublished
+- 3 novel MOMP models of expanded scope that are unique to EARM and are
+  described in Lopez et al. (2013), ([Lopez2013]_)
 - 5 MOMP models with hypothetical reaction topologies previously described in
   Albeck et al. (2008) PLoS Biology, Figure 11 ([Albeck2008]_)
 - 6 MOMP models drawn from three papers from the research group of Pingping Shen
@@ -25,8 +24,8 @@ models includes:
 Moreover, for each of these there is a MOMP-only ("mito") version of the model
 and a full-apoptosis version of the model, in which the MOMP model is linked to
 the upstream and downstream pathways of extrinsic apoptosis from the previously
-published EARM 1.0 from [Albeck2008]_. This gives a total of 30 different
-models.
+published EARM 1.0 from [Albeck2008]_. **This gives a total of 30 different
+models.**
 
 Goals
 -----
@@ -46,21 +45,42 @@ Our goals in creating EARM were to:
 Installation
 ------------
 
-EARM requires PySB, but itself is pure Python. You can get the latest version of
-EARM from GitHub at http://github.com/sorgerlab/earm. If you are not a git user
-you can download a ZIP file at
-https://github.com/sorgerlab/earm/zipball/master. EARM has its own website at
-http://sorgerlab.github.com/earm.
+EARM requires PySB, but itself is pure Python (i.e., does not require
+installation or compilation of dependencies written in languages other than
+Python). PySB is available at http://pysb.org and http://github.com/pysb/pysb.
 
-PySB is available at http://pysb.org and http://github.com/pysb/pysb.
+.. note:: The PySB VM includes EARM!
+
+    If you are using PySB via the downloadable virtual machine, EARM is already
+    installed.
+
+You can get the latest version of EARM from GitHub at
+http://github.com/sorgerlab/earm. If you are not a git user you can download a
+ZIP file at https://github.com/sorgerlab/earm/zipball/master. EARM has its own
+website at http://sorgerlab.github.com/earm.
+
+Once you have downloaded the EARM source code, install EARM by
+switching to the top-level EARM directory and running::
+
+    python setup.py install
 
 How to use the documentation
 ----------------------------
 
-In addition to this introduction, descriptions of each model can be found at
+In addition to this introduction, a general description of how the model
+implementations are organized into Python modules can be found in the
 :doc:`models`.
 
-<TODO> finish this section?
+More detailed descriptions of each model, with links to the Python source code
+that serves as the actual model specification, can be found at
+:doc:`modules/index`.
+
+In addition to the model specifications, EARM also contains a set of tests that
+can be run to ensure that the models can be successfully loaded and that
+the PySB re-implementations of previously published models exactly
+match their prior implementations (specified as systems of ordinary differential
+equations). Documentation and code for these tests can be found at
+:doc:`tests/index`.
 
 Staying current
 ---------------

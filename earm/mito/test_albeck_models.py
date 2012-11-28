@@ -4,14 +4,14 @@ the behavior of the MOMP-only sub-models based on [Albeck2008]_
 and re-written in PySB match that of the original publication. To verify that
 the PySB version of the models match the original models (which were written
 in MATLAB), timecourse data was generated in MATLAB using the original MATLAB
-code, and saved in tab-separated data files (albeck_11{b-f}.tsv). The PySB
+code, and saved in tab-separated data files (`albeck_11{b-f}.tsv`). The PySB
 models are then run using the same input and the output is verified to match
 the original data (within integration tolerances).
 
 This model verification procedure is written as a series of unit tests, one
 for each sub-model, using the built-in Python package unittest.
 
-To run the tests, simply execute this file at the command line, i.e.:
+To run the tests, simply execute this file at the command line, i.e.::
 
     python test_albeck_models.py
 
@@ -50,6 +50,17 @@ def add_caspase8(model):
     Therefore, to match the output of the PySB models in this repository to
     the output produced by the original MATLAB models, it is necessary to add
     the upstream caspase-8:Bid reactions.
+
+    This function takes a model object and adds the necessary elements:
+    - Caspase-8 Monomer 
+    - Caspase-8 initial condition
+    - Caspase-8/Bid cleavage reaction and associated parameters
+
+    In addition, since in the original publication the plotted figures
+    considered Smac release kinetics in the absence of Cytochrome C release,
+    this function sets the Cytochrome C initial condition to 0 (this prevents
+    Cytochrome C from competing with Smac for pore transport, which affects
+    the observed Smac release kinetics slightly).
     """
 
     # If not already added, add upstream caspase reactions to model
@@ -117,6 +128,10 @@ def run_figure_sim(model):
 def plot_figure(model, data_file):
     """Plot the PySB model output alongside the original MATLAB output.
 
+    This function is not used explicitly by any of the testing code,
+    but it is useful for a visual comparison of the output of the PySB
+    model to the original MATLAB model output.
+
     Parameters
     ----------
     model : pysb.model
@@ -129,7 +144,8 @@ def plot_figure(model, data_file):
     ion()
     pysb_num_doses = pysb_data.shape[1]
 
-    mat_data = np.loadtxt(data_file)
+    full_data_file_path = os.path.join(os.path.dirname(__file__), data_file)
+    mat_data = np.loadtxt(full_data_file_path)
     mat_num_doses = mat_data.shape[1]
     if pysb_num_doses != mat_num_doses:
         raise Exception('Different number of doses between PySB and MATLAB ' +
@@ -142,12 +158,13 @@ def plot_figure(model, data_file):
 def matches_figure(model, data_file):
     """Test whether the PySB model output matches the original MATLAB output.
 
-    Calls run_figure_sim to generate the PySB model output, then loads the
-    MATLAB data file and compares the outputs using the function numpy.allclose.
-    Returns True if every timepoint from the dose-response series matches
-    the original MATLAB output to within one order of magnitude of the
-    integration tolerance.
+    Calls :py:func:`run_figure_sim` to generate the PySB model output, then
+    loads the MATLAB data file and compares the outputs using the function
+    numpy.allclose.  Returns True if every timepoint from the dose-response
+    series matches the original MATLAB output to within one order of magnitude
+    of the integration tolerance.
     """
+
     [t, pysb_data] = run_figure_sim(model)
     full_data_file_path = os.path.join(os.path.dirname(__file__), data_file)
     mat_data = np.loadtxt(full_data_file_path)
