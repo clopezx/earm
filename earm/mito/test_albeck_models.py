@@ -32,6 +32,7 @@ from earm.mito import albeck_11f
 
 from matplotlib.pyplot import figure, ion, plot, legend
 import numpy as np
+import os.path
 
 # The default integration tolerance in pysb.integrate
 rtol = 1e-6
@@ -148,7 +149,8 @@ def matches_figure(model, data_file):
     integration tolerance.
     """
     [t, pysb_data] = run_figure_sim(model)
-    mat_data = np.loadtxt(data_file)
+    full_data_file_path = os.path.join(os.path.dirname(__file__), data_file)
+    mat_data = np.loadtxt(full_data_file_path)
 
     if pysb_data.shape[1] != mat_data.shape[1]:
         raise Exception('Different number of doses between PySB and MATLAB ' +
