@@ -1,8 +1,12 @@
 """
 A suite of tests to insure that all of the models in the EARM
-repository can be successfully loaded and rendered as a set
-of ODEs: for every model, pysb.bng.generate_network(model) is called.
+repository can be successfully loaded and have its reaction network
+generated.
+
+For every model, pysb.bng.generate_network(model) is called; if there
+are no errors, the test passes.
 """
+
 # Import the full extrinsic apoptosis models:
 
 import earm.lopez_embedded as m1a
@@ -40,131 +44,47 @@ import earm.mito.cui_direct2 as m14b
 import earm.mito.howells as m15b
 
 from pysb.bng import generate_network
-import unittest
+import nose
+import traceback
 
 # Tests
 # =====
 
-class Test_m1a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m1a.model)
+def test_generate_network():
+    """Test each model for successful network generation."""
+    models = [m1a.model, m1b.model,
+              m2a.model, m2b.model,
+              m3a.model, m3b.model,
+              m4a.model, m4b.model,
+              m5a.model, m5b.model,
+              m6a.model, m6b.model,
+              m7a.model, m7b.model,
+              m8a.model, m8b.model,
+              m9a.model, m9b.model,
+              m10a.model, m10b.model,
+              m11a.model, m11b.model,
+              m12a.model, m12b.model,
+              m13a.model, m13b.model,
+              m14a.model, m14b.model,
+              m15a.model, m15b.model]
+    for model in models:
+        yield (check_generate_network, model)
+    
+def check_generate_network(model):
+    """Tests that network generation occurs without error for the given
+    model."""
 
-class Test_m1b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m1b.model)
+    success = False
 
-class Test_m2a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m2a.model)
+    try:
+        generate_network(model)
+        success = True
+    except:
+        pass
 
-class Test_m2b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m2b.model)
-
-class Test_m3a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m3a.model)
-
-class Test_m3b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m3b.model)
-
-class Test_m4a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m4a.model)
-
-class Test_m4b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m4b.model)
-
-class Test_m5a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m5a.model)
-
-class Test_m5b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m5b.model)
-
-class Test_m6a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m6a.model)
-
-class Test_m6b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m6b.model)
-
-class Test_m7a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m7a.model)
-
-class Test_m7b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m7b.model)
-
-class Test_m8a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m8a.model)
-
-class Test_m8b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m8b.model)
-
-class Test_m9a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m9a.model)
-
-class Test_m9b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m9b.model)
-
-class Test_m10a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m10a.model)
-
-class Test_m10b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m10b.model)
-
-class Test_m11a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m11a.model)
-
-class Test_m11b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m11b.model)
-
-class Test_m12a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m12a.model)
-
-class Test_m12b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m12b.model)
-
-class Test_m13a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m13a.model)
-
-class Test_m13b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m13b.model)
-
-class Test_m14a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m14a.model)
-
-class Test_m14b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m14b.model)
-
-class Test_m15a(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m15a.model)
-
-class Test_m15b(unittest.TestCase):
-    def test_generate_network(self):
-        generate_network(m15b.model)
+    assert success, "Network generation failed on model %s:\n-----\n%s" % \
+                (model.name, traceback.format_exc())
 
 if __name__ == '__main__':
-    unittest.main()
+    print "Please run this file as 'nosetests %s'" % __file__
 
