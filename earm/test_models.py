@@ -1,5 +1,5 @@
 """
-A suite of tests to insure that all of the models in the EARM
+A suite of tests to ensure that each of the models in the EARM
 repository can be successfully loaded and have its reaction network
 generated.
 
