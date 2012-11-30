@@ -1,9 +1,9 @@
 """
 Checks the MOMP-only versions of the Lopez models, that is
 
-- earm.mito.lopez_embedded
-- earm.mito.lopez_direct
-- earm.mito.lopez_indirect
+- :py:mod:`earm.mito.lopez_embedded`
+- :py:mod:`earm.mito.lopez_direct`
+- :py:mod:`earm.mito.lopez_indirect`
 
 against a previously validated and serialized state. Each test in the module
 uses the function pysb.testing.check_model_against_component_list to perform
@@ -37,7 +37,7 @@ def test_lopez_indirect():
 
 def pickle_lopez_models():
     """The pickling procedure that was used to serialize the components
-    of the Lopez models in a validated state.
+    of the Lopez models as a record of a validated state.
     """
     serialize_component_list(lopez_embedded.model,
                              'lopez_embedded_validated.pickle')
