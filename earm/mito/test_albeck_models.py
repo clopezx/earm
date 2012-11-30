@@ -1,7 +1,7 @@
 """
 This module contains a number of tests that can be used to verify that
 the behavior of the MOMP-only sub-models based on [Albeck2008]_
-and re-written in PySB match that of the original publication. To verify that
+and re-written in PySB match the original publication. To verify that
 the PySB version of the models match the original models (which were written
 in MATLAB), timecourse data was generated in MATLAB using the original MATLAB
 code, and saved in tab-separated data files (`albeck_11{b-f}.tsv`). The PySB
