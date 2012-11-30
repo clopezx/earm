@@ -12,5 +12,6 @@ Tests are written using the Python testing modules `unittest` and `nose`.
     :maxdepth: 2
 
     test_models.rst
+    test_lopez_models.rst
     test_albeck_models.rst
     test_shen_models.rst
