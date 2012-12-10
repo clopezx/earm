@@ -99,9 +99,7 @@ This package is subject to change. In particular it may be refactored to stay
 current with ongoing updates to PySB, or to add new models and fix errors in
 existing ones. To be notified of updates, follow EARM on GitHub at
 http://github.com/sorgerlab/earm. If you use Git, you can get updates by going
-to the EARM source directory and running::
-
-    git pull
+to the EARM source directory and running ``git pull``.
 
 Contributing
 ------------
