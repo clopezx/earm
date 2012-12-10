@@ -1,5 +1,5 @@
 """
-Model M1b: "Embedded together" model of MOMP.
+Model M1b: Expanded "embedded together" model of MOMP.
 """
 
 from pysb import *

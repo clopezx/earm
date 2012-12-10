@@ -1,6 +1,5 @@
 """
-TODO: Docstring
-'embedded together' w earm1.0
+Model M2b: Expanded "direct" model of MOMP.
 """
 
 from pysb import *

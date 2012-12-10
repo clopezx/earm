@@ -1,5 +1,6 @@
-"""TODO: Docstring
-'embedded together' w earm1.0"""
+"""
+Model M3b: Expanded "indirect" model of MOMP.
+"""
 
 from pysb import *
 from earm import lopez_modules

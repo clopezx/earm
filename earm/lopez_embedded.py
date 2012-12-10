@@ -1,5 +1,6 @@
 """
-Model M1a: Extrinsic apoptosis model with "embedded together" model of MOMP.
+Model M1a: Extrinsic apoptosis model with expanded, "embedded together"
+model of MOMP.
 """
 
 from pysb import *

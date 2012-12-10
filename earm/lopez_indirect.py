@@ -1,5 +1,5 @@
 """
-Model M3a: Extrinsic apoptosis model with "indirect" model of MOMP.
+Model M3a: Extrinsic apoptosis model with expanded "indirect" model of MOMP.
 """
 
 from pysb import *

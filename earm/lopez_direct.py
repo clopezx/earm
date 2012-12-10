@@ -1,5 +1,5 @@
 """
-Model M2a: Extrinsic apoptosis model with "direct" model of MOMP.
+Model M2a: Extrinsic apoptosis model with expanded "direct" model of MOMP.
 """
 
 from pysb import *
