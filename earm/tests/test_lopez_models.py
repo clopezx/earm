@@ -16,22 +16,29 @@ from earm.mito import lopez_indirect
 
 from pysb.testing import *
 import pickle
+import os
 
 def test_lopez_embedded():
     """Test the earm.mito.lopez_embedded model against a serialized state."""
-    f = open('lopez_embedded_validated.pickle', 'r')
+    full_pickle_file_path = os.path.join(os.path.dirname(__file__),
+                    'lopez_embedded_validated.pickle')
+    f = open(full_pickle_file_path, 'r')
     component_list = pickle.load(f)
     check_model_against_component_list(lopez_embedded.model, component_list)
 
 def test_lopez_direct():
     """Test the earm.mito.lopez_direct model against a serialized state."""
-    f = open('lopez_direct_validated.pickle', 'r')
+    full_pickle_file_path = os.path.join(os.path.dirname(__file__),
+                    'lopez_direct_validated.pickle')
+    f = open(full_pickle_file_path, 'r')
     component_list = pickle.load(f)
     check_model_against_component_list(lopez_direct.model, component_list)
 
 def test_lopez_indirect():
     """Test the earm.mito.lopez_indirect model against a serialized state."""
-    f = open('lopez_indirect_validated.pickle', 'r')
+    full_pickle_file_path = os.path.join(os.path.dirname(__file__),
+                    'lopez_indirect_validated.pickle')
+    f = open(full_pickle_file_path, 'r')
     component_list = pickle.load(f)
     check_model_against_component_list(lopez_indirect.model, component_list)
 
