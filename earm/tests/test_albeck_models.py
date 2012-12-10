@@ -52,6 +52,7 @@ def add_caspase8(model):
     the upstream caspase-8:Bid reactions.
 
     This function takes a model object and adds the necessary elements:
+
     - Caspase-8 Monomer 
     - Caspase-8 initial condition
     - Caspase-8/Bid cleavage reaction and associated parameters
