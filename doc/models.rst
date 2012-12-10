@@ -5,48 +5,117 @@ As the following figure shows, the extrinsic apoptosis pathway can be
 considered to have roughly three major regulatory focal points, or "modules":
 [Albeck2008]_
 
-- Activation of initiator caspases by receptor ligation
+- Activation of initiator caspases of Bid by receptor ligation ("Receptor to
+  Bid" in the diagram)
 - Mitochondrial outer membrane permeabilization (MOMP)
-- Effector caspase activation and substrate cleavage
+- Effector caspase activation and substrate cleavage ("Pore to PARP cleavage" in
+  the diagram)
 
-Each model in EARM exists in two forms: a **"MOMP-only"** form that can be used
-to study the properties of different Bcl-2 reaction topologies as an isolated
-module, and a **"full apoptosis"** form, in which the different MOMP models are
-embedded in the full extrinsic apoptosis pathway which begins with TRAIL or
-FasL stimulation.
+.. image:: images/EARM2_fig.svg
+   :height: 400
+   :align: center
+   :alt: EARM 2.0 pathway/architecture diagram
 
-For the full TRAIL models, the upstream and downstream pathway components
+The models in EARM are focused on exploring alternate hypotheses for the
+regulation of MOMP by Bcl-2 family proteins, both as an isolated module and
+in the overall context of the extrinsic apoptosis pathway.
+
+Each hypothesis for MOMP regulation by Bcl-2 proteins in EARM thus has two
+models associated with it: a **"MOMP-only"** model that can be used to study
+the properties of a Bcl-2 reaction topology as an isolated module, and a
+**"full apoptosis"** form, in which the different MOMP models are embedded in
+the full extrinsic apoptosis pathway which begins with TRAIL or FasL
+stimulation. EARM contains 15 alternative Bcl-2 topologies for MOMP; thus there
+are 15 Bcl-2 topologies x two versions = 30 models, enumerated `M1a, M1b, ...,
+M15a, M15b`. **The "a" suffix denotes the full apoptosis model for a given Bcl-2
+topology, while the "b" suffix denotes the corresponding MOMP-only model.**
+
+For the full apoptosis models, the upstream and downstream pathway components
 and reaction topologies are re-used from the previously published EARM
-1.0 ([Albeck2008]_).
-
+1.0 [Albeck2008]_.
 
 The models in EARM
 ------------------
 
-Here is a list of 15 models of MOMP incorporated into EARM. More detailed
-descriptions of each model, along with the source code, are found in
-:doc:`modules/index`.
+Below is a list of the 15 alternative Bcl-2 reaction topologies incorporated
+into EARM. More detailed descriptions of each model, along with the source
+code, are found in :doc:`modules/index`.
 
-- EARM 2.0, Embedded [Lopez2013]_
-- EARM 2.0, Indirect [Lopez2013]_
-- EARM 2.0, Direct [Lopez2013]_
-- "Minimal Model" (Figure 11b) from Albeck et al. (2008) [Albeck2008]_
-- "Model B + Bax multimerization" (Figure 11c) from Albeck et al. (2008)
+- M1a/b: EARM 2.0, Embedded [Lopez2013]_ 
+- M2a/b: EARM 2.0, Direct [Lopez2013]_
+- M3a/b: EARM 2.0, Indirect [Lopez2013]_
+- M4a/b: "Minimal Model" (Figure 11b) from Albeck et al. (2008) [Albeck2008]_
+- M5a/b: "Model B + Bax multimerization" (Figure 11c) from Albeck et al. (2008)
   [Albeck2008]_
-- "Model C + mitochondrial transport" (Figure 11d) from Albeck et al. (2008)
+- M6a/b: "Model C + mitochondrial transport" (Figure 11d) from Albeck et al.
+  (2008) [Albeck2008]_
+- M7a/b: "Current model" (Figure 11e) from Albeck et al. (2008) [Albeck2008]_
+- M8a/b: "Current model + cooperativity" (Figure 11f) from Albeck et al. (2008)
   [Albeck2008]_
-- "Current model" (Figure 11e) from Albeck et al. (2008) [Albeck2008]_
-- "Current model + cooperativity" (Figure 11f) from Albeck et al. (2008)
-  [Albeck2008]_
-- Deterministic model from Chen et al. (2007), Biophysical Journal
+- M9a/b: Deterministic model from Chen et al. (2007), Biophysical Journal
   [Chen2007biophysj]_
-- Indirect model from Chen et al. (2007), FEBS Letters [Chen2007febs]_
-- Direct model from Chen et al. (2007), FEBS Letters [Chen2007febs]_
-- Direct model from Cui et al. (2008) [Cui2008]_
-- Direct model 1 from Cui et al. (2008) [Cui2008]_
-- Direct model 2 from Cui et al. (2008) [Cui2008]_
-- Model incorporating Bad phosphorylation from Howells et al. (2011)
+- M10a/b: Indirect model from Chen et al. (2007), FEBS Letters [Chen2007febs]_
+- M11a/b: Direct model from Chen et al. (2007), FEBS Letters [Chen2007febs]_
+- M12a/b: Direct model from Cui et al. (2008) [Cui2008]_
+- M13a/b: Direct model 1 from Cui et al. (2008) [Cui2008]_
+- M14a/b: Direct model 2 from Cui et al. (2008) [Cui2008]_
+- M15a/b: Model incorporating Bad phosphorylation from Howells et al. (2011)
   [Howells2011]_
+
+How the model code is organized
+-------------------------------
+
+For each of the 30 models, there is a corresponding ``.py`` file containing
+the model definition. This way any model can be imported using the
+straightforward syntax (for example, for model M1a)::
+
+    from earm.lopez_embedded import model
+
+However the Python files for each individual model in general do not contain
+much code--they mainly call functions from other modules. For example,
+here is the source code for the file ``earm/lopez_embedded.py``, which
+implements model M1a:
+
+.. literalinclude:: ../earm/lopez_embedded.py
+
+As this example shows, the model file calls a series of macros that declare the
+monomers (:py:func:`earm.albeck_modules.ligand_to_c8_monomers`,
+:py:func:`earm.lopez_modules.momp_monomers`, and
+:py:func:`earm.albeck_modules.apaf1_to_parp_monomers`), then calls the macros
+implementing the upstream and downstream pathway elements
+(:py:func:`earm.albeck_modules.rec_to_bid` and
+:py:func:`earm.albeck_modules.pore_to_parp`), and finally calls the macro for
+the specific Bcl-2 topology involved: :py:func:`earm.lopez_modules.embedded`.
+Since the observables for all of the full apoptosis model variants is the same,
+these are declared in the final macro that is called,
+:py:func:`earm.shared.observables`.
+
+All of the model ``.py`` files follow this pattern, calling a handful of macros
+to declare monomers and observables and select implementations of different
+pathway modules.
+
+Note that the ``.py`` model files for the full-apoptosis models (M1a - M15a) 
+are found in the top-level ``earm`` module, but the files for the MOMP-only
+models (M1b - M15b) are found in the submodule ``earm.mito``.
+
+The documentation for all model files (with links to source code) can be found
+at the following links:
+
+.. toctree::
+   :maxdepth: 2
+
+   modules/model_list
+
+The details of the various macro implementations are found in the following
+four files:
+
+.. toctree::
+   :maxdepth: 2
+
+   modules/lopez_modules
+   modules/albeck_modules
+   modules/shen_modules
+   modules/shared
 
 MOMP module "boundaries"
 ------------------------
@@ -87,30 +156,18 @@ rather than implement the model as published by default and then have to
 specifically modify each one separately to fit the pathway context
 appropriately.
 
-
-How the model code is organized
--------------------------------
-
-The code implementing the various modules is contained within the following
-files:
-
-* :doc:`modules/lopez_modules`
-* :doc:`modules/albeck_modules`
-* :doc:`modules/shen_modules`
-* :doc:`modules/shared`
-
 How to use the models
 ---------------------
 
-To use a model, run the Python statement::
+To import a model use the syntax::
 
-    from earm.mito.albeck_11b import model
+    from earm.lopez_embedded import model
 
 That's it. You now have a model object that you can query, simulate, perform
-parameter estimation on, etc. If you wanted the full extrinsic apoptosis
-version, you would simply run::
+parameter estimation on, etc. If you wanted the MOMP-only version, which are
+in the sub-module ``mito``, simply run::
 
-    from earm.albeck_11b import model
+    from earm.mito.lopez_embedded import model
 
 If you want to work with multiple models at the same time (e.g., to compare
 them), you can write::
@@ -119,7 +176,7 @@ them), you can write::
     from earm.chen2007_direct import model as direct
 
 For more information on the kinds of analysis you can do using PySB models,
-see the PySB documentation.
+see the `PySB documentation <http://pysb.rtfd.org>`_.
 
 Parameter values
 ----------------

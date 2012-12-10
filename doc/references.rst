@@ -27,6 +27,6 @@ References
    triggers mitochondria disintegration. Journal of Theoretical Biology.
    :doi:`10.1016/j.jtbi.2010.11.040` :pmid:`21130780`.
  
-.. [Lopez2013] Lopez, C. L., Muhlich, J. L., Bachman, J. A., & Sorger,
+.. [Lopez2013] Lopez, C. L.*, Muhlich, J. L.*, Bachman, J. A.*, & Sorger,
    P. K. (2013). PySB: A second-generation approach to programming biological
    models. Submitted.
