@@ -281,7 +281,6 @@ def embedded(do_pore_transport=True):
 
     tBid_activates_Bax_and_Bak()
 
-
     # Autoactivation: Bax and Bak activate their own kind, but only when
     # free (i.e. not part of a pore complex)
     catalyze(Bax(active_monomer), Bax(state='M'), Bax(state='A'),
