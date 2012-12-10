@@ -97,41 +97,41 @@ def momp_monomers():
     # **Activators**.
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
     Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']})
-    Annotation(Bid, 'http://identifiers.org/uniprot/P55957')
 
     # **Effectors**
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
-    Annotation(Bax, 'http://identifiers.org/uniprot/Q07812')
 
     # Bak, states: inactive and Mitochondrial, Active (and mitochondrial)
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bak', ['bf', 's1', 's2', 'state'], {'state':['M', 'A']})
-    Annotation(Bak, 'http://identifiers.org/uniprot/Q16611')
 
     # **Anti-Apoptotics**
     Monomer('Bcl2', ['bf'])
-    Annotation(Bcl2, 'http://identifiers.org/uniprot/P10415')
-
     Monomer('BclxL', ['bf', 'state'], {'state':['C', 'M']})
-    Annotation(BclxL, 'http://identifiers.org/uniprot/Q07817')
-
     Monomer('Mcl1', ['bf', 'state'], {'state':['M', 'C']})
-    Annotation(Mcl1, 'http://identifiers.org/uniprot/Q07820')
 
     # **Sensitizers**
     Monomer('Bad', ['bf', 'state'], {'state':['C', 'M']})
-    Annotation(Bad, 'http://identifiers.org/uniprot/Q92934')
-
     Monomer('Noxa', ['bf', 'state'], {'state': ['C', 'M']})
-    Annotation(Noxa, 'http://identifiers.org/uniprot/Q13794')
 
     # **Cytochrome C and Smac**
     Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
-    Annotation(CytoC, 'http://identifiers.org/uniprot/P99999')
-
     Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
+
+    alias_model_components()
+
+    # Annotations
+    Annotation(Bid, 'http://identifiers.org/uniprot/P55957')
+    Annotation(Bax, 'http://identifiers.org/uniprot/Q07812')
+    Annotation(Bak, 'http://identifiers.org/uniprot/Q16611')
+    Annotation(Bcl2, 'http://identifiers.org/uniprot/P10415')
+    Annotation(BclxL, 'http://identifiers.org/uniprot/Q07817')
+    Annotation(Mcl1, 'http://identifiers.org/uniprot/Q07820')
+    Annotation(Bad, 'http://identifiers.org/uniprot/Q92934')
+    Annotation(Noxa, 'http://identifiers.org/uniprot/Q13794')
+    Annotation(CytoC, 'http://identifiers.org/uniprot/P99999')
     Annotation(Smac, 'http://identifiers.org/uniprot/Q9NR28')
 
 def declare_initial_conditions():

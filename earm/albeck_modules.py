@@ -48,22 +48,21 @@ def ligand_to_c8_monomers():
     """
 
     Monomer('L', ['bf']) # Ligand
-    Annotation(L, 'http://identifiers.org/uniprot/P50591')
-
     Monomer('R', ['bf']) # Receptor
-    Annotation(R, 'http://identifiers.org/uniprot/O14763')
-
     Monomer('DISC', ['bf']) # Death-Inducing Signaling Complex
-    Annotation(DISC, 'http://identifiers.org/obo.go/GO:0031264')
-
     Monomer('flip', ['bf'])
-    Annotation(flip, 'http://identifiers.org/uniprot/O15519')
-
     # Caspase 8, states: pro, Active
     Monomer('C8', ['bf', 'state'], {'state':['pro', 'A']})
-    Annotation(C8, 'http://identifiers.org/uniprot/Q14790')
-
     Monomer('BAR', ['bf'])
+
+    alias_model_components()
+
+    # == Annotations
+    Annotation(L, 'http://identifiers.org/uniprot/P50591')
+    Annotation(R, 'http://identifiers.org/uniprot/O14763')
+    Annotation(DISC, 'http://identifiers.org/obo.go/GO:0031264')
+    Annotation(flip, 'http://identifiers.org/uniprot/O15519')
+    Annotation(C8, 'http://identifiers.org/uniprot/Q14790')
     Annotation(BAR, 'http://identifiers.org/uniprot/Q9NZS9')
 
 def momp_monomers():
@@ -72,23 +71,26 @@ def momp_monomers():
     # == Activators
     # Bid, states: Untruncated, Truncated, truncated and Mitochondrial
     Monomer('Bid', ['bf', 'state'], {'state':['U', 'T', 'M']})
-    Annotation(Bid, 'http://identifiers.org/uniprot/P55957')
 
     # == Effectors
     # Bax, states: Cytoplasmic, Mitochondrial, Active
     # sites 's1' and 's2' are used for pore formation
     Monomer('Bax', ['bf', 's1', 's2', 'state'], {'state':['C', 'M', 'A']})
-    Annotation(Bax, 'http://identifiers.org/uniprot/Q07812')
 
     # == Anti-Apoptotics
     Monomer('Bcl2', ['bf'])
-    Annotation(Bcl2, 'http://identifiers.org/uniprot/P10415')
 
     # == Cytochrome C and Smac
     Monomer('CytoC', ['bf', 'state'], {'state':['M', 'C', 'A']})
-    Annotation(CytoC, 'http://identifiers.org/uniprot/P99999')
-
     Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
+
+    alias_model_components()
+
+    # == Annotations
+    Annotation(Bid, 'http://identifiers.org/uniprot/P55957')
+    Annotation(Bax, 'http://identifiers.org/uniprot/Q07812')
+    Annotation(Bcl2, 'http://identifiers.org/uniprot/P10415')
+    Annotation(CytoC, 'http://identifiers.org/uniprot/P99999')
     Annotation(Smac, 'http://identifiers.org/uniprot/Q9NR28')
 
 def apaf1_to_parp_monomers():
@@ -105,28 +107,34 @@ def apaf1_to_parp_monomers():
 
     # Apaf-1 and Apoptosome
     Monomer('Apaf', ['bf', 'state'], {'state':['I', 'A']}) # Apaf-1
-    Annotation(Apaf, 'http://identifiers.org/uniprot/O14727')
 
-    Monomer('Apop', ['bf']) # Apoptosome (activated Apaf-1 + caspase 9)
-    Annotation(Apop, 'http://identifiers.org/obo.go/GO:0043293') 
+    # Apoptosome (activated Apaf-1 + caspase 9)
+    Monomer('Apop', ['bf'])
 
     # Csp 3, states: pro, active, ubiquitinated
     Monomer('C3', ['bf', 'state'], {'state':['pro', 'A', 'ub']})
-    Annotation(C3, 'http://identifiers.org/uniprot/P42574')
 
     # Caspase 6, states: pro-, Active
     Monomer('C6', ['bf', 'state'], {'state':['pro', 'A']})
-    Annotation(C6, 'http://identifiers.org/uniprot/P55212')
 
     # Caspase 9
     Monomer('C9', ['bf'])
-    Annotation(C9, 'http://identifiers.org/uniprot/P55211')
 
     # PARP, states: Uncleaved, Cleaved
     Monomer('PARP', ['bf', 'state'], {'state':['U', 'C']})
+
+    # X-linked Inhibitor of Apoptosis Protein
+    Monomer('XIAP', ['bf'])
+
+    alias_model_components()
+
+    # == Annotations
+    Annotation(Apaf, 'http://identifiers.org/uniprot/O14727')
+    Annotation(Apop, 'http://identifiers.org/obo.go/GO:0043293') 
+    Annotation(C3, 'http://identifiers.org/uniprot/P42574')
+    Annotation(C6, 'http://identifiers.org/uniprot/P55212')
+    Annotation(C9, 'http://identifiers.org/uniprot/P55211')
     Annotation(PARP, 'http://identifiers.org/uniprot/P09874')
-    
-    Monomer('XIAP', ['bf']) # X-linked Inhibitor of Apoptosis Protein
     Annotation(XIAP, 'http://identifiers.org/uniprot/P98170')
 
 def all_monomers():
@@ -267,7 +275,6 @@ def pore_to_parp():
     catalyze(C3(state='A'), PARP(state='U'), PARP(state='C'), [KF, 1e-2, KC])
     catalyze(C3(state='A'), C6(state='pro'), C6(state='A'), [KF, KR, KC])
     catalyze(C6(state='A'), C8(state='pro'), C8(state='A'), [3e-8, KR, KC])
-
 
 # MOMP module implementations
 # ===========================
