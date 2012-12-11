@@ -1,7 +1,7 @@
 import numpy as np
 import pylab as pl
 import pysb.anneal_vode
-import pysb.anneal as anneal
+import pysb.anneal_mod as anneal
 
 def getparams(model):
     temp = []
