@@ -6,9 +6,12 @@ import matplotlib.pyplot as plt
 
 from earm.lopez_embedded import model
 
-#pysb.util.update_param_vals(model, pysb.util.load_params('test_fit.txt'))
-exp_data = np.load('xpdata/forfits/EC-RP_IMS-RP_IC-RP_data_for_models.npz')['arr_0']
+# uncomment either this:
+#earm_anneal.earmanneal(model)
+# or this:
+pysb.util.update_param_vals(model, pysb.util.load_params('test_fit.txt'))
 
+exp_data = np.load('xpdata/forfits/EC-RP_IMS-RP_IC-RP_data_for_models.npz')['arr_0']
 exp_time = exp_data[0]
 exp_obs_norm = exp_data[(2,5,8), :]
 
