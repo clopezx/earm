@@ -1,4 +1,5 @@
 import pysb.integrate
+import pysb.util
 import numpy as np
 import scipy.optimize
 import matplotlib.pyplot as plt
@@ -7,31 +8,29 @@ import os
 from earm.lopez_embedded import model
 
 
-obs_names = ['mBid', 'aSmac', 'cPARP']
-data_names = ['norm_ICRP', 'IMSRP_step', 'norm_ECRP']
-
-def objective_func(x, solver, rate_mask, data):
+def objective_func(x, solver, rate_mask, exp_data, obs_names, data_names):
     param_values = np.array([p.value for p in model.parameters])
     param_values[rate_mask] = 10 ** x
     solver.run(param_values)
 
-    #import ipdb; ipdb.set_trace()
     of_value = 0
     for obs_name, data_name in zip(obs_names, data_names):
         ysim = solver.yobs[obs_name]
         traj_min = np.nanmin(ysim)
         traj_max = np.nanmax(ysim)
         ysim_norm = (ysim - traj_min) / (traj_max - traj_min)
-        ydata = data[data_name]
-        #sigma = np.maximum(data[data_name] * 0.25, 0.01)  # .25 CV, min of 0.01
+        ydata = exp_data[data_name]
         sigma = 0.1
         of_value += np.sum((ydata - ysim_norm) ** 2 / (2 * sigma ** 2))
 
-    print of_value, x[0:5]
+    print of_value
     return of_value
 
 
 if __name__ == '__main__':
+
+    if os.path.exists('anneal_new_fit.txt'):
+        pysb.util.update_param_vals(model, pysb.util.load_params('anneal_new_fit.txt'))
 
     params = model.parameters
     rate_params = model.parameters_rules()
@@ -46,15 +45,20 @@ if __name__ == '__main__':
                              'EC-RP_IMS-RP_IC-RP_data_for_models.csv')
     exp_data = np.genfromtxt(data_path, delimiter=',', names=True)
 
+    obs_names = ['mBid', 'aSmac', 'cPARP']
+    data_names = ['norm_ICRP', 'IMSRP_step', 'norm_ECRP']
+
     solver = pysb.integrate.Solver(model, exp_data['Time'], rtol=1e-3, atol=1e-3)
 
     np.random.seed(1)
     (xmin, Jmin, Tfinal, feval, iters, accept, retval) = \
         scipy.optimize.anneal(objective_func, x0, full_output=True,
-                              lower=lower, upper=upper, disp=True,
-                              args=[solver, rate_mask, data])
+                              lower=lower, upper=upper,
+                              args=[solver, rate_mask, exp_data, obs_names, data_names])
     params_estimated = np.array([p.value for p in params])
     params_estimated[rate_mask] = 10 ** xmin
+
+    pysb.util.write_params(model, params_estimated, 'anneal_new_fit.txt')
 
     exp_obs_norm = exp_data[data_names].view(float).reshape(len(exp_data), -1).T
 
