@@ -71,9 +71,6 @@ switching to the top-level EARM source directory and running::
 
     python setup.py install
 
-You may also want to add the top-level EARM source directory to your PYTHONPATH
-environment variable for convenience.
-
 How to use the documentation
 ----------------------------
 
@@ -99,7 +96,8 @@ This package is subject to change. In particular it may be refactored to stay
 current with ongoing updates to PySB, or to add new models and fix errors in
 existing ones. To be notified of updates, follow EARM on GitHub at
 http://github.com/sorgerlab/earm. If you use Git, you can get updates by going
-to the EARM source directory and running ``git pull``.
+to the EARM source directory and running ``git pull``. After getting the update
+source code, you will need to re-install by running ``python setup.py install``.
 
 Contributing
 ------------
