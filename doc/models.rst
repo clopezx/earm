@@ -11,7 +11,7 @@ considered to have roughly three major regulatory focal points, or "modules":
 - Effector caspase activation and substrate cleavage ("Pore to PARP cleavage" in
   the diagram)
 
-.. image:: images/EARM2_fig.svg
+.. image:: images/EARM2_fig.png
    :height: 400
    :align: center
    :alt: EARM 2.0 pathway/architecture diagram
