@@ -212,7 +212,7 @@ def sensitizers_bind_anti_apoptotics():
     bind_table([[                        Bcl2,  BclxL(state='M'),  Mcl1(state='M')],
                 [Bad(state='M'),  11e-9*N_A*V,       10e-9*N_A*V,             None],
                 [Noxa(state='M'),        None,              None,      19e-9*N_A*V]],
-               kf=1e-6)
+               kf=1e6/(N_A*V))
 
 def effectors_bind_anti_apoptotics():
     """Binding of Bax and Bak to Bcl2, BclxL, and Mcl1.
