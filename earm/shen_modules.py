@@ -125,7 +125,6 @@ def momp_monomers():
     Monomer('Smac', ['bf', 'state'], {'state':['M', 'C', 'A']})
 
 def shen_pore_transport(pore_size=4):
-    # TODO: Move this to albeck_modules?
     """Implements release of Cytochrome C and Smac.
 
     Uses the same model as the original EARM 1.0 ([Albeck2008]_), in
@@ -233,8 +232,8 @@ def chen_febs_indirect(do_pore_assembly=True, do_pore_transport=False):
         As for :py:func:`chen_biophys_j`.
     """
 
-    Parameter('Bcl2_0'  , 30e-9) # Mitochondrial Bcl2
-    Parameter('Bax_0'   , 60e-9) # Bax
+    Parameter('Bcl2_0'  , 30e-9 * N_A * V) # Mitochondrial Bcl2
+    Parameter('Bax_0'   , 60e-9 * N_A * V) # Bax
 
     alias_model_components()
 
@@ -245,7 +244,7 @@ def chen_febs_indirect(do_pore_assembly=True, do_pore_transport=False):
     # by default)
 
     # Bcl2 binds tBid and Bax:
-    bind_table([[                                            Bcl2],
+    bind_table([[                                     Bcl2],
                 [Bid(state='T'),       (1e5/(N_A*V), 1e-3)],
                 [Bax(active_monomer),  (1e5/(N_A*V), 1e-3)]])
 
@@ -276,8 +275,8 @@ def chen_febs_direct(do_pore_assembly=True, do_pore_transport=False):
     """
 
     # Initial conditions
-    Parameter('Bcl2_0' , 30e-9) # Bcl2
-    Parameter('Bax_0'  , 60e-9) # InBax
+    Parameter('Bcl2_0' , 30e-9 * N_A * V) # Bcl2
+    Parameter('Bax_0'  , 60e-9 * N_A * V) # InBax
 
     alias_model_components()
 
