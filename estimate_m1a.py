@@ -5,6 +5,7 @@ import scipy.optimize
 import scipy.interpolate
 import matplotlib.pyplot as plt
 import os
+import inspect
 
 from earm.lopez_embedded import model
 
@@ -52,6 +53,9 @@ bounds_radius = 2  # TODO remove bounds checking entirely?
 
 
 def objective_func(x, rate_mask, lb, ub):
+
+    # Print out an indication of how the annealing is progressing
+    print_anneal_status()
 
     # Apply hard bounds
     if np.any((x < lb) | (x > ub)):
@@ -106,6 +110,22 @@ def objective_func(x, rate_mask, lb, ub):
 
     error = e1 + e2 + e3
     return error
+
+
+def print_anneal_status():
+    """Print annealing progress report"""
+    # scipy.optimize.anneal doesn't offer any introspection, so we have to dig
+    # into its stack frames directly to find what we need. This function will
+    # only work properly when called directly from the objective function. It
+    # could be modified to walk the stack until the proper frame is found, but
+    # right now it just explicitly looks two levels up.
+    caller_frame, _, _, caller_func, _, _ = inspect.stack()[2]
+    # Only report when called from anneal, not from getstart_temp
+    if caller_func == 'anneal':
+        caller_locals = caller_frame.f_locals
+        # Only report on the first iteration of the 'dwell' loop
+        if caller_locals['n'] == 1:
+            print 'best fit:', caller_locals['best_state'].cost, 'current fit:', caller_locals['current_state'].cost
 
 
 def estimate(start_values=None):
@@ -193,14 +213,13 @@ def display(params_estimated):
 
 if __name__ == '__main__':
 
-    print 'Estimating rates for model:', model.name
+    print 'Estimating rates for Lopez embedded model (M1a)'
 
     np.random.seed(1)
     params_estimated = estimate()
 
     # Write parameter values to a file
-    fit_filename = 'fit_%s.txt' % model.name.replace('.', '_')
-    fit_filename = os.path.join(earm_path, fit_filename)
+    fit_filename = os.path.join(earm_path, 'EARM_2_0_M1a_fitted_params.txt')
     print 'Saving parameter values to file:', fit_filename
     pysb.util.write_params(model, params_estimated, fit_filename)
 
