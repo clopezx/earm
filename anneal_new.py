@@ -29,8 +29,26 @@ momp_data = np.array([9810.0, 180.0, 1.0])
 #momp_var = np.array([7245000.0, 3600.0, 1e-9])
 momp_var = np.array([72450.0, 3600.0, 1e-9])
 
+# Build time points for the integrator, using the same time scale as the
+# experimental data but with greater resolution to help the integrator converge.
+ntimes = len(exp_data['Time'])
+# Factor by which to increase time resolution
+tmul = 10
+# Do the sampling such that the original experimental timepoints can be
+# extracted with a slice expression instead of requiring interpolation.
+tspan = np.linspace(exp_data['Time'][0], exp_data['Time'][-1],
+                    (ntimes-1) * tmul + 1)
 # Initialize solver object
-solver = pysb.integrate.Solver(model, exp_data['Time'], rtol=1e-3, atol=1e-3)
+solver = pysb.integrate.Solver(model, tspan, rtol=1e-5, atol=1e-5)
+
+# Get parameters for rates only
+rate_params = model.parameters_rules()
+# Build a boolean mask for those params against the entire param list
+rate_mask = np.array([p in rate_params for p in model.parameters])
+# Build vector of nominal parameter values from the model
+nominal_values = np.array([p.value for p in model.parameters])
+# Set the radius of a hypercube bounding the search space
+bounds_radius = 2  # TODO remove bounds checking entirely?
 
 
 def objective_func(x, rate_mask, lb, ub):
@@ -48,8 +66,9 @@ def objective_func(x, rate_mask, lb, ub):
     # Calculate error for point-by-point trajectory comparisons
     e1 = 0
     for obs_name, data_name, var_name in zip(obs_names, data_names, var_names):
-        # Get model observable trajectory
-        ysim = solver.yobs[obs_name]
+        # Get model observable trajectory (this is the slice expression
+        # mentioned above in the comment for tspan)
+        ysim = solver.yobs[obs_name][::tmul]
         # Normalize it to 0-1
         ysim_norm = ysim / np.nanmax(ysim)
         # Get experimental measurement and variance
@@ -64,7 +83,7 @@ def objective_func(x, rate_mask, lb, ub):
     ysim_momp = solver.yobs[momp_obs]
     ysim_momp_norm = ysim_momp / np.nanmax(ysim_momp)
     # Build a spline to interpolate it
-    st, sc, sk = scipy.interpolate.splrep(exp_data['Time'], ysim_momp_norm)
+    st, sc, sk = scipy.interpolate.splrep(solver.tspan, ysim_momp_norm)
     # Use root-finding to find the point where trajectory reaches 10% and 90%
     t10 = scipy.interpolate.sproot((st, sc-0.10, sk))[0]
     t90 = scipy.interpolate.sproot((st, sc-0.90, sk))[0]
@@ -86,7 +105,6 @@ def objective_func(x, rate_mask, lb, ub):
     e3 = (cparp_final - cparp_final_sim) ** 2 / (2 * cparp_final_var)
 
     error = e1 + e2 + e3
-    print ' + '.join(map(str, (e1, e2, e3))), '=', error
     return error
 
 
@@ -106,14 +124,6 @@ def estimate(start_values=None):
 
     """
 
-    # Get parameters for rates only
-    rate_params = model.parameters_rules()
-    # Build a boolean mask for those params against the entire param list
-    rate_mask = np.array([p in rate_params for p in model.parameters])
-    # Build vector of nominal parameter values from the model
-    nominal_values = np.array([p.value for p in model.parameters])
-    # Set the radius of a hypercube bounding the search space
-    bounds_radius = 10  # TODO remove bounds checking entirely?
     # Set starting position to nominal parameter values if not specified
     if start_values is None:
         start_values = nominal_values
@@ -140,10 +150,10 @@ def estimate(start_values=None):
     # Perform the annealing
     args = [rate_mask, lb, ub]
     (xmin, Jmin, Tfinal, feval, iters, accept, retval) = \
-        scipyx.optimize.anneal(objective_func, x0, full_output=True,
-                               maxiter=4000, quench=0.5,
-                               lower=lower, upper=upper,
-                               args=args)
+        scipy.optimize.anneal(objective_func, x0, full_output=True,
+                              maxiter=4000, quench=0.5,
+                              lower=lower, upper=upper,
+                              args=args)
     # Construct vector with resulting parameter values (un-log-transformed)
     params_estimated = start_values.copy()
     params_estimated[rate_mask] = 10 ** xmin
@@ -175,8 +185,8 @@ def display(params_estimated):
         plt.plot(exp_data['Time'], exp, color=c, marker='.', linestyle=':')
         plt.errorbar(exp_data['Time'], exp, yerr=exp_err, ecolor=c,
                      elinewidth=0.5, capsize=0, fmt=None)
-        plt.plot(exp_data['Time'], sim, color=c)
-    plt.plot(exp_data['Time'], sim_obs_norm[2], color='g')
+        plt.plot(solver.tspan, sim, color=c)
+    plt.plot(solver.tspan, sim_obs_norm[2], color='g')
     plt.vlines(momp_data[0], -0.05, 1.05, color='g', linestyle=':')
     plt.show()
 
