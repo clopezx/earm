@@ -15,6 +15,9 @@ from earm.lopez_embedded import model
 obs_names = ['mBid', 'cPARP']
 data_names = ['norm_ICRP', 'norm_ECRP']
 var_names = ['nrm_var_ICRP', 'nrm_var_ECRP']
+# Total starting amounts of proteins in obs_names, for normalizing simulations
+obs_totals = [model.parameters['Bid_0'].value,
+              model.parameters['PARP_0'].value]
 
 # Load experimental data file
 earm_path = os.path.dirname(__file__)
@@ -26,8 +29,9 @@ exp_data = np.genfromtxt(data_path, delimiter=',', names=True)
 momp_obs = 'aSmac'
 # Mean and variance of Td (delay time) and Ts (switching time) of MOMP, and
 # yfinal (the last value of the IMS-RP trajectory)
-momp_data = np.array([9810.0, 180.0, 1.0])
-momp_var = np.array([7245000.0, 3600.0, 1e-9])
+momp_obs_total = model.parameters['Smac_0'].value
+momp_data = np.array([9810.0, 180.0, momp_obs_total])
+momp_var = np.array([7245000.0, 3600.0, 1e4])
 
 # Build time points for the integrator, using the same time scale as the
 # experimental data but with greater resolution to help the integrator converge.
@@ -68,12 +72,13 @@ def objective_func(x, rate_mask, lb, ub):
 
     # Calculate error for point-by-point trajectory comparisons
     e1 = 0
-    for obs_name, data_name, var_name in zip(obs_names, data_names, var_names):
+    for obs_name, data_name, var_name, obs_total in \
+            zip(obs_names, data_names, var_names, obs_totals):
         # Get model observable trajectory (this is the slice expression
         # mentioned above in the comment for tspan)
         ysim = solver.yobs[obs_name][::tmul]
         # Normalize it to 0-1
-        ysim_norm = ysim / np.nanmax(ysim)
+        ysim_norm = ysim / obs_total
         # Get experimental measurement and variance
         ydata = exp_data[data_name]
         yvar = exp_data[var_name]
@@ -95,19 +100,13 @@ def objective_func(x, rate_mask, lb, ub):
     # Calculate Ts as their difference
     ts = t90 - t10
     # Get yfinal, the last element from the trajectory
-    yfinal = ysim_momp_norm[-1]
+    yfinal = ysim_momp[-1]
     # Build a vector of the 3 variables to fit
     momp_sim = [td, ts, yfinal]
     # Perform chi-squared calculation against mean and variance vectors
     e2 = np.sum((momp_data - momp_sim) ** 2 / (2 * momp_var)) / 3
 
-    # Calculate error for final cPARP value (ensure all PARP is cleaved)
-    cparp_final = model.parameters['PARP_0'].value
-    cparp_final_var = .01
-    cparp_final_sim = solver.yobs['cPARP'][-1]
-    e3 = (cparp_final - cparp_final_sim) ** 2 / (2 * cparp_final_var)
-
-    error = e1 + e2 + e3
+    error = e1 + e2
     return error
 
 
@@ -196,7 +195,8 @@ def display(params_estimated):
     solver.run(params_estimated)
     obs_names_disp = obs_names + ['aSmac']
     sim_obs = solver.yobs[obs_names_disp].view(float).reshape(len(solver.yobs), -1)
-    sim_obs_norm = (sim_obs / sim_obs.max(0)).T
+    totals = obs_totals + [momp_obs_total]
+    sim_obs_norm = (sim_obs / totals).T
 
     # Plot experimental data and simulation on the same axes
     colors = ('r', 'b')
