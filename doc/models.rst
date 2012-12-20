@@ -71,7 +71,7 @@ straightforward syntax (for example, for model M1a)::
 
     from earm.lopez_embedded import model
 
-However the Python files for each individual model in general do not contain
+However, the Python files for each individual model in general do not contain
 much code--they mainly call functions from other modules. For example,
 here is the source code for the file ``earm/lopez_embedded.py``, which
 implements model M1a:
@@ -164,7 +164,7 @@ To import a model use the syntax::
     from earm.lopez_embedded import model
 
 That's it. You now have a model object that you can query, simulate, perform
-parameter estimation on, etc. If you wanted the MOMP-only version, which are
+parameter estimation on, etc. If you wanted the MOMP-only version, which is 
 in the sub-module ``mito``, simply run::
 
     from earm.mito.lopez_embedded import model
