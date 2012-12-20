@@ -27,8 +27,7 @@ momp_obs = 'aSmac'
 # Mean and variance of Td (delay time) and Ts (switching time) of MOMP, and
 # yfinal (the last value of the IMS-RP trajectory)
 momp_data = np.array([9810.0, 180.0, 1.0])
-#momp_var = np.array([7245000.0, 3600.0, 1e-9])
-momp_var = np.array([72450.0, 3600.0, 1e-9])
+momp_var = np.array([7245000.0, 3600.0, 1e-9])
 
 # Build time points for the integrator, using the same time scale as the
 # experimental data but with greater resolution to help the integrator converge.
@@ -49,7 +48,7 @@ rate_mask = np.array([p in rate_params for p in model.parameters])
 # Build vector of nominal parameter values from the model
 nominal_values = np.array([p.value for p in model.parameters])
 # Set the radius of a hypercube bounding the search space
-bounds_radius = 2  # TODO remove bounds checking entirely?
+bounds_radius = 2
 
 
 def objective_func(x, rate_mask, lb, ub):
