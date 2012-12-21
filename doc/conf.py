@@ -270,7 +270,9 @@ class MockConstant(object):
     def __getattr__(cls, name):
         return 1.0
 
-MOCK_MODULES = ['numpy', 'numpy.random', 'numpy.ma', 'scipy', 'scipy.integrate', 'scipy.weave', 'matplotlib', 'pylab', 'matplotlib.pyplot']
+MOCK_MODULES = ['scipy', 'scipy.integrate',
+                'scipy.weave', 'matplotlib', 'pylab', 'matplotlib.pyplot',
+                ]
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
 sys.modules['scipy.constants'] = MockConstant()
