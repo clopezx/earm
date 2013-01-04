@@ -2,6 +2,7 @@
 Model M1a: Extrinsic apoptosis model with "embedded together" model of MOMP.
 """
 
+# USE AS TEMPLATE FOR NECROSIS
 
 from pysb import *
 from earm import shared
