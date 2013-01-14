@@ -27,12 +27,19 @@
 
 import numpy
 from pysb import *
-from pysb.macros import *
 from pysb.util import alias_model_components
-from shared_anrm import *
+from pysb.macros import *
+
+#from shared_anrm import *
 #from earm.shared import *
 
 Model()
+    
+Parameter('KF', 1e-6)
+Parameter('KR', 1e-3)
+Parameter('KC', 1)
+Parameter('KT', 1e-5)
+Parameter('KE', 1e-4)
 
 def CD95_to_SecondaryComplex_monomers():
     """ Declares Fas ligand, CD95, FADD, Flip_L, Flip_S procaspase8 and Caspase 8.
@@ -52,11 +59,11 @@ def CD95_to_SecondaryComplex_monomers():
     Monomer('C8', ['bf'])                       #active caspase 8
 
 def CD95_to_SecondaryComplex():
-    """Defines the interactoins from CD95 ligation of generation of secondary
+    """Defines the interactoins from CD95 ligation to generation of secondary
     complexes as per ANRM 1.0.
     
-    Uses Fas, CD95, FADD, flip_L, flip_S, proC8 monomers and C8 active dimers and
-    there assicated parameters to generate rules that describe the ligand/receptor
+    Uses Fas, CD95, FADD, flip_L, flip_S, proC8 monomers and C8 active dimers, and
+    their assicated parameters to generate rules that describe the ligand/receptor
     binding, FADD recruitment, proC8 and c-flip recruitment, activation of caspase
     and release of the secondary complex. This model assumes that one copy of proC8
     binds FADD before c-flip. 
@@ -64,14 +71,6 @@ def CD95_to_SecondaryComplex():
     This model converts proC8:proC8 to C8 (active caspase 8 dimer)
     This model also produces Secondary complex, FADD:proC8:c-Flip.
     """
-    
-    Parameter('KF', 1e-6)
-    Parameter('KR', 1e-3)
-    Parameter('KC', 1)
-    
-    Parameter('KF1', 0)
-    Parameter('KR1', 1e-1)
-    Parameter('KC1', 1)
 
     Parameter('Fas_0'   ,   3000) # 3000 correspons to 50ng/ml Fas(?)
     Parameter('CD95_0'  ,    200) # 200 receptors per cell
@@ -90,7 +89,7 @@ def CD95_to_SecondaryComplex():
     Initial(C8(bf=None), C8_0)       #caspase 8
    
     # =========================================
-    # CD95 ligation and formation of DISC rules
+    # CD95 ligation and formation of Secondary Complex rules
     # -----------------------------------------
     #   Fas + CD95 <-> Fas:CD95
     #   Fas:CD95 + FADD <-> Fas:CD95:FADD
@@ -105,7 +104,8 @@ def CD95_to_SecondaryComplex():
     # ------------------------------------------
 
     # -------------DISC assembly----------------
-    bind(Fas(blig=None), 'blig',  CD95(blig = None, bfad = None), 'blig', [KF, KR])
+    bind(Fas(blig=None), 'blig',  CD95(blig = None, bfad = None), 'blig', [Parameter('k', 4e-7), KR])
+    #bind(Fas(blig=None), 'blig',  CD95(blig = None, bfad = None), 'blig', [4e-7, KR])
     bind(CD95(blig = ANY, bfad = None), 'bfad', FADD(brec = None, bc81 =None, bc82 = None), 'brec', [KF, KR])
     
     bind(FADD(brec = ANY, bc81 = None, bc82 = None),'bc81', proC8(bfad = None), 'bfad', [KF, KR])
@@ -124,22 +124,102 @@ def CD95_to_SecondaryComplex():
     Rule('C8_activation2', SecComp >> FADD(brec=None, bc81=None, bc82=None) + C8(bf=None), KC)
 
     # release of secondary complex from the DISC
-    bind(FADD(brec = None, bc82 = ANY, bc81 = ANY), 'brec', CD95(bfad=None), 'bfad', [KF1,KR])
+    bind(FADD(brec = None, bc82 = ANY, bc81 = ANY), 'brec', CD95(bfad=None), 'bfad', [Parameter('k1', 0),KR])
 
+def TNFR1_to_SecondaryComplex_monomers():
+    """ Declares TNFa, TNFR1, TRADD, CompI, RIP1, A20, CYLD, NEMO and NFkB.
+    Upon activation, TNFR1 gets endocytosed and post translationally modified After Complex I 
+    has released TRADD and RIP1 it possibly gets recycled. This is represented by giving TNFR1 
+    two states: norm and spent. TRADD has two states. CompI has two states. RIP1 has three states:
+    Ub, PO4 and inactive. RIP1 binds FADD, Complex I, Bid-P and RIP3 (see SecondaryComplex_Bid).
+    A20, CYLD and NEMO catalyze transformations of CompI and RIP1, maybe theycan be represented in the rates. 
+    """
+    Monomer('TNFa', ['blig'])
+    Monomer('TNFR1', ['blig', 'btra', 'state'], {'state':['norm','spent']})
+    Monomer('TRADD', ['brec', 'state'], {'state':['active', 'inactive']})
+    Monomer('CompI', ['brip', 'state'], {'state':['unmod', 'mod']})
+    Monomer('RIP1', ['bcomp', 'brip', 'state'], {'state':['unmod', 'ub', 'po4']})
+    Monomer('NFkB', ['bf'])
+
+def TNFR1_to_SecondaryComplex():
+    """Defines the interactoins from TNFR1 ligation to generation of secondary
+    complexes as per ANRM 1.0.
+        
+    Uses TNFa, TNFR1, TRADD, CompI, RIP1 and NFkB. C8 active dimers and
+    their associated parameters to generate rules that describe the ligand/receptor
+    binding, FADD recruitment, proC8 and c-flip recruitment, activation of caspase
+    and release of the secondary complex. This model assumes that one copy of proC8
+    binds FADD before c-flip.
     
-#def TNFR1_toSecondaryComplex_monomers()
+    This model converts proC8:proC8 to C8 (active caspase 8 dimer)
+    This model also produces Secondary complex, FADD:proC8:c-Flip.
+    """
+    
+    Parameter('TNFa_0'  ,  3000) # 3000 corresponds to 50ng/ml TNFa
+    Parameter('TNFR1_0' ,   200) # 200 receptors per cell
+    Parameter('TRADD_0' , 1.0e3) # molecules per cell (arbitrarily assigned)
+    Parameter('CompI_0' ,     0) # complexes per cell
+    Parameter('RIP1_0'  , 2.0e4) # molecules per cell
+    Parameter('NFkB_0'  ,     0) # molecules per cell
+    
+    Initial(TNFa(blig=None), TNFa_0)                                # TNFa Ligand
+    Initial(TNFR1(blig=None, btra=None, state='norm'), TNFR1_0)       # TNFR1
+    Initial(TRADD(brec=None, state='inactive'), TRADD_0)              # TRADD
+    Initial(CompI(brip=None, state='unmod'), CompI_0)      # Complex I
+    Initial(RIP1(bcomp=None, brip = None, state = 'unmod'), RIP1_0)   # RIP1
+    Initial(NFkB(bf=None), NFkB_0)
 
-CD95_to_SecondaryComplex_monomers()
-CD95_to_SecondaryComplex()
+    # =========================================
+    # TNFR1 ligation, formation of Complex I and release of RIP1 and TRADD rules
+    # -----------------------------------------
+    #   TNFa+ TNFR1 <-> TNFa:TNFR1
+    #   TNFa:TNFR1 + TRADD <-> TNFa:TNFR1:TRADD >> CompI
+    #   CompI + RIP1 <-> CompI:RIP1 >> [active]CompI:RIP1-Ub
+    
+    #   [active]CompI:RIP1-Ub >> NFkB # This reaction will consume the receptor.
+    #   [active]CompI:RIP1-Ub >> [active]CompI:RIP1
+    #   [active]CompI:RIP1 >> [active]CompI # A20 mediated degradation of RIP1
+    #   [active]CompI:RIP1 >> [active]CompI + RIP1
+    #   [active]CompI >> [active]TRADD + TNFa:[spent]TNFR1
+    
+    #   TNFa:[spent]TNFR1 >> [norm]TNFR1 #receptor recycle typically distroys the ligand.
+    # ------------------------------------------
+    
+    # -------------Complex I assembly----------------
+    bind(TNFa(blig=None), 'blig',  TNFR1(blig = None, btra = None, state = 'norm'), 'blig', [Parameter('k3', 4e-7), KR])
+    bind(TNFR1(blig = ANY, btra = None, state =  'norm'), 'btra', TRADD(brec = None, state = 'inactive'), 'brec', [KF, KR])
+    preCompI = TNFa(blig=ANY)%TNFR1(blig=ANY, btra=ANY, state = 'norm')%TRADD(brec=ANY, state='inactive')
+    Rule('CompI_formation', preCompI >> CompI(brip=None, state = 'unmod'), KC)
+    bind(CompI(brip=None, state = 'unmod'), 'brip', RIP1(bcomp=None, brip=None, state='unmod'), 'bcomp',[KF, KR])
 
-Observable('ObsFas',  Fas(blig=None))
-Observable('ObsFas_CD95', CD95(blig=ANY))
-Observable('ObsFas_CD95_FADD', Fas(blig=ANY)%CD95(blig=ANY,bfad=ANY)%FADD(brec=ANY))
-Observable('ObsCD95_FADD', CD95(blig=None,bfad=ANY)%FADD(brec=ANY))
-Observable('ObsCD95_FADD_proC8', CD95(blig=None, bfad=ANY) % FADD(brec=ANY, bc81=ANY, bc82=None) % proC8(bfad=ANY))
-Observable('ObsproC8', proC8(bfad=None))
-Observable('ObsC8',  C8(bf=None))
-Observable('ObsFADD_flipS_proC8', FADD(brec=None, bc81=1, bc82=2) % flip_S(bfad=2) % proC8(bfad=1))
+    Rule('CompI_Ub', CompI(brip=ANY, state = 'unmod')%RIP1(bcomp=ANY,brip=None, state = 'unmod')>> CompI(brip=ANY, state = 'mod')%RIP1(bcomp=ANY,brip=None, state = 'ub'), KT)
+    Rule('CompI_deUb', CompI(brip=ANY, state='mod')%RIP1(bcomp=ANY, brip=None, state='ub')>>CompI(brip=ANY, state='mod')%RIP1(bcomp=ANY, brip=None, state='unmod'),KE)
+    Rule('RIP1_deg', CompI(brip=ANY, state='mod')%RIP1(bcomp=ANY, brip=None, state='unmod') >> CompI(brip=None, state='mod'),KC)
+    Rule('RIP1_rel', CompI(brip=ANY, state='mod')%RIP1(bcomp=ANY, brip=None, state='unmod') >> CompI(brip=None, state='mod') + RIP1(bcomp=None, brip = None, state = 'unmod'), KC)
+    Rule('TNFR1_recycle', CompI(brip=None, state='mod') >> TRADD(brec=None, state='active') + TNFR1(blig = None, btra = None, state =  'norm'), KC)
+    Rule('NFkB_expression', CompI(brip=ANY, state = 'mod')%RIP1(bcomp=ANY,brip=None, state = 'ub')>> CompI(brip=ANY, state = 'mod')%RIP1(bcomp=ANY,brip=None, state = 'ub') + NFkB(bf=None), KE)
+    
+#CD95_to_SecondaryComplex_monomers()
+#CD95_to_SecondaryComplex()
+TNFR1_to_SecondaryComplex_monomers()
+TNFR1_to_SecondaryComplex()
+
+#Observable('ObsFas', Fas(blig=None))
+#Observable('ObsFas_CD95', CD95(blig=ANY))
+#Observable('ObsFas_CD95_FADD', Fas(blig=ANY)%CD95(blig=ANY,bfad=ANY)%FADD(brec=ANY))
+#Observable('ObsCD95_FADD', CD95(blig=None, bfad=ANY)%FADD(brec=ANY))
+#Observable('ObsCD95_FADD_proC8', CD95(blig=None, bfad=ANY)%FADD(brec=ANY, bc81=ANY, bc82=None)%proC8(bfad=ANY))
+#Observable('ObsproC8', proC8(bfad=None))
+#Observable('ObsC8',  C8(bf=None))
+#Observable('ObsFADD_flipS_proC8', FADD(brec=None, bc81=1, bc82=2)%flip_S(bfad=2)%proC8(bfad=1))
+
+Observable('ObsTNFa', TNFa(blig=None))
+Observable('ObsTNFR1', TNFR1(blig = ANY, state =  'norm'))
+Observable('ObsTNFR1_all', TNFR1())
+Observable('ObsCompI', CompI(brip=ANY)%RIP1(bcomp=ANY))
+Observable('ObsTRADD', TRADD(brec=None, state='active'))
+Observable('ObsRIP1', RIP1(brip=None, state='unmod'))
+Observable('ObsNFkB', NFkB(bf=None))
 
 #from pysb.integrate import odesolve
 #m = Model
